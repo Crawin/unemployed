@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\Renderer">
+      <UniqueIdentifier>{d22333f4-3569-4648-bc15-a493044bd0f8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="소스 파일\App">
       <UniqueIdentifier>{8ba84851-6708-4e11-8ba3-617fc3738aee}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Renderer">
-      <UniqueIdentifier>{d22333f4-3569-4648-bc15-a493044bd0f8}</UniqueIdentifier>
+    <Filter Include="소스 파일\Renderer\Shader">
+      <UniqueIdentifier>{53916aac-3a28-42fc-8923-ddd2bcaf99bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Renderer\Shader\HLSL">
+      <UniqueIdentifier>{b30a2d9e-7976-4799-baf4-b8cab75edb98}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +42,12 @@
     <ClInclude Include="Include\Renderer\Renderer.h">
       <Filter>소스 파일\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Shader\Shader.h">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Shader\TestShader.h">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -46,6 +58,15 @@
     </ClCompile>
     <ClCompile Include="Include\Renderer\Renderer.cpp">
       <Filter>소스 파일\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Shader\Shader.cpp">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Shader\TestShader.cpp">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Shader\HLSL\TestShader.hlsl">
+      <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

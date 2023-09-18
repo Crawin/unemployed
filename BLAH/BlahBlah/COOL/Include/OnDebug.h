@@ -29,3 +29,4 @@ inline void DebugPrint(const std::string& str)
 
 // 
 #define CHECK_CREATE_FAILED(result, msg) if (!result) { DebugPrint(std::format("Failed! {}({}) {}", __FUNCTION__, __LINE__, msg)); return false; }
+#define PRINT_ERROR(msg) DebugPrint(std::format("{}: {}", __LINE__, msg))

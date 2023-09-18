@@ -1,0 +1,19 @@
+23.09.17
+Shader(PSO) 클래스는 만들음
+RootSignature는 아직 생성하지 않음
+이건 아마 동일할탠데
+Renderer에다가 만드는것도 나쁘지 않을듯
+
+Todo
+Renderer에다가 RootSignature 만들고
+테스트 쉐이더로 렌더 하기
+
+23.09.19
+Shader 클래스 기본 완성
+루트시그니처는 고정일태니 그냥 Renderer에다 넣기로 함
+
+Todo
+쉐이더들을 파일에서 읽어서(레스터라이저 0, 1, 2 ... / 블랜드스테이트 0, 1, 2 .../) 만들어보기?
+<- 나중에
+일단 프리미티브토폴로지 오류 고치기 <- 고침
+commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

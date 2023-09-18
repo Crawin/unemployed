@@ -24,7 +24,7 @@ bool Application::InitWindow()
 
 	RECT rt = { 0, 0, m_windowSize.cx, m_windowSize.cy };
 	AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, NULL);
-	m_hWnd = CreateWindow(L"Class Name", L"Title", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0,
+	m_hWnd = CreateWindow(L"Class Name", L"Your Game Name Here", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0,
 		rt.right - rt.left, rt.bottom - rt.top, NULL, NULL, m_hInst, NULL);
 
 	ShowWindow(m_hWnd, SW_SHOW);
@@ -41,8 +41,8 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	// windows 생성 및 창 띄우기 한다..
 	CHECK_CREATE_FAILED(InitWindow(), "윈도우 생성 실패");
 
-
-	CHECK_CREATE_FAILED(Renderer::Instance().Init(), "렌더러 생성 실패");
+	// 렌더러를 만든다
+	CHECK_CREATE_FAILED(Renderer::Instance().Init(m_windowSize, m_hWnd), "렌더러 생성 실패");
 
 	// 씬매니저의 생성 및 로드?
 
@@ -59,9 +59,9 @@ int Application::StartProgram()
 			DispatchMessage(&Message);
 		}
 		else {
-			// 아아.. 게임이 돌아간다
-			// 아마 내 예상으로는 씬매니저가 돌리지 않을까 싶다..
-			
+			// 게임 루프
+
+			Renderer::Instance().Render();
 			/*
 #ifdef _DEBUG
 			TCHAR szTitle[30];
