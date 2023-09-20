@@ -13,8 +13,8 @@ public:
 	}
 
 private:
-	Application() {}
-	~Application() {}
+	Application();
+	~Application();
 
 	bool InitWindow();
 

@@ -3,6 +3,8 @@
 // dx12 렌더러
 
 class Shader;
+class COOLResource;
+
 
 struct GraphicsCommand {
 	ComPtr<ID3D12CommandAllocator> m_CommandAllocator;
@@ -49,7 +51,9 @@ public:
 	// 지정해준 사이즈로 설정
 	void SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
 
+	void ResourceTransition(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES transTo);
 
+	// render
 	void Render();
 
 private:
@@ -79,11 +83,13 @@ private:
 	UINT64 m_FenceValues[m_NumSwapChainBuffers];
 	HANDLE m_FenceEvent;
 
+	// 여기 아래는 분해해도 되나?
+
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
-	ComPtr<ID3D12Resource> m_RenderTargetBuffer[m_NumSwapChainBuffers];
-	ComPtr<ID3D12Resource> m_DepthStencilBuffer;
+	ComPtr<COOLResource> m_RenderTargetBuffer[m_NumSwapChainBuffers];
+	ComPtr<COOLResource> m_DepthStencilBuffer;
 
 	size_t m_MainCommandIdx = 0;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;

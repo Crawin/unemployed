@@ -133,6 +133,7 @@
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Math.h" />
     <ClInclude Include="Include\OnDebug.h" />
+    <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
     <ClInclude Include="Include\Shader\Shader.h" />
     <ClInclude Include="Include\Shader\TestShader.h" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Include\Application.cpp" />
     <ClCompile Include="Include\main.cpp" />
+    <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
     <ClCompile Include="Include\Shader\HLSL\TestShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

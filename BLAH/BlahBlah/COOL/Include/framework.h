@@ -44,3 +44,15 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib, "dxgi.lib")
 
 #pragma comment(lib, "dxguid.lib")
+
+
+enum MY_ROOTSIGN_PARAM {
+	CAMERA_DATA = 0,						// cbv (CamPos, farplane, v Mat, p Mat, vp Mat)
+	LIGHTS = 1,								// cbv (struct LIGHT)
+	WORLD_MATIRX = 2,						// root constant float4x4 (world matrix)
+	WORLD_MATIRX_INSTANCED = 3,				// cbv (array of world matrix)
+	SHADER_BASE_PROPERTY = 4,				// root constant float4x4(shader base property)
+	BINDLESS_RESOURCE = 5,					// descriptor heap (all shader resource(srv))
+
+	PARAM_MAX
+};

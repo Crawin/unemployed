@@ -1,5 +1,6 @@
 #include "../framework.h"
 #include "Renderer.h"
+#include "COOLResource.h"
 //#include "../Shader/Shader.h"
 
 #define TEST_SHADER
@@ -15,6 +16,11 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+	// 각종 객체들이 아래 함수 호출까지는 살아있는 상태이며 소멸자를 완전히 나가면서 소멸된다.
+	// 확실하게 체크하기 위해서는 어케해야할까?
+	// Renderer 말고 Application에서 하자
+
+/*
 	// 죽기 전에 살아있는 애들 확인하고 간다
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
@@ -22,6 +28,7 @@ Renderer::~Renderer()
 	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
 	debug->Release();
 #endif
+*/
 }
 
 bool Renderer::CreateDevice()
@@ -164,8 +171,13 @@ bool Renderer::CreateRTV()
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptorHandle = m_RtvHeap->GetCPUDescriptorHandleForHeapStart();
 	for (UINT i = 0; i < m_NumSwapChainBuffers; ++i) {
-		m_SwapChain->GetBuffer(i, IID_PPV_ARGS(m_RenderTargetBuffer[i].GetAddressOf()));
+		m_SwapChain->GetBuffer(
+			i, 
+			__uuidof(ID3D12Resource),
+			(void**)m_RenderTargetBuffer[i].GetAddressOf());
+
 		CHECK_CREATE_FAILED(m_RenderTargetBuffer[i], "m_SwapChain->GetBuffer Failed!!");
+		m_RenderTargetBuffer[i]->SetInitialState(D3D12_RESOURCE_STATE_PRESENT);
 		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i].Get(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
 	}
@@ -211,8 +223,11 @@ bool Renderer::CreateDSV()
 		&resDesc, 
 		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// initialResState
 		&clearValue, 
-		IID_PPV_ARGS(m_DepthStencilBuffer.GetAddressOf()));
+		__uuidof(ID3D12Resource),
+		(void**)m_DepthStencilBuffer.GetAddressOf());
 	CHECK_CREATE_FAILED(m_DepthStencilBuffer, "m_Device->CreateCommittedResource Create DepthStencil Failed!");
+
+	m_DepthStencilBuffer->SetInitialState(D3D12_RESOURCE_STATE_DEPTH_WRITE);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -273,8 +288,6 @@ bool Renderer::LoadShaders()
 #ifdef TEST_SHADER
 	auto shader = std::make_shared<TestShader>(Shader::GetGID(), 1, "TestShader");
 	m_Shaders.push_back(shader);
-	
-	DebugPrint("asdf");
 	
 	for (auto& sha : m_Shaders) {
 		CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
@@ -365,6 +378,11 @@ void Renderer::SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& 
 	m_MainCommandList->RSSetScissorRects(numOfViewPort, &scissorRect);
 }
 
+void Renderer::ResourceTransition(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES transTo)
+{
+
+}
+
 void Renderer::Render()
 {
 	// pre render
@@ -382,15 +400,9 @@ void Renderer::Render()
 	SetViewportScissorRect();
 
 	// 렌더타겟의 프레젠트를 기다리고
+	
 	// present -> render target 상태로 전이한다
-	D3D12_RESOURCE_BARRIER resourceBarrier = {};
-	resourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	resourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	resourceBarrier.Transition.pResource = m_RenderTargetBuffer[m_CurSwapChainIndex].Get();
-	resourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	resourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	resourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	m_MainCommandList->ResourceBarrier(1, &resourceBarrier);
+	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// 현재 렌더타겟의 cpu핸들을 계산한다
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuDesHandle = m_RtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -409,10 +421,6 @@ void Renderer::Render()
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// 렌더러가 가지고 있는 셰이더를 렌더시킴
-	// 소유임? 소유로 해도 되나? 일단 그렇게 하자 딱히
-
-	// 셰이더를 정렬할까(렌더큐 순서로)? ㄴㄴ 정렬은 이미 되어있다고 가정한다
 
 	// 셰이더에게 CommandList를 넘겨주며 렌더
 	for (auto shader : m_Shaders) {
@@ -423,9 +431,7 @@ void Renderer::Render()
 	// render end
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	resourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	resourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	m_MainCommandList->ResourceBarrier(1, &resourceBarrier);
+	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_PRESENT);
 
 	for (auto& command : m_GraphicsCommandLists)
 		command->Close();
