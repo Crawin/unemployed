@@ -2,6 +2,21 @@
 #include "Application.h"
 #include "Renderer/Renderer.h"
 
+Application::Application()
+{
+}
+
+Application::~Application()
+{
+	// 죽기 전에 살아있는 애들 확인하고 간다
+#if defined(_DEBUG)
+	IDXGIDebug1* debug = NULL;
+	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
+	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+	debug->Release();
+#endif
+}
+
 bool Application::InitWindow()
 {
 	// 윈도우 생성
@@ -38,7 +53,7 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	m_hInst = hInst;
 	m_windowSize = wndSize;
 
-	// windows 생성 및 창 띄우기 한다..
+	// windows 생성 및 창 띄우기 한다
 	CHECK_CREATE_FAILED(InitWindow(), "윈도우 생성 실패");
 
 	// 렌더러를 만든다
