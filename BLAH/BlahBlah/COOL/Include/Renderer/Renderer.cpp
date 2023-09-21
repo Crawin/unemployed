@@ -171,14 +171,16 @@ bool Renderer::CreateRTV()
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptorHandle = m_RtvHeap->GetCPUDescriptorHandleForHeapStart();
 	for (UINT i = 0; i < m_NumSwapChainBuffers; ++i) {
-		m_SwapChain->GetBuffer(
-			i, 
-			__uuidof(ID3D12Resource),
-			(void**)m_RenderTargetBuffer[i].GetAddressOf());
+		ID3D12Resource* tempResource = nullptr;
 
-		CHECK_CREATE_FAILED(m_RenderTargetBuffer[i], "m_SwapChain->GetBuffer Failed!!");
-		m_RenderTargetBuffer[i]->SetInitialState(D3D12_RESOURCE_STATE_PRESENT);
-		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i].Get(), nullptr, rtvDescriptorHandle);
+		m_SwapChain->GetBuffer(
+			i,
+			IID_PPV_ARGS(&tempResource));
+		CHECK_CREATE_FAILED(tempResource, "m_SwapChain->GetBuffer Failed!!");
+		
+		m_RenderTargetBuffer[i] = COOLResourcePtr(new COOLResource(tempResource, D3D12_RESOURCE_STATE_PRESENT));
+
+		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i]->GetResource(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
 	}
 
@@ -191,43 +193,7 @@ bool Renderer::CreateDSV()
 	// 보통 리소스를 디폴트힙에다 만들면
 	// 값을 넣어 복사해주기 위한 업로드힙이 별도로 필요
 	// 근데 얘는 필요없음
-
-	D3D12_RESOURCE_DESC resDesc = {};
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;				// dsv라 tex2D
-	resDesc.Alignment = 0;
-	resDesc.Width = m_ScreenSize.cx;
-	resDesc.Height = m_ScreenSize.cy;
-	resDesc.DepthOrArraySize = 1;										// tex 배열 크기 혹은 tex3D라면 깊이
-	resDesc.MipLevels = 1;
-	resDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
-	resDesc.SampleDesc.Quality = (m_MsaaEnable) ? (m_MsaaQualityLevels - 1) : 0;
-	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-
-	D3D12_HEAP_PROPERTIES heapProperty = {};
-	heapProperty.Type = D3D12_HEAP_TYPE_DEFAULT;						// default heap
-	heapProperty.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	heapProperty.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-	heapProperty.CreationNodeMask = 1;
-	heapProperty.VisibleNodeMask = 1;
-
-	D3D12_CLEAR_VALUE clearValue = {};
-	clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	clearValue.DepthStencil.Depth = 1.0f;
-	clearValue.DepthStencil.Stencil = 0;
-
-	m_Device->CreateCommittedResource(
-		&heapProperty,
-		D3D12_HEAP_FLAG_NONE,				// heapFlags
-		&resDesc, 
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,	// initialResState
-		&clearValue, 
-		__uuidof(ID3D12Resource),
-		(void**)m_DepthStencilBuffer.GetAddressOf());
-	CHECK_CREATE_FAILED(m_DepthStencilBuffer, "m_Device->CreateCommittedResource Create DepthStencil Failed!");
-
-	m_DepthStencilBuffer->SetInitialState(D3D12_RESOURCE_STATE_DEPTH_WRITE);
+	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -235,14 +201,14 @@ bool Renderer::CreateDSV()
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCPUHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
-	m_Device->CreateDepthStencilView(m_DepthStencilBuffer.Get(), &dsvDesc, dsvCPUHandle);
+	m_Device->CreateDepthStencilView(m_DepthStencilBuffer->GetResource(), &dsvDesc, dsvCPUHandle);
 	return true;
 }
 
 bool Renderer::CreateRootSignature()
 {
-	D3D12_ROOT_PARAMETER rootParam = {};
-	D3D12_ROOT_SIGNATURE_DESC rootSignature;
+	//D3D12_ROOT_PARAMETER rootParam = {};
+	//D3D12_ROOT_SIGNATURE_DESC rootSignature;
 
 
 	return false;
@@ -357,6 +323,95 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 	return true;
 }
 
+COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size)
+{
+	ID3D12Resource* temp;
+
+	D3D12_RESOURCE_DESC resDesc = {};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Alignment = 0;
+	resDesc.Width = size.cx;
+	resDesc.Height = size.cy;
+	resDesc.DepthOrArraySize = 1;										// tex 배열 크기 혹은 tex3D라면 깊이
+	resDesc.MipLevels = 1;
+	resDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
+	resDesc.SampleDesc.Quality = (m_MsaaEnable) ? (m_MsaaQualityLevels - 1) : 0;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	D3D12_HEAP_PROPERTIES heapProperty = {};
+	heapProperty.Type = heapType;
+	heapProperty.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapProperty.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	heapProperty.CreationNodeMask = 1;
+	heapProperty.VisibleNodeMask = 1;
+
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	clearValue.DepthStencil.Depth = 1.0f;
+	clearValue.DepthStencil.Stencil = 0;
+
+	m_Device->CreateCommittedResource(
+		&heapProperty,
+		D3D12_HEAP_FLAG_NONE,				// heapFlags
+		&resDesc,
+		resourceState,						// initialResState
+		&clearValue,
+		IID_PPV_ARGS(&temp));
+
+	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType));
+}
+
+COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes)
+{
+	ID3D12Resource* temp;
+
+	D3D12_RESOURCE_DESC resDesc = {};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Alignment = 0;
+	resDesc.Width = bytes;
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;										// tex 배열 크기 혹은 tex3D라면 깊이
+	resDesc.MipLevels = 1;
+	resDesc.Format = DXGI_FORMAT_UNKNOWN;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.SampleDesc.Quality = 0;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	D3D12_HEAP_PROPERTIES heapProperty = {};
+	heapProperty.Type = heapType;
+	heapProperty.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapProperty.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	heapProperty.CreationNodeMask = 1;
+	heapProperty.VisibleNodeMask = 1;
+
+	m_Device->CreateCommittedResource(
+		&heapProperty,
+		D3D12_HEAP_FLAG_NONE,				// heapFlags
+		&resDesc,
+		resourceState,						// initialResState
+		nullptr,
+		IID_PPV_ARGS(&temp));
+
+	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, "buffer"));
+}
+
+void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)
+{
+	// if state is not copy dest
+	auto curDestState = src->GetState();
+	if (curDestState != D3D12_RESOURCE_STATE_COPY_DEST) 
+		dest->TransToState(commandList, D3D12_RESOURCE_STATE_COPY_DEST);
+
+	// do copy
+	//D3D12_SUBRESOURCE_DATA 
+
+	// return to state
+	dest->TransToState(commandList, curDestState);
+}
+
 void Renderer::SetViewportScissorRect()
 {
 	D3D12_VIEWPORT vp;
@@ -376,11 +431,6 @@ void Renderer::SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& 
 {
 	m_MainCommandList->RSSetViewports(numOfViewPort, &viewport);
 	m_MainCommandList->RSSetScissorRects(numOfViewPort, &scissorRect);
-}
-
-void Renderer::ResourceTransition(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES transTo)
-{
-
 }
 
 void Renderer::Render()

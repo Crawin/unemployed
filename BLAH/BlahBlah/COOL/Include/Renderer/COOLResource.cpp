@@ -1,24 +1,23 @@
 #include "../framework.h"
 #include "COOLResource.h"
 
-std::map<COOLResource*, D3D12_RESOURCE_STATES> COOLResource::m_CurStateMap{};
-
-COOLResource::COOLResource()
-	: ID3D12Resource()
+COOLResource::COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType, std::string name) :
+	m_Resource{ resource },
+	m_CurStateMap{ initState },
+	m_HeapType{ heapType },
+	m_Name{ name }
 {
-	m_CurStateMap.emplace(this, D3D12_RESOURCE_STATE_COMMON);
 }
 
 COOLResource::~COOLResource()
 {
-	m_CurStateMap.erase(this);
+	if (m_Resource)
+		m_Resource->Release();
 }
 
 void COOLResource::TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState)
 {
-	auto& curState = m_CurStateMap[this];
-
-	if (newState == curState) {
+	if (newState == m_CurStateMap) {
 		DebugPrint(std::format("ERROR! Same resource state: {}", static_cast<int>(newState)));
 		return;
 	}
@@ -26,12 +25,12 @@ void COOLResource::TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_
 	D3D12_RESOURCE_BARRIER resourceBarrier = {};
 	resourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	resourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	resourceBarrier.Transition.pResource = this;
-	resourceBarrier.Transition.StateBefore = curState;
+	resourceBarrier.Transition.pResource = m_Resource;
+	resourceBarrier.Transition.StateBefore = m_CurStateMap;
 	resourceBarrier.Transition.StateAfter = newState;
 	resourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	cmdLst->ResourceBarrier(1, &resourceBarrier);
 
-	curState = newState;
+	m_CurStateMap = newState;
 	//m_CurrentState = newState;
 }

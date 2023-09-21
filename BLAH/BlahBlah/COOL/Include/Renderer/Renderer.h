@@ -1,15 +1,10 @@
 #pragma once
-#include <vector>
 // dx12 렌더러
 
 class Shader;
 class COOLResource;
 
-
-struct GraphicsCommand {
-	ComPtr<ID3D12CommandAllocator> m_CommandAllocator;
-	ComPtr<ID3D12GraphicsCommandList> m_GraphicsCommandList;
-};
+using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
 class Renderer
 {
@@ -46,12 +41,19 @@ public:
 	// 생성된 할당자,리스트의 인덱스를 outIndex로 돌려줌
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
+	// Device가 하는 일들 단순 묶음
+	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size);
+	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes);
+	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 임시로 없음
+
+	// commandlist가 하는 반복적인 일들 묶음
+	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);						// 리소스 복사는 subresourceData로 하자 이건 보류
+
+	// 아래 두 함수 추후에 다른 클래스로 빼야 함
 	// 윈도우 전체에 설정
 	void SetViewportScissorRect();
 	// 지정해준 사이즈로 설정
 	void SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
-
-	void ResourceTransition(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES transTo);
 
 	// render
 	void Render();
@@ -88,8 +90,8 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
-	ComPtr<COOLResource> m_RenderTargetBuffer[m_NumSwapChainBuffers];
-	ComPtr<COOLResource> m_DepthStencilBuffer;
+	COOLResourcePtr m_RenderTargetBuffer[m_NumSwapChainBuffers];
+	COOLResourcePtr m_DepthStencilBuffer;
 
 	size_t m_MainCommandIdx = 0;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;
