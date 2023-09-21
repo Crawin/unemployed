@@ -54,6 +54,9 @@
     <ClInclude Include="Include\Renderer\COOLResource.h">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Renderer\COOLDevice.h">
+      <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -75,6 +78,9 @@
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </ClCompile>
     <ClCompile Include="Include\Renderer\COOLResource.cpp">
+      <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Renderer\COOLDevice.cpp">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClCompile>
   </ItemGroup>

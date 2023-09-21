@@ -20,6 +20,10 @@
 #include <wrl.h>			// COM
 #include <shellapi.h>
 
+#include <vector>
+#include <map>
+
+
 // DirectX 12 Headers
 #include <d3d12.h>
 #include <dxgi1_4.h>
