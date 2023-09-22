@@ -16,12 +16,12 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	// ���� ��ü���� �Ʒ� �Լ� ȣ������� ����ִ� �����̸� �Ҹ��ڸ� ������ �����鼭 �Ҹ�ȴ�.
-	// Ȯ���ϰ� üũ�ϱ� ���ؼ��� �����ؾ��ұ�?
-	// Renderer ���� Application���� ����
+	// 각종 객체들이 아래 함수 호출까지는 살아있는 상태이며 소멸자를 완전히 나가면서 소멸된다.
+	// 확실하게 체크하기 위해서는 어케해야할까?
+	// Renderer 말고 Application에서 하자
 
 /*
-	// �ױ� ���� ����ִ� �ֵ� Ȯ���ϰ� ����
+	// 죽기 전에 살아있는 애들 확인하고 간다
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
 	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
@@ -38,19 +38,19 @@ bool Renderer::CreateDevice()
 	ComPtr<ID3D12Debug> debugController = nullptr;
 
 	D3D12GetDebugInterface(IID_PPV_ARGS(&debugController));
-	CHECK_CREATE_FAILED(debugController, "debugController ���� ����\n");
+	CHECK_CREATE_FAILED(debugController, "debugController 생성 실패\n");
 
 	debugController->EnableDebugLayer();
 	DXGIFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
 #endif
 
-	// ���丮���� �����Ѵ�.
+	// 팩토리님을 생성한다.
 	CreateDXGIFactory2(DXGIFactoryFlags, IID_PPV_ARGS(m_Factory.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_Factory, " m_Factory ���� ����\n");
+	CHECK_CREATE_FAILED(m_Factory, " m_Factory 생성 실패\n");
 
-	// �⺻ ����ͷ� �����غ���
-	// ������ �𸣰ڴµ� �� ��ǻ��(������)���� ����̽� ������ ���ܰ� �ߴµ� ����? ���ܸ� �߰� ������
-	// ���� �߻�(0x00007FFD140B2BDC, COOL.exe): Microsoft C++ ����: Poco::NotFoundException
+	// 기본 어답터로 생성해본다
+	// 왜인진 모르겠는데 내 컴퓨터(손정원)에선 디바이스 생성에 예외가 뜨는데 왜지? 예외만 뜨고 멀쩡함
+	// 예외 발생(0x00007FFD140B2BDC, COOL.exe): Microsoft C++ 예외: Poco::NotFoundException
 	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(m_Device.GetAddressOf()));
 
 	if (!m_Device) {
@@ -67,13 +67,13 @@ bool Renderer::CreateDevice()
 
 	CHECK_CREATE_FAILED(m_Device, " m_Device ���� ����\n");
 
-	// �� �� �������� ũ�⸦ ���س���
+	// 각 뷰 종류들의 크기를 구해놓음
 	m_CbvSrvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	m_RtvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	m_DsvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	// MSAA ���� ������ üũ�Ѵ�
-	// ��ǻ� dx12�� ������ �����ߴٸ� ũ�� �ʿ�� ���ٰ� ��
+	// MSAA 지원 수준을 체크한다
+	// 사실상 dx12로 생성이 성공했다면 크게 필요는 없다고 함
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msLevel;
 	msLevel.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	msLevel.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -90,36 +90,33 @@ bool Renderer::CreateDevice()
 bool Renderer::CreateFence()
 {
 	m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_Fence.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_Fence, " m_Fence ���� ����\n");
+	CHECK_CREATE_FAILED(m_Fence, " m_Fence 생성 실패\n");
 
 	return true;
 }
 
 bool Renderer::CreateCommandQueueAndList()
 {
-	// CommandQueue�� �־����
-	// CommandQueue�� CommandList�� ��Ƽ� ����
-	// CommandList���ٰ� ������ ��µ� �̶� ������ �Ҵ��� �� CommandAllocator�� �ʿ���
-	// Allocator�� �������� CommandList�� open�� ���·� �� �� ����, �� 1:1 ��Ī
+	// CommandQueue가 있어야함
+	// CommandQueue에 CommandList를 담아서 보냄
+	// CommandList에다가 명령을 담는데 이때 명령을 할당할 때 CommandAllocator가 필요함
+	// Allocator는 여러개의 CommandList를 open한 상태로 쓸 수 없음, 즉 1:1 매칭
 
-	D3D12_COMMAND_QUEUE_DESC queueDesc = {};					// �ʱ�ȭ�� ������
-	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;			// ���̷�Ʈ <- �������� ���� ������
+	D3D12_COMMAND_QUEUE_DESC queueDesc = {};					// 초기화는 해주자
+	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;			// 다이렉트 <- 지피유가 직접 실행함
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;			//
-	
+
 	m_Device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_CommandQueue.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_CommandQueue, "m_CommandQueue ���� ����");
+	CHECK_CREATE_FAILED(m_CommandQueue, "m_CommandQueue 생성 실패");
 
-	CHECK_CREATE_FAILED(CreateCommandAllocatorAndList(m_MainCommandIdx), std::format("idx: {} Ŀ�ǵ帮��Ʈ ���� ����!", m_MainCommandIdx));
-
-	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
-	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
+	CHECK_CREATE_FAILED(CreateCommandAllocatorAndList(m_MainCommandIdx), std::format("idx: {} 커맨드리스트 생성 실패!", m_MainCommandIdx));
 
 	return true;
 }
 
 bool Renderer::CreateSwapChain()
 {
-	// ����۶� ���ñ�� ��¶�� ���ִ°�
+	// 백버퍼랑 뭐시기랑 어쨋든 해주는거
 	m_SwapChain.Reset();
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
@@ -140,7 +137,7 @@ bool Renderer::CreateSwapChain()
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	m_Factory->CreateSwapChain(m_CommandQueue.Get(), &swapChainDesc, (IDXGISwapChain**)m_SwapChain.GetAddressOf());
-	CHECK_CREATE_FAILED(m_SwapChain, "����ü�� ���� ����!");
+	CHECK_CREATE_FAILED(m_SwapChain, "스왑체인 생성 실패!");
 
 	return true;
 }
@@ -154,22 +151,23 @@ bool Renderer::CreateRTVAndDSVDescrHeap()
 	descriptorDesc.NodeMask = 0;
 
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_RtvHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap ���� ����!");
+	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap 생성 실패!");
 
 	descriptorDesc.NumDescriptors = 1;
 	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_DsvHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap ���� ����!");
+	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap 생성 실패!");
 
 	return true;
 }
 
+
 bool Renderer::CreateRTV()
 {
-	// �並 ���������� ���ҽ��� �����ؾ��Ѵ�
-	// �׷��� �̰� ���� ���� �ʿ䰡 ����
-	// ����ü���� ���� ������� ������ �̹� ������
+	// 뷰를 만들으려면 리소스가 존재해야한다
+	// 그러나 이건 따로 만들 필요가 없음
+	// 스왑체인을 통해 만들었기 때문에 이미 존재함
 	// 
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptorHandle = m_RtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -192,10 +190,10 @@ bool Renderer::CreateRTV()
 
 bool Renderer::CreateDSV()
 {
-	// Depth/Stencil�� �츮�� ���ҽ��� ���� ������־����
-	// ���� ���ҽ��� ����Ʈ������ �����
-	// ���� �־� �������ֱ� ���� ���ε����� ������ �ʿ�
-	// �ٵ� ��� �ʿ����
+	// Depth/Stencil은 우리가 리소스를 따로 만들어주어야함
+	// 보통 리소스를 디폴트힙에다 만들면
+	// 값을 넣어 복사해주기 위한 업로드힙이 별도로 필요
+	// 근데 얘는 필요없음
 	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
@@ -210,7 +208,7 @@ bool Renderer::CreateDSV()
 
 bool Renderer::CreateRootSignature()
 {
-	// t0 ��������, �ٸ� �����̽�
+	// t0 
 	// 
 	const int resourceType = 3;
 	D3D12_DESCRIPTOR_RANGE descRange[resourceType] = {};
@@ -221,12 +219,12 @@ bool Renderer::CreateRootSignature()
 		descRange[i].RegisterSpace = i;
 		descRange[i].OffsetInDescriptorsFromTableStart = 0;
 		//descRange[i].Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE;		// D3D12_DESCRIPTOR_RANGE1
-		descRange[i].OffsetInDescriptorsFromTableStart = 0;								// �� �� ����
+		descRange[i].OffsetInDescriptorsFromTableStart = 0;								// 좀 더 알아봐야함
 	}
 
 	const int numParams = ROOT_SIGNATURE_IDX_MAX;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
-	// idx 0: descriptor table ��� ���̴� ���ҽ��� ��ũ�������̺��� �������, ���̴����� ����� �ε����� �Ѱ���
+	// idx 0: descriptor table ...ROOT_SIGNATURE_IDX enum 참고
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;
 	rootParams[0].DescriptorTable.pDescriptorRanges = descRange;
@@ -276,7 +274,6 @@ bool Renderer::CreateRootSignature()
 	rootSignatureDesc.pStaticSamplers = samperDesc;
 	rootSignatureDesc.Flags = rootSignatureFlag;
 
-	// ��Ʈ�ñ״�ó ����
 	ComPtr<ID3DBlob> signatureBlob = nullptr;;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
@@ -318,7 +315,7 @@ bool Renderer::CreateTestRootSignature()
 	rootSignatureDesc.pStaticSamplers = nullptr;
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	// ��Ʈ�ñ״�ó ����
+	// 루트시그니처 생성
 	ComPtr<ID3DBlob> signatureBlob = nullptr;;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
@@ -348,11 +345,11 @@ bool Renderer::CreateResourceDescriptorHeap()
 
 bool Renderer::LoadShaders()
 {
-	// ��� ���̴��� �ε��Ѵ�
-	// �� �͵��� ���Ϸ� �����صд�? 
-	// ���� �ٸ� ���̴� ����, �����彺����Ʈ, �����Ͷ�����������Ʈ, ds ������Ʈ ��� ��� �ٸ��´�
-	// ���̴��� �̸� �ε� �صΰ� �ű⿡ �´� ������Ʈ���� �ִٸ� �����ϴ� �������� ����?
-	// ���α׷� ���� �ε�ÿ��� ���̴��� �����Ѵ� ������ ����
+	// 모든 쉐이더를 로드한다
+	// 쓸 것들을 파일로 저장해둔다? 
+	// 각기 다른 쉐이더 종류, 블렌드스테이트, 레스터라이저스테이트, ds 스테이트 등등 모두 다를태니
+	// 쉐이더는 미리 로드 해두고 거기에 맞는 오브젝트들이 있다면 렌더하는 방향으로 갈까?
+	// 프로그램 최초 로드시에만 쉐이더를 생성한다 나쁘지 않음
 
 
 #ifdef TEST_SHADER
@@ -360,12 +357,12 @@ bool Renderer::LoadShaders()
 	m_Shaders.push_back(shader);
 	
 	for (auto& sha : m_Shaders) {
-		// todo shader���ٰ� ���ҽ��� �Ѱ��༭ �� �˾Ƽ� �߰��ϰ� �Ѵ�
+		// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
 		CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
 	}
 #endif
 
-	// ����ť�� �����Ѵ�
+	// 렌더큐 기준으로 정렬한다
 	std::sort(m_Shaders.begin(), m_Shaders.end());
 
 	return true;
@@ -374,15 +371,15 @@ bool Renderer::LoadShaders()
 
 bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 {
-	// dx12�� �ʱ�ȭ ����
+	// dx12의 초기화 과정
 	// 
-	// ����̽� ����
-	// �潺 ����, ������ ũ�� ���
-	// ��Ƽ���ø� ������ Ȯ��
-	// Ŀ�ǵ帮��Ʈ, ť ����
-	// ����ü�� ����
-	// rtv dsv �� ����
-	// rtv, dsv ����
+	// 디바이스 생성
+	// 펜스 생성, 서술자 크기 얻기
+	// 멀티샘플링 어디까지 확인
+	// 커맨드리스트, 큐 생성
+	// 스왑체인 생성
+	// rtv dsv 힙 생성
+	// rtv, dsv 생성
 
 	m_ScreenSize = wndSize;
 	m_hWnd = hWnd;
@@ -424,7 +421,6 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 		IID_PPV_ARGS(commandlist.GetAddressOf()));
 	CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList ���� ����");
 
-	// Reset�� ȣ�� �ϰ� ������ ��ƾ� �ϴµ�, ���� ���¿��� Reset�� ȣ�� ������
 	commandlist->Close();
 
 	return true;
@@ -439,7 +435,7 @@ COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_
 	resDesc.Alignment = 0;
 	resDesc.Width = size.cx;
 	resDesc.Height = size.cy;
-	resDesc.DepthOrArraySize = 1;										// tex �迭 ũ�� Ȥ�� tex3D��� ����
+	resDesc.DepthOrArraySize = 1;										// 텍스쳐어레이같은건 안쓸 예정 아마도
 	resDesc.MipLevels = 1;
 	resDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
@@ -479,7 +475,7 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 	resDesc.Alignment = 0;
 	resDesc.Width = bytes;
 	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;										// tex �迭 ũ�� Ȥ�� tex3D��� ����
+	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;
 	resDesc.Format = DXGI_FORMAT_UNKNOWN;
 	resDesc.SampleDesc.Count = 1;
@@ -544,7 +540,6 @@ void Renderer::Render()
 {
 	// pre render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// �Ҵ���, ����Ʈ ����
 	for (int i = 0; i < m_CommandAllocators.size(); ++i) {
 		m_CommandAllocators[i]->Reset();
 		m_GraphicsCommandLists[i]->Reset(m_CommandAllocators[i].Get(), nullptr);
@@ -553,10 +548,9 @@ void Renderer::Render()
 	// root signature set
 	m_MainCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
 
-	// ����Ʈ, ������Ʈ ����
 	SetViewportScissorRect();
 
-	// ����Ÿ���� ������Ʈ�� ��ٸ���
+	// present를 기다려야 하지 않을까
 	
 	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -564,20 +558,16 @@ void Renderer::Render()
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuDesHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
 
-	// rtv�� dsv�� �ʱ�ȭ�Ѵ�
 	float clearColor[4] = { 0.3f, 0.9f, 0.3f, 1.0f };
 	m_MainCommandList->ClearRenderTargetView(rtvCpuDesHandle, clearColor, 0, nullptr);
 	m_MainCommandList->ClearDepthStencilView(dsvCpuDesHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-	// ����Ÿ���� om�� ����, MRT�� ����ϰ� �ȴٸ� ���� 1�� �ٲ۴�
 	m_MainCommandList->OMSetRenderTargets(1, &rtvCpuDesHandle, true, &dsvCpuDesHandle);
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// ���̴����� CommandList�� �Ѱ��ָ� ����
 	for (auto shader : m_Shaders) {
-		// ������ �ϰ��ʹٸ�
 		shader->Render(m_MainCommandList);
 	}
 
@@ -589,11 +579,11 @@ void Renderer::Render()
 	for (auto& command : m_GraphicsCommandLists)
 		command->Close();
 
-	// CommandList�� ��Ƽ� CommandQueue�� �ְ� Execute
+	// CommandList CommandQueue Execute
 	ID3D12CommandList* p[] = { m_MainCommandList.Get() };
 	m_CommandQueue->ExecuteCommandLists(_countof(p), p);
 	
-	// GPU �Ϸ���� ���
+	// wait for gpu
 	UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
 	HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
 	if (m_Fence->GetCompletedValue() < fenceValue) {
@@ -601,7 +591,7 @@ void Renderer::Render()
 		WaitForSingleObject(m_FenceEvent, INFINITE);
 	}
 
-	// ����ü���� present
+	// present
 	m_SwapChain->Present(0, 0);
 
 	m_CurSwapChainIndex = m_SwapChain->GetCurrentBackBufferIndex();
