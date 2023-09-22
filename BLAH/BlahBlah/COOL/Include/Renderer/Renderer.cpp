@@ -111,6 +111,9 @@ bool Renderer::CreateCommandQueueAndList()
 
 	CHECK_CREATE_FAILED(CreateCommandAllocatorAndList(m_MainCommandIdx), std::format("idx: {} 커맨드리스트 생성 실패!", m_MainCommandIdx));
 
+	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
+	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
+
 	return true;
 }
 
@@ -207,11 +210,98 @@ bool Renderer::CreateDSV()
 
 bool Renderer::CreateRootSignature()
 {
-	//D3D12_ROOT_PARAMETER rootParam = {};
-	//D3D12_ROOT_SIGNATURE_DESC rootSignature;
+	// t0 레지스터, 다른 스페이스
+	// 
+	const int resourceType = 3;
+	D3D12_DESCRIPTOR_RANGE descRange[resourceType] = {};
+	for (int i = 0; i < resourceType; ++i) {
+		descRange[i].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descRange[i].NumDescriptors = UINT_MAX;
+		descRange[i].BaseShaderRegister = 0;
+		descRange[i].RegisterSpace = i;
+		descRange[i].OffsetInDescriptorsFromTableStart = 0;
+		//descRange[i].Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE;		// D3D12_DESCRIPTOR_RANGE1
+		descRange[i].OffsetInDescriptorsFromTableStart = 0;								// 좀 더 보자
+	}
 
+	const int numParams = ROOT_SIGNATURE_IDX_MAX;
+	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
+	// idx 0: descriptor table 모든 셰이더 리소스를 디스크립터테이블에 집어넣음, 쉐이더에서 사용은 인덱스를 넘겨줌
+	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;
+	rootParams[0].DescriptorTable.pDescriptorRanges = descRange;
+	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	return false;
+	//
+	// sampler desc
+	const int samplers = 2;
+	D3D12_STATIC_SAMPLER_DESC samperDesc[samplers] = {};
+	samperDesc[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samperDesc[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samperDesc[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samperDesc[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samperDesc[0].MipLODBias = 0;
+	samperDesc[0].MaxAnisotropy = 1;
+	samperDesc[0].ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	samperDesc[0].MinLOD = 0;
+	samperDesc[0].MaxLOD = D3D12_FLOAT32_MAX;
+	samperDesc[0].ShaderRegister = 0;
+	samperDesc[0].RegisterSpace = 0;
+	samperDesc[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	samperDesc[1].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samperDesc[1].AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	samperDesc[1].AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	samperDesc[1].AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	samperDesc[1].MipLODBias = 0;
+	samperDesc[1].MaxAnisotropy = 1;
+	samperDesc[1].ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	samperDesc[1].MinLOD = 0;
+	samperDesc[1].MaxLOD = D3D12_FLOAT32_MAX;
+	samperDesc[1].ShaderRegister = 1;
+	samperDesc[1].RegisterSpace = 0;
+	samperDesc[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	//
+	// create root signature
+	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlag =
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT; /* |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS;     */
+
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+	rootSignatureDesc.NumParameters = _countof(rootParams);
+	rootSignatureDesc.pParameters = rootParams;
+	rootSignatureDesc.NumStaticSamplers = _countof(samperDesc);
+	rootSignatureDesc.pStaticSamplers = samperDesc;
+	rootSignatureDesc.Flags = rootSignatureFlag;
+
+	// 루트시그니처 생성
+	ComPtr<ID3DBlob> signatureBlob = nullptr;;
+	ComPtr<ID3DBlob> errorBlob = nullptr;
+	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
+	
+	if (errorBlob) {
+		char* pErrorString = NULL;
+		pErrorString = (char*)errorBlob->GetBufferPointer();
+		TCHAR pstrDebug[256] = { 0 };
+
+		mbstowcs(pstrDebug, pErrorString, 256);
+		//OutputDebugString(pstrDebug);
+
+		DebugPrint(pErrorString);
+	}
+
+	m_Device->CreateRootSignature(
+		0,
+		signatureBlob->GetBufferPointer(),
+		signatureBlob->GetBufferSize(),
+		IID_PPV_ARGS(m_RootSignature.GetAddressOf()));
+
+	CHECK_CREATE_FAILED(m_RootSignature, "CreateRootSignature Failed!!");
+	return true;
+
+	return true;
 }
 
 bool Renderer::CreateTestRootSignature()
@@ -242,6 +332,20 @@ bool Renderer::CreateTestRootSignature()
 	return true;
 }
 
+bool Renderer::CreateResourceDescriptorHeap()
+{
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
+	descriptorDesc.NumDescriptors = m_NumSwapChainBuffers;
+	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	descriptorDesc.NodeMask = 0;
+	
+	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
+	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap 생성 실패!");
+
+	return true;
+}
+
 bool Renderer::LoadShaders()
 {
 	// 모든 쉐이더를 로드한다
@@ -256,12 +360,15 @@ bool Renderer::LoadShaders()
 	m_Shaders.push_back(shader);
 	
 	for (auto& sha : m_Shaders) {
+		// todo shader에다가 리소스힙 넘겨줘서 지 알아서 추가하게 한다
 		CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
 	}
-	return true;
 #endif
 
+	// 렌더큐로 정렬한다
+	std::sort(m_Shaders.begin(), m_Shaders.end());
 
+	return true;
 	return false;
 }
 
@@ -288,11 +395,11 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 	CHECK_CREATE_FAILED(CreateRTV(), "CreateRTV Failed!!");
 	CHECK_CREATE_FAILED(CreateDSV(), "CreateDSV Failed!!");
 
-	CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
+	// scene??????
+	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
+	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
+	CHECK_CREATE_FAILED(CreateResourceDescriptorHeap(), "CreateResourceDescriptorHeap");
 	CHECK_CREATE_FAILED(LoadShaders(), "LoadShaders Failed!!");
-
-	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
-	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
 
 	return true;
 }
@@ -451,15 +558,11 @@ void Renderer::Render()
 
 	// 렌더타겟의 프레젠트를 기다리고
 	
-	// present -> render target 상태로 전이한다
 	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	// 현재 렌더타겟의 cpu핸들을 계산한다
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvCpuDesHandle = m_RtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
-
-	// ds 힙의 cpu핸들을 찾음
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuDesHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
 
 	// rtv와 dsv를 초기화한다
 	float clearColor[4] = { 0.3f, 0.9f, 0.3f, 1.0f };

@@ -33,6 +33,8 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 
+#include "DDSTextureLoader12.h"
+
 #include <Mmsystem.h>
 
 // debug only
@@ -50,6 +52,7 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib, "dxguid.lib")
 
 
+// юс╫ц
 enum MY_ROOTSIGN_PARAM {
 	CAMERA_DATA = 0,						// cbv (CamPos, farplane, v Mat, p Mat, vp Mat)
 	LIGHTS = 1,								// cbv (struct LIGHT)

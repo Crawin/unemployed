@@ -1,6 +1,5 @@
 #pragma once
-#include <vector>
-// material을 가지고 있는건 자명한 사실
+
 class Material;
 
 enum class SHADER_TYPE {
@@ -15,15 +14,20 @@ class Shader
 {
 public:
 	Shader() = delete;
-	Shader(int id, int queue, std::string name);
+	Shader(int id, int queue, std::string_view name);
 	virtual ~Shader();
 
 	static int GetGID() { return m_GID++; }
-
 	std::string_view GetName() const { return m_Name; }
-	void ChangeRenderQueue(int n) { m_RenderQueue = n; }
 
-	virtual bool InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature) = 0;
+
+	void ChangeRenderQueue(int n) { m_RenderQueue = n; }
+	void EnableShader() { m_Enable = true; }
+	void DisableShader() { m_Enable = false; }
+
+	virtual bool InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap = nullptr) = 0;
+
+	std::strong_ordering operator<=>(const Shader& other) { return m_RenderQueue <=> other.m_RenderQueue; }
 
 protected:
 	// PSO 생성에 필요한 함수, 변수들
@@ -70,6 +74,8 @@ private:
 	int m_Id = 0;
 	int m_RenderQueue = 0;
 	std::string m_Name = "Shader";
+
+	bool m_Enable = true;
 
 	ComPtr<ID3D12PipelineState> m_PipelineState;
 	std::vector<std::shared_ptr<Material>> m_Materials;

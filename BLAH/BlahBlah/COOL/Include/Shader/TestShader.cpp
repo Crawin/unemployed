@@ -1,7 +1,7 @@
 #include "../framework.h"
 #include "TestShader.h"
 
-TestShader::TestShader(int id, int queue, const std::string& name) :
+TestShader::TestShader(int id, int queue, std::string_view name) :
 	Shader(id, queue, name)
 {
 	m_PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -11,7 +11,7 @@ TestShader::~TestShader()
 {
 }
 
-bool TestShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature)
+bool TestShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap)
 {
 	// base path + shader name -> shader property
 	// 
@@ -28,12 +28,12 @@ void TestShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 D3D12_SHADER_BYTECODE TestShader::CreateVertexShader()
 {
-	return CompileShaderCode("TestShader.hlsl", SHADER_TYPE::vs_5_1, m_VertxShaderBlob);
+	return CompileShaderCode("TestRootSignature.hlsl", SHADER_TYPE::vs_5_1, m_VertxShaderBlob);
 }
 
 D3D12_SHADER_BYTECODE TestShader::CreatePixelShader()
 {
-	return CompileShaderCode("TestShader.hlsl", SHADER_TYPE::ps_5_1, m_PixelShaderBlob);
+	return CompileShaderCode("TestRootSignature.hlsl", SHADER_TYPE::ps_5_1, m_PixelShaderBlob);
 }
 
 D3D12_INPUT_LAYOUT_DESC TestShader::GetInputLayout()

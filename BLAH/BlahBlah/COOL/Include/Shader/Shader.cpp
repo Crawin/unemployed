@@ -1,11 +1,12 @@
 #include "../framework.h"
 #include "Shader.h"
+#include "../Material.h"
 
 #define FILE_PATH "Include/Shader/HLSL/"
 
 int Shader::m_GID = 0;
 
-Shader::Shader(int id, int queue, std::string name) :
+Shader::Shader(int id, int queue, std::string_view name) :
 	m_Id{ id },
 	m_RenderQueue{ queue },
 	m_Name{ name }
@@ -194,11 +195,15 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 
 void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
+	if (false == m_Enable)
+		return;
+
 	// set pso
 	commandList->IASetPrimitiveTopology(m_PrimitiveTopology);
 	commandList->SetPipelineState(m_PipelineState.Get());
 
 	for (auto mat : m_Materials) {
+		mat->SetDatas(commandList, 1);
 		// mat->SetDatas(commandList);
 		// auto objects = Mapper->Get(mat);
 		// for (auto obj : objects) 

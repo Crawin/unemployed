@@ -6,6 +6,14 @@ class COOLResource;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
+enum ROOT_SIGNATURE_IDX {
+	DESCRIPTOR_HEAP = 0,
+	DESCRIPTOR_IDX_CBV,
+	CAMERA_DATA_CBV,
+	SHADER_DATAS_CBV,
+	ROOT_SIGNATURE_IDX_MAX
+};
+
 class Renderer
 {
 public:
@@ -33,6 +41,7 @@ private:
 
 	bool CreateRootSignature();
 	bool CreateTestRootSignature();
+	bool CreateResourceDescriptorHeap();
 	bool LoadShaders();
 
 public:
@@ -41,15 +50,18 @@ public:
 	// 생성된 할당자,리스트의 인덱스를 outIndex로 돌려줌
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
-	// Device가 하는 일들 단순 묶음
+	// -------------------  Device가 하는 일들 단순 묶음 -------------------
+
 	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size);
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes);
 	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 임시로 없음
 
-	// commandlist가 하는 반복적인 일들 묶음
-	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);						// 리소스 복사는 subresourceData로 하자 이건 보류
+	// ------------------- commandlist가 하는 반복적인 일들 묶음 -------------------
+	 
+	// 리소스 복사는 subresourceData로 하자 이건 보류
+	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
-	// 아래 두 함수 추후에 다른 클래스로 빼야 함
+	// 아래 두 함수 추후에 다른 클래스로 빼야 함 (Camera같은 곳으로)
 	// 윈도우 전체에 설정
 	void SetViewportScissorRect();
 	// 지정해준 사이즈로 설정
@@ -108,5 +120,8 @@ private:
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
+
+	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
+
 };
 

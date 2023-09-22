@@ -28,6 +28,9 @@
     <Filter Include="소스 파일\Renderer\DX12Wrapper">
       <UniqueIdentifier>{1cef2ef1-2570-4108-95ef-13dff4c98ea7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Renderer\Material">
+      <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -57,6 +60,18 @@
     <ClInclude Include="Include\Renderer\COOLDevice.h">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="Include\DDSTextureLoader12.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\d3dx12.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Shader\SkyboxShader.h">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Material.h">
+      <Filter>소스 파일\Renderer\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -83,10 +98,24 @@
     <ClCompile Include="Include\Renderer\COOLDevice.cpp">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="Include\DDSTextureLoader12.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Shader\SkyboxShader.cpp">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Material.cpp">
+      <Filter>소스 파일\Renderer\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt">
       <Filter>리소스 파일</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Include\Shader\HLSL\TestRootSignature.hlsl">
+      <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
