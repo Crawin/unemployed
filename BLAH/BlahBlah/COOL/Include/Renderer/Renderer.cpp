@@ -16,12 +16,12 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	// °¢Á¾ °´Ã¼µéÀÌ ¾Æ·¡ ÇÔ¼ö È£Ãâ±îÁö´Â »ì¾ÆÀÖ´Â »óÅÂÀÌ¸ç ¼Ò¸êÀÚ¸¦ ¿ÏÀüÈ÷ ³ª°¡¸é¼­ ¼Ò¸êµÈ´Ù.
-	// È®½ÇÇÏ°Ô Ã¼Å©ÇÏ±â À§ÇØ¼­´Â ¾îÄÉÇØ¾ßÇÒ±î?
-	// Renderer ¸»°í Application¿¡¼­ ÇÏÀÚ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½Ô¼ï¿½ È£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ò¸ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½é¼­ ï¿½Ò¸ï¿½È´ï¿½.
+	// È®ï¿½ï¿½ï¿½Ï°ï¿½ Ã¼Å©ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ò±ï¿½?
+	// Renderer ï¿½ï¿½ï¿½ï¿½ Applicationï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 /*
-	// Á×±â Àü¿¡ »ì¾ÆÀÖ´Â ¾Öµé È®ÀÎÇÏ°í °£´Ù
+	// ï¿½×±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Öµï¿½ È®ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
 	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
@@ -38,23 +38,23 @@ bool Renderer::CreateDevice()
 	ComPtr<ID3D12Debug> debugController = nullptr;
 
 	D3D12GetDebugInterface(IID_PPV_ARGS(&debugController));
-	CHECK_CREATE_FAILED(debugController, "debugController »ý¼º ½ÇÆÐ\n");
+	CHECK_CREATE_FAILED(debugController, "debugController ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n");
 
 	debugController->EnableDebugLayer();
 	DXGIFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
 #endif
 
-	// ÆÑÅä¸®´ÔÀ» »ý¼ºÇÑ´Ù.
+	// ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
 	CreateDXGIFactory2(DXGIFactoryFlags, IID_PPV_ARGS(m_Factory.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_Factory, " m_Factory »ý¼º ½ÇÆÐ\n");
+	CHECK_CREATE_FAILED(m_Factory, " m_Factory ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n");
 
-	// ±âº» ¾î´äÅÍ·Î »ý¼ºÇØº»´Ù
-	// ¿ÖÀÎÁø ¸ð¸£°Ú´Âµ¥ ³» ÄÄÇ»ÅÍ(¼ÕÁ¤¿ø)¿¡¼± µð¹ÙÀÌ½º »ý¼º¿¡ ¿¹¿Ü°¡ ¶ß´Âµ¥ ¿ÖÁö? ¿¹¿Ü¸¸ ¶ß°í ¸ÖÂÄÇÔ
-	// ¿¹¿Ü ¹ß»ý(0x00007FFD140B2BDC, COOL.exe): Microsoft C++ ¿¹¿Ü: Poco::NotFoundException
+	// ï¿½âº» ï¿½ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ð¸£°Ú´Âµï¿½ ï¿½ï¿½ ï¿½ï¿½Ç»ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ü°ï¿½ ï¿½ß´Âµï¿½ ï¿½ï¿½ï¿½ï¿½? ï¿½ï¿½ï¿½Ü¸ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½(0x00007FFD140B2BDC, COOL.exe): Microsoft C++ ï¿½ï¿½ï¿½ï¿½: Poco::NotFoundException
 	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(m_Device.GetAddressOf()));
 
 	if (!m_Device) {
-		// ½ÇÆÐÇß´Ù¸é ÆÑÅä¸®´ÔÀÌ ¾î´äÅÍ¸¦ Ã£¾ÆÁØ´Ù.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ï¿½Ø´ï¿½.
 		ComPtr<IDXGIAdapter1> pAdapter = nullptr;
 		for (UINT i = 0; DXGI_ERROR_NOT_FOUND != m_Factory->EnumAdapters1(i, &pAdapter); i++) {
 			DXGI_ADAPTER_DESC1 adapterDesc;
@@ -65,15 +65,15 @@ bool Renderer::CreateDevice()
 		D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(m_Device.GetAddressOf()));
 	}
 
-	CHECK_CREATE_FAILED(m_Device, " m_Device »ý¼º ½ÇÆÐ\n");
+	CHECK_CREATE_FAILED(m_Device, " m_Device ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n");
 
-	// °¢ ºä Á¾·ùµéÀÇ Å©±â¸¦ ±¸ÇØ³õÀ½
+	// ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½
 	m_CbvSrvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	m_RtvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	m_DsvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
-	// MSAA Áö¿ø ¼öÁØÀ» Ã¼Å©ÇÑ´Ù
-	// »ç½Ç»ó dx12·Î »ý¼ºÀÌ ¼º°øÇß´Ù¸é Å©°Ô ÇÊ¿ä´Â ¾ø´Ù°í ÇÔ
+	// MSAA ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©ï¿½Ñ´ï¿½
+	// ï¿½ï¿½Ç»ï¿½ dx12ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ Å©ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msLevel;
 	msLevel.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	msLevel.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -90,26 +90,26 @@ bool Renderer::CreateDevice()
 bool Renderer::CreateFence()
 {
 	m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_Fence.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_Fence, " m_Fence »ý¼º ½ÇÆÐ\n");
+	CHECK_CREATE_FAILED(m_Fence, " m_Fence ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½\n");
 
 	return true;
 }
 
 bool Renderer::CreateCommandQueueAndList()
 {
-	// CommandQueue°¡ ÀÖ¾î¾ßÇÔ
-	// CommandQueue¿¡ CommandList¸¦ ´ã¾Æ¼­ º¸³¿
-	// CommandList¿¡´Ù°¡ ¸í·ÉÀ» ´ã´Âµ¥ ÀÌ¶§ ¸í·ÉÀ» ÇÒ´çÇÒ ¶§ CommandAllocator°¡ ÇÊ¿äÇÔ
-	// Allocator´Â ¿©·¯°³ÀÇ CommandList¸¦ openÇÑ »óÅÂ·Î ¾µ ¼ö ¾øÀ½, Áï 1:1 ¸ÅÄª
+	// CommandQueueï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½
+	// CommandQueueï¿½ï¿½ CommandListï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// CommandListï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Âµï¿½ ï¿½Ì¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½ ï¿½ï¿½ CommandAllocatorï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½
+	// Allocatorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ CommandListï¿½ï¿½ openï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ 1:1 ï¿½ï¿½Äª
 
-	D3D12_COMMAND_QUEUE_DESC queueDesc = {};					// ÃÊ±âÈ­´Â ÇØÁÖÀÚ
-	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;			// ´ÙÀÌ·ºÆ® <- ÁöÇÇÀ¯°¡ Á÷Á¢ ½ÇÇàÇÔ
+	D3D12_COMMAND_QUEUE_DESC queueDesc = {};					// ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;			// ï¿½ï¿½ï¿½Ì·ï¿½Æ® <- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;			//
 	
 	m_Device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(m_CommandQueue.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_CommandQueue, "m_CommandQueue »ý¼º ½ÇÆÐ");
+	CHECK_CREATE_FAILED(m_CommandQueue, "m_CommandQueue ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 
-	CHECK_CREATE_FAILED(CreateCommandAllocatorAndList(m_MainCommandIdx), std::format("idx: {} Ä¿¸Çµå¸®½ºÆ® »ý¼º ½ÇÆÐ!", m_MainCommandIdx));
+	CHECK_CREATE_FAILED(CreateCommandAllocatorAndList(m_MainCommandIdx), std::format("idx: {} Ä¿ï¿½Çµå¸®ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!", m_MainCommandIdx));
 
 	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
 	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
@@ -119,7 +119,7 @@ bool Renderer::CreateCommandQueueAndList()
 
 bool Renderer::CreateSwapChain()
 {
-	// ¹é¹öÆÛ¶û ¹¹½Ã±â¶û ¾îÂ¶µç ÇØÁÖ´Â°Å
+	// ï¿½ï¿½ï¿½ï¿½Û¶ï¿½ ï¿½ï¿½ï¿½Ã±ï¿½ï¿½ ï¿½ï¿½Â¶ï¿½ï¿½ ï¿½ï¿½ï¿½Ö´Â°ï¿½
 	m_SwapChain.Reset();
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
@@ -140,7 +140,7 @@ bool Renderer::CreateSwapChain()
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	m_Factory->CreateSwapChain(m_CommandQueue.Get(), &swapChainDesc, (IDXGISwapChain**)m_SwapChain.GetAddressOf());
-	CHECK_CREATE_FAILED(m_SwapChain, "½º¿ÒÃ¼ÀÎ »ý¼º ½ÇÆÐ!");
+	CHECK_CREATE_FAILED(m_SwapChain, "ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 
 	return true;
 }
@@ -154,22 +154,22 @@ bool Renderer::CreateRTVAndDSVDescrHeap()
 	descriptorDesc.NodeMask = 0;
 
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_RtvHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap »ý¼º ½ÇÆÐ!");
+	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 
 	descriptorDesc.NumDescriptors = 1;
 	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_DsvHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap »ý¼º ½ÇÆÐ!");
+	CHECK_CREATE_FAILED(m_RtvHeap, "m_RtvHeap ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 
 	return true;
 }
 
 bool Renderer::CreateRTV()
 {
-	// ºä¸¦ ¸¸µéÀ¸·Á¸é ¸®¼Ò½º°¡ Á¸ÀçÇØ¾ßÇÑ´Ù
-	// ±×·¯³ª ÀÌ°Ç µû·Î ¸¸µé ÇÊ¿ä°¡ ¾øÀ½
-	// ½º¿ÒÃ¼ÀÎÀ» ÅëÇØ ¸¸µé¾ú±â ¶§¹®¿¡ ÀÌ¹Ì Á¸ÀçÇÔ
+	// ï¿½ä¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ñ´ï¿½
+	// ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ä°¡ ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	// 
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvDescriptorHandle = m_RtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -192,10 +192,10 @@ bool Renderer::CreateRTV()
 
 bool Renderer::CreateDSV()
 {
-	// Depth/StencilÀº ¿ì¸®°¡ ¸®¼Ò½º¸¦ µû·Î ¸¸µé¾îÁÖ¾î¾ßÇÔ
-	// º¸Åë ¸®¼Ò½º¸¦ µðÆúÆ®Èü¿¡´Ù ¸¸µé¸é
-	// °ªÀ» ³Ö¾î º¹»çÇØÁÖ±â À§ÇÑ ¾÷·ÎµåÈüÀÌ º°µµ·Î ÇÊ¿ä
-	// ±Ùµ¥ ¾ê´Â ÇÊ¿ä¾øÀ½
+	// Depth/Stencilï¿½ï¿½ ï¿½ì¸®ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+	// ï¿½Ùµï¿½ ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½
 	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize);
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
@@ -210,7 +210,7 @@ bool Renderer::CreateDSV()
 
 bool Renderer::CreateRootSignature()
 {
-	// t0 ·¹Áö½ºÅÍ, ´Ù¸¥ ½ºÆäÀÌ½º
+	// t0 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½
 	// 
 	const int resourceType = 3;
 	D3D12_DESCRIPTOR_RANGE descRange[resourceType] = {};
@@ -221,12 +221,12 @@ bool Renderer::CreateRootSignature()
 		descRange[i].RegisterSpace = i;
 		descRange[i].OffsetInDescriptorsFromTableStart = 0;
 		//descRange[i].Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE;		// D3D12_DESCRIPTOR_RANGE1
-		descRange[i].OffsetInDescriptorsFromTableStart = 0;								// Á» ´õ º¸ÀÚ
+		descRange[i].OffsetInDescriptorsFromTableStart = 0;								// ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 
 	const int numParams = ROOT_SIGNATURE_IDX_MAX;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
-	// idx 0: descriptor table ¸ðµç ¼ÎÀÌ´õ ¸®¼Ò½º¸¦ µð½ºÅ©¸³ÅÍÅ×ÀÌºí¿¡ Áý¾î³ÖÀ½, ½¦ÀÌ´õ¿¡¼­ »ç¿ëÀº ÀÎµ¦½º¸¦ ³Ñ°ÜÁÜ
+	// idx 0: descriptor table ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½ï¿½
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;
 	rootParams[0].DescriptorTable.pDescriptorRanges = descRange;
@@ -276,7 +276,7 @@ bool Renderer::CreateRootSignature()
 	rootSignatureDesc.pStaticSamplers = samperDesc;
 	rootSignatureDesc.Flags = rootSignatureFlag;
 
-	// ·çÆ®½Ã±×´ÏÃ³ »ý¼º
+	// ï¿½ï¿½Æ®ï¿½Ã±×´ï¿½Ã³ ï¿½ï¿½ï¿½ï¿½
 	ComPtr<ID3DBlob> signatureBlob = nullptr;;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
@@ -318,7 +318,7 @@ bool Renderer::CreateTestRootSignature()
 	rootSignatureDesc.pStaticSamplers = nullptr;
 	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-	// ·çÆ®½Ã±×´ÏÃ³ »ý¼º
+	// ï¿½ï¿½Æ®ï¿½Ã±×´ï¿½Ã³ ï¿½ï¿½ï¿½ï¿½
 	ComPtr<ID3DBlob> signatureBlob = nullptr;;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
 	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
@@ -341,18 +341,18 @@ bool Renderer::CreateResourceDescriptorHeap()
 	descriptorDesc.NodeMask = 0;
 	
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap »ý¼º ½ÇÆÐ!");
+	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
 
 	return true;
 }
 
 bool Renderer::LoadShaders()
 {
-	// ¸ðµç ½¦ÀÌ´õ¸¦ ·ÎµåÇÑ´Ù
-	// ¾µ °ÍµéÀ» ÆÄÀÏ·Î ÀúÀåÇØµÐ´Ù? 
-	// °¢±â ´Ù¸¥ ½¦ÀÌ´õ Á¾·ù, ºí·»µå½ºÅ×ÀÌÆ®, ·¹½ºÅÍ¶óÀÌÀú½ºÅ×ÀÌÆ®, ds ½ºÅ×ÀÌÆ® µîµî ¸ðµÎ ´Ù¸¦ÅÂ´Ï
-	// ½¦ÀÌ´õ´Â ¹Ì¸® ·Îµå ÇØµÎ°í °Å±â¿¡ ¸Â´Â ¿ÀºêÁ§Æ®µéÀÌ ÀÖ´Ù¸é ·»´õÇÏ´Â ¹æÇâÀ¸·Î °¥±î?
-	// ÇÁ·Î±×·¥ ÃÖÃÊ ·Îµå½Ã¿¡¸¸ ½¦ÀÌ´õ¸¦ »ý¼ºÇÑ´Ù ³ª»ÚÁö ¾ÊÀ½
+	// ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½Ñ´ï¿½
+	// ï¿½ï¿½ ï¿½Íµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ØµÐ´ï¿½? 
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½å½ºï¿½ï¿½ï¿½ï¿½Æ®, ï¿½ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®, ds ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½Â´ï¿½
+	// ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ ï¿½Îµï¿½ ï¿½ØµÎ°ï¿½ ï¿½Å±â¿¡ ï¿½Â´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½?
+	// ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½Ã¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 
 #ifdef TEST_SHADER
@@ -360,12 +360,12 @@ bool Renderer::LoadShaders()
 	m_Shaders.push_back(shader);
 	
 	for (auto& sha : m_Shaders) {
-		// todo shader¿¡´Ù°¡ ¸®¼Ò½ºÈü ³Ñ°ÜÁà¼­ Áö ¾Ë¾Æ¼­ Ãß°¡ÇÏ°Ô ÇÑ´Ù
+		// todo shaderï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½à¼­ ï¿½ï¿½ ï¿½Ë¾Æ¼ï¿½ ï¿½ß°ï¿½ï¿½Ï°ï¿½ ï¿½Ñ´ï¿½
 		CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
 	}
 #endif
 
-	// ·»´õÅ¥·Î Á¤·ÄÇÑ´Ù
+	// ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½
 	std::sort(m_Shaders.begin(), m_Shaders.end());
 
 	return true;
@@ -374,15 +374,15 @@ bool Renderer::LoadShaders()
 
 bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 {
-	// dx12ÀÇ ÃÊ±âÈ­ °úÁ¤
+	// dx12ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½
 	// 
-	// µð¹ÙÀÌ½º »ý¼º
-	// Ææ½º »ý¼º, ¼­¼úÀÚ Å©±â ¾ò±â
-	// ¸ÖÆ¼»ùÇÃ¸µ ¾îµð±îÁö È®ÀÎ
-	// Ä¿¸Çµå¸®½ºÆ®, Å¥ »ý¼º
-	// ½º¿ÒÃ¼ÀÎ »ý¼º
-	// rtv dsv Èü »ý¼º
-	// rtv, dsv »ý¼º
+	// ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// ï¿½æ½º ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½
+	// ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
+	// Ä¿ï¿½Çµå¸®ï¿½ï¿½Æ®, Å¥ ï¿½ï¿½ï¿½ï¿½
+	// ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// rtv dsv ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// rtv, dsv ï¿½ï¿½ï¿½ï¿½
 
 	m_ScreenSize = wndSize;
 	m_hWnd = hWnd;
@@ -414,7 +414,7 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 	m_Device->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(allocator.GetAddressOf()));
-	CHECK_CREATE_FAILED(allocator, "m_CommandAllocator »ý¼º ½ÇÆÐ");
+	CHECK_CREATE_FAILED(allocator, "m_CommandAllocator ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 
 	m_Device->CreateCommandList(
 		0,
@@ -422,9 +422,9 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 		allocator.Get(),
 		nullptr,
 		IID_PPV_ARGS(commandlist.GetAddressOf()));
-	CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList »ý¼º ½ÇÆÐ");
+	CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 
-	// ResetÀ» È£Ãâ ÇÏ°í ¸í·ÉÀ» ´ã¾Æ¾ß ÇÏ´Âµ¥, ´ÝÈù »óÅÂ¿©¾ß ResetÀ» È£Ãâ °¡´ÉÇÔ
+	// Resetï¿½ï¿½ È£ï¿½ï¿½ ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¾ï¿½ ï¿½Ï´Âµï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ Resetï¿½ï¿½ È£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	commandlist->Close();
 
 	return true;
@@ -439,7 +439,7 @@ COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_
 	resDesc.Alignment = 0;
 	resDesc.Width = size.cx;
 	resDesc.Height = size.cy;
-	resDesc.DepthOrArraySize = 1;										// tex ¹è¿­ Å©±â È¤Àº tex3D¶ó¸é ±íÀÌ
+	resDesc.DepthOrArraySize = 1;										// tex ï¿½è¿­ Å©ï¿½ï¿½ È¤ï¿½ï¿½ tex3Dï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	resDesc.MipLevels = 1;
 	resDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
@@ -479,7 +479,7 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 	resDesc.Alignment = 0;
 	resDesc.Width = bytes;
 	resDesc.Height = 1;
-	resDesc.DepthOrArraySize = 1;										// tex ¹è¿­ Å©±â È¤Àº tex3D¶ó¸é ±íÀÌ
+	resDesc.DepthOrArraySize = 1;										// tex ï¿½è¿­ Å©ï¿½ï¿½ È¤ï¿½ï¿½ tex3Dï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	resDesc.MipLevels = 1;
 	resDesc.Format = DXGI_FORMAT_UNKNOWN;
 	resDesc.SampleDesc.Count = 1;
@@ -544,7 +544,7 @@ void Renderer::Render()
 {
 	// pre render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// ÇÒ´çÀÚ, ¸®½ºÆ® ¸®¼Â
+	// ï¿½Ò´ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < m_CommandAllocators.size(); ++i) {
 		m_CommandAllocators[i]->Reset();
 		m_GraphicsCommandLists[i]->Reset(m_CommandAllocators[i].Get(), nullptr);
@@ -553,10 +553,10 @@ void Renderer::Render()
 	// root signature set
 	m_MainCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
 
-	// ºäÆ÷Æ®, ½ÃÀú·ºÆ® ¼¼ÆÃ
+	// ï¿½ï¿½ï¿½ï¿½Æ®, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 	SetViewportScissorRect();
 
-	// ·»´õÅ¸°ÙÀÇ ÇÁ·¹Á¨Æ®¸¦ ±â´Ù¸®°í
+	// ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½
 	
 	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -564,20 +564,20 @@ void Renderer::Render()
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuDesHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
 
-	// rtv¿Í dsv¸¦ ÃÊ±âÈ­ÇÑ´Ù
+	// rtvï¿½ï¿½ dsvï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ñ´ï¿½
 	float clearColor[4] = { 0.3f, 0.9f, 0.3f, 1.0f };
 	m_MainCommandList->ClearRenderTargetView(rtvCpuDesHandle, clearColor, 0, nullptr);
 	m_MainCommandList->ClearDepthStencilView(dsvCpuDesHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-	// ·»´õÅ¸°ÙÀ» om¿¡ ¿¬°á, MRT¸¦ »ç¿ëÇÏ°Ô µÈ´Ù¸é ¿©±â 1À» ¹Ù²Û´Ù
+	// ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ omï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, MRTï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½È´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½Ù²Û´ï¿½
 	m_MainCommandList->OMSetRenderTargets(1, &rtvCpuDesHandle, true, &dsvCpuDesHandle);
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// ¼ÎÀÌ´õ¿¡°Ô CommandList¸¦ ³Ñ°ÜÁÖ¸ç ·»´õ
+	// ï¿½ï¿½ï¿½Ì´ï¿½ï¿½ï¿½ï¿½ï¿½ CommandListï¿½ï¿½ ï¿½Ñ°ï¿½ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 	for (auto shader : m_Shaders) {
-		// ¹º°¡¸¦ ÇÏ°í½Í´Ù¸é
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ï¿½Í´Ù¸ï¿½
 		shader->Render(m_MainCommandList);
 	}
 
@@ -589,11 +589,11 @@ void Renderer::Render()
 	for (auto& command : m_GraphicsCommandLists)
 		command->Close();
 
-	// CommandList¸¦ ¸ð¾Æ¼­ CommandQueue¿¡ ³Ö°í Execute
+	// CommandListï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ CommandQueueï¿½ï¿½ ï¿½Ö°ï¿½ Execute
 	ID3D12CommandList* p[] = { m_MainCommandList.Get() };
 	m_CommandQueue->ExecuteCommandLists(_countof(p), p);
 	
-	// GPU ¿Ï·á±îÁö ´ë±â
+	// GPU ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
 	HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
 	if (m_Fence->GetCompletedValue() < fenceValue) {
@@ -601,7 +601,7 @@ void Renderer::Render()
 		WaitForSingleObject(m_FenceEvent, INFINITE);
 	}
 
-	// ½º¿ÒÃ¼ÀÎÀ» present
+	// ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ present
 	m_SwapChain->Present(0, 0);
 
 	m_CurSwapChainIndex = m_SwapChain->GetCurrentBackBufferIndex();

@@ -1,5 +1,5 @@
 #pragma once
-// dx12 ·»´õ·¯
+// dx12 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 class Shader;
 class COOLResource;
@@ -47,35 +47,35 @@ private:
 public:
 	bool Init(const SIZE& wndSize, HWND hWnd);
 
-	// »ý¼ºµÈ ÇÒ´çÀÚ,¸®½ºÆ®ÀÇ ÀÎµ¦½º¸¦ outIndex·Î µ¹·ÁÁÜ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ outIndexï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
-	// -------------------  Device°¡ ÇÏ´Â ÀÏµé ´Ü¼ø ¹­À½ -------------------
+	// -------------------  Deviceï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½Ïµï¿½ ï¿½Ü¼ï¿½ ï¿½ï¿½ï¿½ï¿½ -------------------
 
 	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size);
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes);
-	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// ÀÓ½Ã·Î ¾øÀ½
+	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// ï¿½Ó½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	// ------------------- commandlist°¡ ÇÏ´Â ¹Ýº¹ÀûÀÎ ÀÏµé ¹­À½ -------------------
+	// ------------------- commandlistï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ïµï¿½ ï¿½ï¿½ï¿½ï¿½ -------------------
 	 
-	// ¸®¼Ò½º º¹»ç´Â subresourceData·Î ÇÏÀÚ ÀÌ°Ç º¸·ù
+	// ï¿½ï¿½ï¿½Ò½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ subresourceDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
-	// ¾Æ·¡ µÎ ÇÔ¼ö ÃßÈÄ¿¡ ´Ù¸¥ Å¬·¡½º·Î »©¾ß ÇÔ (Camera°°Àº °÷À¸·Î)
-	// À©µµ¿ì ÀüÃ¼¿¡ ¼³Á¤
+	// ï¿½Æ·ï¿½ ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ ï¿½Ù¸ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ (Cameraï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void SetViewportScissorRect();
-	// ÁöÁ¤ÇØÁØ »çÀÌÁî·Î ¼³Á¤
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	void SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
 
 	// render
 	void Render();
 
 private:
-	// ½º¿ÒÃ¼ÀÎ °ü·Ã
+	// ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	static const UINT m_NumSwapChainBuffers = 2;
 	UINT m_CurSwapChainIndex = 0;
 
-	// À©µµ¿ì
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	HWND m_hWnd = 0;
 	SIZE m_ScreenSize = { 1280,720 };
 	bool m_Windowed = true;
@@ -84,7 +84,7 @@ private:
 	UINT m_MsaaQualityLevels = 0;
 	bool m_MsaaEnable = true;
 
-	// µð½ºÅ©¸³ÅÍ Áõ°¡ »çÀÌÁî
+	// ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UINT m_CbvSrvDescIncrSize = 0;
 	UINT m_RtvDescIncrSize = 0;
 	UINT m_DsvDescIncrSize = 0;
@@ -97,7 +97,7 @@ private:
 	UINT64 m_FenceValues[m_NumSwapChainBuffers];
 	HANDLE m_FenceEvent;
 
-	// ¿©±â ¾Æ·¡´Â ºÐÇØÇØµµ µÇ³ª?
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½Ç³ï¿½?
 
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
@@ -107,7 +107,7 @@ private:
 
 	size_t m_MainCommandIdx = 0;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;
-	// ¾Æ¸ð¸¥Á÷´Ù °¡´É¼ºÀº ¿­¾îµÎÀÚ, ±×¸²ÀÚ¸Ê Á¤µµ´Â µ¿½Ã¿¡ ¸¸µé¾îµµ?
+	// ï¿½Æ¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½×¸ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¿ï¿½ ï¿½ï¿½ï¿½ï¿½îµµ?
 
 	std::vector<ComPtr<ID3D12CommandAllocator>> m_CommandAllocators;
 	std::vector<ComPtr<ID3D12GraphicsCommandList>> m_GraphicsCommandLists;
@@ -116,7 +116,7 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> m_MainCommandList;
 
 
-	// ÇÁ·Î±×·¥ÀÇ ·çÆ®½Ã±×´ÏÃ³´Â º¯ÇÏÁö ¾ÊÀ» ¿¹Á¤
+	// ï¿½ï¿½ï¿½Î±×·ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ã±×´ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
