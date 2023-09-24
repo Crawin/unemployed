@@ -5,7 +5,6 @@
 // 디버그 모드에 테스트용
 #ifdef _DEBUG
 #include <iostream>
-#include <format>
 #include <dxgidebug.h>
 
 // 콘솔창 활셩화
@@ -16,7 +15,6 @@
 #endif
 #endif
 
-#include <format>
 
 // 스트링을 출력한다
 inline void DebugPrint(const std::string& str)
