@@ -54,7 +54,6 @@ bool Renderer::CreateDevice()
 	D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(m_Device.GetAddressOf()));
 
 	if (!m_Device) {
-		// �����ߴٸ� ���丮���� ����͸� ã���ش�.
 		ComPtr<IDXGIAdapter1> pAdapter = nullptr;
 		for (UINT i = 0; DXGI_ERROR_NOT_FOUND != m_Factory->EnumAdapters1(i, &pAdapter); i++) {
 			DXGI_ADAPTER_DESC1 adapterDesc;
@@ -65,7 +64,7 @@ bool Renderer::CreateDevice()
 		D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(m_Device.GetAddressOf()));
 	}
 
-	CHECK_CREATE_FAILED(m_Device, " m_Device ���� ����\n");
+	CHECK_CREATE_FAILED(m_Device, " m_Device 생성 실패");
 
 	// 각 뷰 종류들의 크기를 구해놓음
 	m_CbvSrvDescIncrSize = m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -338,7 +337,7 @@ bool Renderer::CreateResourceDescriptorHeap()
 	descriptorDesc.NodeMask = 0;
 	
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap ���� ����!");
+	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap 생성 실패!");
 
 	return true;
 }
@@ -392,6 +391,9 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 	CHECK_CREATE_FAILED(CreateRTV(), "CreateRTV Failed!!");
 	CHECK_CREATE_FAILED(CreateDSV(), "CreateDSV Failed!!");
 
+	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
+	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
+
 	// scene??????
 	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
@@ -411,7 +413,7 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 	m_Device->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT,
 		IID_PPV_ARGS(allocator.GetAddressOf()));
-	CHECK_CREATE_FAILED(allocator, "m_CommandAllocator ���� ����");
+	CHECK_CREATE_FAILED(allocator, "m_CommandAllocator 생성 실패");
 
 	m_Device->CreateCommandList(
 		0,
@@ -419,7 +421,7 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 		allocator.Get(),
 		nullptr,
 		IID_PPV_ARGS(commandlist.GetAddressOf()));
-	CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList ���� ����");
+	CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList 생성 실패");
 
 	commandlist->Close();
 

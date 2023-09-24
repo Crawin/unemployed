@@ -1,5 +1,4 @@
 #pragma once
-// dx12 ������
 
 class Shader;
 class COOLResource;
@@ -47,35 +46,33 @@ private:
 public:
 	bool Init(const SIZE& wndSize, HWND hWnd);
 
-	// ������ �Ҵ���,����Ʈ�� �ε����� outIndex�� ������
+	// 생성된 할당자,리스트의 인덱스를 outIndex로 돌려줌
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
-	// -------------------  Device�� �ϴ� �ϵ� �ܼ� ���� -------------------
+	// -------------------  Device가 하는 일들 단순 묶음 -------------------
 
 	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size);
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes);
-	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// �ӽ÷� ����
+	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 일단 없앰
 
-	// ------------------- commandlist�� �ϴ� �ݺ����� �ϵ� ���� -------------------
+	// ------------------- commandlist가 하는 일들 묶음 -------------------
 	 
-	// ���ҽ� ����� subresourceData�� ���� �̰� ����
+	// 리소스 복사는 subresourceData로 하자 이건 보류
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
-	// �Ʒ� �� �Լ� ���Ŀ� �ٸ� Ŭ������ ���� �� (Camera���� ������)
-	// ������ ��ü�� ����
+	// 아래 두 함수 추후에 다른 클래스로 빼야 함 (Camera같은 곳으로)
+	// 윈도우 전체에 설정
 	void SetViewportScissorRect();
-	// �������� ������� ����
+	// 지정해준 사이즈로 설정
 	void SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
 
 	// render
 	void Render();
 
 private:
-	// ����ü�� ����
 	static const UINT m_NumSwapChainBuffers = 2;
 	UINT m_CurSwapChainIndex = 0;
 
-	// ������
 	HWND m_hWnd = 0;
 	SIZE m_ScreenSize = { 1280,720 };
 	bool m_Windowed = true;
@@ -84,7 +81,6 @@ private:
 	UINT m_MsaaQualityLevels = 0;
 	bool m_MsaaEnable = true;
 
-	// ��ũ���� ���� ������
 	UINT m_CbvSrvDescIncrSize = 0;
 	UINT m_RtvDescIncrSize = 0;
 	UINT m_DsvDescIncrSize = 0;
@@ -94,10 +90,8 @@ private:
 	ComPtr<ID3D12Fence> m_Fence;
 	ComPtr<IDXGISwapChain3> m_SwapChain;
 
-	UINT64 m_FenceValues[m_NumSwapChainBuffers];
-	HANDLE m_FenceEvent;
-
-	// ���� �Ʒ��� �����ص� �ǳ�?
+	UINT64 m_FenceValues[m_NumSwapChainBuffers] = { 0 };
+	HANDLE m_FenceEvent = 0;;
 
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
@@ -107,7 +101,6 @@ private:
 
 	size_t m_MainCommandIdx = 0;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;
-	// �Ƹ����� ���ɼ��� �������, �׸��ڸ� ������ ���ÿ� ����?
 
 	std::vector<ComPtr<ID3D12CommandAllocator>> m_CommandAllocators;
 	std::vector<ComPtr<ID3D12GraphicsCommandList>> m_GraphicsCommandLists;
@@ -116,7 +109,6 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> m_MainCommandList;
 
 
-	// ���α׷��� ��Ʈ�ñ״�ó�� ������ ���� ����
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
