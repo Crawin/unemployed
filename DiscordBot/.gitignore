@@ -1,2 +1,4 @@
 .idea/
-token.py
+DiscordToken.py
+test.py
+enterbot.py

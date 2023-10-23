@@ -1,20 +1,15 @@
-import asyncio
-
 import discord
-from discord.ext import tasks
-import token
-
+import DiscordToken
 from datetime import datetime
 
-TOKEN = token.TOKEN
-CHAT_CHANNEL_ID = token.CHAT_CHANNEL_ID
-VOICE_CHANNEL_ID = token.VOICE_CHANNEL_ID
+TOKEN = DiscordToken.TOKEN
+CHAT_CHANNEL_ID = DiscordToken.CHAT_CHANNEL_ID
+VOICE_CHANNEL_ID = DiscordToken.VOICE_CHANNEL_ID
 
 class MyClient(discord.Client):
     async def on_ready(self):
         channel = self.get_channel(CHAT_CHANNEL_ID)
         await channel.send('ON')
-        self.check_voice_channel.start()
 
     async def on_message(self, message):
         if message.author == self.user:
@@ -23,41 +18,33 @@ class MyClient(discord.Client):
             if message.content == '현황':
                 channel = self.get_channel(CHAT_CHANNEL_ID)
                 await channel.send(Working_Members)
-            pass
+                for Wmember in Working_Members:
+                    print(Wmember)
+            if message.content == '종료':
+                with open('text_file.txt', 'w', encoding='utf-8') as file:
+                    for Wmember in Working_Members:
+                        for key, value in Wmember.items():
+                            file.write(f"{key}: {value}\n")
+                        file.write('\n')
+                file = discord.File("text_file.txt")
+                channel = self.get_channel(CHAT_CHANNEL_ID)
+                await channel.send(file=file)
 
-    @tasks.loop(seconds=1)
-    async def check_voice_channel(self):
-        global Working_Members
-        channel = self.get_channel(VOICE_CHANNEL_ID)
-        # 먼저 WM의 이름들과 CM의 이름들을 리스트로 만든 후 비교 한다음 없는 이름을 갖고와서 working에 없나 channel에 없나 확인 후 working에 없으면 입장, channel에 없으면 퇴장 시키자.
-
-
-        # # 채널 이용자를 일하는 멤버 리스트에 속하나?
-        # for Cmember in channel.members:
-        #     if self.compare_working_members(Cmember.name):
-        #         Working_Members.append({'NAME': Cmember.name, 'IN': datetime.now().strftime('%Y/%m/%d %H:%M:%S'), 'OUT': 0})
-
-        #일하는 멤버 리스트엔 있지만 채널엔 없다?
-
-
-        await asyncio.sleep(1)
-
-    def compare_working_members(self, Cmember):
-        global Working_Members
-        # print(f'C: {Cmember}, W: {Working_Members}')
-        for Wmember in Working_Members:
-            if Cmember in Wmember['NAME']:
-                return False
-        return True
-
-    def compare_channel_members(self, Cmembers):
-        for Wmember in Working_Members:
-            for Cmember in Cmembers:
-                if Wmember['NAME'] in Cmember.name:
-                    continue
-
-
-
+    async def on_voice_state_update(self, member, before, after):
+        if before.channel is None and after.channel is not None:
+            # 사용자가 통화방에 입장한 경우
+            target_channel = self.get_channel(CHAT_CHANNEL_ID)
+            # await target_channel.send(f'{member.name}이(가) {after.channel.name} 통화방에 입장했습니다.')
+            Working_Members.append({'NAME': member.name, 'ENTER': datetime.now(), 'EXIT': 0, 'GAP': 0})
+        elif before.channel is not None and after.channel is None:
+            # 사용자가 통화방에서 퇴장한 경우
+            target_channel = self.get_channel(CHAT_CHANNEL_ID)
+            # await target_channel.send(f'{member.name}이(가) {before.channel.name} 통화방에서 퇴장했습니다.')
+            for Wmember in Working_Members:
+                if Wmember['NAME'] == member.name and Wmember['EXIT'] == 0:
+                    Wmember['EXIT'] = datetime.now()
+                    Wmember['GAP'] = Wmember['EXIT'] - Wmember['ENTER']
+                    await target_channel.send(f"근무 시작은 {Wmember['GAP']} 입니다.")
 
 Working_Members = []
 
