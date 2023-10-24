@@ -58,6 +58,9 @@ class MyClient(discord.Client):
             if message.content == '현황':
                 channel = self.get_channel(int(CHAT_CHANNEL_ID))
                 await channel.send(Working_Members)
+                file = discord.File("text_file.txt")
+                channel = self.get_channel(int(CHAT_CHANNEL_ID))
+                await channel.send(file=file)
                 for Wmember in Working_Members:
                     print(Wmember)
             elif message.content == '종료':
@@ -73,18 +76,29 @@ class MyClient(discord.Client):
         if before.channel is None and after.channel is not None:
             # 사용자가 통화방에 입장한 경우
             Working_Members.append({'NAME': member.name, 'ENTER': datetime.now(), 'EXIT': 0, 'GAP': 0})
+            # 입장하면 파일에 추가 작성
+            with open('text_file.txt', 'a', encoding='utf-8') as file:
+                for key, value in Working_Members[-1].items():
+                    file.write(f"{key}: {value}\n")
+                file.write('\n')
             print(f"입장: {Working_Members[-1]}")
-        elif before.channel is not None and after.channel is None:
+        if before.channel is not None and after.channel is None:
             # 사용자가 통화방에서 퇴장한 경우
             for Wmember in Working_Members:
-                if Wmember['NAME'] == member.name and Wmember['EXIT'] == 0:
+                if Wmember['NAME'] == member.name and (Wmember['EXIT'] == 0 or Wmember['EXIT'] == str(0)):
                     Wmember['EXIT'] = datetime.now()
+                    if type(Wmember['ENTER']) == str:
+                        format = "%Y-%m-%d %H:%M:%S.%f"
+                        Wmember['ENTER'] = datetime.strptime(Wmember['ENTER'], format)
                     Wmember['GAP'] = Wmember['EXIT'] - Wmember['ENTER']
-                    with open('text_file.txt', 'a', encoding='utf-8') as file:
-                        for key, value in Working_Members[-1].items():
-                            file.write(f"{key}: {value}\n")
-                        file.write('\n')
                     print(f"퇴장: {Wmember}")
+            #퇴장하면 싹 갈아엎기
+            with open('text_file.txt', 'w', encoding='utf-8') as file:
+                for Wmember in Working_Members:
+                    for key, value in Wmember.items():
+                        file.write(f"{key}: {value}\n")
+                    file.write('\n')
+
 
 Working_Members = []
 
