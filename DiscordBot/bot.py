@@ -1,5 +1,6 @@
 import discord
 from datetime import datetime
+import logging
 import os
 # from WebDriver import keep_alive
 # keep_alive()
@@ -11,6 +12,14 @@ import DiscordToken
 TOKEN = DiscordToken.TOKEN
 CHAT_CHANNEL_ID = DiscordToken.CHAT_CHANNEL_ID
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(message)s')
+
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+
 class MyClient(discord.Client):
     async def on_ready(self):
         print(f"{self.user.name}이 준비되었습니다.")
@@ -19,12 +28,13 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
         else:
+            logger.info(f'({message.author}) 이 ({message.content}) 를 입력하였습니다.')
             if message.content == '현황':
                 channel = self.get_channel(int(CHAT_CHANNEL_ID))
                 await channel.send(Working_Members)
                 for Wmember in Working_Members:
                     print(Wmember)
-            if message.content == '종료':
+            elif message.content == '종료':
                 with open('text_file.txt', 'w', encoding='utf-8') as file:
                     for Wmember in Working_Members:
                         for key, value in Wmember.items():
@@ -35,6 +45,8 @@ class MyClient(discord.Client):
                 await channel.send(file=file)
                 print(f"{self.user.name}이 종료됩니다.")
                 await self.close()
+            else:
+                await message.channel.send('없는 명령어 입니다.')
 
     async def on_voice_state_update(self, member, before, after):
         if before.channel is None and after.channel is not None:
