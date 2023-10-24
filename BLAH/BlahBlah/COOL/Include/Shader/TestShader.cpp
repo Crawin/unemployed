@@ -1,8 +1,8 @@
 #include "../framework.h"
 #include "TestShader.h"
 
-TestShader::TestShader(int id, int queue, std::string_view name) :
-	Shader(id, queue, name)
+TestShader::TestShader(int queue, std::string_view name) :
+	Shader(queue, name)
 {
 	m_PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 }

@@ -14,12 +14,10 @@ class Shader
 {
 public:
 	Shader() = delete;
-	Shader(int id, int queue, std::string_view name);
+	Shader(int queue, std::string_view name);
 	virtual ~Shader();
 
-	static int GetGID() { return m_GID++; }
 	std::string_view GetName() const { return m_Name; }
-
 
 	void ChangeRenderQueue(int n) { m_RenderQueue = n; }
 	void EnableShader() { m_Enable = true; }
@@ -42,7 +40,7 @@ protected:
 	virtual D3D12_BLEND_DESC GetBlendDesc();					// Normal
 	virtual D3D12_RASTERIZER_DESC GetRasterizerStateDesc();		// Normal
 	virtual D3D12_DEPTH_STENCIL_DESC GetDepthStencilState();	// Normal
-	virtual D3D12_INPUT_LAYOUT_DESC GetInputLayout() = 0;		// 재정의 필요
+	virtual D3D12_INPUT_LAYOUT_DESC GetInputLayout();			// 깡통
 	virtual DXGI_SAMPLE_DESC GetSampleDesc();					// Normal
 
 	UINT m_SampleMask = UINT_MAX;
@@ -67,6 +65,8 @@ protected:
 public:
 	virtual void Render(ComPtr<ID3D12GraphicsCommandList> commandList);
 
+protected:
+	std::vector<Material> m_Materials;
 
 private:
 	static int m_GID;
@@ -78,6 +78,5 @@ private:
 	bool m_Enable = true;
 
 	ComPtr<ID3D12PipelineState> m_PipelineState;
-	std::vector<std::shared_ptr<Material>> m_Materials;
 };
 

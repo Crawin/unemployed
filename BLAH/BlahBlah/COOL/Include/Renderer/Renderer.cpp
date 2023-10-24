@@ -7,6 +7,7 @@
 
 #ifdef TEST_SHADER
 #include "../Shader/TestShader.h"
+#include "../Shader/SkyboxShader.h"
 #endif
 
 Renderer::Renderer()
@@ -177,9 +178,13 @@ bool Renderer::CreateRTV()
 		CHECK_CREATE_FAILED(tempResource, "m_SwapChain->GetBuffer Failed!!");
 
 		m_RenderTargetBuffer[i] = COOLResourcePtr(new COOLResource(tempResource, D3D12_RESOURCE_STATE_PRESENT));
+		m_RenderTargetBuffer[i].get()->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 
 		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i]->GetResource(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
+
+		RegisterShaderResource(m_RenderTargetBuffer[i]);
+
 	}
 
 	return true;
@@ -190,8 +195,10 @@ bool Renderer::CreateDSV()
 	// Depth/Stencil은 우리가 리소스를 따로 만들어주어야함
 	// 보통 리소스를 디폴트힙에다 만들면
 	// 값을 넣어 복사해주기 위한 업로드힙이 별도로 필요
-	// 근데 얘는 필요없음
+	// 근데 얘는 필요없음 비어있는애
 	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize);
+	m_DepthStencilBuffer.get()->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	m_DepthStencilBuffer.get()->SetName("depthstencil buffer");
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -200,6 +207,8 @@ bool Renderer::CreateDSV()
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCPUHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	m_Device->CreateDepthStencilView(m_DepthStencilBuffer->GetResource(), &dsvDesc, dsvCPUHandle);
+
+	RegisterShaderResource(m_DepthStencilBuffer);
 	return true;
 }
 
@@ -214,10 +223,12 @@ bool Renderer::CreateRootSignature()
 		descRange[i].NumDescriptors = UINT_MAX;
 		descRange[i].BaseShaderRegister = 0;
 		descRange[i].RegisterSpace = i;
-		descRange[i].OffsetInDescriptorsFromTableStart = 0;
 		//descRange[i].Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE;		// D3D12_DESCRIPTOR_RANGE1
 		descRange[i].OffsetInDescriptorsFromTableStart = 0;								// 좀 더 알아봐야함
 	}
+	// 사용 시
+	// 디스크립터힙 내부: (Texture2D, TextureCube, Texture2D, ...) 
+	// 쉐이더 에서 TexCubeList[1]로 사용 해야 함
 
 	const int numParams = ROOT_SIGNATURE_IDX_MAX;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
@@ -329,13 +340,66 @@ bool Renderer::CreateTestRootSignature()
 bool Renderer::CreateResourceDescriptorHeap()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
-	descriptorDesc.NumDescriptors = m_NumSwapChainBuffers;
+	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
+	descriptorDesc.NumDescriptors = m_Resources.size();										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
 	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descriptorDesc.NodeMask = 0;
 
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
 	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap 생성 실패!");
+
+	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
+	for (auto resource : m_Resources) {
+		ID3D12Resource* res = resource.get()->GetResource();
+		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.Format = resDesc.Format;
+		srvDesc.ViewDimension = resource.get()->GetDimension();
+
+		switch (srvDesc.ViewDimension) {
+		case D3D12_SRV_DIMENSION_TEXTURE2D:
+			srvDesc.Texture2D.MipLevels = -1;
+			srvDesc.Texture2D.MostDetailedMip = 0;
+			srvDesc.Texture2D.PlaneSlice = 0;
+			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+			break;
+
+		case D3D12_SRV_DIMENSION_TEXTURECUBE:
+			srvDesc.TextureCube.MipLevels = 1;
+			srvDesc.TextureCube.MostDetailedMip = 0;
+			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+			break;
+
+		case D3D12_SRV_DIMENSION_BUFFER:
+			srvDesc.Buffer.FirstElement = 0;
+			srvDesc.Buffer.NumElements = 0;								// 나중에 버퍼 쓸 때 다시 확인
+			srvDesc.Buffer.StructureByteStride = 0;
+			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + resource.get()->GetName());
+			break;
+
+		default:
+			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + resource.get()->GetName());
+			return false;
+		}
+
+	}
+	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
+	// D3D12_SRV_DIMENSION_BUFFER = 1,
+	// D3D12_SRV_DIMENSION_TEXTURE1D = 2,
+	// D3D12_SRV_DIMENSION_TEXTURE1DARRAY = 3,
+	// D3D12_SRV_DIMENSION_TEXTURE2D = 4,
+	// D3D12_SRV_DIMENSION_TEXTURE2DARRAY = 5,
+	// D3D12_SRV_DIMENSION_TEXTURE2DMS = 6,
+	// D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY = 7,
+	// D3D12_SRV_DIMENSION_TEXTURE3D = 8,
+	// D3D12_SRV_DIMENSION_TEXTURECUBE = 9,
+	// D3D12_SRV_DIMENSION_TEXTURECUBEARRAY = 10,
+	// D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE = 11
 
 	return true;
 }
@@ -350,8 +414,11 @@ bool Renderer::LoadShaders()
 
 
 #ifdef TEST_SHADER
-	auto shader = std::make_shared<TestShader>(Shader::GetGID(), 1, "TestShader");
+	auto shader = std::make_shared<TestShader>(1, "TestShader");
 	m_Shaders.push_back(shader);
+
+	auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
+	m_Shaders.push_back(tshader);
 
 	for (auto& sha : m_Shaders) {
 		// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
@@ -359,7 +426,7 @@ bool Renderer::LoadShaders()
 	}
 #endif
 
-	// 렌더큐 기준으로 정렬한다
+	// 렌더큐 기준으로 오름차순 정렬한다
 	std::sort(m_Shaders.begin(), m_Shaders.end());
 
 	return true;
@@ -536,6 +603,12 @@ void Renderer::SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& 
 	m_MainCommandList->RSSetScissorRects(numOfViewPort, &scissorRect);
 }
 
+UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
+{
+	m_Resources.push_back(resource);
+	return m_Resources.size() - 1;
+}
+
 void Renderer::Render()
 {
 	// pre render
@@ -558,7 +631,9 @@ void Renderer::Render()
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuDesHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
 
-	float clearColor[4] = { 0.3f, 0.9f, 0.3f, 1.0f };
+	//float clearColor[4] = { 0.3f, 0.9f, 0.3f, 1.0f };
+	float clearColor[4] = { 0, };// { 1.0f, 1.0f, 1.0f, 1.0f };
+
 	m_MainCommandList->ClearRenderTargetView(rtvCpuDesHandle, clearColor, 0, nullptr);
 	m_MainCommandList->ClearDepthStencilView(dsvCpuDesHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 

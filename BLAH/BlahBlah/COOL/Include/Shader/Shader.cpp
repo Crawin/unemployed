@@ -6,11 +6,11 @@
 
 int Shader::m_GID = 0;
 
-Shader::Shader(int id, int queue, std::string_view name) :
-	m_Id{ id },
+Shader::Shader(int queue, std::string_view name) :
 	m_RenderQueue{ queue },
 	m_Name{ name }
 {
+	m_Id = m_GID++;
 }
 
 Shader::~Shader()
@@ -97,6 +97,13 @@ D3D12_DEPTH_STENCIL_DESC Shader::GetDepthStencilState()
 	desc.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_NEVER;
 
 	return desc;
+}
+
+D3D12_INPUT_LAYOUT_DESC Shader::GetInputLayout()
+{
+	D3D12_INPUT_LAYOUT_DESC temp = {};
+	temp.pInputElementDescs = nullptr;
+	return temp;
 }
 
 DXGI_SAMPLE_DESC Shader::GetSampleDesc()
@@ -203,7 +210,7 @@ void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->SetPipelineState(m_PipelineState.Get());
 
 	for (auto mat : m_Materials) {
-		mat->SetDatas(commandList, 1);
+		mat.SetDatas(commandList, 1);
 		// mat->SetDatas(commandList);
 		// auto objects = Mapper->Get(mat);
 		// for (auto obj : objects) 

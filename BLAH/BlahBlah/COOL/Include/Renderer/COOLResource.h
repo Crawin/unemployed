@@ -25,8 +25,13 @@ public:
 	COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT, std::string name = "Resource");
 	~COOLResource();
 
+	const std::string GetName() const { return m_Name; }
 	ID3D12Resource* GetResource() { return m_Resource; }
 	D3D12_RESOURCE_STATES GetState() const { return m_CurStateMap; }
+	D3D12_SRV_DIMENSION GetDimension() const { return m_Dimension; }
+
+	void SetName(const std::string& str) { m_Name = str; }
+	void SetDimension(D3D12_SRV_DIMENSION dim) { m_Dimension = dim; }
 
 	void TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState);
 
@@ -35,5 +40,6 @@ private:
 	ID3D12Resource* m_Resource = nullptr;
 	D3D12_RESOURCE_STATES m_CurStateMap = D3D12_RESOURCE_STATE_COMMON;
 	D3D12_HEAP_TYPE m_HeapType = D3D12_HEAP_TYPE_DEFAULT;
+	D3D12_SRV_DIMENSION m_Dimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 };
 

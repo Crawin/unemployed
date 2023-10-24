@@ -12,7 +12,7 @@ public:
 	void SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx);
 
 private:
-	int m_TextureIndex[16];
+	int m_TextureIndex[16] = {};
 	//XMFLOAT4X4 m_TextureIndex = XMFLOAT4X4(0);
 };
 

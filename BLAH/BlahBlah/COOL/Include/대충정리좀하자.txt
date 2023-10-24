@@ -35,3 +35,13 @@ DX12 관리
 이름부터 렌더러다
 그럼 어케 할까
 일단 디바이스 초기화부터 시키자
+
+
+
+유니티 URP(SRP) https://www.youtube.com/live/QRlz4-pAtpY?si=rXBpfbi82YK3SkZ2
+SRP Batcher
+
+
+
+
+

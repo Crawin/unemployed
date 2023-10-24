@@ -4,7 +4,7 @@
 class TestShader : public Shader
 {
 public:
-	TestShader(int id, int queue, std::string_view name);
+	TestShader(int queue, std::string_view name);
 	virtual ~TestShader();
 
 	virtual bool InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap = nullptr);

@@ -9,7 +9,9 @@ struct VSOUT
 VSOUT vs(uint instancID : SV_VertexID)
 {
 	VSOUT op;
-
+	op.pos = float4(0.0, 0.5, 0.5, 1.0);
+	op.color = float4(1.0, 0.0, 0.0, 1.0);
+	
 	if (instancID == 0)
 	{
 		op.pos = float4(0.0, 0.5, 0.5, 1.0);

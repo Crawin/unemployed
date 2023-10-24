@@ -60,11 +60,19 @@ public:
 	// 리소스 복사는 subresourceData로 하자 이건 보류
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
+	// ------------------- 기타등등 -------------------
+	
 	// 아래 두 함수 추후에 다른 클래스로 빼야 함 (Camera같은 곳으로)
 	// 윈도우 전체에 설정
 	void SetViewportScissorRect();
 	// 지정해준 사이즈로 설정
 	void SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
+
+	// ------------------- 리소스 관리하는 저거들 묶음 -------------------
+
+	// 해당 리소스의 인덱스 번호를 되돌려줌
+	UINT RegisterShaderResource(COOLResourcePtr resource);
+
 
 	// render
 	void Render();
@@ -113,7 +121,8 @@ private:
 
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
 
+	// 리소스힙 관련
+	std::vector<COOLResourcePtr> m_Resources;
 	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
-
 };
 
