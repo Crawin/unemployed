@@ -48,6 +48,7 @@ class MyClient(discord.Client):
                     temp['GAP'] = line
                 if line == '\n':
                     Working_Members.append(temp.copy())
+            f.close()
         print(f"{self.user.name}이 {datetime.now()}에 준비되었습니다.")
 
     async def on_message(self, message):
@@ -56,25 +57,33 @@ class MyClient(discord.Client):
             return
         else:
             logger.info(f'({message.author}) 이 ({message.content}) 를 입력하였습니다.')
+            channel = self.get_channel(int(CHAT_CHANNEL_ID))
             if message.content == '현황':
-                channel = self.get_channel(int(CHAT_CHANNEL_ID))
                 await channel.send(Working_Members)
-                file = discord.File("text_file.txt")
-                channel = self.get_channel(int(CHAT_CHANNEL_ID))
-                await channel.send(file=file)
+                try:
+                    file = discord.File("text_file.txt")
+                    await channel.send(file=file)
+                except:
+                    await channel.send('현황 파일이 존재하지 않습니다.')
                 for Wmember in Working_Members:
                     print(Wmember)
             elif message.content == '종료':
-                file = discord.File("text_file.txt")
-                channel = self.get_channel(int(CHAT_CHANNEL_ID))
-                await channel.send(file=file)
-                print(f"{self.user.name}이 종료됩니다.")
+                try:
+                    file = discord.File("text_file.txt")
+                    await channel.send(file=file)
+                    print(f"{self.user.name}이 종료됩니다.")
+                except:
+                    await channel.send('현황 파일이 존재하지 않습니다.')
+                    print(f"{self.user.name}이 종료됩니다.")
                 await self.close()
-            elif message.content == '내역삭제':
-                file = discord.File("text_file.txt")
-                channel = self.get_channel(int(CHAT_CHANNEL_ID))
-                await channel.send(file=file)
-                os.remove('text_file.txt')
+            elif message.content == '삭제':
+                try:
+                    file = discord.File("text_file.txt")
+                    await channel.send(file=file)
+                    os.remove('text_file.txt')
+                except:
+                    await channel.send('현황 파일이 존재하지 않습니다.')
+                    print('현황 파일이 존재하지 않습니다.')
                 Working_Members = []
             else:
                 await message.channel.send('없는 명령어 입니다.')
