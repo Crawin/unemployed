@@ -20,9 +20,35 @@ stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
+f = False
+
 class MyClient(discord.Client):
     async def on_ready(self):
-        print(f"{self.user.name}이 준비되었습니다.")
+        global f
+        try:
+            f = open("text_file.txt", 'r', encoding='UTF-8')
+        except:
+            print('text_file.txt.가 존재하지 않습니다.')
+        if f:
+            temp = {}
+            print('File exist')
+            lines = f.readlines()
+            for line in lines:
+                if 'NAME: ' in line:
+                    line = line.replace('NAME: ', '').replace('\n', '')
+                    temp['NAME'] = line
+                if 'ENTER: ' in line:
+                    line = line.replace('ENTER: ', '').replace('\n', '')
+                    temp['ENTER'] = line
+                if 'EXIT: ' in line:
+                    line = line.replace('EXIT: ', '').replace('\n', '')
+                    temp['EXIT'] = line
+                if 'GAP: ' in line:
+                    line = line.replace('GAP: ', '').replace('\n', '')
+                    temp['GAP'] = line
+                if line == '\n':
+                    Working_Members.append(temp.copy())
+        print(f"{self.user.name}이 {datetime.now()}에 준비되었습니다.")
 
     async def on_message(self, message):
         if message.author == self.user:
@@ -35,11 +61,6 @@ class MyClient(discord.Client):
                 for Wmember in Working_Members:
                     print(Wmember)
             elif message.content == '종료':
-                with open('text_file.txt', 'w', encoding='utf-8') as file:
-                    for Wmember in Working_Members:
-                        for key, value in Wmember.items():
-                            file.write(f"{key}: {value}\n")
-                        file.write('\n')
                 file = discord.File("text_file.txt")
                 channel = self.get_channel(int(CHAT_CHANNEL_ID))
                 await channel.send(file=file)
@@ -59,6 +80,10 @@ class MyClient(discord.Client):
                 if Wmember['NAME'] == member.name and Wmember['EXIT'] == 0:
                     Wmember['EXIT'] = datetime.now()
                     Wmember['GAP'] = Wmember['EXIT'] - Wmember['ENTER']
+                    with open('text_file.txt', 'a', encoding='utf-8') as file:
+                        for key, value in Working_Members[-1].items():
+                            file.write(f"{key}: {value}\n")
+                        file.write('\n')
                     print(f"퇴장: {Wmember}")
 
 Working_Members = []
