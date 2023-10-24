@@ -51,6 +51,7 @@ class MyClient(discord.Client):
         print(f"{self.user.name}이 {datetime.now()}에 준비되었습니다.")
 
     async def on_message(self, message):
+        global Working_Members
         if message.author == self.user:
             return
         else:
@@ -69,6 +70,12 @@ class MyClient(discord.Client):
                 await channel.send(file=file)
                 print(f"{self.user.name}이 종료됩니다.")
                 await self.close()
+            elif message.content == '내역삭제':
+                file = discord.File("text_file.txt")
+                channel = self.get_channel(int(CHAT_CHANNEL_ID))
+                await channel.send(file=file)
+                os.remove('text_file.txt')
+                Working_Members = []
             else:
                 await message.channel.send('없는 명령어 입니다.')
 
