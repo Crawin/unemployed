@@ -1,6 +1,9 @@
 import discord
 from datetime import datetime
-# import os
+import os
+# from WebDriver import keep_alive
+# keep_alive()
+
 # TOKEN = os.environ['TOKEN']
 # CHAT_CHANNEL_ID = os.environ['CHAT_CHANNEL_ID']
 
@@ -46,9 +49,7 @@ class MyClient(discord.Client):
                     Wmember['GAP'] = Wmember['EXIT'] - Wmember['ENTER']
                     print(f"퇴장: {Wmember}")
 
-
 Working_Members = []
-
 
 intents = discord.Intents.default()
 intents.message_content = True
