@@ -10,7 +10,7 @@ app = Flask('')
 
 @app.route('/')
 def home():
-    return "켜졌습니다."
+    return "독서실 봇이 실행중 입니다."
 
 
 

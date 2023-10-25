@@ -1,16 +1,11 @@
 import discord
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 import os
-# from WebDriver import keep_alive
-# keep_alive()
+from WebDriver import keep_alive
 
-# TOKEN = os.environ['TOKEN']
-# CHAT_CHANNEL_ID = os.environ['CHAT_CHANNEL_ID']
-
-import DiscordToken
-TOKEN = DiscordToken.TOKEN
-CHAT_CHANNEL_ID = DiscordToken.CHAT_CHANNEL_ID
+TOKEN = os.environ['TOKEN']
+CHAT_CHANNEL_ID = os.environ['CHAT_CHANNEL_ID']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -49,7 +44,7 @@ class MyClient(discord.Client):
                 if line == '\n':
                     Working_Members.append(temp.copy())
             f.close()
-        print(f"{self.user.name}이 {datetime.now()}에 준비되었습니다.")
+        print(f"{self.user.name}이 {datetime.utcnow() + timedelta(hours=9)}에 준비되었습니다.")
 
     async def on_message(self, message):
         global Working_Members
@@ -80,18 +75,19 @@ class MyClient(discord.Client):
                 try:
                     file = discord.File("text_file.txt")
                     await channel.send(file=file)
+                    git_push()
                     os.remove('text_file.txt')
                 except:
                     await channel.send('현황 파일이 존재하지 않습니다.')
                     print('현황 파일이 존재하지 않습니다.')
                 Working_Members = []
-            else:
-                await message.channel.send('없는 명령어 입니다.')
+            # else:
+            #     await message.channel.send('없는 명령어 입니다.')
 
     async def on_voice_state_update(self, member, before, after):
         if before.channel is None and after.channel is not None:
             # 사용자가 통화방에 입장한 경우
-            Working_Members.append({'NAME': member.name, 'ENTER': datetime.now(), 'EXIT': 0, 'GAP': 0})
+            Working_Members.append({'NAME': member.name, 'ENTER': datetime.utcnow() + timedelta(hours=9), 'EXIT': 0, 'GAP': 0})
             # 입장하면 파일에 추가 작성
             with open('text_file.txt', 'a', encoding='utf-8') as file:
                 for key, value in Working_Members[-1].items():
@@ -102,7 +98,7 @@ class MyClient(discord.Client):
             # 사용자가 통화방에서 퇴장한 경우
             for Wmember in Working_Members:
                 if Wmember['NAME'] == member.name and (Wmember['EXIT'] == 0 or Wmember['EXIT'] == str(0)):
-                    Wmember['EXIT'] = datetime.now()
+                    Wmember['EXIT'] = datetime.utcnow() + timedelta(hours=9)
                     if type(Wmember['ENTER']) == str:
                         format = "%Y-%m-%d %H:%M:%S.%f"
                         Wmember['ENTER'] = datetime.strptime(Wmember['ENTER'], format)
@@ -117,6 +113,8 @@ class MyClient(discord.Client):
 
 
 Working_Members = []
+
+keep_alive()
 
 intents = discord.Intents.default()
 intents.message_content = True
