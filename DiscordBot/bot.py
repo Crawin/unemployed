@@ -1,8 +1,9 @@
 import discord
+from discord.ext import tasks
 from datetime import datetime, timedelta
 import logging
 import os
-from WebDriver import keep_alive
+from WebDriver import keep_alive, update_Working_Members
 
 TOKEN = os.environ['TOKEN']
 CHAT_CHANNEL_ID = os.environ['CHAT_CHANNEL_ID']
@@ -44,6 +45,7 @@ class MyClient(discord.Client):
                 if line == '\n':
                     Working_Members.append(temp.copy())
             f.close()
+        self.update_Working_Members.start()
         print(f"{self.user.name}이 {datetime.utcnow() + timedelta(hours=9)}에 준비되었습니다.")
 
     async def on_message(self, message):
@@ -75,7 +77,6 @@ class MyClient(discord.Client):
                 try:
                     file = discord.File("text_file.txt")
                     await channel.send(file=file)
-                    git_push()
                     os.remove('text_file.txt')
                 except:
                     await channel.send('현황 파일이 존재하지 않습니다.')
@@ -111,6 +112,9 @@ class MyClient(discord.Client):
                         file.write(f"{key}: {value}\n")
                     file.write('\n')
 
+    @tasks.loop(seconds=1)  # 1초마다 업데이트
+    async def update_Working_Members(self):
+        update_Working_Members(Working_Members)
 
 Working_Members = []
 
