@@ -7,8 +7,9 @@ start_time = None
 Working_Members = []
 @app.route('/')
 def home():
-    log = f'독서실 봇이 {(datetime.utcnow() + timedelta(hours=9)) - start_time}째 실행중입니다.' \
-           f'<p>{Working_Members}</p>'
+    log = f'독서실 봇이 {(datetime.utcnow() + timedelta(hours=9)) - start_time}째 실행중입니다.'
+    for Wmember in Working_Members:
+        log = log + f'<p>{Wmember}</p>'
     return log
 
 def run():
