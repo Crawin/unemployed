@@ -55,15 +55,35 @@ class MyClient(discord.Client):
         else:
             logger.info(f'({message.author}) 이 ({message.content}) 를 입력하였습니다.')
             channel = self.get_channel(int(CHAT_CHANNEL_ID))
-            if message.content == '현황':
-                await channel.send(Working_Members)
-                try:
-                    file = discord.File("text_file.txt")
-                    await channel.send(file=file)
-                except:
-                    await channel.send('현황 파일이 존재하지 않습니다.')
-                for Wmember in Working_Members:
-                    print(Wmember)
+            if message.content.startswith('현황'):
+                if message.content == '현황':
+                    await channel.send(Working_Members)
+                    try:
+                        file = discord.File("text_file.txt")
+                        await channel.send(file=file)
+                    except:
+                        await channel.send('현황 파일이 존재하지 않습니다.')
+                    for Wmember in Working_Members:
+                        print(Wmember)
+                else:
+                    current_name = message.content.replace('현황','').replace(' ','')
+                    name_log = ''
+                    for Wmember in Working_Members:
+                        if Wmember['NAME'] == current_name:
+                            for key, value in Wmember.items():
+                                name_log = name_log + f'{key}: {value} \n'
+                            name_log = name_log + '\n'
+                    if name_log == '':
+                        await channel.send('해당 ID의 현황이 존재하지 않습니다.')
+                    else:
+                        await channel.send(name_log)
+                        temp_file_name = current_name + '.txt'
+                        with open(temp_file_name, 'w', encoding='utf-8') as file:
+                            file.write(name_log)
+                        file = discord.File(temp_file_name)
+                        await channel.send(file=file)
+                        os.remove(temp_file_name)
+
             elif message.content == '종료':
                 try:
                     file = discord.File("text_file.txt")
