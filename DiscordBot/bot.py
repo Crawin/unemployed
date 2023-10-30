@@ -123,7 +123,10 @@ class MyClient(discord.Client):
                     if type(Wmember['ENTER']) == str:
                         format = "%Y-%m-%d %H:%M:%S.%f"
                         Wmember['ENTER'] = datetime.strptime(Wmember['ENTER'], format)
-                    Wmember['GAP'] = Wmember['EXIT'] - Wmember['ENTER']
+                    # Wmember['GAP'] = Wmember['EXIT'] - Wmember['ENTER']
+                    Wmember['GAP'] = str(Wmember['EXIT'] - Wmember['ENTER'])
+                    Wmember['ENTER'] = str(Wmember['ENTER'])
+                    Wmember['EXIT'] = str(Wmember['EXIT'])
                     print(f"퇴장: {Wmember}")
             #퇴장하면 싹 갈아엎기
             with open('text_file.txt', 'w', encoding='utf-8') as file:
@@ -135,6 +138,7 @@ class MyClient(discord.Client):
     @tasks.loop(seconds=1)  # 1초마다 업데이트
     async def update_Working_Members(self):
         update_Working_Members(Working_Members)
+        # Working_Members = []
 
 Working_Members = []
 
