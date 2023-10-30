@@ -47,7 +47,6 @@ class MyClient(discord.Client):
                         line = line.replace('GAP: ', '').replace('\n', '')
                         temp['GAP'] = line
                     if line == '\n':
-                        # print(f'{temp}완료,{key}')
                         if key == 'current':
                             Working_Members.append(temp.copy())
                         else:

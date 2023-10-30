@@ -23,6 +23,7 @@ def home():
             if Wmember['GAP'] != '0' and Wmember['GAP'] != 0:
                 members[0].append(Wmember['NAME'])
                 members[1].append(datetime.strptime(Wmember['GAP'], format))
+    print(members)
     for pre_key, pre_val in Previous_Logs.items():
         log += f'<br><details><summary>{pre_key}</summary><ul>'
         for pre_log in pre_val:
@@ -30,8 +31,9 @@ def home():
         log += '</ul></details>'
     log += '</div>'
     log += '<div style=float:right>'
+    format = "%d 일 %H:%M:%S.%f"
     for i in range(0,len(members[0])):
-        log += f'{members[0][i]}: {members[1][i].strftime(format)} / {Days_Times} | {((((members[1][i].hour * 60)+members[1][i].minute)*60+members[1][i].second)*1000+members[1][i].microsecond)/(Days_Times*60*60*10):.2f}%<br>'
+        log += f'{members[0][i]}: {members[1][i].strftime(format)} / {Days_Times} | {(((((((members[1][i].day - 1) * 24)+members[1][i].hour) * 60)+members[1][i].minute)*60+members[1][i].second)*1000000+members[1][i].microsecond)/(Days_Times*60*60*10000):.2f}%<br>'
     log += '</div>'
     return log
 
