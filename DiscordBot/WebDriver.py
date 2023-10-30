@@ -17,19 +17,18 @@ def home():
         log = log + f'{Wmember}<br>'
         if Wmember['NAME'] in members[0]:
             if Wmember['GAP'] != '0' and Wmember['GAP'] != 0:
-                print(Wmember['GAP'])
                 temp_datetime = datetime.strptime(Wmember['GAP'], format)
                 members[1][members[0].index(Wmember['NAME'])] += timedelta(hours=temp_datetime.hour,minutes=temp_datetime.minute,seconds=temp_datetime.second,microseconds=temp_datetime.microsecond)
         else:
             if Wmember['GAP'] != '0' and Wmember['GAP'] != 0:
                 members[0].append(Wmember['NAME'])
                 members[1].append(datetime.strptime(Wmember['GAP'], format))
-    log += '<br><details><summary>'
-    # for pre_key, pre_val in Previous_Logs.items():
-    #     log += f'{pre_key}</summary><ul>'
-    # for pre_log in pre_val:
-    #     log += f'{pre_log}<br>'
-    log += '</ul></details><br></div>'
+    for pre_key, pre_val in Previous_Logs.items():
+        log += f'<br><details><summary>{pre_key}</summary><ul>'
+        for pre_log in pre_val:
+            log += f'{pre_log}<br>'
+        log += '</ul></details>'
+    log += '</div>'
     log += '<div style=float:right>'
     for i in range(0,len(members[0])):
         log += f'{members[0][i]}: {members[1][i].strftime(format)} / {Days_Times} | {((((members[1][i].hour * 60)+members[1][i].minute)*60+members[1][i].second)*1000+members[1][i].microsecond)/(Days_Times*60*60*10):.2f}%<br>'
@@ -46,10 +45,12 @@ def keep_alive():
     t = Thread(target=run)
     t.start()
 
-def update_Working_Members(dic):
-    global Working_Members
-    Working_Members = dic.copy()
-    Update_Days()
+def update_Working_Members(Wmem, PLog, DTimes):
+    global Working_Members, Previous_Logs, Days_Times
+    Working_Members = Wmem.copy()
+    Previous_Logs = PLog.copy()
+    Days_Times = DTimes
+    # Update_Days()
 
 def Update_Days():
     global Days_Times, Previous_Logs
@@ -68,8 +69,8 @@ def Update_Days():
             sat_days = (days - now.day) // 7 + 1
             sun_days = (days - (now.day + 1)) // 7 + 1
             Days_Times = (days - sat_days - sun_days)*9
-
-    # Previous_Logs[datetime.strftime(now.date(),"%Y.%m")] = Working_Members.copy()
+        if now.day == 1:
+            Previous_Logs[datetime.strftime(now.date(),"%Y.%m")] = Working_Members.copy()
 
 def IsLeapYear(year):
      if year % 4 != 0:
@@ -99,40 +100,3 @@ def GetDayOfMonth(year, month):
 
      # 위의 조건문에 해당되지 않는 1,3,5,7,8,10,12월은 31을 리턴.
      return 31
-
-
-
-# def update_Working_Members():
-#     global Working_Members
-#     # Working_Members = dic.copy()
-#     read_text_file()
-#     Update_Days()
-# f = None
-# def read_text_file():
-#     global f
-#     try:
-#         f = open("text_file.txt", 'r', encoding='UTF-8')
-#     except:
-#         print('text_file.txt.가 존재하지 않습니다.')
-#     if f:
-#         temp = {}
-#         print('File exist')
-#         lines = f.readlines()
-#         for line in lines:
-#             if 'NAME: ' in line:
-#                 line = line.replace('NAME: ', '').replace('\n', '')
-#                 temp['NAME'] = line
-#             if 'ENTER: ' in line:
-#                 line = line.replace('ENTER: ', '').replace('\n', '')
-#                 temp['ENTER'] = line
-#             if 'EXIT: ' in line:
-#                 line = line.replace('EXIT: ', '').replace('\n', '')
-#                 temp['EXIT'] = line
-#             if 'GAP: ' in line:
-#                 line = line.replace('GAP: ', '').replace('\n', '')
-#                 temp['GAP'] = line
-#             if line == '\n':
-#                 Working_Members.append(temp.copy())
-#         print(Working_Members)
-# update_Working_Members()
-# keep_alive()

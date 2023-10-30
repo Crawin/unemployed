@@ -20,7 +20,7 @@ f = False
 
 class MyClient(discord.Client):
     async def on_ready(self):
-        global f
+        global f, Working_Members, Previous_Logs
         try:
             f = open("text_file.txt", 'r', encoding='UTF-8')
         except:
@@ -29,21 +29,32 @@ class MyClient(discord.Client):
             temp = {}
             print('File exist')
             lines = f.readlines()
+            key = None
             for line in lines:
-                if 'NAME: ' in line:
-                    line = line.replace('NAME: ', '').replace('\n', '')
-                    temp['NAME'] = line
-                if 'ENTER: ' in line:
-                    line = line.replace('ENTER: ', '').replace('\n', '')
-                    temp['ENTER'] = line
-                if 'EXIT: ' in line:
-                    line = line.replace('EXIT: ', '').replace('\n', '')
-                    temp['EXIT'] = line
-                if 'GAP: ' in line:
-                    line = line.replace('GAP: ', '').replace('\n', '')
-                    temp['GAP'] = line
-                if line == '\n':
-                    Working_Members.append(temp.copy())
+                if line[0] == '<':          # 분기점
+                    key = line.replace('<','').replace('>','').replace('\n','')
+                else:
+                    if 'NAME: ' in line:
+                        line = line.replace('NAME: ', '').replace('\n', '')
+                        temp['NAME'] = line
+                    if 'ENTER: ' in line:
+                        line = line.replace('ENTER: ', '').replace('\n', '')
+                        temp['ENTER'] = line
+                    if 'EXIT: ' in line:
+                        line = line.replace('EXIT: ', '').replace('\n', '')
+                        temp['EXIT'] = line
+                    if 'GAP: ' in line:
+                        line = line.replace('GAP: ', '').replace('\n', '')
+                        temp['GAP'] = line
+                    if line == '\n':
+                        # print(f'{temp}완료,{key}')
+                        if key == 'current':
+                            Working_Members.append(temp.copy())
+                        else:
+                            try:
+                                Previous_Logs[key].append(temp.copy())
+                            except:
+                                Previous_Logs[key] = [temp.copy()]
             f.close()
         self.update_Working_Members.start()
         print(f"{self.user.name}이 {datetime.utcnow() + timedelta(hours=9)}에 준비되었습니다.")
@@ -130,6 +141,14 @@ class MyClient(discord.Client):
                     print(f"퇴장: {Wmember}")
             #퇴장하면 싹 갈아엎기
             with open('text_file.txt', 'w', encoding='utf-8') as file:
+                for PLog_key, PLog_val in Previous_Logs.items():
+                    file.write(f'<{PLog_key}>\n')
+                    for PLog in PLog_val:
+                        for key, value in PLog.items():
+                            file.write(f"{key}: {value}\n")
+                        file.write('\n')
+                    file.write(f'</{PLog_key}>\n')
+                file.write('<current>\n')
                 for Wmember in Working_Members:
                     for key, value in Wmember.items():
                         file.write(f"{key}: {value}\n")
@@ -137,10 +156,67 @@ class MyClient(discord.Client):
 
     @tasks.loop(seconds=1)  # 1초마다 업데이트
     async def update_Working_Members(self):
-        update_Working_Members(Working_Members)
-        # Working_Members = []
+        self.Update_Days()
+        update_Working_Members(Working_Members,Previous_Logs,Days_Times)
+            
+    def Update_Days(self):
+        global Days_Times, Previous_Logs, BackUp_Flag, Working_Members
+        now = datetime.utcnow() + timedelta(hours=9)
+        if now.day == 1 or Days_Times == 0:   # 한달이 시작되면 그 달의 평일수 * 9를 계산
+            days = self.GetDayOfMonth(now.year,now.month)            # 해당 달에 일수를 days에 저장
+            if Days_Times == 0:
+                now = datetime.utcnow() + timedelta(hours=9) - timedelta(days= now.day-1)
+                BackUp_Flag = False
+            while (now.weekday() < 5):                          # 반복문이 끝나면 토요일 혹은 일요일
+                now += timedelta(days=1)
+            if now.day == 1 and now.weekday() == 6:                    # 1일부터 일요일일때
+                sat_days = (days - (now.day + 6)) // 7 + 1
+                sun_days = (days - now.day) // 7 + 1
+                Days_Times = (days - sat_days - sun_days)*9
+            else:
+                sat_days = (days - now.day) // 7 + 1
+                sun_days = (days - (now.day + 1)) // 7 + 1
+                Days_Times = (days - sat_days - sun_days)*9
+            if now.day == 1 and BackUp_Flag:
+                BackUp_Flag = False
+                Previous_Logs[datetime.strftime(now.date(),"%Y.%m")] = Working_Members.copy()
+                Working_Members = []
+        else:
+            BackUp_Flag = True
+
+    def IsLeapYear(self,year):
+        if year % 4 != 0:
+            return False
+        
+        if year % 400 == 0:
+            return True
+        
+        if year % 100 != 0:
+            return True
+        
+        return False
+    
+    def GetDayOfMonth(self,year, month):
+        
+        # 먼저 입력받은 월이 2월인지 아닌지 확인함.
+        if month == 2:
+            # IsLeapYear함수를 호출하여 윤년인지 아닌지 판별함. 윤년이면 결과값이 True이므로 29를 리턴. 그렇지 않으면 28을 리턴함.
+            if IsLeapYear(year):
+                return 29
+            else:
+                return 28
+            
+            # 4,6,9,11월일 땐 무조건 30일이므로 30리턴. 해당 월 수가 더 적으므로 4,6,9,11월인지 먼저 조건문을 사용해 판단.
+        if month == 4 or month == 6 or month == 9 or month == 11:
+            return 30
+            
+            # 위의 조건문에 해당되지 않는 1,3,5,7,8,10,12월은 31을 리턴.
+        return 31
 
 Working_Members = []
+Previous_Logs = {}
+Days_Times = 0
+BackUp_Flag = True
 
 keep_alive()
 
