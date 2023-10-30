@@ -38,7 +38,6 @@ def home():
 def run():
     global start_time
     start_time = datetime.utcnow() + timedelta(hours=9)
-    Update_Days()
     app.run(host='0.0.0.0',port=8080)
 
 def keep_alive():
@@ -50,53 +49,3 @@ def update_Working_Members(Wmem, PLog, DTimes):
     Working_Members = Wmem.copy()
     Previous_Logs = PLog.copy()
     Days_Times = DTimes
-    # Update_Days()
-
-def Update_Days():
-    global Days_Times, Previous_Logs
-    now = datetime.utcnow() + timedelta(hours=9)
-    if now.day == 1 or Days_Times == 0:   # 한달이 시작되면 그 달의 평일수 * 9를 계산
-        days = GetDayOfMonth(now.year,now.month)            # 해당 달에 일수를 days에 저장
-        if Days_Times == 0:
-            now = datetime.utcnow() + timedelta(hours=9) - timedelta(days= now.day-1)
-        while (now.weekday() < 5):                          # 반복문이 끝나면 토요일 혹은 일요일
-            now += timedelta(days=1)
-        if now.day == 1 and now.weekday() == 6:                    # 1일부터 일요일일때
-            sat_days = (days - (now.day + 6)) // 7 + 1
-            sun_days = (days - now.day) // 7 + 1
-            Days_Times = (days - sat_days - sun_days)*9
-        else:
-            sat_days = (days - now.day) // 7 + 1
-            sun_days = (days - (now.day + 1)) // 7 + 1
-            Days_Times = (days - sat_days - sun_days)*9
-        if now.day == 1:
-            Previous_Logs[datetime.strftime(now.date(),"%Y.%m")] = Working_Members.copy()
-
-def IsLeapYear(year):
-     if year % 4 != 0:
-          return False
-
-     if year % 400 == 0:
-          return True
-
-     if year % 100 != 0:
-          return True
-
-     return False
-
-def GetDayOfMonth(year, month):
-
-     # 먼저 입력받은 월이 2월인지 아닌지 확인함.
-     if month == 2:
-          # IsLeapYear함수를 호출하여 윤년인지 아닌지 판별함. 윤년이면 결과값이 True이므로 29를 리턴. 그렇지 않으면 28을 리턴함.
-          if IsLeapYear(year):
-               return 29
-          else:
-               return 28
-
-     # 4,6,9,11월일 땐 무조건 30일이므로 30리턴. 해당 월 수가 더 적으므로 4,6,9,11월인지 먼저 조건문을 사용해 판단.
-     if month == 4 or month == 6 or month == 9 or month == 11:
-          return 30
-
-     # 위의 조건문에 해당되지 않는 1,3,5,7,8,10,12월은 31을 리턴.
-     return 31
