@@ -63,9 +63,6 @@
     <ClInclude Include="Include\DDSTextureLoader12.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Include\d3dx12.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Shader\SkyboxShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>

@@ -14,6 +14,8 @@ public:
 	virtual void Render(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 private:
+	virtual D3D12_SHADER_BYTECODE CreateVertexShader();
+	virtual D3D12_SHADER_BYTECODE CreatePixelShader();
 
 };
 

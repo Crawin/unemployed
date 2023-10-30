@@ -27,3 +27,14 @@ void SkyboxShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	Shader::Render(commandList);
 	commandList->DrawInstanced(6, 1, 0, 0);				// draw rect
 }
+
+D3D12_SHADER_BYTECODE SkyboxShader::CreateVertexShader()
+{
+	return CompileShaderCode("TestRootSignature.hlsl", SHADER_TYPE::vs_5_1, m_VertxShaderBlob);
+}
+
+D3D12_SHADER_BYTECODE SkyboxShader::CreatePixelShader()
+{
+	return CompileShaderCode("TestRootSignature.hlsl", SHADER_TYPE::ps_5_1, m_PixelShaderBlob);
+}
+

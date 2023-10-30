@@ -16,6 +16,8 @@ ByteAddressBuffer RawDataList[] : register(t0, space2);
 Buffer<uint> BufferUintList[] : register(t0, space3);
 Buffer<float> BufferFloatList[] : register(t0, space3);
 
+
+
 SamplerState samplerWarp : register(s0);
 SamplerState samplerClamp : register(s1);
 

@@ -5,13 +5,6 @@ class COOLResource;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
-enum ROOT_SIGNATURE_IDX {
-	DESCRIPTOR_HEAP = 0,
-	DESCRIPTOR_IDX_CBV,
-	CAMERA_DATA_CBV,
-	SHADER_DATAS_CBV,
-	ROOT_SIGNATURE_IDX_MAX
-};
 
 class Renderer
 {

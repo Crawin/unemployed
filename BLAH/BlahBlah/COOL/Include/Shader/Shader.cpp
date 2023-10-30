@@ -210,7 +210,7 @@ void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->SetPipelineState(m_PipelineState.Get());
 
 	for (auto mat : m_Materials) {
-		mat.SetDatas(commandList, 1);
+		mat.SetDatas(commandList, DESCRIPTOR_IDX_CONSTANT);
 		// mat->SetDatas(commandList);
 		// auto objects = Mapper->Get(mat);
 		// for (auto obj : objects) 

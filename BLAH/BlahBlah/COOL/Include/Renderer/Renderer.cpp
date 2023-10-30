@@ -232,12 +232,33 @@ bool Renderer::CreateRootSignature()
 
 	const int numParams = ROOT_SIGNATURE_IDX_MAX;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
-	// idx 0: descriptor table ...ROOT_SIGNATURE_IDX enum 참고
+
+	//  ...ROOT_SIGNATURE_IDX enum 참고
+	// idx 0: descriptor table, descriptor table
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;
 	rootParams[0].DescriptorTable.pDescriptorRanges = descRange;
 	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
+	// idx 1: index of descriptor table, root constants
+	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	rootParams[1].Constants.Num32BitValues = 16;
+	rootParams[1].Constants.RegisterSpace = 0;
+	rootParams[1].Constants.RegisterSpace = 0;
+	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// idx 2: camera matrix (view, projection(ortho)), root constants
+	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParams[2].Descriptor.RegisterSpace = 1;
+	rootParams[2].Descriptor.ShaderRegister = 0;
+	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// idx 3: etc (delta time, 
+	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	rootParams[3].Constants.Num32BitValues = 16;
+	rootParams[3].Constants.RegisterSpace = 2;
+	rootParams[3].Descriptor.ShaderRegister = 0;
+	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	//
 	// sampler desc
 	const int samplers = 2;
