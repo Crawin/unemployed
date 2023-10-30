@@ -67,7 +67,7 @@ class MyClient(discord.Client):
             channel = self.get_channel(int(CHAT_CHANNEL_ID))
             if message.content.startswith('현황'):
                 if message.content == '현황':
-                    await channel.send(Working_Members)
+                    # await channel.send(Working_Members)
                     try:
                         file = discord.File("text_file.txt")
                         await channel.send(file=file)
@@ -86,7 +86,7 @@ class MyClient(discord.Client):
                     if name_log == '':
                         await channel.send('해당 ID의 현황이 존재하지 않습니다.')
                     else:
-                        await channel.send(name_log)
+                        # await channel.send(name_log)
                         temp_file_name = current_name + '.txt'
                         with open(temp_file_name, 'w', encoding='utf-8') as file:
                             file.write(name_log)
