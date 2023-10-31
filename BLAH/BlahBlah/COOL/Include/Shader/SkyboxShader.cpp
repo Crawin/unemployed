@@ -13,12 +13,7 @@ SkyboxShader::~SkyboxShader()
 
 bool SkyboxShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap)
 {
-	// 필요한 텍스쳐들 로드함 근데 귀찮다 내일 할까
-	// 4시니까 내일 하자
-
-	Material temp{};
-	m_Materials.push_back(temp);
-
+	// 필요한 텍스쳐들 로드함 여기서 해야하나? 그건 좀인가? ㅖ
 	return CreateShader(device, commandList, rootSignature);
 }
 

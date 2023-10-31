@@ -1,13 +1,15 @@
 ﻿#include "../framework.h"
 #include "Renderer.h"
 #include "COOLResource.h"
-//#include "../Shader/Shader.h"
+//#include "Shader/Shader.h"
 
 #define TEST_SHADER
 
 #ifdef TEST_SHADER
 #include "../Shader/TestShader.h"
 #include "../Shader/SkyboxShader.h"
+#include "../Material.h"
+
 #endif
 
 Renderer::Renderer()
@@ -480,11 +482,65 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
 	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
 
-	// scene
 	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
-	CHECK_CREATE_FAILED(CreateResourceDescriptorHeap(), "CreateResourceDescriptorHeap");
 	CHECK_CREATE_FAILED(LoadShaders(), "LoadShaders Failed!!");
+
+	// scene
+	// 씬 로드 부분 이라고 가정
+#ifdef TEST_SHADER
+	{
+		auto commandAllocator = m_MainCommandAllocator;
+		auto commandList = m_MainCommandList;
+
+		// 씬 로드 플로우????? 임시임
+		//	1. 씬에서 사용할 쉐이더를 로드한다
+		//	2. 씬에서 사용할 매터리얼 로드
+		//		a. 얘가 필요한 텍스쳐들 로드, 로드하면 인덱스를 리턴함
+		//		b. 매터리엘 멤버에 보면 배열 있음(m_TextureIndex). 거기에 텍스쳐 인덱스 넣기
+		//		c. 완료 후 쉐이더에 연결
+		//	2. 오브젝트들 로드 및 매터리얼과 짝지어서 맵퍼같은거에 등록 <- 
+		//  사실 2번 3번 순서는 큰 상관 없을거같음
+
+		commandList->Reset(commandAllocator.Get(), nullptr);
+
+
+		// 아래가 1번
+		// 하드코딩하긴 귀찮으니까 텍스트파일로 빼서 하자
+		// ex) material_load_list.json
+		//		여기 안에 메터리얼 이름부터 해서 로드할 텍스쳐 이름이 쫙 있는거임, 이거 좀 쩌는듯
+		//		
+		//		{name: 임시, shader: 무슨무슨쉐이더,albedo: bbb.dds, ...}, {name: asdf, ...} ...
+
+		// 뭐 대충 메터리얼 로드하는 부분이라고 가정함
+		Material* temp = new Material("임시");
+		int skyBox = CreateTextureFromDDSFile(commandList, L"SkyBox_0.dds", D3D12_RESOURCE_STATE_COMMON);
+		temp->SetAlbedoTextureIndex(skyBox);
+
+		m_Shaders.back()->AddMaterial(temp);
+
+		// 2번은 생략
+		// 3번도 생략
+
+		commandList->Close();
+		ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
+		m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
+
+		UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
+		HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
+		if (m_Fence->GetCompletedValue() < fenceValue) {
+			hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
+			WaitForSingleObject(m_FenceEvent, INFINITE);
+		}
+
+		//for (auto& res : m_UploadResources) {
+		//	delete res;
+		//}
+		//m_UploadResources.clear();
+	}
+#endif // _DEBUG
+
+	CHECK_CREATE_FAILED(CreateResourceDescriptorHeap(), "CreateResourceDescriptorHeap");
 
 	return true;
 }
@@ -587,6 +643,77 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 		IID_PPV_ARGS(&temp));
 
 	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, "buffer"));
+}
+
+int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)
+{
+	ID3D12Resource* texture = nullptr;
+	std::unique_ptr<uint8_t[]> ddsData;
+	std::vector<D3D12_SUBRESOURCE_DATA> subResources;
+	DDS_ALPHA_MODE ddsAlphaMode = DDS_ALPHA_MODE_UNKNOWN;
+	bool isCubeMap = false;
+
+	// dds를 로드한다
+	HRESULT res = DirectX::LoadDDSTextureFromFileEx(m_Device.Get(), fileName, 0, D3D12_RESOURCE_FLAG_NONE, DDS_LOADER_DEFAULT, &texture, ddsData, subResources, &ddsAlphaMode, &isCubeMap);
+
+	// 실패시 -1 리턴
+	if (res == E_FAIL) {
+		// fileName이 wstring이라 wstring -> string으로 바꿔줘야한다
+		std::wstring wstring{ fileName };
+		wstring += L" Failed!!";
+
+		std::string str(wstring.begin(), wstring.end());
+
+		DebugPrint(str);
+		return -1;
+	}
+
+	if (ddsAlphaMode != DDS_ALPHA_MODE_UNKNOWN) {
+		DebugPrint("!!!!!\n");
+	}
+
+	// 리소스 디스크립터
+	UINT64 numObSUbresource = GetRequiredIntermediateSize(texture, 0, subResources.size());
+
+	D3D12_RESOURCE_DESC resDesc = {};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	resDesc.Alignment = 0;
+	resDesc.Width = numObSUbresource;
+	resDesc.Height = 1;
+	resDesc.DepthOrArraySize = 1;										// 텍스쳐어레이같은건 안쓸 예정 아마도
+	resDesc.MipLevels = 1;
+	resDesc.Format = DXGI_FORMAT_UNKNOWN;
+	resDesc.SampleDesc.Count = 1;
+	resDesc.SampleDesc.Quality = 0;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	resDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	// 업로드 힙에다 생성해둔다
+	D3D12_HEAP_PROPERTIES heapProperty = {};
+	heapProperty.Type = D3D12_HEAP_TYPE_UPLOAD;
+	heapProperty.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapProperty.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	heapProperty.CreationNodeMask = 1;
+	heapProperty.VisibleNodeMask = 1;
+
+	// 업로드용 리소스 생성, 나중에 이거 지워야함
+	ID3D12Resource* uploadResource = nullptr;
+	m_Device->CreateCommittedResource(&heapProperty, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&uploadResource));
+	m_UploadResources.push_back(uploadResource);
+
+	// 복사 및 상태 전이
+	UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
+
+	D3D12_RESOURCE_BARRIER resourceBarrier = {};
+	resourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	resourceBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	resourceBarrier.Transition.pResource = texture;
+	resourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	resourceBarrier.Transition.StateAfter = resourceState;
+	resourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	commandList->ResourceBarrier(1, &resourceBarrier);
+
+	return m_Resources.size();
 }
 
 void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)

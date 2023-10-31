@@ -60,9 +60,6 @@
     <ClInclude Include="Include\Renderer\COOLDevice.h">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="Include\DDSTextureLoader12.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Shader\SkyboxShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
@@ -95,14 +92,14 @@
     <ClCompile Include="Include\Renderer\COOLDevice.cpp">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="Include\DDSTextureLoader12.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Shader\SkyboxShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Include\Material.cpp">
       <Filter>소스 파일\Renderer\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\framework.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

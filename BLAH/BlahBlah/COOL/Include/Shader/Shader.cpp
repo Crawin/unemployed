@@ -15,6 +15,8 @@ Shader::Shader(int queue, std::string_view name) :
 
 Shader::~Shader()
 {
+	for (auto& mats : m_Materials)
+		delete mats;
 }
 
 D3D12_SHADER_BYTECODE Shader::CreateHullShader()
@@ -210,7 +212,7 @@ void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->SetPipelineState(m_PipelineState.Get());
 
 	for (auto mat : m_Materials) {
-		mat.SetDatas(commandList, DESCRIPTOR_IDX_CONSTANT);
+		mat->SetDatas(commandList, DESCRIPTOR_IDX_CONSTANT);
 		// mat->SetDatas(commandList);
 		// auto objects = Mapper->Get(mat);
 		// for (auto obj : objects) 

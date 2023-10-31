@@ -50,6 +50,9 @@ public:
 
 	// ------------------- commandlist가 하는 일들 묶음 -------------------
 
+	// create texture, returns index of texture..	씬 생성단계에서만 불러줘야 한다. 업로드버퍼가 생기니 주의
+	int CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState);
+
 	// 리소스 복사는 subresourceData로 하자 이건 보류
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
@@ -115,6 +118,8 @@ private:
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
 
 	// 리소스힙 관련
+	std::vector<ID3D12Resource*> m_UploadResources;
+
 	std::vector<COOLResourcePtr> m_Resources;
 	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
 };

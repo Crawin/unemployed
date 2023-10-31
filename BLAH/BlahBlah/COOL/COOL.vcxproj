@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Include\Application.cpp" />
     <ClCompile Include="Include\DDSTextureLoader12.cpp" />
+    <ClCompile Include="Include\framework.cpp" />
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material.cpp" />
     <ClCompile Include="Include\Renderer\COOLDevice.cpp" />
