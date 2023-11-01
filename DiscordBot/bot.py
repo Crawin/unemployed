@@ -157,7 +157,7 @@ class MyClient(discord.Client):
     async def update_Working_Members(self):
         self.Update_Days()
         update_Working_Members(Working_Members,Previous_Logs,Days_Times)
-            
+
     def Update_Days(self):
         global Days_Times, Previous_Logs, BackUp_Flag, Working_Members
         now = datetime.utcnow() + timedelta(hours=9)
@@ -166,6 +166,13 @@ class MyClient(discord.Client):
             if Days_Times == 0:
                 now = datetime.utcnow() + timedelta(hours=9) - timedelta(days= now.day-1)
                 BackUp_Flag = False
+
+            if now.day == 1 and BackUp_Flag:
+                print(f'{now.month}가 되었습니다. 데이터 이전을 진행합니다. {Working_Members} -> {Previous_Logs}')
+                BackUp_Flag = False
+                Previous_Logs[datetime.strftime(now.date(),"%Y.%m")] = Working_Members.copy()
+                Working_Members = []
+
             while (now.weekday() < 5):                          # 반복문이 끝나면 토요일 혹은 일요일
                 now += timedelta(days=1)
             if now.day == 1 and now.weekday() == 6:                    # 1일부터 일요일일때
@@ -176,10 +183,6 @@ class MyClient(discord.Client):
                 sat_days = (days - now.day) // 7 + 1
                 sun_days = (days - (now.day + 1)) // 7 + 1
                 Days_Times = (days - sat_days - sun_days)*9
-            if now.day == 1 and BackUp_Flag:
-                BackUp_Flag = False
-                Previous_Logs[datetime.strftime(now.date(),"%Y.%m")] = Working_Members.copy()
-                Working_Members = []
         else:
             BackUp_Flag = True
 
