@@ -119,7 +119,7 @@ D3D12_SHADER_BYTECODE Shader::CompileShaderCode(std::string_view fileName, SHADE
 {
 	UINT nCompileFlags = 0;
 #if defined(_DEBUG)
-	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES;
 #endif
 
 	std::string file(FILE_PATH);

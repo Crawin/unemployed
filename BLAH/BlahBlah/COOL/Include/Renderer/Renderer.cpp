@@ -210,7 +210,7 @@ bool Renderer::CreateDSV()
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCPUHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	m_Device->CreateDepthStencilView(m_DepthStencilBuffer->GetResource(), &dsvDesc, dsvCPUHandle);
 
-	RegisterShaderResource(m_DepthStencilBuffer);
+	//RegisterShaderResource(m_DepthStencilBuffer);
 	return true;
 }
 
@@ -218,7 +218,7 @@ bool Renderer::CreateRootSignature()
 {
 	// t0 
 	// 
-	const int resourceType = 3;
+	const int resourceType = 5;
 	D3D12_DESCRIPTOR_RANGE descRange[resourceType] = {};
 	for (int i = 0; i < resourceType; ++i) {
 		descRange[i].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -238,7 +238,7 @@ bool Renderer::CreateRootSignature()
 	//  ...ROOT_SIGNATURE_IDX enum 참고
 	// idx 0: descriptor table, descriptor table
 	rootParams[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	rootParams[0].DescriptorTable.NumDescriptorRanges = 1;
+	rootParams[0].DescriptorTable.NumDescriptorRanges = resourceType;
 	rootParams[0].DescriptorTable.pDescriptorRanges = descRange;
 	rootParams[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
@@ -249,13 +249,13 @@ bool Renderer::CreateRootSignature()
 	rootParams[1].Constants.RegisterSpace = 0;
 	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 2: camera matrix (view, projection(ortho)), root constants
+	// idx 2: camera matrix (view, projection(ortho)), cbv
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParams[2].Descriptor.RegisterSpace = 1;
 	rootParams[2].Descriptor.ShaderRegister = 0;
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 3: etc (delta time, 
+	// idx 3: etc (delta time, 이것도 cbv로?
 	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	rootParams[3].Constants.Num32BitValues = 16;
 	rootParams[3].Constants.RegisterSpace = 2;
@@ -372,19 +372,23 @@ bool Renderer::CreateResourceDescriptorHeap()
 	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
 	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap 생성 실패!");
 
+	auto currentCPUPtr = m_ResourceHeap->GetCPUDescriptorHandleForHeapStart();
+	//auto currentGPUPtr = m_ResourceHeap->GetGPUDescriptorHandleForHeapStart();
+
 	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
-	for (auto resource : m_Resources) {
-		ID3D12Resource* res = resource.get()->GetResource();
+	for (int i = 0; i < m_Resources.size(); ++i) {
+	//for (auto resource : m_Resources) {
+		ID3D12Resource* res = m_Resources[i].get()->GetResource();
 		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.Format = resDesc.Format;
-		srvDesc.ViewDimension = resource.get()->GetDimension();
+		srvDesc.ViewDimension = m_Resources[i].get()->GetDimension();
 
 		switch (srvDesc.ViewDimension) {
 		case D3D12_SRV_DIMENSION_TEXTURE2D:
-			srvDesc.Texture2D.MipLevels = -1;
+			srvDesc.Texture2D.MipLevels = 1;
 			srvDesc.Texture2D.MostDetailedMip = 0;
 			srvDesc.Texture2D.PlaneSlice = 0;
 			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
@@ -402,14 +406,17 @@ bool Renderer::CreateResourceDescriptorHeap()
 			srvDesc.Buffer.StructureByteStride = 0;
 			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + resource.get()->GetName());
+			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + m_Resources[i].get()->GetName());
 			break;
 
 		default:
-			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + resource.get()->GetName());
+			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + m_Resources[i].get()->GetName());
 			return false;
 		}
 
+		ID3D12Resource* resource = m_Resources[i]->GetResource();
+		m_Device->CreateShaderResourceView(resource, &srvDesc, currentCPUPtr);
+		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
 	}
 	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
 	// D3D12_SRV_DIMENSION_BUFFER = 1,
@@ -494,7 +501,8 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		auto commandList = m_MainCommandList;
 
 		// 씬 로드 플로우????? 임시임
-		//	1. 씬에서 사용할 쉐이더를 로드한다
+		//	0. 루트시그니쳐가 있어야함
+		//	1. 씬에서 사용할 쉐이더를 로드한다 <- 지금은 위에서 함
 		//	2. 씬에서 사용할 매터리얼 로드
 		//		a. 얘가 필요한 텍스쳐들 로드, 로드하면 인덱스를 리턴함
 		//		b. 매터리엘 멤버에 보면 배열 있음(m_TextureIndex). 거기에 텍스쳐 인덱스 넣기
@@ -502,6 +510,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		//	2. 오브젝트들 로드 및 매터리얼과 짝지어서 맵퍼같은거에 등록 <- 
 		//  사실 2번 3번 순서는 큰 상관 없을거같음
 
+		m_MainCommandAllocator->Reset();
 		commandList->Reset(commandAllocator.Get(), nullptr);
 
 
@@ -514,7 +523,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 		// 뭐 대충 메터리얼 로드하는 부분이라고 가정함
 		Material* temp = new Material("임시");
-		int skyBox = CreateTextureFromDDSFile(commandList, L"SkyBox_0.dds", D3D12_RESOURCE_STATE_COMMON);
+		int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_GENERIC_READ);
 		temp->SetAlbedoTextureIndex(skyBox);
 
 		m_Shaders.back()->AddMaterial(temp);
@@ -533,10 +542,13 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 			WaitForSingleObject(m_FenceEvent, INFINITE);
 		}
 
-		//for (auto& res : m_UploadResources) {
-		//	delete res;
-		//}
-		//m_UploadResources.clear();
+		for (int i = 0; i < m_UploadResources.size(); ++i) {
+			if (m_UploadResources[i]) {
+				m_UploadResources[i]->Release();
+				m_UploadResources[i] = nullptr;
+			}
+		}
+		m_UploadResources.clear();
 	}
 #endif // _DEBUG
 
@@ -660,9 +672,10 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	if (res == E_FAIL) {
 		// fileName이 wstring이라 wstring -> string으로 바꿔줘야한다
 		std::wstring wstring{ fileName };
-		wstring += L" Failed!!";
+		wstring += L"Load Fail!! Check path";
 
-		std::string str(wstring.begin(), wstring.end());
+		std::string str;
+		str.assign(wstring.begin(), wstring.end());
 
 		DebugPrint(str);
 		return -1;
@@ -712,8 +725,12 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	resourceBarrier.Transition.StateAfter = resourceState;
 	resourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	commandList->ResourceBarrier(1, &resourceBarrier);
+	
+	COOLResourcePtr newResource(new COOLResource(texture, resourceState, D3D12_HEAP_TYPE_DEFAULT));
+	newResource->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	newResource->SetName("Texture");
 
-	return m_Resources.size();
+	return RegisterShaderResource(newResource);
 }
 
 void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)
@@ -768,6 +785,10 @@ void Renderer::Render()
 
 	// root signature set
 	m_MainCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
+
+	// 리소스 set
+	m_MainCommandList->SetDescriptorHeaps(1, m_ResourceHeap.GetAddressOf());
+	m_MainCommandList->SetGraphicsRootDescriptorTable(0, m_ResourceHeap->GetGPUDescriptorHandleForHeapStart());
 
 	SetViewportScissorRect();
 

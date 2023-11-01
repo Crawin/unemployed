@@ -66,6 +66,9 @@
     <ClInclude Include="Include\Material.h">
       <Filter>소스 파일\Renderer\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Include\DDSTextureLoader12.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -101,6 +104,9 @@
     <ClCompile Include="Include\framework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Include\DDSTextureLoader12.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt">
@@ -109,6 +115,12 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Include\Shader\HLSL\TestRootSignature.hlsl">
+      <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Include\Shader\HLSL\TestSkyBoxShader.hlsl">
+      <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Include\Shader\HLSL\ShaderBaseParameters.hlsl">
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
