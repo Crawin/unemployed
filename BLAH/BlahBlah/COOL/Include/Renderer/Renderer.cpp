@@ -523,7 +523,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 		// 뭐 대충 메터리얼 로드하는 부분이라고 가정함
 		Material* temp = new Material("임시");
-		int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_COPY_DEST);
+		int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		temp->SetAlbedoTextureIndex(skyBox);
 
 		m_Shaders.back()->AddMaterial(temp);
