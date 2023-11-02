@@ -10,6 +10,7 @@ cbuffer t
 struct VSOUT
 {
 	float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD;
 };
 
 VSOUT vs(uint instancID : SV_VertexID)
@@ -18,32 +19,38 @@ VSOUT vs(uint instancID : SV_VertexID)
 	VSOUT op;
 	
 	op.pos = float4(0.0, 0.8, 0.8, 1.0);
-
+    op.uv = float2(0, 0);
 	if (instancID == 0)
 	{
-		op.pos = float4(0.0, 1.0, 0.8, 1.0);
-	}
+		op.pos = float4(-1.0, 1.0, 0.8, 1.0);
+		op.uv = float2(0, 0);
+    }
 	else if (instancID == 1)
 	{
-		op.pos = float4(1.0, 1.0, 0.8, 1.0);
-	}
+		op.pos = float4(1.0, 1.0, 0.7, 1.0);
+		op.uv = float2(1, 0);
+    }
 	else if (instancID == 2)
 	{
-		op.pos = float4(1.0, -1.0, 0.8, 1.0);
-	}
+		op.pos = float4(1.0, -1.0, 0.6, 1.0);
+		op.uv = float2(1, 1);
+    }
 	
 	else if (instancID == 3)
 	{
-		op.pos = float4(0.0, 1.0, 0.8, 1.0);
-	}
+		op.pos = float4(-1.0, 1.0, 0.8, 1.0);
+		op.uv = float2(0, 0);
+    }
 	else if (instancID == 4)
 	{
-		op.pos = float4(1.0, -1.0, 0.8, 1.0);
-	}
+		op.pos = float4(1.0, -1.0, 0.9, 1.0);
+		op.uv = float2(1, 1);
+    }
 	else if (instancID == 5)
 	{
-		op.pos = float4(0.0, -1.0, 0.8, 1.0);
-	}
+		op.pos = float4(-1.0, -1.0, 0.6, 1.0);
+		op.uv = float2(0, 1);
+    }
 	
 	return op;
 }
@@ -52,13 +59,12 @@ float4 ps(VSOUT input) : SV_TARGET
 {
 	int albedoIdx = materialIndex[ALBEDO];
 
-	// ÀÓ½Ã¶ó¼­ ÅØ½ºÃÄÅ¥ºê´Â ¾È¾²°í ±×³É Åõµğ ÀÌ¹ÌÁö¸¸ ±×¸²
+	// ì„ì‹œë¼ì„œ í…ìŠ¤ì³íë¸ŒëŠ” ì•ˆì“°ê³  ê·¸ëƒ¥ íˆ¬ë”” ì´ë¯¸ì§€ë§Œ ê·¸ë¦¼
 	
-	float2 uv = (input.pos.xy + 1) / 2;
 	
-	return float4((input.pos.z), 0, 0, 1);
+    //return float4(uv, input.pos.z, 1);
 	
-	return Tex2DList[albedoIdx].Sample(samplerClamp, uv);
+    return Tex2DList[albedoIdx].Sample(samplerClamp, input.uv);
 	
 	//return TexCubeList[texCubeIdx].Sample(samplerClamp, input.pos.xyz);
 }
