@@ -1,6 +1,7 @@
 #include "framework.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
+#include "Scene.h"
 
 Application::Application()
 {
@@ -60,7 +61,7 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	CHECK_CREATE_FAILED(Renderer::Instance().Init(m_windowSize, m_hWnd), "렌더러 생성 실패");
 
 	// 씬매니저의 생성 및 로드?
-
+	CHECK_CREATE_FAILED(CScene::Instance().Init(), "씬 생성 실패");
 	return true;
 }
 
@@ -75,8 +76,8 @@ int Application::StartProgram()
 		}
 		else {
 			// 게임 루프
-
-			Renderer::Instance().Render();
+			CScene::Instance().Render();
+			//Renderer::Instance().Render();
 			/*
 #ifdef _DEBUG
 			TCHAR szTitle[30];

@@ -847,3 +847,9 @@ void Renderer::Render()
 	}
 
 }
+
+Renderer* Renderer::GetRendererPtr()
+{
+	std::cout << "ptr: " << &Renderer::Instance() << std::endl;
+	return &Renderer::Instance();
+}
