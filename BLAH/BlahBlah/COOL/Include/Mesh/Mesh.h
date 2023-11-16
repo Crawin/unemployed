@@ -35,7 +35,7 @@ public:
 	Mesh() {}
 	~Mesh() {}
 
-	static void pasdf() {}
+	void LoadFile() {}
 
 	void SetPositionBuffer(int idx)		{ m_PositionBuffer = idx; }
 	void SetNormalBuffer(int idx)		{ m_NormalBuffer = idx; }
