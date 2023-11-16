@@ -152,6 +152,7 @@
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\Math.h" />
+    <ClInclude Include="Include\Mesh\Mesh.h" />
     <ClInclude Include="Include\OnDebug.h" />
     <ClInclude Include="Include\Renderer\COOLDevice.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
@@ -171,6 +172,7 @@
     </ClCompile>
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material.cpp" />
+    <ClCompile Include="Include\Mesh\Mesh.cpp" />
     <ClCompile Include="Include\Renderer\COOLDevice.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />

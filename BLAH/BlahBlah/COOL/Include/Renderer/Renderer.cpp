@@ -627,7 +627,7 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 	ID3D12Resource* temp;
 
 	D3D12_RESOURCE_DESC resDesc = {};
-	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Alignment = 0;
 	resDesc.Width = bytes;
 	resDesc.Height = 1;
@@ -731,6 +731,16 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	newResource->SetName("Texture");
 
 	return RegisterShaderResource(newResource);
+}
+
+int Renderer::LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
+{
+	std::vector<int> data;
+
+	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, data.size());
+
+	
+	return 0;
 }
 
 void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)

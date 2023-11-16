@@ -42,18 +42,23 @@ public:
 	// 생성된 할당자,리스트의 인덱스를 outIndex로 돌려줌
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
+private:
 	// -------------------  Device가 하는 일들 단순 묶음 -------------------
 
 	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size);
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes);
 	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 일단 없앰
 
+
+public:
 	// ------------------- commandlist가 하는 일들 묶음 -------------------
 
 	// create texture, returns index of texture..	씬 생성단계에서만 불러줘야 한다. 업로드버퍼가 생기니 주의
 	int CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState);
 
-	// 리소스 복사는 subresourceData로 하자 이건 보류
+	int LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
+
+	// 리소스 복사는 subresourceData로 하자 이건 보류 사용금지!!!!!!!!!!!!!!!!
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
 	// ------------------- 기타등등 -------------------

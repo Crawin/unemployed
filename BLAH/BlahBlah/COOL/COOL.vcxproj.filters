@@ -31,6 +31,9 @@
     <Filter Include="소스 파일\Renderer\Material">
       <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Mesh">
+      <UniqueIdentifier>{979dc6b6-e94e-47f7-a39b-6a9e1fd2ce2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="Include\DDSTextureLoader12.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Mesh\Mesh.h">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -106,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="Include\DDSTextureLoader12.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Mesh\Mesh.cpp">
+      <Filter>소스 파일\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
