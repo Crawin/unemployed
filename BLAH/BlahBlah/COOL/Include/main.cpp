@@ -6,10 +6,10 @@
 
 
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 	SIZE temp = { 1280, 720 };
-	if (false == Application::Instance().Init(hInstance, temp)) {
+	if (false == Application::GetInstance().Init(hInstance, temp)) {
 		DebugPrint("Application Init failed!!\n");
 		system("Pause");
 		return 1;
@@ -17,6 +17,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmd
 
 
 
-	Application::Instance().StartProgram();
+	Application::GetInstance().StartProgram();
 
 }

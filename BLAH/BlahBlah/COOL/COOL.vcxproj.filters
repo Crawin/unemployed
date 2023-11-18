@@ -28,11 +28,11 @@
     <Filter Include="소스 파일\Renderer\DX12Wrapper">
       <UniqueIdentifier>{1cef2ef1-2570-4108-95ef-13dff4c98ea7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Renderer\Material">
-      <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Mesh">
       <UniqueIdentifier>{979dc6b6-e94e-47f7-a39b-6a9e1fd2ce2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Material">
+      <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +67,7 @@
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Include\Material.h">
-      <Filter>소스 파일\Renderer\Material</Filter>
+      <Filter>소스 파일\Material</Filter>
     </ClInclude>
     <ClInclude Include="Include\DDSTextureLoader12.h">
       <Filter>헤더 파일</Filter>
@@ -105,7 +105,7 @@
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Include\Material.cpp">
-      <Filter>소스 파일\Renderer\Material</Filter>
+      <Filter>소스 파일\Material</Filter>
     </ClCompile>
     <ClCompile Include="Include\framework.cpp">
       <Filter>소스 파일</Filter>

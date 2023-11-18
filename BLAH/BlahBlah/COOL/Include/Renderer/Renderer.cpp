@@ -522,11 +522,23 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		//		{name: 임시, shader: 무슨무슨쉐이더,albedo: bbb.dds, ...}, {name: asdf, ...} ...
 
 		// 뭐 대충 메터리얼 로드하는 부분이라고 가정함
-		Material* temp = new Material("임시");
-		int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-		temp->SetAlbedoTextureIndex(skyBox);
+		// 로드 해야 할 메터리얼 파일들이 txt로 리스트로 줄마다 나열되어있음
+		// SkyBox.json
+		// asdf.json
+		// ...
 
-		m_Shaders.back()->AddMaterial(temp);
+		const char* materialLoadList[] = { "SkyBox.json", };
+
+		for (int i = 0; i < _countof(materialLoadList); ++i) {
+			Material* temp = new Material("임시");
+			temp->LoadTexture(commandList, materialLoadList[i]);
+
+			int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			
+			temp->SetAlbedoTextureIndex(skyBox);
+
+			m_Shaders.back()->AddMaterial(temp);
+		}
 
 		// 2번은 생략
 		// 3번도 생략

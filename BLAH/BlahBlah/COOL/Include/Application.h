@@ -7,7 +7,7 @@
 class Application
 {
 public:
-	static Application& Instance() {
+	static Application& GetInstance() {
 		static Application inst;
 		return inst;
 	}

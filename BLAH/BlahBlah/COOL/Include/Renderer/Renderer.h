@@ -9,7 +9,7 @@ using COOLResourcePtr = std::shared_ptr<COOLResource>;
 class Renderer
 {
 public:
-	static Renderer& Instance() {
+	static Renderer& GetInstance() {
 		static Renderer inst;
 		return inst;
 	}

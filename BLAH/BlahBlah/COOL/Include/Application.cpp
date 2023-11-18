@@ -57,7 +57,7 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	CHECK_CREATE_FAILED(InitWindow(), "윈도우 생성 실패");
 
 	// 렌더러를 만든다
-	CHECK_CREATE_FAILED(Renderer::Instance().Init(m_windowSize, m_hWnd), "렌더러 생성 실패");
+	CHECK_CREATE_FAILED(Renderer::GetInstance().Init(m_windowSize, m_hWnd), "렌더러 생성 실패");
 
 	// 씬매니저의 생성 및 로드?
 
@@ -76,7 +76,7 @@ int Application::StartProgram()
 		else {
 			// 게임 루프
 
-			Renderer::Instance().Render();
+			Renderer::GetInstance().Render();
 			/*
 #ifdef _DEBUG
 			TCHAR szTitle[30];
@@ -94,7 +94,7 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
-		Application::Instance().m_GameLoop = false;
+		Application::GetInstance().m_GameLoop = false;
 		break;
 	}
 
