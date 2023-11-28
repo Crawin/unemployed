@@ -35,11 +35,15 @@ public:
 
 	void TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState);
 
+	void DontReleaseOnDesctruct() { m_Release = false; }
+
 private:
 	std::string m_Name;
 	ID3D12Resource* m_Resource = nullptr;
 	D3D12_RESOURCE_STATES m_CurStateMap = D3D12_RESOURCE_STATE_COMMON;
 	D3D12_HEAP_TYPE m_HeapType = D3D12_HEAP_TYPE_DEFAULT;
 	D3D12_SRV_DIMENSION m_Dimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+
+	bool m_Release = true;
 };
 

@@ -36,13 +36,13 @@ private:
 
 	std::vector<Mesh> m_Childs;
 
-	void BuildMesh(std::ifstream& file);
+	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file);
 
 public:
 	Mesh() {}
 	~Mesh() {}
 
-	bool LoadFile(const char* fileName);
+	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
 
 	void SetPositionBuffer(int idx)		{ m_PositionBuffer = idx; }
 	void SetNormalBuffer(int idx)		{ m_NormalBuffer = idx; }

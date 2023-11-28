@@ -11,7 +11,7 @@ COOLResource::COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initS
 
 COOLResource::~COOLResource()
 {
-	if (m_Resource)
+	if (m_Resource && m_Release)
 		m_Resource->Release();
 }
 

@@ -23,7 +23,10 @@ Renderer::~Renderer()
 	// 확실하게 체크하기 위해서는 어케해야할까?
 	// Renderer 말고 Application에서 하자
 
-/*
+	// 혹시 모르니 여기서 모두 해제하고 가자
+	m_Resources.clear();
+	m_VertexIndexDatas.clear();
+	
 	// 죽기 전에 살아있는 애들 확인하고 간다
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
@@ -31,7 +34,7 @@ Renderer::~Renderer()
 	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
 	debug->Release();
 #endif
-*/
+
 }
 
 bool Renderer::CreateDevice()
@@ -162,7 +165,6 @@ bool Renderer::CreateRTVAndDSVDescrHeap()
 
 	return true;
 }
-
 
 bool Renderer::CreateRTV()
 {
@@ -543,7 +545,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 		// 3번이긴 하지?
 		Mesh tempMesh;
-		tempMesh.LoadFile("satodia.bin");
+		tempMesh.LoadFile(commandList, "satodia.bin");
 
 
 		// 업로드버퍼같은거 실행

@@ -1,7 +1,8 @@
 #include "../framework.h"
+#include "../Renderer/Renderer.h"
 #include "Mesh.h"
 
-void Mesh::BuildMesh(std::ifstream& file)
+void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file)
 {
 	// 메쉬 파일 구조
 	// 1. 이름 길이					// int
@@ -47,7 +48,7 @@ void Mesh::BuildMesh(std::ifstream& file)
 		std::vector<XMFLOAT3> position(vertexLen);
 		file.read((char*)(&position[0]), sizeof(XMFLOAT3) * vertexLen);
 		// todo
-		// 이 버텍스 정보를 가지고
+		m_PositionBuffer =  Renderer::GetInstance().CreateBufferFromVector(commandList, position, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// normal
@@ -55,6 +56,8 @@ void Mesh::BuildMesh(std::ifstream& file)
 	if (vertexLen > 0) {
 		std::vector<XMFLOAT3> normal(vertexLen);
 		file.read((char*)(&normal[0]), sizeof(XMFLOAT3) * vertexLen);
+
+		m_NormalBuffer =  Renderer::GetInstance().CreateBufferFromVector(commandList, normal, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// tangent
@@ -63,8 +66,7 @@ void Mesh::BuildMesh(std::ifstream& file)
 		std::vector<XMFLOAT3> tangent(vertexLen);
 		file.read((char*)(&tangent[0]), sizeof(XMFLOAT3) * vertexLen);
 
-		// todo
-		// 이 버텍스 정보를 가지고
+		 m_TangentBuffer =  Renderer::GetInstance().CreateBufferFromVector(commandList, tangent, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// uv
@@ -73,8 +75,7 @@ void Mesh::BuildMesh(std::ifstream& file)
 		std::vector<XMFLOAT2> uv(vertexLen);
 		file.read((char*)(&uv[0]), sizeof(XMFLOAT2) * vertexLen);
 
-		// todo
-		// 이 버텍스 정보를 가지고
+		m_TexCoord0Buffer = Renderer::GetInstance().CreateBufferFromVector(commandList, uv, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// 5. 인덱스 정보				// int int*int
@@ -85,6 +86,8 @@ void Mesh::BuildMesh(std::ifstream& file)
 		file.read((char*)(&index[0]), sizeof(unsigned int) * indexNum);
 		DebugPrint(std::format("name: {}", m_Name));
 		DebugPrint(std::format("indexNum: {}, {}", index.size(), index.back()));
+
+		m_IndexBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, index, D3D12_RESOURCE_STATE_INDEX_BUFFER);
 	}
 
 	unsigned int childNum;
@@ -95,12 +98,12 @@ void Mesh::BuildMesh(std::ifstream& file)
 	m_Childs.reserve(childNum);
 	for (int i = 0; i < childNum; ++i) {
 		Mesh newMesh;
-		newMesh.BuildMesh(file);
+		newMesh.BuildMesh(commandList, file);
 		m_Childs.push_back(newMesh);
 	}
 }
 
-bool Mesh::LoadFile(const char* fileName)
+bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
 {
 	std::ifstream meshFile(fileName, std::ios::binary);
 
@@ -109,6 +112,5 @@ bool Mesh::LoadFile(const char* fileName)
 		return false;
 	}
 
-	BuildMesh(meshFile);
-
+	BuildMesh(commandList, meshFile);
 }
