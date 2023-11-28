@@ -23,7 +23,7 @@ Renderer::~Renderer()
 	// 확실하게 체크하기 위해서는 어케해야할까?
 	// Renderer 말고 Application에서 하자
 
-	// 혹시 모르니 여기서 모두 해제하고 가자
+	// 혹시 모르니 여기서 모두 해제
 	m_Resources.clear();
 	m_VertexIndexDatas.clear();
 	
@@ -546,7 +546,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		// 3번이긴 하지?
 		Mesh tempMesh;
 		tempMesh.LoadFile(commandList, "satodia.bin");
-
+		m_Meshes.push_back(tempMesh);
 
 		// 업로드버퍼같은거 실행
 		commandList->Close();

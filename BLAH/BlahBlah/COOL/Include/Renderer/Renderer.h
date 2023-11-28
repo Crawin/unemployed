@@ -109,7 +109,6 @@ public:
 	// 해당 리소스의 인덱스 번호를 되돌려줌
 	UINT RegisterShaderResource(COOLResourcePtr resource);
 
-
 	// render
 	void Render();
 
@@ -163,5 +162,9 @@ private:
 
 	std::vector<COOLResourcePtr> m_Resources;
 	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
+
+	// 임시
+	std::vector<Mesh> m_Meshes;
+
 };
 

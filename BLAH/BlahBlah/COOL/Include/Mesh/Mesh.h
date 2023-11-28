@@ -20,11 +20,18 @@ private:
 	int m_PositionBuffer = -1;
 	int m_NormalBuffer = -1;
 	int m_TangentBuffer = -1;							// 혹시 모를 노말맵핑을 위해
-	
 	int m_TexCoord0Buffer = -1;
 	//int m_TexCoord1Buffer = -1;						// 혹시 모를
 
-	int m_SubSetIndexBuffer = -1;						// 인덱스 버퍼
+	int m_IndexBuffer = -1;						// 인덱스 버퍼
+
+	D3D12_VERTEX_BUFFER_VIEW m_PositionBufferView = {};
+	D3D12_VERTEX_BUFFER_VIEW m_NormalBufferView = {};
+	D3D12_VERTEX_BUFFER_VIEW m_TangentBufferView = {};
+	D3D12_VERTEX_BUFFER_VIEW m_TexCoord0BufferView = {};
+	//D3D12_VERTEX_BUFFER_VIEW m_TexCoord1BufferView = {};
+
+	D3D12_INDEX_BUFFER_VIEW m_IndexBufferView = {};
 
 	// name
 	std::string m_Name = "";
@@ -38,6 +45,9 @@ private:
 
 	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file);
 
+	int m_VertexNum = 0;
+	int m_IndexNum = 0;
+
 public:
 	Mesh() {}
 	~Mesh() {}
@@ -49,6 +59,8 @@ public:
 	void SetTangentBuffer(int idx)		{ m_TangentBuffer = idx; }
 	void SetTexCoord0Buffer(int idx)	{ m_TexCoord0Buffer = idx; }
 	//void SetTexCoord1Buffer(int idx)	{ m_TexCoord1Buffer = idx; }
-	void InsertIndexBuffer(int idx)		{ m_SubSetIndexBuffer = idx; }
+	void InsertIndexBuffer(int idx)		{ m_IndexBuffer = idx; }
+
+	void Render(ComPtr<ID3D12GraphicsCommandList> commandList);
 };
 

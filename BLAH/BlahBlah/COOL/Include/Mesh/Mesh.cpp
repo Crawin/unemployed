@@ -49,6 +49,12 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		file.read((char*)(&position[0]), sizeof(XMFLOAT3) * vertexLen);
 		// todo
 		m_PositionBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, position, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+		m_PositionBufferView.BufferLocation = 0;
+		m_PositionBufferView.StrideInBytes = sizeof(XMFLOAT3);
+		m_PositionBufferView.SizeInBytes = sizeof(XMFLOAT3) * vertexLen;
+
+		m_VertexNum = vertexLen;
 	}
 
 	// normal
@@ -58,6 +64,10 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		file.read((char*)(&normal[0]), sizeof(XMFLOAT3) * vertexLen);
 
 		m_NormalBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, normal, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+		m_NormalBufferView.BufferLocation = 0;
+		m_NormalBufferView.StrideInBytes = sizeof(XMFLOAT3);
+		m_NormalBufferView.SizeInBytes = sizeof(XMFLOAT3) * vertexLen;
 	}
 
 	// tangent
@@ -66,7 +76,11 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		std::vector<XMFLOAT3> tangent(vertexLen);
 		file.read((char*)(&tangent[0]), sizeof(XMFLOAT3) * vertexLen);
 
-		 m_TangentBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, tangent, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		m_TangentBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, tangent, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+		m_TangentBufferView.BufferLocation = 0;
+		m_TangentBufferView.StrideInBytes = sizeof(XMFLOAT3);
+		m_TangentBufferView.SizeInBytes = sizeof(XMFLOAT3) * vertexLen;
 	}
 
 	// uv
@@ -76,6 +90,10 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		file.read((char*)(&uv[0]), sizeof(XMFLOAT2) * vertexLen);
 
 		m_TexCoord0Buffer = Renderer::GetInstance().CreateBufferFromVector(commandList, uv, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+
+		m_TexCoord0BufferView.BufferLocation = 0;
+		m_TexCoord0BufferView.StrideInBytes = sizeof(XMFLOAT2);
+		m_TexCoord0BufferView.SizeInBytes = sizeof(XMFLOAT2) * vertexLen;
 	}
 
 	// 5. ¿Œµ¶Ω∫ ¡§∫∏				// int int*int
@@ -88,6 +106,12 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		DebugPrint(std::format("indexNum: {}, {}", index.size(), index.back()));
 
 		m_IndexBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, index, D3D12_RESOURCE_STATE_INDEX_BUFFER);
+
+		m_IndexBufferView.BufferLocation = 0;
+		m_IndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+		m_IndexBufferView.SizeInBytes = sizeof(unsigned int) * indexNum;
+
+		m_IndexNum = indexNum;
 	}
 
 	unsigned int childNum;
@@ -113,4 +137,17 @@ bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* f
 	}
 
 	BuildMesh(commandList, meshFile);
+}
+
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[4] = { 
+		m_PositionBufferView,
+		m_NormalBufferView, 
+		m_TangentBufferView, 
+		m_TexCoord0BufferView
+	};
+
+	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
+	commandList->DrawIndexedInstanced(m_IndexNum, 1, 0, 0, 0);
 }
