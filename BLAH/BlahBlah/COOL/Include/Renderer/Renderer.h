@@ -2,6 +2,7 @@
 
 class Shader;
 class COOLResource;
+class Mesh;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 

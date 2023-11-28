@@ -139,7 +139,7 @@ bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* f
 	BuildMesh(commandList, meshFile);
 }
 
-void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList) const
 {
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[4] = { 
 		m_PositionBufferView,
@@ -149,5 +149,9 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	};
 
 	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
+	commandList->IASetIndexBuffer(&m_IndexBufferView);
 	commandList->DrawIndexedInstanced(m_IndexNum, 1, 0, 0, 0);
+
+	for (const auto& mesh : m_Childs)
+		mesh.Render(commandList);
 }
