@@ -13,6 +13,7 @@
 // 임시리소스를 진짜 버퍼로 복사함
 // 맨 뒤에 임시리소스를 해제하는데 그건 렌더러가 해줄거임
 
+
 class Mesh
 {
 private:
@@ -21,27 +22,33 @@ private:
 	int m_TangentBuffer = -1;							// 혹시 모를 노말맵핑을 위해
 	
 	int m_TexCoord0Buffer = -1;
-	int m_TexCoord1Buffer = -1;							// 혹시 모를
+	//int m_TexCoord1Buffer = -1;						// 혹시 모를
 
-	std::vector<int> m_SubSetIndexBuffers;				// 인덱스 버퍼 버퍼
+	int m_SubSetIndexBuffer = -1;						// 인덱스 버퍼
 
+	// name
+	std::string m_Name = "";
 
 	// bounding box
 	XMFLOAT3 m_AABBCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	XMFLOAT3 m_AABBExtents = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	BoundingOrientedBox m_ModelBoundingBox;
 
+	std::vector<Mesh> m_Childs;
+
+	void BuildMesh(std::ifstream& file);
+
 public:
 	Mesh() {}
 	~Mesh() {}
 
-	void LoadFile() {}
+	bool LoadFile(const char* fileName);
 
 	void SetPositionBuffer(int idx)		{ m_PositionBuffer = idx; }
 	void SetNormalBuffer(int idx)		{ m_NormalBuffer = idx; }
 	void SetTangentBuffer(int idx)		{ m_TangentBuffer = idx; }
 	void SetTexCoord0Buffer(int idx)	{ m_TexCoord0Buffer = idx; }
-	void SetTexCoord1Buffer(int idx)	{ m_TexCoord1Buffer = idx; }
-	void InsertIndexBuffer(int idx)		{ m_SubSetIndexBuffers.push_back(idx); }
+	//void SetTexCoord1Buffer(int idx)	{ m_TexCoord1Buffer = idx; }
+	void InsertIndexBuffer(int idx)		{ m_SubSetIndexBuffer = idx; }
 };
 

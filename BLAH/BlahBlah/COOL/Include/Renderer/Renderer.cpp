@@ -9,7 +9,7 @@
 #include "../Shader/TestShader.h"
 #include "../Shader/SkyboxShader.h"
 #include "../Material.h"
-
+#include "../Mesh/Mesh.h"
 #endif
 
 Renderer::Renderer()
@@ -507,7 +507,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		//		a. 얘가 필요한 텍스쳐들 로드, 로드하면 인덱스를 리턴함
 		//		b. 매터리엘 멤버에 보면 배열 있음(m_TextureIndex). 거기에 텍스쳐 인덱스 넣기
 		//		c. 완료 후 쉐이더에 연결
-		//	2. 오브젝트들 로드 및 매터리얼과 짝지어서 맵퍼같은거에 등록 <- 
+		//	3. 오브젝트들 로드 및 매터리얼과 짝지어서 맵퍼같은거에 등록 <- 
 		//  사실 2번 3번 순서는 큰 상관 없을거같음
 
 		m_MainCommandAllocator->Reset();
@@ -527,6 +527,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		// asdf.json
 		// ...
 
+		// 2번이긴 하지?
 		const char* materialLoadList[] = { "SkyBox.json", };
 
 		for (int i = 0; i < _countof(materialLoadList); ++i) {
@@ -540,9 +541,12 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 			m_Shaders.back()->AddMaterial(temp);
 		}
 
-		// 2번은 생략
-		// 3번도 생략
+		// 3번이긴 하지?
+		Mesh tempMesh;
+		tempMesh.LoadFile("satodia.bin");
 
+
+		// 업로드버퍼같은거 실행
 		commandList->Close();
 		ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
 		m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);

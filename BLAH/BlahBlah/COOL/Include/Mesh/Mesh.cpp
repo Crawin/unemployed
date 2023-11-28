@@ -1,3 +1,114 @@
 #include "../framework.h"
 #include "Mesh.h"
 
+void Mesh::BuildMesh(std::ifstream& file)
+{
+	// 메쉬 파일 구조
+	// 1. 이름 길이					// int
+	// 2. 이름						// char*
+	// 3. 바운딩박스					// float3 x 3 min max center
+	// 4. 버텍스 정보				// int, int*(pos, nor, tan, uv)
+	// 5. 인덱스 정보				// int int*int
+	// 6. 서브메쉬 개수				// int
+	// 7. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
+	//
+
+	// 1. 이름 길이
+	unsigned int size;
+	file.read((char*)&size, sizeof(unsigned int));
+
+	// 2. 이름
+	if (size > 0) {
+		char* name = new char[size + 1];
+		name[size] = '\0';
+		file.read(name, size);
+		m_Name = std::string(name);
+		delete[] name;
+	}
+
+	// 3. 바운딩박스	
+	XMFLOAT3 min, max;
+	file.read((char*)&min, sizeof(XMFLOAT3));
+	file.read((char*)&max, sizeof(XMFLOAT3));
+	file.read((char*)&m_AABBCenter, sizeof(XMFLOAT3));
+	m_AABBExtents = XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
+
+	// 4-1. 버텍스 타입
+	unsigned int t;
+	file.read((char*)&t, sizeof(unsigned int));
+
+	// 4. 버텍스 정보
+	unsigned int vertexLen = 0;
+
+	// position
+	file.read((char*)&vertexLen, sizeof(unsigned int));
+	if (vertexLen > 0) {
+		// vertexLen만큼 버텍스를 생성
+		std::vector<XMFLOAT3> position(vertexLen);
+		file.read((char*)(&position[0]), sizeof(XMFLOAT3) * vertexLen);
+		// todo
+		// 이 버텍스 정보를 가지고
+	}
+
+	// normal
+	file.read((char*)&vertexLen, sizeof(unsigned int));
+	if (vertexLen > 0) {
+		std::vector<XMFLOAT3> normal(vertexLen);
+		file.read((char*)(&normal[0]), sizeof(XMFLOAT3) * vertexLen);
+	}
+
+	// tangent
+	file.read((char*)&vertexLen, sizeof(unsigned int));
+	if (vertexLen > 0) {
+		std::vector<XMFLOAT3> tangent(vertexLen);
+		file.read((char*)(&tangent[0]), sizeof(XMFLOAT3) * vertexLen);
+
+		// todo
+		// 이 버텍스 정보를 가지고
+	}
+
+	// uv
+	file.read((char*)&vertexLen, sizeof(unsigned int));
+	if (vertexLen > 0) {
+		std::vector<XMFLOAT2> uv(vertexLen);
+		file.read((char*)(&uv[0]), sizeof(XMFLOAT2) * vertexLen);
+
+		// todo
+		// 이 버텍스 정보를 가지고
+	}
+
+	// 5. 인덱스 정보				// int int*int
+	unsigned int indexNum;
+	file.read((char*)&indexNum, sizeof(unsigned int));
+	if (indexNum) {
+		std::vector<unsigned int> index(indexNum);
+		file.read((char*)(&index[0]), sizeof(unsigned int) * indexNum);
+		DebugPrint(std::format("name: {}", m_Name));
+		DebugPrint(std::format("indexNum: {}, {}", index.size(), index.back()));
+	}
+
+	unsigned int childNum;
+	file.read((char*)&childNum, sizeof(unsigned int));
+
+	// 6. 서브메쉬 개수
+	// 7. 서브메쉬(재귀)
+	m_Childs.reserve(childNum);
+	for (int i = 0; i < childNum; ++i) {
+		Mesh newMesh;
+		newMesh.BuildMesh(file);
+		m_Childs.push_back(newMesh);
+	}
+}
+
+bool Mesh::LoadFile(const char* fileName)
+{
+	std::ifstream meshFile(fileName, std::ios::binary);
+
+	if (meshFile.fail()) {
+		DebugPrint(std::format("Failed to open mesh file!! fileName: {}", fileName));
+		return false;
+	}
+
+	BuildMesh(meshFile);
+
+}

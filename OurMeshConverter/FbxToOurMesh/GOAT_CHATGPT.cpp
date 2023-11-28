@@ -12,7 +12,8 @@
 // 이름 길이					// int
 // 이름						// char*
 // 바운딩박스				// float3 x 3
-// 버텍스 정보				// int, int*(pos, nor, tan, uv)
+// 버텍스 타입				// int
+// 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
 // 인덱스 정보				// int int*int
 // 서브메쉬 개수				// int
 // 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)
@@ -21,6 +22,7 @@
 using namespace DirectX;
 
 // DirectX 12에서 사용할 정점 구조체
+// mesh type 4
 struct Vertex
 {
 	XMFLOAT3 position;
@@ -52,7 +54,7 @@ void ExtractToFIle(const Mesh& mesh, std::fstream& out);
 
 std::string ChangeExtensionToBin(const std::string& originalFileName);
 
-void WriteToFile(int i, std::fstream& out);
+void WriteToFile(unsigned int i, std::fstream& out);
 void WriteToFile(const std::string& str, std::fstream& out);
 void WriteToFile(const XMFLOAT3& float3, std::fstream& out);
 void WriteToFile(const XMFLOAT2& float3, std::fstream& out);
@@ -295,6 +297,10 @@ void PrintMeshHierachy(const Mesh& mesh)
 	std::cout << std::format("name: {}\n", mesh.name);
 	std::cout << std::format("vertex: {}\n\n", mesh.vertices.size());
 
+	std::cout << "min: " << mesh.min.x << ", " << mesh.min.y << ", " << mesh.min.z << std::endl;
+	std::cout << "max: " << mesh.max.x << ", " << mesh.max.y << ", " << mesh.max.z << std::endl;
+	std::cout << "center: " << mesh.center.x << ", " << mesh.center.y << ", " << mesh.center.z << std::endl;
+
 	for (const auto& m : mesh.subMeshes) {
 		PrintMeshHierachy(m);
 	}
@@ -315,10 +321,34 @@ void ExtractToFIle(const Mesh& mesh, std::fstream& out)
 	WriteToFile(mesh.center, out);
 
 	// 버텍스 정보				// int, position, normal, tangent, uv, int, index
+#ifdef ALL_IN_ONE
 	WriteToFile(mesh.vertices.size(), out);
 	for (const auto& vtx : mesh.vertices) {
 		WriteToFile(vtx, out);
 	}
+#else
+	WriteToFile(0, out);
+
+	WriteToFile(mesh.vertices.size(), out);
+	for (const auto& vtx : mesh.vertices) {
+		WriteToFile(vtx.position, out);
+	}
+
+	WriteToFile(mesh.vertices.size(), out);
+	for (const auto& vtx : mesh.vertices) {
+		WriteToFile(vtx.normal, out);
+	}
+
+	WriteToFile(mesh.vertices.size(), out);
+	for (const auto& vtx : mesh.vertices) {
+		WriteToFile(vtx.tangent, out);
+	}
+
+	WriteToFile(mesh.vertices.size(), out);
+	for (const auto& vtx : mesh.vertices) {
+		WriteToFile(vtx.uv, out);
+	}
+#endif
 
 	// 인덱스 정보
 	WriteToFile(mesh.indices.size(), out);
@@ -356,7 +386,7 @@ std::string ChangeExtensionToBin(const std::string& originalFileName)
 	}
 }
 
-void WriteToFile(int i, std::fstream& out)
+void WriteToFile(unsigned int i, std::fstream& out)
 {
 #ifdef BINARY
 	out.write((const char*)(&i), sizeof(i));
