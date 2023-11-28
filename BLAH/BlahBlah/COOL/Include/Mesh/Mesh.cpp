@@ -48,7 +48,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		std::vector<XMFLOAT3> position(vertexLen);
 		file.read((char*)(&position[0]), sizeof(XMFLOAT3) * vertexLen);
 		// todo
-		m_PositionBuffer =  Renderer::GetInstance().CreateBufferFromVector(commandList, position, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		m_PositionBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, position, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// normal
@@ -57,7 +57,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		std::vector<XMFLOAT3> normal(vertexLen);
 		file.read((char*)(&normal[0]), sizeof(XMFLOAT3) * vertexLen);
 
-		m_NormalBuffer =  Renderer::GetInstance().CreateBufferFromVector(commandList, normal, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		m_NormalBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, normal, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// tangent
@@ -66,7 +66,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		std::vector<XMFLOAT3> tangent(vertexLen);
 		file.read((char*)(&tangent[0]), sizeof(XMFLOAT3) * vertexLen);
 
-		 m_TangentBuffer =  Renderer::GetInstance().CreateBufferFromVector(commandList, tangent, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		 m_TangentBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, tangent, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 	}
 
 	// uv
