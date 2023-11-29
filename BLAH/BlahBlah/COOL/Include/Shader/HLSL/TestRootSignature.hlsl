@@ -17,17 +17,17 @@ VSOUT vs(uint instancID : SV_VertexID)
 
 	if (instancID == 0)
 	{
-		op.pos = float4(0.0, 0.5, 0.5, 1.0);
+		op.pos = float4(0.50, 0.05, 0.1, 1.0);
 		op.color = float4(1.0, 0.0, 0.0, 1.0);
 	}
 	else if (instancID == 1)
 	{
-		op.pos = float4(0.5, -0.5, 0.5, 1.0);
+		op.pos = float4(0.55, -0.1, 0.1, 1.0);
 		op.color = float4(0.0, 1.0, 0.0, 1.0);
 	}
 	else if (instancID == 2)
 	{
-		op.pos = float4(-0.5, -0.5, 0.5, 1.0);
+		op.pos = float4(0.45, -0.1, 0.1, 1.0);
 		op.color = float4(0.0, 0.0, 1.0, 1.0);
 	}
 

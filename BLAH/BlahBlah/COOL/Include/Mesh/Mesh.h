@@ -61,6 +61,6 @@ public:
 	//void SetTexCoord1Buffer(int idx)	{ m_TexCoord1Buffer = idx; }
 	void InsertIndexBuffer(int idx)		{ m_IndexBuffer = idx; }
 
-	void Render(ComPtr<ID3D12GraphicsCommandList> commandList);
+	void Render(ComPtr<ID3D12GraphicsCommandList> commandList) const;
 };
 

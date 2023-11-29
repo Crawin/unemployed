@@ -3,6 +3,7 @@
 class Shader;
 class COOLResource;
 class Mesh;
+class Camera;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
@@ -46,8 +47,8 @@ public:
 private:
 	// -------------------  Device가 하는 일들 단순 묶음 -------------------
 
-	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size);
-	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes);
+	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D");
+	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty");
 	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 일단 없앰
 
 
@@ -61,21 +62,22 @@ public:
 
 	// create buffer, returns index of texture..	씬 생성단계에서만 불러줘야 한다. 업로드버퍼가 생기니 주의
 	template <class T>
-	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState)
+	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
 		UINT bytes = data.size() * sizeof(T);
-		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COPY_DEST, bytes);
-		auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes);
+		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COPY_DEST, bytes, name);
+		auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes, std::format("{} upload resource", name));
 		uploadResource->DontReleaseOnDesctruct();
 
-		//D3D12_SUBRESOURCE_DATA subresourceData = {};
-		//subresourceData.pData = &(data[0]);
-		//subresourceData.SlicePitch = subresourceData.RowPitch = bytes;
-		//UpdateSubresources<1>(commandList.Get(), resource->GetResource(), uploadResource->GetResource(), 0, 0, 1, &subresourceData);
+		D3D12_SUBRESOURCE_DATA subresourceData = {};
+		subresourceData.pData = &(data[0]);
+		subresourceData.SlicePitch = subresourceData.RowPitch = bytes;
+		UpdateSubresources<1>(commandList.Get(), resource->GetResource(), uploadResource->GetResource(), 0, 0, 1, &subresourceData);
 
-		//resource->TransToState(commandList, resourceState);
+		resource->TransToState(commandList, resourceState);
 
 		m_UploadResources.push_back(uploadResource->GetResource());
+
 		if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
 			resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER) {
 			m_VertexIndexDatas.push_back(resource);
@@ -93,6 +95,9 @@ public:
 
 		//UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
 	}
+
+	// 그냥 진짜 비어있는 리소스 생성, toMapData를 넣으면 자동으로 데이터 맵핑까지
+	int CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty", void** toMapData = nullptr);
 
 	// 리소스 복사는 subresourceData로 하자 이건 보류 사용금지!!!!!!!!!!!!!!!!
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
@@ -152,7 +157,6 @@ private:
 	ComPtr<ID3D12CommandAllocator> m_MainCommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> m_MainCommandList;
 
-
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
@@ -166,6 +170,18 @@ private:
 
 	// 임시
 	std::vector<Mesh> m_Meshes;
+	Camera* m_Camera;
+
+public:
+	D3D12_GPU_VIRTUAL_ADDRESS GetResourceGPUAddress(int idx);
+	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
+
+	COOLResourcePtr GetResourceFromIndex(int idx);
+	COOLResourcePtr GetVertexDataFromIndex(int idx);
+
+
+	// 임시
+	void MouseInput(int x, int y);
 
 };
 

@@ -59,6 +59,17 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	// 렌더러를 만든다
 	CHECK_CREATE_FAILED(Renderer::GetInstance().Init(m_windowSize, m_hWnd), "렌더러 생성 실패");
 
+	// high input mouse
+	// 참고
+	// https://learn.microsoft.com/ko-kr/windows/win32/dxtecharts/taking-advantage-of-high-dpi-mouse-movement
+
+	RAWINPUTDEVICE Rid[1];
+	Rid[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
+	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
+	Rid[0].dwFlags = RIDEV_INPUTSINK;
+	Rid[0].hwndTarget = m_hWnd;
+	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+
 	// 씬매니저의 생성 및 로드?
 
 	return true;
@@ -91,11 +102,43 @@ int Application::StartProgram()
 
 LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	// 임시
+	static bool dragging = false;
+
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		Application::GetInstance().m_GameLoop = false;
 		break;
+	case WM_INPUT:
+	{
+		UINT dwSize = sizeof(RAWINPUT);
+		static BYTE lpb[sizeof(RAWINPUT)];
+
+		GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
+
+		RAWINPUT* raw = (RAWINPUT*)lpb;
+
+		if (raw->header.dwType == RIM_TYPEMOUSE)
+		{
+			int xPosRelative = raw->data.mouse.lLastX;
+			int yPosRelative = raw->data.mouse.lLastY;
+
+			// 임시
+			// 씬 생기면 여기서 할듯?
+			if (dragging) Renderer::GetInstance().MouseInput(xPosRelative, yPosRelative);
+
+			//DebugPrint(std::format("x: {}, y: {}", xPosRelative, yPosRelative));
+		}
+		break;
+	}
+	case WM_LBUTTONDOWN:
+		dragging = true;
+		break;
+	case WM_LBUTTONUP:
+		dragging = false;
+		break;
+
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);

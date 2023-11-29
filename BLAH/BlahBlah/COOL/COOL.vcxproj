@@ -148,7 +148,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\Application.h" />
+    <ClInclude Include="Include\Camera\Camera.h" />
     <ClInclude Include="Include\DDSTextureLoader12.h" />
+    <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\Math.h" />
@@ -157,12 +159,14 @@
     <ClInclude Include="Include\Renderer\COOLDevice.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
+    <ClInclude Include="Include\Shader\MeshShader.h" />
     <ClInclude Include="Include\Shader\Shader.h" />
     <ClInclude Include="Include\Shader\SkyboxShader.h" />
     <ClInclude Include="Include\Shader\TestShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\Application.cpp" />
+    <ClCompile Include="Include\Camera\Camera.cpp" />
     <ClCompile Include="Include\DDSTextureLoader12.cpp" />
     <ClCompile Include="Include\framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -180,6 +184,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Include\Shader\MeshShader.cpp" />
     <ClCompile Include="Include\Shader\Shader.cpp" />
     <ClCompile Include="Include\Shader\SkyboxShader.cpp" />
     <ClCompile Include="Include\Shader\TestShader.cpp" />
@@ -189,6 +194,12 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Include\Shader\HLSL\ShaderBaseParameters.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Include\Shader\HLSL\TestMeshShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

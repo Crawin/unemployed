@@ -1,6 +1,7 @@
 ﻿#include "../framework.h"
 #include "Renderer.h"
 #include "COOLResource.h"
+#include "../Camera/Camera.h"
 //#include "Shader/Shader.h"
 
 #define TEST_SHADER
@@ -8,6 +9,7 @@
 #ifdef TEST_SHADER
 #include "../Shader/TestShader.h"
 #include "../Shader/SkyboxShader.h"
+#include "../Shader/MeshShader.h"
 #include "../Material.h"
 #include "../Mesh/Mesh.h"
 #endif
@@ -26,7 +28,7 @@ Renderer::~Renderer()
 	// 혹시 모르니 여기서 모두 해제
 	m_Resources.clear();
 	m_VertexIndexDatas.clear();
-	
+
 	// 죽기 전에 살아있는 애들 확인하고 간다
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
@@ -183,7 +185,7 @@ bool Renderer::CreateRTV()
 
 		m_RenderTargetBuffer[i] = COOLResourcePtr(new COOLResource(tempResource, D3D12_RESOURCE_STATE_PRESENT));
 		m_RenderTargetBuffer[i].get()->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
-
+		m_RenderTargetBuffer[i]->SetName(std::format("RenderTarget[{}]", i));
 		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i]->GetResource(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
 
@@ -200,7 +202,7 @@ bool Renderer::CreateDSV()
 	// 보통 리소스를 디폴트힙에다 만들면
 	// 값을 넣어 복사해주기 위한 업로드힙이 별도로 필요
 	// 근데 얘는 필요없음 비어있는애
-	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize);
+	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize, "depthstencil buffer");
 	m_DepthStencilBuffer.get()->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 	m_DepthStencilBuffer.get()->SetName("depthstencil buffer");
 
@@ -247,21 +249,21 @@ bool Renderer::CreateRootSignature()
 	// idx 1: index of descriptor table, root constants
 	rootParams[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	rootParams[1].Constants.Num32BitValues = 16;
-	rootParams[1].Constants.RegisterSpace = 0;
+	rootParams[1].Constants.ShaderRegister = 0;
 	rootParams[1].Constants.RegisterSpace = 0;
 	rootParams[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
 	// idx 2: camera matrix (view, projection(ortho)), cbv
 	rootParams[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	rootParams[2].Descriptor.RegisterSpace = 1;
-	rootParams[2].Descriptor.ShaderRegister = 0;
+	rootParams[2].Descriptor.ShaderRegister = 1;
+	rootParams[2].Descriptor.RegisterSpace = 0;
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
 	// idx 3: etc (delta time, 이것도 cbv로?
 	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	rootParams[3].Constants.Num32BitValues = 16;
-	rootParams[3].Constants.RegisterSpace = 2;
-	rootParams[3].Descriptor.ShaderRegister = 0;
+	rootParams[3].Descriptor.ShaderRegister = 2;
+	rootParams[3].Constants.RegisterSpace = 0;
 	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	//
 	// sampler desc
@@ -379,7 +381,7 @@ bool Renderer::CreateResourceDescriptorHeap()
 
 	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
 	for (int i = 0; i < m_Resources.size(); ++i) {
-	//for (auto resource : m_Resources) {
+		//for (auto resource : m_Resources) {
 		ID3D12Resource* res = m_Resources[i].get()->GetResource();
 		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
 
@@ -449,8 +451,11 @@ bool Renderer::LoadShaders()
 	auto shader = std::make_shared<TestShader>(1, "TestShader");
 	m_Shaders.push_back(shader);
 
-	auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
-	m_Shaders.push_back(tshader);
+	//auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
+	//m_Shaders.push_back(tshader);
+
+	auto tttShader = std::make_shared<MeshShader>(1001, "meshShader");
+	m_Shaders.push_back(tttShader);
 
 	for (auto& sha : m_Shaders) {
 		// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
@@ -491,6 +496,9 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 	m_MainCommandAllocator = m_CommandAllocators[CMDID::MAIN];
 	m_MainCommandList = m_GraphicsCommandLists[CMDID::MAIN];
 
+	m_MainCommandAllocator->Reset();
+	m_MainCommandList->Reset(m_MainCommandAllocator.Get(), nullptr);
+
 	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(LoadShaders(), "LoadShaders Failed!!");
@@ -512,8 +520,8 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		//	3. 오브젝트들 로드 및 매터리얼과 짝지어서 맵퍼같은거에 등록 <- 
 		//  사실 2번 3번 순서는 큰 상관 없을거같음
 
-		m_MainCommandAllocator->Reset();
-		commandList->Reset(commandAllocator.Get(), nullptr);
+		//m_MainCommandAllocator->Reset();
+		//commandList->Reset(commandAllocator.Get(), nullptr);
 
 
 		// 아래가 1번
@@ -537,16 +545,19 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 			temp->LoadTexture(commandList, materialLoadList[i]);
 
 			int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-			
+
 			temp->SetAlbedoTextureIndex(skyBox);
 
 			m_Shaders.back()->AddMaterial(temp);
 		}
 
 		// 3번이긴 하지?
-		Mesh tempMesh;
-		tempMesh.LoadFile(commandList, "satodia.bin");
-		m_Meshes.push_back(tempMesh);
+		//Mesh tempMesh;
+		//tempMesh.LoadFile(commandList, "satodia.bin");
+		//m_Meshes.push_back(tempMesh);
+		m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
+		m_Camera->SetPosition({ 0.0f, 30.0f, -150.0f });
+		m_Camera->Init();
 
 		// 업로드버퍼같은거 실행
 		commandList->Close();
@@ -600,7 +611,7 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 	return true;
 }
 
-COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size)
+COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name)
 {
 	ID3D12Resource* temp;
 
@@ -637,10 +648,10 @@ COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_
 		&clearValue,
 		IID_PPV_ARGS(&temp));
 
-	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType));
+	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
 }
 
-COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes)
+COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name)
 {
 	ID3D12Resource* temp;
 
@@ -672,7 +683,7 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 		nullptr,
 		IID_PPV_ARGS(&temp));
 
-	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, "buffer"));
+	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
 }
 
 int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)
@@ -682,6 +693,9 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	std::vector<D3D12_SUBRESOURCE_DATA> subResources;
 	DDS_ALPHA_MODE ddsAlphaMode = DDS_ALPHA_MODE_UNKNOWN;
 	bool isCubeMap = false;
+
+	std::wstring temp(fileName);
+	std::string strTemp(temp.begin(), temp.end());
 
 	// dds를 로드한다
 	HRESULT res = DirectX::LoadDDSTextureFromFileEx(m_Device.Get(), fileName, 0, D3D12_RESOURCE_FLAG_NONE, DDS_LOADER_DEFAULT, &texture, ddsData, subResources, &ddsAlphaMode, &isCubeMap);
@@ -732,6 +746,8 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	m_Device->CreateCommittedResource(&heapProperty, D3D12_HEAP_FLAG_NONE, &resDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&uploadResource));
 	m_UploadResources.push_back(uploadResource);
 
+	uploadResource->SetName((temp + L" - upload buffer").c_str());
+
 	// 복사 및 상태 전이
 	UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
 
@@ -743,10 +759,11 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	resourceBarrier.Transition.StateAfter = resourceState;
 	resourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	commandList->ResourceBarrier(1, &resourceBarrier);
-	
+
 	COOLResourcePtr newResource(new COOLResource(texture, resourceState, D3D12_HEAP_TYPE_DEFAULT));
 	newResource->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
-	newResource->SetName("Texture");
+
+	newResource->SetName(strTemp);
 
 	return RegisterShaderResource(newResource);
 }
@@ -757,8 +774,32 @@ int Renderer::LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, co
 
 	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, data.size());
 
-	
+
 	return 0;
+}
+
+int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
+{
+	UINT createBytes = ((bytes + 255) & ~255);
+	auto resource = CreateEmptyBufferResource(heapType, resourceState, createBytes, name);
+
+	if (toMapData) {
+		resource->SetMapOn();
+		resource->GetResource()->Map(0, nullptr, toMapData);
+	}
+
+	if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
+		resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER ||
+		toMapData != nullptr) {
+		m_VertexIndexDatas.push_back(resource);
+		return m_VertexIndexDatas.size() - 1;
+	}
+	else {
+		m_Resources.push_back(resource);
+		return m_Resources.size() - 1;
+	}
+
+	return -1;
 }
 
 void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)
@@ -828,8 +869,8 @@ void Renderer::Render()
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuDesHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
 
-	//float clearColor[4] = { 0.3f, 0.9f, 0.3f, 1.0f };
-	float clearColor[4] = { 0, };// { 1.0f, 1.0f, 1.0f, 1.0f };
+	float clearColor[4] = { 0.1f, 0.1f, 0.35f, 1.0f };
+	//float clearColor[4] = { 0, };// { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	m_MainCommandList->ClearRenderTargetView(rtvCpuDesHandle, clearColor, 0, nullptr);
 	m_MainCommandList->ClearDepthStencilView(dsvCpuDesHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
@@ -838,6 +879,42 @@ void Renderer::Render()
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
+	if (GetAsyncKeyState('W') & 0x8000) tempMove.z += 1.0f;
+	if (GetAsyncKeyState('S') & 0x8000) tempMove.z -= 1.0f;
+	if (GetAsyncKeyState('A') & 0x8000) tempMove.x += 1.0f;
+	if (GetAsyncKeyState('D') & 0x8000) tempMove.x -= 1.0f;
+	if (GetAsyncKeyState('Q') & 0x8000) tempMove.y += 1.0f;
+	if (GetAsyncKeyState('E') & 0x8000) tempMove.y -= 1.0f;
+
+	float size = Vector3::Length(tempMove);
+	if (size > 0.5f) {
+		XMFLOAT3 normal = Vector3::Normalize(tempMove);
+		tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
+		XMFLOAT3 pos = Vector3::Add(m_Camera->GetPosition(), tempMove);
+		m_Camera->SetPosition(pos);
+
+		// debug print;
+		XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
+		XMFLOAT4X4 view = m_Camera->GetViewMat();
+		XMFLOAT4X4 proj = m_Camera->GetProjMat();
+
+		XMVECTOR statVector = XMLoadFloat4(&stat);
+
+		XMMATRIX viewMatrix = XMLoadFloat4x4(&view);
+		XMMATRIX projMatrix = XMLoadFloat4x4(&proj);
+
+		statVector = XMVector4Transform(statVector, viewMatrix);
+		statVector = XMVector4Transform(statVector, projMatrix);
+
+		XMFLOAT4 pTrans;
+		XMStoreFloat4(&pTrans, statVector);
+
+		DebugPrint(std::format("pTrans {}, {}, {}", pTrans.x, pTrans.y, pTrans.z));
+	}
+
+
+	m_Camera->Render(m_MainCommandList);
 
 	for (auto shader : m_Shaders) {
 		shader->Render(m_MainCommandList);
@@ -874,4 +951,70 @@ void Renderer::Render()
 		WaitForSingleObject(m_FenceEvent, INFINITE);
 	}
 
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetResourceGPUAddress(int idx)
+{
+	if (0 <= idx && idx < m_Resources.size())
+		return m_Resources[idx]->GetResource()->GetGPUVirtualAddress();
+
+	return 0;
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetVertexDataGPUAddress(int idx)
+{
+	if (0 <= idx && idx < m_VertexIndexDatas.size())
+		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+
+	return 0;
+}
+
+COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
+{
+	if (0 <= idx && idx < m_Resources.size())
+		return m_Resources[idx];
+
+	return nullptr;
+}
+
+COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
+{
+	if (0 <= idx && idx < m_VertexIndexDatas.size())
+		return m_VertexIndexDatas[idx];
+
+	return nullptr;
+}
+
+void Renderer::MouseInput(int xin, int yin)
+{
+	float x = yin * 0.10f;
+	float y = xin * 0.10f;
+
+	XMFLOAT3 look = m_Camera->GetLook();
+	XMFLOAT3 right = m_Camera->GetRight();
+	XMFLOAT3 up = m_Camera->GetUp();
+
+	// x
+	if (xin != 0) {
+		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&right), XMConvertToRadians(x));
+		right = Vector3::TransformNormal(right, xmmtxRotate);
+		up = Vector3::TransformNormal(up, xmmtxRotate);
+		look = Vector3::TransformNormal(look, xmmtxRotate);
+	}
+	// y
+	if (yin != 0) {
+		XMFLOAT3 xmf3Up = { 0.0f, 1.0f, 0.0f };
+		XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&xmf3Up), XMConvertToRadians(y));
+		right = Vector3::TransformNormal(right, xmmtxRotate);
+		look = Vector3::TransformNormal(look, xmmtxRotate);
+		up = Vector3::TransformNormal(up, xmmtxRotate);
+	}
+
+
+	//m_Camera->SetRight(right);
+	//m_Camera->SetLook(look);
+	//m_Camera->SetUp(up);
+
+	//look = Vector3::TransformNormal(look, xmmtxRotate);
+	DebugPrint(std::format("look: {}, {}, {}", look.x, look.y, look.z));
 }

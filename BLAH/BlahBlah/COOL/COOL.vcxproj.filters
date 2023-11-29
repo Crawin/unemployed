@@ -34,6 +34,9 @@
     <Filter Include="소스 파일\Material">
       <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Camera">
+      <UniqueIdentifier>{07d3d024-2120-4caa-af20-e976485f9834}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -74,6 +77,15 @@
     </ClInclude>
     <ClInclude Include="Include\Mesh\Mesh.h">
       <Filter>소스 파일\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Shader\MeshShader.h">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Camera\Camera.h">
+      <Filter>소스 파일\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\DXMath.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +128,12 @@
     <ClCompile Include="Include\Mesh\Mesh.cpp">
       <Filter>소스 파일\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Include\Shader\MeshShader.cpp">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Camera\Camera.cpp">
+      <Filter>소스 파일\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt">
@@ -130,6 +148,9 @@
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="Include\Shader\HLSL\ShaderBaseParameters.hlsl">
+      <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Include\Shader\HLSL\TestMeshShader.hlsl">
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

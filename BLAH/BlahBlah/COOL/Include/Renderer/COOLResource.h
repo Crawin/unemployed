@@ -22,7 +22,7 @@ private:
 
 class COOLResource {
 public:
-	COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT, std::string name = "Resource");
+	COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT, std::string_view name = "Resource");
 	~COOLResource();
 
 	const std::string GetName() const { return m_Name; }
@@ -30,12 +30,14 @@ public:
 	D3D12_RESOURCE_STATES GetState() const { return m_CurStateMap; }
 	D3D12_SRV_DIMENSION GetDimension() const { return m_Dimension; }
 
-	void SetName(const std::string& str) { m_Name = str; }
+	void SetName(std::string_view str) { m_Name = str; std::wstring temp(m_Name.begin(), m_Name.end());  m_Resource->SetName(temp.c_str()); }
 	void SetDimension(D3D12_SRV_DIMENSION dim) { m_Dimension = dim; }
 
 	void TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState);
 
 	void DontReleaseOnDesctruct() { m_Release = false; }
+
+	void SetMapOn() { m_Mapped = true; }
 
 private:
 	std::string m_Name;
@@ -44,6 +46,10 @@ private:
 	D3D12_HEAP_TYPE m_HeapType = D3D12_HEAP_TYPE_DEFAULT;
 	D3D12_SRV_DIMENSION m_Dimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 
+	// release를 미루지 않겠습니다.
 	bool m_Release = true;
+
+	// map되어있는 오브젝트이다.
+	bool m_Mapped = false;
 };
 

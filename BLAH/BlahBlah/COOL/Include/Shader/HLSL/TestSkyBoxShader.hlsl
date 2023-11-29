@@ -18,37 +18,37 @@ VSOUT vs(uint instancID : SV_VertexID)
 	
 	VSOUT op;
 	
-	op.pos = float4(0.0, 0.8, 0.8, 1.0);
+	op.pos = float4(0.0, 0.8, 0.99, 1.0);
     op.uv = float2(0, 0);
 	if (instancID == 0)
 	{
-		op.pos = float4(-1.0, 1.0, 0.8, 1.0);
+		op.pos = float4(-1.0, 1.0, 0.99, 1.0);
 		op.uv = float2(0, 0);
     }
 	else if (instancID == 1)
 	{
-		op.pos = float4(1.0, 1.0, 0.7, 1.0);
+		op.pos = float4(1.0, 1.0, 0.99, 1.0);
 		op.uv = float2(1, 0);
     }
 	else if (instancID == 2)
 	{
-		op.pos = float4(1.0, -1.0, 0.6, 1.0);
+		op.pos = float4(1.0, -1.0, 0.99, 1.0);
 		op.uv = float2(1, 1);
     }
 	
 	else if (instancID == 3)
 	{
-		op.pos = float4(-1.0, 1.0, 0.8, 1.0);
+		op.pos = float4(-1.0, 1.0, 0.99, 1.0);
 		op.uv = float2(0, 0);
     }
 	else if (instancID == 4)
 	{
-		op.pos = float4(1.0, -1.0, 0.9, 1.0);
+		op.pos = float4(1.0, -1.0, 0.99, 1.0);
 		op.uv = float2(1, 1);
     }
 	else if (instancID == 5)
 	{
-		op.pos = float4(-1.0, -1.0, 0.6, 1.0);
+		op.pos = float4(-1.0, -1.0, 0.99, 1.0);
 		op.uv = float2(0, 1);
     }
 	
