@@ -2,12 +2,12 @@
 
 
 /*
-enum ROOT_SIGNATURE_IDX
-{
-	DESCRIPTOR_HEAP = 0,
-	DESCRIPTOR_IDX_CBV,
-	CAMERA_DATA_CBV,
-	SHADER_DATAS_CBV,
+enum ROOT_SIGNATURE_IDX {
+	DESCRIPTOR_HEAP = 0,			// 디스크립터힙
+	DESCRIPTOR_IDX_CONSTANT,		// 디스크립터를 사용할 인덱스 16개의 int
+	CAMERA_DATA_CBV,				// 카메라행렬 4x4 x2
+	WORLD_MATRIX,
+	SHADER_DATAS_CBV,				// 뭐 대충 나머지들 (delta time, 등등)
 	ROOT_SIGNATURE_IDX_MAX
 };
 */
@@ -40,6 +40,15 @@ cbuffer CameraInfo : register(b1)
 	// float3 cameraPosition : packoffset(c8); <- 이건 뷰변환 행렬에서 뽑아 쓰자
 };
 
+cbuffer WorldMatrix : register(b2)
+{
+	matrix localMatrix;
+};
+
+cbuffer ShaderVar : register(b3)
+{
+	float4x4 temp;
+};
 
 SamplerState samplerWarp : register(s0);
 SamplerState samplerClamp : register(s1);

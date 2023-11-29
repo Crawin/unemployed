@@ -22,18 +22,10 @@ struct VS_OUTPUT
 VS_OUTPUT vs(VS_INPUT i)
 {
 	VS_OUTPUT o;
-
-	matrix worldMatrix =
-	{
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f,
-	};
 	
-	o.positionW = (float3) mul(float4(i.position, 1.0f), worldMatrix);
-	o.normalW = mul(i.normal, (float3x3) worldMatrix);
-	o.tangentW = (float3) mul(float4(i.tangent, 1.0f), worldMatrix);
+	o.positionW = (float3) mul(float4(i.position, 1.0f), localMatrix);
+	o.normalW = normalize(mul(i.normal, (float3x3) localMatrix));
+	o.tangentW = (float3) mul(float4(i.tangent, 1.0f), localMatrix);
 	o.position = mul(mul(float4(o.positionW, 1.0f), viewMatrix), projectionMatrix);
 	
 	o.uv = i.uv;
@@ -43,6 +35,9 @@ VS_OUTPUT vs(VS_INPUT i)
 
 float4 ps(VS_OUTPUT i) : SV_Target
 {
+	int albedoIdx = materialIndex[ALBEDO];
 	
-	return float4(i.normalW, 1.0f);
+	//i.uv.y = 1 - i.uv.y;
+	//i.uv = tempUV.yx;
+	return Tex2DList[albedoIdx].Sample(samplerWarp, i.uv);
 }

@@ -12,6 +12,7 @@
 // 이름 길이					// int
 // 이름						// char*
 // 바운딩박스				// float3 x 3
+// 부모 상대 변환 행렬		// float4x4
 // 버텍스 타입				// int
 // 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
 // 인덱스 정보				// int int*int
@@ -38,6 +39,8 @@ struct Mesh {
 	XMFLOAT3 max;
 	XMFLOAT3 center;
 
+	XMFLOAT4X4 localTransform = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
+
 	std::vector<Vertex> vertices;
 	std::vector<uint16_t> indices;
 
@@ -58,6 +61,7 @@ void WriteToFile(unsigned int i, std::fstream& out);
 void WriteToFile(const std::string& str, std::fstream& out);
 void WriteToFile(const XMFLOAT3& float3, std::fstream& out);
 void WriteToFile(const XMFLOAT2& float3, std::fstream& out);
+void WriteToFile(const XMFLOAT4X4& matrix, std::fstream& out);
 void WriteToFile(const Vertex& vtx, std::fstream& out);
 
 //template<class T>
@@ -115,7 +119,7 @@ int main()
 		// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
 		// ...
 
-		//PrintMeshHierachy(mesh);
+		PrintMeshHierachy(mesh);
 
 		std::fstream outputFile(outputFileName,
 #ifdef BINARY
@@ -170,9 +174,16 @@ void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices,
 		FbxVector4 min, max, center;
 		node->EvaluateGlobalBoundingBoxMinMaxCenter(min, max, center);
 
+		// bounding box
 		myMesh.min = XMFLOAT3(static_cast<float>(min[0]), static_cast<float>(min[1]), static_cast<float>(min[2]));
 		myMesh.max = XMFLOAT3(static_cast<float>(max[0]), static_cast<float>(max[1]), static_cast<float>(max[2]));
 		myMesh.center = XMFLOAT3(static_cast<float>(center[0]), static_cast<float>(center[1]), static_cast<float>(center[2]));
+
+		// local matrix
+		FbxMatrix mat = node->EvaluateGlobalTransform();
+		for (int i = 0; i < 4; ++i)
+			for (int j = 0; j < 4; ++j)
+				myMesh.localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
 
 		// 이름
 		myMesh.name = node->GetName();
@@ -301,6 +312,14 @@ void PrintMeshHierachy(const Mesh& mesh)
 	std::cout << "max: " << mesh.max.x << ", " << mesh.max.y << ", " << mesh.max.z << std::endl;
 	std::cout << "center: " << mesh.center.x << ", " << mesh.center.y << ", " << mesh.center.z << std::endl;
 
+	std::cout << std::endl;
+	std::cout << std::format("{} {} {} {}\n{} {} {} {}\n{} {} {} {}\n{} {} {} {}\n",
+		mesh.localTransform._11, mesh.localTransform._12, mesh.localTransform._13, mesh.localTransform._14,
+		mesh.localTransform._21, mesh.localTransform._22, mesh.localTransform._23, mesh.localTransform._24,
+		mesh.localTransform._31, mesh.localTransform._32, mesh.localTransform._33, mesh.localTransform._34,
+		mesh.localTransform._41, mesh.localTransform._42, mesh.localTransform._43, mesh.localTransform._44		
+		);
+
 	for (const auto& m : mesh.subMeshes) {
 		PrintMeshHierachy(m);
 	}
@@ -319,6 +338,9 @@ void ExtractToFIle(const Mesh& mesh, std::fstream& out)
 	WriteToFile(mesh.min, out);
 	WriteToFile(mesh.max, out);
 	WriteToFile(mesh.center, out);
+
+	// matrix
+	WriteToFile(mesh.localTransform, out);
 
 	// 버텍스 정보				// int, position, normal, tangent, uv, int, index
 #ifdef ALL_IN_ONE
@@ -419,6 +441,15 @@ void WriteToFile(const XMFLOAT2& float2, std::fstream& out)
 {
 #ifdef BINARY
 	out.write((const char*)(&float2), sizeof(XMFLOAT2));
+#else
+	out << float2.x << ", " << float2.y << "\n";
+#endif
+}
+
+void WriteToFile(const XMFLOAT4X4& matrix, std::fstream& out)
+{
+#ifdef BINARY
+	out.write((const char*)(&matrix), sizeof(XMFLOAT4X4));
 #else
 	out << float2.x << ", " << float2.y << "\n";
 #endif

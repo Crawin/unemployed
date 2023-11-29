@@ -259,12 +259,18 @@ bool Renderer::CreateRootSignature()
 	rootParams[2].Descriptor.RegisterSpace = 0;
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 3: etc (delta time, 이것도 cbv로?
+	// idx 3: index of descriptor table, root constants
 	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	rootParams[3].Constants.Num32BitValues = 16;
-	rootParams[3].Descriptor.ShaderRegister = 2;
+	rootParams[3].Constants.ShaderRegister = 2;
 	rootParams[3].Constants.RegisterSpace = 0;
 	rootParams[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// idx 4: etc (delta time, 이것도 cbv로
+	rootParams[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParams[4].Descriptor.ShaderRegister = 3;
+	rootParams[4].Descriptor.RegisterSpace = 0;
+	rootParams[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	//
 	// sampler desc
 	const int samplers = 2;
@@ -545,6 +551,9 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 			temp->LoadTexture(commandList, materialLoadList[i]);
 
 			int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			int temphair = CreateTextureFromDDSFile(commandList, L"satoh.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+			int tempbody = CreateTextureFromDDSFile(commandList, L"satob.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+			int uvchecker = CreateTextureFromDDSFile(commandList, L"uvchecker2.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 			temp->SetAlbedoTextureIndex(skyBox);
 
@@ -882,10 +891,10 @@ void Renderer::Render()
 	XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 	if (GetAsyncKeyState('W') & 0x8000) tempMove.z += 1.0f;
 	if (GetAsyncKeyState('S') & 0x8000) tempMove.z -= 1.0f;
-	if (GetAsyncKeyState('A') & 0x8000) tempMove.x += 1.0f;
-	if (GetAsyncKeyState('D') & 0x8000) tempMove.x -= 1.0f;
-	if (GetAsyncKeyState('Q') & 0x8000) tempMove.y += 1.0f;
-	if (GetAsyncKeyState('E') & 0x8000) tempMove.y -= 1.0f;
+	if (GetAsyncKeyState('A') & 0x8000) tempMove.x -= 1.0f;
+	if (GetAsyncKeyState('D') & 0x8000) tempMove.x += 1.0f;
+	if (GetAsyncKeyState('Q') & 0x8000) tempMove.y -= 1.0f;
+	if (GetAsyncKeyState('E') & 0x8000) tempMove.y += 1.0f;
 
 	float size = Vector3::Length(tempMove);
 	if (size > 0.5f) {
@@ -895,22 +904,22 @@ void Renderer::Render()
 		m_Camera->SetPosition(pos);
 
 		// debug print;
-		XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
-		XMFLOAT4X4 view = m_Camera->GetViewMat();
-		XMFLOAT4X4 proj = m_Camera->GetProjMat();
+		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
+		//XMFLOAT4X4 view = m_Camera->GetViewMat();
+		//XMFLOAT4X4 proj = m_Camera->GetProjMat();
 
-		XMVECTOR statVector = XMLoadFloat4(&stat);
+		//XMVECTOR statVector = XMLoadFloat4(&stat);
 
-		XMMATRIX viewMatrix = XMLoadFloat4x4(&view);
-		XMMATRIX projMatrix = XMLoadFloat4x4(&proj);
+		//XMMATRIX viewMatrix = XMLoadFloat4x4(&view);
+		//XMMATRIX projMatrix = XMLoadFloat4x4(&proj);
 
-		statVector = XMVector4Transform(statVector, viewMatrix);
-		statVector = XMVector4Transform(statVector, projMatrix);
+		//statVector = XMVector4Transform(statVector, viewMatrix);
+		//statVector = XMVector4Transform(statVector, projMatrix);
 
-		XMFLOAT4 pTrans;
-		XMStoreFloat4(&pTrans, statVector);
+		//XMFLOAT4 pTrans;
+		//XMStoreFloat4(&pTrans, statVector);
 
-		DebugPrint(std::format("pTrans {}, {}, {}", pTrans.x, pTrans.y, pTrans.z));
+		//DebugPrint(std::format("pTrans {}, {}, {}", pTrans.x, pTrans.y, pTrans.z));
 	}
 
 

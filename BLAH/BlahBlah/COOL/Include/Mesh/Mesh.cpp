@@ -7,11 +7,13 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// 메쉬 파일 구조
 	// 1. 이름 길이					// int
 	// 2. 이름						// char*
-	// 3. 바운딩박스					// float3 x 3 min max center
-	// 4. 버텍스 정보				// int, int*(pos, nor, tan, uv)
-	// 5. 인덱스 정보				// int int*int
-	// 6. 서브메쉬 개수				// int
-	// 7. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
+	// 3. 바운딩박스					// float3 x 3
+	// 4. 부모 상대 변환 행렬			// float4x4
+	// 5. 버텍스 타입				// int
+	// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
+	// 7. 인덱스 정보				// int int*int
+	// 8. 서브메쉬 개수				// int
+	// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
 	//
 
 	// 1. 이름 길이
@@ -34,11 +36,14 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	file.read((char*)&m_AABBCenter, sizeof(XMFLOAT3));
 	m_AABBExtents = XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
 
-	// 4-1. 버텍스 타입
+	// 4. 부모 상대 변환 행렬		// float4x4
+	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
+
+	// 5. 버텍스 타입
 	unsigned int t;
 	file.read((char*)&t, sizeof(unsigned int));
 
-	// 4. 버텍스 정보
+	// 6. 버텍스 정보
 	unsigned int vertexLen = 0;
 
 	// position
@@ -96,7 +101,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		m_TexCoord0BufferView.SizeInBytes = sizeof(XMFLOAT2) * vertexLen;
 	}
 
-	// 5. 인덱스 정보				// int int*int
+	// 7. 인덱스 정보				// int int*int
 	unsigned int indexNum = 0;
 	file.read((char*)&indexNum, sizeof(unsigned int));
 	if (indexNum > 0) {
@@ -117,8 +122,8 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	unsigned int childNum;
 	file.read((char*)&childNum, sizeof(unsigned int));
 
-	// 6. 서브메쉬 개수
-	// 7. 서브메쉬(재귀)
+	// 8. 서브메쉬 개수
+	// 9. 서브메쉬(재귀)
 	m_Childs.reserve(childNum);
 	for (int i = 0; i < childNum; ++i) {
 		Mesh newMesh;
@@ -139,7 +144,7 @@ bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* f
 	BuildMesh(commandList, meshFile);
 }
 
-void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList) const
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent)
 {
 	if (m_IndexNum > 0) {
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[4] = {
@@ -148,12 +153,25 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList) const
 			m_TangentBufferView,
 			m_TexCoord0BufferView
 		};
+		// 임시
+		int tempi[16] = { 5, 0, };
+
+
+		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT, 16, tempi, 0);
+
+		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
+
+		XMFLOAT4X4 temp = Matrix4x4::Transpose(m_RootTransform);
+
+		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::WORLD_MATRIX, 16, &temp, 0);
 
 		commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
 		commandList->IASetIndexBuffer(&m_IndexBufferView);
 		commandList->DrawIndexedInstanced(m_IndexNum, 1, 0, 0, 0);
+
+
 	}
 
-	for (const auto& mesh : m_Childs)
-		mesh.Render(commandList);
+	for (auto& mesh : m_Childs)
+		mesh.Render(commandList, m_RootTransform);
 }

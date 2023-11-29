@@ -41,6 +41,10 @@ private:
 	XMFLOAT3 m_AABBExtents = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	BoundingOrientedBox m_ModelBoundingBox;
 
+	// 부모와 상대적인 변환행렬
+	XMFLOAT4X4 m_LocalTransform = Matrix4x4::Identity();
+	XMFLOAT4X4 m_RootTransform = Matrix4x4::Identity();
+
 	std::vector<Mesh> m_Childs;
 
 	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file);
@@ -61,6 +65,6 @@ public:
 	//void SetTexCoord1Buffer(int idx)	{ m_TexCoord1Buffer = idx; }
 	void InsertIndexBuffer(int idx)		{ m_IndexBuffer = idx; }
 
-	void Render(ComPtr<ID3D12GraphicsCommandList> commandList) const;
+	void Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent);
 };
 

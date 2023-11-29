@@ -17,7 +17,8 @@ void MeshShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	Shader::Render(commandList);
 
 	// юс╫ц
-	tempMesh.Render(commandList);
+	XMFLOAT4X4 t = Matrix4x4::Identity();
+	tempMesh.Render(commandList, t);
 }
 
 D3D12_SHADER_BYTECODE MeshShader::CreateVertexShader()
