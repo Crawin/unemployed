@@ -93,7 +93,7 @@ int main()
 
 	const char* fileName = "satodia.fbx";
 	std::string outputFileName = ChangeExtensionToBin(fileName);
-	outputFileName = "satodiatemp.bin";
+	outputFileName = "satodiatemptemp.bin";
 
 	if (!importer->Initialize(fileName, -1, fbxManager->GetIOSettings()))
 	{
@@ -306,6 +306,7 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 		std::cout << "nor count : " << mesh->GetElementNormalCount() << std::endl;
 		std::cout << "tan count : " << mesh->GetElementTangentCount() << std::endl;
 		std::cout << "uvs count : " << mesh->GetElementUVCount() << std::endl;
+		std::cout << "uv mapping mode : " << mesh->GetElementUV()->GetMappingMode() << std::endl;
 		std::cout << std::endl;
 
 		for (int i = 0; i < polygonCount; ++i) {
@@ -319,14 +320,18 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 					vertex.position = { static_cast<float>(controlPoints[vertexIndex][0]), static_cast<float>(controlPoints[vertexIndex][1]), static_cast<float>(controlPoints[vertexIndex][2]) };
 
 					if (normalElement) {
-						int normalIndex = mesh->GetTextureUVIndex(i, j);
-						FbxVector4 normal = normalElement->GetDirectArray().GetAt(normalIndex);
+						//int normalIndex = vertexIndex;// mesh->GetTextureUVIndex(i, j);
+						//int normalIndex = normalElement->GetIndexArray().GetAt(vertexIndex);
+						FbxVector4 normal;// = normalElement->GetDirectArray().GetAt(normalIndex);
+						mesh->GetPolygonVertexNormal(i, j, normal);
 						vertex.normal = { static_cast<float>(normal[0]), static_cast<float>(normal[1]), static_cast<float>(normal[2]) };
 					}
 
 					if (tangentElement) {
-						int tangentIndex = mesh->GetTextureUVIndex(i, j);
+						int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);// mesh->GetTextureUVIndex(i, j);
+						//int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);
 						FbxVector4 tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
+
 						vertex.tangent = { static_cast<float>(tangent[0]), static_cast<float>(tangent[1]), static_cast<float>(tangent[2]) };
 					}
 

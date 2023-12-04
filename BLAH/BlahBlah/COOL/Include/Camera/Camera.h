@@ -3,6 +3,7 @@
 struct CameraShaderData {
 	XMFLOAT4X4 m_ViewMatrix;
 	XMFLOAT4X4 m_ProjMatrix;
+	XMFLOAT3 m_CameraPosition;
 };
 
 // 기본 카메라 클래스

@@ -87,4 +87,5 @@ void Camera::UpdateShaderData()
 
 	memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
 	memcpy(&m_ShaderData->m_ProjMatrix, &proj, sizeof(XMFLOAT4X4));
+	memcpy(&m_ShaderData->m_CameraPosition, &m_Position, sizeof(XMFLOAT3));
 }

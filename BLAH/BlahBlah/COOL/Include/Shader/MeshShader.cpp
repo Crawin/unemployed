@@ -7,7 +7,7 @@
 bool MeshShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap)
 {
 	// юс╫ц
-	tempMesh.LoadFile(commandList, "satodiatemp.bin");
+	tempMesh.LoadFile(commandList, "satodiatemptemp.bin");
 
 	return CreateShader(device, commandList, rootSignature);
 }

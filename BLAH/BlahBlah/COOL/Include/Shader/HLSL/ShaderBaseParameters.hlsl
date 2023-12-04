@@ -37,7 +37,7 @@ cbuffer CameraInfo : register(b1)
 {
 	matrix viewMatrix;
 	matrix projectionMatrix;
-	// float3 cameraPosition : packoffset(c8); <- 이건 뷰변환 행렬에서 뽑아 쓰자
+	float3 cameraPosition;
 };
 
 cbuffer WorldMatrix : register(b2)

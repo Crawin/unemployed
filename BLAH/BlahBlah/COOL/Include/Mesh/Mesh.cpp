@@ -39,7 +39,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// 4. 부모 상대 변환 행렬		// float4x4
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
-	// 5. 버텍스 타입 // ???????
+	// 5. 버텍스 타입 // ??????? 사용하지 않을듯 하다
 	unsigned int t;
 	file.read((char*)&t, sizeof(unsigned int));
 
@@ -181,8 +181,10 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 
 #endif
 		// 임시
-		int tempi[16] = { 4, 0, };
+		int tempi[16] = { 5, 0, };
 
+		if (m_Name == "Hair") tempi[0] = 3;
+		else if (m_Name == "Body") tempi[0] = 4;
 		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT, 16, tempi, 0);
 
 		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
