@@ -127,7 +127,7 @@ int main()
 #endif
 			std::ios::out);
 
-		ExtractToFIle(mesh, outputFile);
+		//ExtractToFIle(mesh, outputFile);
 
 		// 정리 작업
 		fbxManager->Destroy();
@@ -214,6 +214,11 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices)
 
 	// 정점 데이터 추출
 	FbxVector4* controlPoints = mesh->GetControlPoints();
+	std::cout << "name: " << mesh->GetName() << std::endl;
+	std::cout << "vertex count : " << vertexCount << std::endl;
+	std::cout << "normal count : " << mesh->GetElementNormal()->GetDirectArray().GetCount() << std::endl;
+	std::cout << "tangent count : " << mesh->GetElementTangent()->GetDirectArray().GetCount() << std::endl;
+	std::cout << "uv count : " << mesh->GetElementUV()->GetDirectArray().GetCount() << std::endl << std::endl;
 
 	// 정점을 Vertex 구조체로 변환하여 벡터에 추가
 	for (int i = 0; i < vertexCount; ++i)
@@ -223,14 +228,15 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices)
 		// DirectX 12에서 사용할 형식으로 변환하여 벡터에 추가
 		Vertex vertex;
 		vertex.position = XMFLOAT3(static_cast<float>(position[0]), static_cast<float>(position[1]), static_cast<float>(position[2]));
-
 		// 법선 정보가 있는 경우에만 추출
 		if (mesh->GetElementNormalCount() > 0)
 		{
 			FbxGeometryElementNormal* normalElement = mesh->GetElementNormal();
 			FbxVector4 normal;
+
 			normal = normalElement->GetDirectArray().GetAt(i);
 			vertex.normal = XMFLOAT3(static_cast<float>(normal[0]), static_cast<float>(normal[1]), static_cast<float>(normal[2]));
+
 		}
 
 		// 탄젠트 정보가 있는 경우에만 추출
@@ -240,6 +246,8 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices)
 			FbxVector4 tangent;
 			tangent = tangentElement->GetDirectArray().GetAt(i);
 			vertex.tangent = XMFLOAT3(static_cast<float>(tangent[0]), static_cast<float>(tangent[1]), static_cast<float>(tangent[2]));
+
+
 		}
 		else if (mesh->GetElementBinormalCount() > 0)
 		{
@@ -306,19 +314,20 @@ void ExtractIndices(FbxMesh* mesh, std::vector<uint16_t>& indices)
 void PrintMeshHierachy(const Mesh& mesh)
 {
 	std::cout << std::format("name: {}\n", mesh.name);
-	std::cout << std::format("vertex: {}\n\n", mesh.vertices.size());
+	std::cout << std::format("vertex: {}\n", mesh.vertices.size());
+	std::cout << "index: " << mesh.indices.size() << std::endl << std::endl;
 
-	std::cout << "min: " << mesh.min.x << ", " << mesh.min.y << ", " << mesh.min.z << std::endl;
-	std::cout << "max: " << mesh.max.x << ", " << mesh.max.y << ", " << mesh.max.z << std::endl;
-	std::cout << "center: " << mesh.center.x << ", " << mesh.center.y << ", " << mesh.center.z << std::endl;
+	//std::cout << "min: " << mesh.min.x << ", " << mesh.min.y << ", " << mesh.min.z << std::endl;
+	//std::cout << "max: " << mesh.max.x << ", " << mesh.max.y << ", " << mesh.max.z << std::endl;
+	//std::cout << "center: " << mesh.center.x << ", " << mesh.center.y << ", " << mesh.center.z << std::endl;
 
-	std::cout << std::endl;
-	std::cout << std::format("{} {} {} {}\n{} {} {} {}\n{} {} {} {}\n{} {} {} {}\n",
-		mesh.localTransform._11, mesh.localTransform._12, mesh.localTransform._13, mesh.localTransform._14,
-		mesh.localTransform._21, mesh.localTransform._22, mesh.localTransform._23, mesh.localTransform._24,
-		mesh.localTransform._31, mesh.localTransform._32, mesh.localTransform._33, mesh.localTransform._34,
-		mesh.localTransform._41, mesh.localTransform._42, mesh.localTransform._43, mesh.localTransform._44		
-		);
+	//std::cout << std::endl;
+	//std::cout << std::format("{} {} {} {}\n{} {} {} {}\n{} {} {} {}\n{} {} {} {}\n",
+	//	mesh.localTransform._11, mesh.localTransform._12, mesh.localTransform._13, mesh.localTransform._14,
+	//	mesh.localTransform._21, mesh.localTransform._22, mesh.localTransform._23, mesh.localTransform._24,
+	//	mesh.localTransform._31, mesh.localTransform._32, mesh.localTransform._33, mesh.localTransform._34,
+	//	mesh.localTransform._41, mesh.localTransform._42, mesh.localTransform._43, mesh.localTransform._44		
+	//	);
 
 	for (const auto& m : mesh.subMeshes) {
 		PrintMeshHierachy(m);

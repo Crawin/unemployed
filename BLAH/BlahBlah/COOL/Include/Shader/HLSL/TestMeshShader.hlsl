@@ -37,7 +37,8 @@ float4 ps(VS_OUTPUT i) : SV_Target
 {
 	int albedoIdx = materialIndex[ALBEDO];
 	
-	//i.uv.y = 1 - i.uv.y;
+	i.uv.y = 1 - i.uv.y;
 	//i.uv = tempUV.yx;
+	//return float4(i.normalW, 1.0f);
 	return Tex2DList[albedoIdx].Sample(samplerWarp, i.uv);
 }

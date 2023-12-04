@@ -39,13 +39,29 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// 4. 부모 상대 변환 행렬		// float4x4
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
-	// 5. 버텍스 타입
+	// 5. 버텍스 타입 // ???????
 	unsigned int t;
 	file.read((char*)&t, sizeof(unsigned int));
 
 	// 6. 버텍스 정보
 	unsigned int vertexLen = 0;
 
+#ifdef INTERLEAVED_VERTEX
+	file.read((char*)&vertexLen, sizeof(unsigned int));
+	if (vertexLen > 0) {
+		std::vector<Vertex> vertex(vertexLen);
+		file.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
+
+		m_VertexBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, vertex, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, std::format("{}_vertex data", m_Name));
+
+		m_VertexBufferView.BufferLocation = Renderer::GetInstance().GetVertexDataGPUAddress(m_VertexBuffer);
+		m_VertexBufferView.StrideInBytes = sizeof(Vertex);
+		m_VertexBufferView.SizeInBytes = sizeof(Vertex) * vertexLen;
+
+		m_VertexNum = vertexLen;
+	}
+
+#else
 	// position
 	file.read((char*)&vertexLen, sizeof(unsigned int));
 	if (vertexLen > 0) {
@@ -118,6 +134,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 
 		m_IndexNum = indexNum;
 	}
+#endif
 
 	unsigned int childNum;
 	file.read((char*)&childNum, sizeof(unsigned int));
@@ -142,20 +159,29 @@ bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* f
 	}
 
 	BuildMesh(commandList, meshFile);
+	return true;
 }
 
 void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent)
 {
-	if (m_IndexNum > 0) {
+	if (m_VertexNum > 0) {
+#ifdef INTERLEAVED_VERTEX
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[1] = {
+			m_VertexBufferView
+		};
+#else
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[4] = {
 			m_PositionBufferView,
 			m_NormalBufferView,
 			m_TangentBufferView,
 			m_TexCoord0BufferView
 		};
-		// 임시
-		int tempi[16] = { 5, 0, };
 
+		commandList->IASetIndexBuffer(&m_IndexBufferView);
+
+#endif
+		// 임시
+		int tempi[16] = { 4, 0, };
 
 		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT, 16, tempi, 0);
 
@@ -166,10 +192,12 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::WORLD_MATRIX, 16, &temp, 0);
 
 		commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
-		commandList->IASetIndexBuffer(&m_IndexBufferView);
+
+#ifdef INTERLEAVED_VERTEX
+		commandList->DrawInstanced(m_VertexNum, 1, 0, 0);
+#else
 		commandList->DrawIndexedInstanced(m_IndexNum, 1, 0, 0, 0);
-
-
+#endif
 	}
 
 	for (auto& mesh : m_Childs)
