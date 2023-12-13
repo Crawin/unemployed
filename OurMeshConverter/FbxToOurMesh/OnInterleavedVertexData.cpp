@@ -328,11 +328,23 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 					}
 
 					if (tangentElement) {
-						int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);// mesh->GetTextureUVIndex(i, j);
-						//int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);
-						FbxVector4 tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
+						FbxLayerElement::EMappingMode tangentMappingMode = tangentElement->GetMappingMode();
+						//FbxLayerElement::EReferenceMode tangentReferenceMode = tangentElement->GetReferenceMode();
+						FbxVector4 tangent;
 
+
+						if (tangentMappingMode == FbxLayerElement::eByControlPoint) {
+							//tangent = tangentElement->GetDirectArray().GetAt(i * polygonSize + j);
+							printf("asdf");
+						}
+						else if (tangentMappingMode == FbxLayerElement::eByPolygonVertex) {
+							int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);// mesh->GetTextureUVIndex(i, j);
+							//int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);
+							tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
+						}
 						vertex.tangent = { static_cast<float>(tangent[0]), static_cast<float>(tangent[1]), static_cast<float>(tangent[2]) };
+
+
 					}
 
 					if (uvElement) {
@@ -347,69 +359,6 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 		}
 	}
 
-/*
-	int polygonCount = mesh->GetPolygonCount();
-	//FbxVector4* controlPoints = mesh->GetControlPoints();
-
-	// 노말 요소 가져오기
-	FbxGeometryElementNormal* normalElement = mesh->GetElementNormal();
-	FbxLayerElementArrayTemplate<FbxVector4>& normalArray = normalElement->GetDirectArray();
-	FbxLayerElementArrayTemplate<int>& normalIndices = normalElement->GetIndexArray();
-
-	FbxGeometryElementTangent* tangentElement = mesh->GetElementTangent();
-	FbxLayerElementArrayTemplate<FbxVector4>& tangentArray = tangentElement->GetDirectArray();
-	FbxLayerElementArrayTemplate<int>& tangentIndices = tangentElement->GetIndexArray();
-
-	// 텍스처 좌표 요소 가져오기 (예시로 2차원 텍스처 좌표 사용)
-	FbxGeometryElementUV* uvElement = mesh->GetElementUV();
-	FbxLayerElementArrayTemplate<FbxVector2>& uvArray = uvElement->GetDirectArray();
-	FbxLayerElementArrayTemplate<int>& uvIndices = uvElement->GetIndexArray();
-
-	// 인터리브드 방식으로 정점 데이터 저장
-
-	for (int polygonIndex = 0; polygonIndex < polygonCount; ++polygonIndex) {
-		int polygonSize = mesh->GetPolygonSize(polygonIndex);
-
-
-		for (int i = 0; i < polygonSize; ++i) {
-			Vertex temp;
-			int vertexIndex = mesh->GetPolygonVertex(polygonIndex, i);
-
-			// 정점 좌표
-			temp.position = XMFLOAT3(
-				static_cast<float>(controlPoints[vertexIndex][0]),
-				static_cast<float>(controlPoints[vertexIndex][1]),
-				static_cast<float>(controlPoints[vertexIndex][2]));
-
-			// 노말 데이터
-			//int normalIndex = normalIndices.GetAt(vertexIndex);
-			FbxVector4 normal = normalArray.GetAt(vertexIndex);
-			temp.normal = XMFLOAT3(
-				static_cast<float>(normal[0]),
-				static_cast<float>(normal[1]),
-				static_cast<float>(normal[2]));
-
-			// 탄젠트
-			temp.tangent;
-			//int tangentIndex = tangentIndices.GetAt(vertexIndex);
-			FbxVector4 tangent = tangentArray.GetAt(vertexIndex);
-			temp.tangent = XMFLOAT3(
-				static_cast<float>(tangent[0]),
-				static_cast<float>(tangent[1]),
-				static_cast<float>(tangent[2]));
-
-			// 텍스처 좌표 데이터 (2차원)
-			//int uvIndex = uvIndices.GetAt(vertexIndex);
-			FbxVector2 uv = uvArray.GetAt(vertexIndex);
-			temp.uv = XMFLOAT2(
-				static_cast<float>(uv[0]), 
-				static_cast<float>(uv[1]));
-
-			vertices.push_back(temp);
-		}
-	
-
-	*/
 #endif
 }
 
