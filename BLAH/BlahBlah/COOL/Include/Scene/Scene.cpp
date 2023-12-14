@@ -1,6 +1,6 @@
 #include "Scene.h"
-#include "Renderer/Renderer.h"
-#include "framework.h"
+#include "../Renderer/Renderer.h"
+#include "../framework.h"
 
 Scene::Scene()
 {
