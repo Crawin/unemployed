@@ -160,6 +160,7 @@
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
     <ClInclude Include="Include\Shader\MeshShader.h" />
+    <ClInclude Include="Include\Scene.h" />
     <ClInclude Include="Include\Shader\Shader.h" />
     <ClInclude Include="Include\Shader\SkyboxShader.h" />
     <ClInclude Include="Include\Shader\TestShader.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Include\Renderer\COOLDevice.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
+    <ClCompile Include="Include\Scene.cpp" />
     <ClCompile Include="Include\Shader\HLSL\TestShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
