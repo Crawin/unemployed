@@ -1027,3 +1027,9 @@ void Renderer::MouseInput(int xin, int yin)
 	//look = Vector3::TransformNormal(look, xmmtxRotate);
 	DebugPrint(std::format("look: {}, {}, {}", look.x, look.y, look.z));
 }
+
+Renderer* Renderer::GetRendererPtr()
+{
+	std::cout << "ptr: " << &Renderer::GetInstance() << std::endl;
+	return &Renderer::GetInstance();
+}

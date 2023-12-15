@@ -155,10 +155,12 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\Math.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
+    <ClInclude Include="Include\Object\ObjectBase.h" />
     <ClInclude Include="Include\OnDebug.h" />
     <ClInclude Include="Include\Renderer\COOLDevice.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
+    <ClInclude Include="Include\Scene\Scene.h" />
     <ClInclude Include="Include\Shader\MeshShader.h" />
     <ClInclude Include="Include\Shader\Shader.h" />
     <ClInclude Include="Include\Shader\SkyboxShader.h" />
@@ -177,9 +179,11 @@
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
+    <ClCompile Include="Include\Object\ObjectBase.cpp" />
     <ClCompile Include="Include\Renderer\COOLDevice.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
+    <ClCompile Include="Include\Scene\Scene.cpp" />
     <ClCompile Include="Include\Shader\HLSL\TestShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

@@ -37,6 +37,12 @@
     <Filter Include="소스 파일\Camera">
       <UniqueIdentifier>{07d3d024-2120-4caa-af20-e976485f9834}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene">
+      <UniqueIdentifier>{ec9aab73-7280-4f95-9e0f-103c579cc275}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object">
+      <UniqueIdentifier>{4f2b83cc-a40d-4508-a05a-c230862fdf4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -87,6 +93,12 @@
     <ClInclude Include="Include\DXMath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Object\ObjectBase.h">
+      <Filter>소스 파일\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\Scene.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -133,6 +145,12 @@
     </ClCompile>
     <ClCompile Include="Include\Camera\Camera.cpp">
       <Filter>소스 파일\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Object\ObjectBase.cpp">
+      <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\Scene.cpp">
+      <Filter>소스 파일\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

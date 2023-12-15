@@ -118,6 +118,8 @@ public:
 	// render
 	void Render();
 
+	Renderer* GetRendererPtr();
+
 private:
 	static const UINT m_NumSwapChainBuffers = 2;
 	UINT m_CurSwapChainIndex = 0;
