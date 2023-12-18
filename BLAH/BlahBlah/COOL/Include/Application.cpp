@@ -1,6 +1,7 @@
 #include "framework.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
+#include "Scene/SceneManager.h"
 
 Application::Application()
 {
@@ -68,9 +69,10 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
 	Rid[0].dwFlags = RIDEV_INPUTSINK;
 	Rid[0].hwndTarget = m_hWnd;
-	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+	CHECK_CREATE_FAILED(RegisterRawInputDevices(Rid, 1, sizeof(Rid[0])), "RegisterRawInputDevices 실패");
 
 	// 씬매니저의 생성 및 로드?
+	CHECK_CREATE_FAILED(SceneManager::GetInstance().Init(), "씬매니저 생성 실패");
 
 	return true;
 }
@@ -126,7 +128,7 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 			// 임시
 			// 씬 생기면 여기서 할듯?
-			if (dragging) Renderer::GetInstance().MouseInput(xPosRelative, yPosRelative);
+			//if (dragging) Renderer::GetInstance().MouseInput(xPosRelative, yPosRelative);
 
 			//DebugPrint(std::format("x: {}, y: {}", xPosRelative, yPosRelative));
 		}

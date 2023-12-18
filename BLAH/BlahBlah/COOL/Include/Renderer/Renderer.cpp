@@ -994,6 +994,7 @@ COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
 	return nullptr;
 }
 
+/*
 void Renderer::MouseInput(int xin, int yin)
 {
 	float x = yin * 0.10f;
@@ -1027,7 +1028,7 @@ void Renderer::MouseInput(int xin, int yin)
 	//look = Vector3::TransformNormal(look, xmmtxRotate);
 	DebugPrint(std::format("look: {}, {}, {}", look.x, look.y, look.z));
 }
-
+*/
 Renderer* Renderer::GetRendererPtr()
 {
 	std::cout << "ptr: " << &Renderer::GetInstance() << std::endl;

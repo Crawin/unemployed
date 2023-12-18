@@ -99,6 +99,9 @@
     <ClInclude Include="Include\Scene\Scene.h">
       <Filter>소스 파일\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene\SceneManager.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -150,6 +153,9 @@
       <Filter>소스 파일\Object</Filter>
     </ClCompile>
     <ClCompile Include="Include\Scene\Scene.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\SceneManager.cpp">
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
   </ItemGroup>

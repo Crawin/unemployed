@@ -11,6 +11,12 @@ SceneManager::~SceneManager()
 {
 }
 
+bool SceneManager::Init()
+{
+
+	return true;
+}
+
 void SceneManager::ChangeScene(Scene* newScene)
 {
 	if (newScene == nullptr) {
@@ -29,8 +35,12 @@ void SceneManager::ChangeScene(Scene* newScene)
 
 }
 
-void SceneManager::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
+bool SceneManager::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	// todo/ 미완성
-	// 키보드, 마우스 나눠서 씬에다 분배
+	if (m_CurrentScene) 
+	{
+		return m_CurrentScene->ProcessInput(msg, wParam, lParam);
+	}
+
+	return false;
 }

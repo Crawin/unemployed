@@ -183,7 +183,7 @@ public:
 
 
 	// 임시
-	void MouseInput(int x, int y);
+	//void MouseInput(int x, int y);
 
 };
 

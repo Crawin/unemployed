@@ -23,11 +23,13 @@ public:
 		return inst;
 	}
 
+	bool Init();
+
 	// 씬 전환에 로딩이 있다면 어쩌지? 로딩 씬을 강제로 넣어줘야 하지 않을까?
 	// 이건 생각해보자
 	void ChangeScene(Scene* newScene);
 
-	void ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);
+	bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);
 
 };
 
