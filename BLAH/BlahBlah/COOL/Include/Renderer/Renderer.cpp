@@ -565,7 +565,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		//tempMesh.LoadFile(commandList, "satodia.bin");
 		//m_Meshes.push_back(tempMesh);
 		m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
-		m_Camera->SetPosition({ 0.0f, 30.0f, -150.0f });
+		m_Camera->SetWorldPosition({ 0.0f, 30.0f, -150.0f });
 		m_Camera->Init();
 
 		// 업로드버퍼같은거 실행
@@ -900,8 +900,8 @@ void Renderer::Render()
 	if (size > 0.5f) {
 		XMFLOAT3 normal = Vector3::Normalize(tempMove);
 		tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
-		XMFLOAT3 pos = Vector3::Add(m_Camera->GetPosition(), tempMove);
-		m_Camera->SetPosition(pos);
+		XMFLOAT3 pos = Vector3::Add(m_Camera->GeWorldPosition(), tempMove);
+		m_Camera->SetWorldPosition(pos);
 
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };

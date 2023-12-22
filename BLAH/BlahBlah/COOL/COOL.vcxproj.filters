@@ -43,6 +43,12 @@
     <Filter Include="소스 파일\Object">
       <UniqueIdentifier>{4f2b83cc-a40d-4508-a05a-c230862fdf4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\MainScene">
+      <UniqueIdentifier>{8e55888e-98b4-4927-9920-46ae9e16bb71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Object\Actor">
+      <UniqueIdentifier>{84939733-13ee-41d9-aeae-378d69c23650}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -102,6 +108,12 @@
     <ClInclude Include="Include\Scene\SceneManager.h">
       <Filter>소스 파일\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene\TestMainScene.h">
+      <Filter>소스 파일\Scene\MainScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Object\Actor\Actor.h">
+      <Filter>소스 파일\Object\Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -157,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="Include\Scene\SceneManager.cpp">
       <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\TestMainScene.cpp">
+      <Filter>소스 파일\Scene\MainScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Object\Actor\Actor.cpp">
+      <Filter>소스 파일\Object\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

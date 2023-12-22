@@ -9,6 +9,9 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
+	if (m_PrevScene) delete m_PrevScene;
+	if (m_CurrentScene) delete m_CurrentScene;
+	if (m_NextScene) delete m_NextScene;
 }
 
 bool SceneManager::Init()

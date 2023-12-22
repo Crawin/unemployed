@@ -28,6 +28,8 @@ void Camera::Init()
 	//	// float3 cameraPosition : packoffset(c8); <- 이건 뷰변환 행렬에서 뽑아 쓰자
 	//};
 
+	// todo 
+	// map 하는 resource들은 따로 관리하자
 	m_MappedShaderData = Renderer::GetInstance().CreateEmptyBuffer(
 		D3D12_HEAP_TYPE_UPLOAD, 
 		D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER*/, 
