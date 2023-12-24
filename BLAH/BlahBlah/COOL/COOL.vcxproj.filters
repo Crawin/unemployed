@@ -117,6 +117,9 @@
     <ClInclude Include="Include\Object\ObjectManager.h">
       <Filter>소스 파일\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Mesh\MeshManager.h">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Include\Object\ObjectManager.cpp">
       <Filter>소스 파일\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Mesh\MeshManager.cpp">
+      <Filter>소스 파일\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

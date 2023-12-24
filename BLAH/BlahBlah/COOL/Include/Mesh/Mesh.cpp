@@ -136,31 +136,31 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	}
 #endif
 
-	unsigned int childNum;
-	file.read((char*)&childNum, sizeof(unsigned int));
+	//unsigned int childNum;
+	//file.read((char*)&childNum, sizeof(unsigned int));
 
-	// 8. 서브메쉬 개수
-	// 9. 서브메쉬(재귀)
-	m_Childs.reserve(childNum);
-	for (int i = 0; i < childNum; ++i) {
-		Mesh newMesh;
-		newMesh.BuildMesh(commandList, file);
-		m_Childs.push_back(newMesh);
-	}
+	//// 8. 서브메쉬 개수
+	//// 9. 서브메쉬(재귀)
+	//m_Childs.reserve(childNum);
+	//for (int i = 0; i < childNum; ++i) {
+	//	Mesh* newMesh = new Mesh;
+	//	newMesh->BuildMesh(commandList, file);
+	//	m_Childs.push_back(newMesh);
+	//}
 }
 
-bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
-{
-	std::ifstream meshFile(fileName, std::ios::binary);
-
-	if (meshFile.fail()) {
-		DebugPrint(std::format("Failed to open mesh file!! fileName: {}", fileName));
-		return false;
-	}
-
-	BuildMesh(commandList, meshFile);
-	return true;
-}
+//bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
+//{
+//	std::ifstream meshFile(fileName, std::ios::binary);
+//
+//	if (meshFile.fail()) {
+//		DebugPrint(std::format("Failed to open mesh file!! fileName: {}", fileName));
+//		return false;
+//	}
+//
+//	BuildMesh(commandList, meshFile);
+//	return true;
+//}
 
 void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent)
 {
@@ -203,5 +203,5 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 	}
 
 	for (auto& mesh : m_Childs)
-		mesh.Render(commandList, m_RootTransform);
+		mesh->Render(commandList, m_RootTransform);
 }

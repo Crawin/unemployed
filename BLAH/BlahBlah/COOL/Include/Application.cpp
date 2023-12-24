@@ -9,6 +9,8 @@ Application::Application()
 
 Application::~Application()
 {
+	if (m_SceneManager) delete m_SceneManager;
+
 	// 죽기 전에 살아있는 애들 확인하고 간다
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
@@ -76,7 +78,8 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	// 오브젝트 매니저의 생성?
 
 	// 씬매니저의 생성 및 로드?
-	CHECK_CREATE_FAILED(SceneManager::GetInstance().Init(""), "씬매니저 생성 실패");
+	m_SceneManager = new SceneManager();
+	CHECK_CREATE_FAILED(m_SceneManager->Init(Renderer::GetInstance().GetCommandList(0), "Test"), "씬매니저 생성 실패");
 
 	return true;
 }
@@ -92,7 +95,7 @@ int Application::StartProgram()
 		}
 		else {
 			// 게임 루프
-
+			m_SceneManager->Update(m_DeltaTime);
 			Renderer::GetInstance().Render();
 			/*
 #ifdef _DEBUG

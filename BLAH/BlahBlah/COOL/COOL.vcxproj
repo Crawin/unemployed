@@ -72,6 +72,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <AllProjectIncludesArePublic>true</AllProjectIncludesArePublic>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -80,8 +86,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>framework.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,8 +122,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>framework.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +159,7 @@
     <ClInclude Include="Include\Material.h" />
     <ClInclude Include="Include\Math.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
+    <ClInclude Include="Include\Mesh\MeshManager.h" />
     <ClInclude Include="Include\Object\Actor\Actor.h" />
     <ClInclude Include="Include\Object\ObjectBase.h" />
     <ClInclude Include="Include\Object\ObjectManager.h" />
@@ -183,6 +188,7 @@
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
+    <ClCompile Include="Include\Mesh\MeshManager.cpp" />
     <ClCompile Include="Include\Object\Actor\Actor.cpp" />
     <ClCompile Include="Include\Object\ObjectBase.cpp" />
     <ClCompile Include="Include\Object\ObjectManager.cpp" />

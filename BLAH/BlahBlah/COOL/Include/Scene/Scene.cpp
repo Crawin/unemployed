@@ -1,25 +1,51 @@
 #include "Scene.h"
 #include "../Renderer/Renderer.h"
 #include "../framework.h"
+#include "../Mesh/MeshManager.h"
+#include "../Object/ObjectManager.h"
 
 Scene::Scene()
 {
+	m_MeshManager = new MeshManager;
+	m_ObjectManager = new ObjectManager;
 }
 
 Scene::~Scene()
 {
+	if (m_MeshManager) delete m_MeshManager;
+	if (m_ObjectManager) delete m_ObjectManager;
+
 }
 
-
-
-bool Scene::Init()
+bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
-	m_SceneName = "Base";
-	//pRenederer = Renderer::GetInstance().GetRendererPtr();
-	std::cout << "¾À: " << m_SceneName << " »ý¼º ¿Ï·á" << std::endl;// << "·»´õ·¯: " << pRenederer << std::endl;
+	std::string meshPath = sceneName + "\\Mesh\\";
+	CHECK_CREATE_FAILED(m_MeshManager->LoadFolder(commandList, meshPath), "failed to load mesh");
+
+	std::string objPath = sceneName + "\\Object\\";
+	CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
+
+
 	return true;
 }
 
+bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	if (LoadScene(commandList, m_SceneName) == false) {
+		DebugPrint(std::format("ERROR!! Scene load error, {}", m_SceneName));
+		exit(-1);
+	}
+
+	return false;
+}
+
+//bool Scene::Init()
+//{
+//	m_SceneName = "Base";
+//	//pRenederer = Renderer::GetInstance().GetRendererPtr();
+//	DebugPrint(std::format("¾À: {} »ý¼º", m_SceneName));
+//	return true;
+//}
 
 //void Scene::Render()
 //{

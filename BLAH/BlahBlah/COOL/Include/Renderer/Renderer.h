@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 class Shader;
 class COOLResource;
@@ -41,26 +41,26 @@ private:
 public:
 	bool Init(const SIZE& wndSize, HWND hWnd);
 
-	// ìƒì„±ëœ í• ë‹¹ì,ë¦¬ìŠ¤íŠ¸ì˜ ì¸ë±ìŠ¤ë¥¼ outIndexë¡œ ëŒë ¤ì¤Œ
+	// »ı¼ºµÈ ÇÒ´çÀÚ,¸®½ºÆ®ÀÇ ÀÎµ¦½º¸¦ outIndex·Î µ¹·ÁÁÜ
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
 private:
-	// -------------------  Deviceê°€ í•˜ëŠ” ì¼ë“¤ ë‹¨ìˆœ ë¬¶ìŒ -------------------
+	// -------------------  Device°¡ ÇÏ´Â ÀÏµé ´Ü¼ø ¹­À½ -------------------
 
 	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D");
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty");
-	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// ì¼ë‹¨ ì—†ì•°
+	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// ÀÏ´Ü ¾ø¾Ú
 
 
 public:
-	// ------------------- commandlistê°€ í•˜ëŠ” ì¼ë“¤ ë¬¶ìŒ -------------------
+	// ------------------- commandlist°¡ ÇÏ´Â ÀÏµé ¹­À½ -------------------
 
-	// create texture, returns index of texture..	ì”¬ ìƒì„±ë‹¨ê³„ì—ì„œë§Œ ë¶ˆëŸ¬ì¤˜ì•¼ í•œë‹¤. ì—…ë¡œë“œë²„í¼ê°€ ìƒê¸°ë‹ˆ ì£¼ì˜
+	// create texture, returns index of texture..	¾À »ı¼º´Ü°è¿¡¼­¸¸ ºÒ·¯Áà¾ß ÇÑ´Ù. ¾÷·Îµå¹öÆÛ°¡ »ı±â´Ï ÁÖÀÇ
 	int CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState);
 
 	int LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
 
-	// create buffer, returns index of texture..	ì”¬ ìƒì„±ë‹¨ê³„ì—ì„œë§Œ ë¶ˆëŸ¬ì¤˜ì•¼ í•œë‹¤. ì—…ë¡œë“œë²„í¼ê°€ ìƒê¸°ë‹ˆ ì£¼ì˜
+	// create buffer, returns index of texture..	¾À »ı¼º´Ü°è¿¡¼­¸¸ ºÒ·¯Áà¾ß ÇÑ´Ù. ¾÷·Îµå¹öÆÛ°¡ »ı±â´Ï ÁÖÀÇ
 	template <class T>
 	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
@@ -96,26 +96,29 @@ public:
 		//UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
 	}
 
-	// ê·¸ëƒ¥ ì§„ì§œ ë¹„ì–´ìˆëŠ” ë¦¬ì†ŒìŠ¤ ìƒì„±, toMapDataë¥¼ ë„£ìœ¼ë©´ ìë™ìœ¼ë¡œ ë°ì´í„° ë§µí•‘ê¹Œì§€
+	// ±×³É ÁøÂ¥ ºñ¾îÀÖ´Â ¸®¼Ò½º »ı¼º, toMapData¸¦ ³ÖÀ¸¸é ÀÚµ¿À¸·Î µ¥ÀÌÅÍ ¸ÊÇÎ±îÁö
 	int CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty", void** toMapData = nullptr);
 
-	// ë¦¬ì†ŒìŠ¤ ë³µì‚¬ëŠ” subresourceDataë¡œ í•˜ì ì´ê±´ ë³´ë¥˜ ì‚¬ìš©ê¸ˆì§€!!!!!!!!!!!!!!!!
+	// ¸®¼Ò½º º¹»ç´Â subresourceData·Î ÇÏÀÚ ÀÌ°Ç º¸·ù »ç¿ë±İÁö!!!!!!!!!!!!!!!!
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
 
-	// ------------------- ê¸°íƒ€ë“±ë“± -------------------
+	// ------------------- ±âÅ¸µîµî -------------------
 	
-	// ì•„ë˜ ë‘ í•¨ìˆ˜ ì¶”í›„ì— ë‹¤ë¥¸ í´ë˜ìŠ¤ë¡œ ë¹¼ì•¼ í•¨ (Cameraê°™ì€ ê³³ìœ¼ë¡œ)
-	// ìœˆë„ìš° ì „ì²´ì— ì„¤ì •
+	// ¾Æ·¡ µÎ ÇÔ¼ö ÃßÈÄ¿¡ ´Ù¸¥ Å¬·¡½º·Î »©¾ß ÇÔ (Camera°°Àº °÷À¸·Î)
+	// À©µµ¿ì ÀüÃ¼¿¡ ¼³Á¤
 	void SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList);
-	// ì§€ì •í•´ì¤€ ì‚¬ì´ì¦ˆë¡œ ì„¤ì •
+	// ÁöÁ¤ÇØÁØ »çÀÌÁî·Î ¼³Á¤
 	void SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList, UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
 
-	// ------------------- ë¦¬ì†ŒìŠ¤ ê´€ë¦¬í•˜ëŠ” ì €ê±°ë“¤ ë¬¶ìŒ -------------------
+	// ------------------- ¸®¼Ò½º °ü¸®ÇÏ´Â Àú°Åµé ¹­À½ -------------------
 
-	// í•´ë‹¹ ë¦¬ì†ŒìŠ¤ì˜ ì¸ë±ìŠ¤ ë²ˆí˜¸ë¥¼ ë˜ëŒë ¤ì¤Œ
+	// ÇØ´ç ¸®¼Ò½ºÀÇ ÀÎµ¦½º ¹øÈ£¸¦ µÇµ¹·ÁÁÜ
 	UINT RegisterShaderResource(COOLResourcePtr resource);
 
-	// render, ì”¬ì˜ ë Œë”ëŸ¬ë¡œ ë°”ê¿€ ì˜ˆì •ì´ë‹ˆ ì–˜ëŠ” ì‚­ì œ ì˜ˆì •
+	// Ä¿¸Çµå ¸®½ºÆ® execute ÇÏ°í ¾÷·ÎµåÈüÀÇ ³»¿ëÀ» Áö¿î´Ù.
+	void ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	// render, ¾ÀÀÇ ·»´õ·¯·Î ¹Ù²Ü ¿¹Á¤ÀÌ´Ï ¾ê´Â »èÁ¦ ¿¹Á¤
 	void Render();
 
 	Renderer* GetRendererPtr();
@@ -124,7 +127,7 @@ private:
 	static const UINT m_NumSwapChainBuffers = 2;
 	UINT m_CurSwapChainIndex = 0;
 
-	// ìœˆë„ìš° ê´€ë ¨
+	// À©µµ¿ì °ü·Ã
 	HWND m_hWnd = 0;
 	SIZE m_ScreenSize = { 1280,720 };
 	bool m_Windowed = true;
@@ -133,56 +136,56 @@ private:
 	UINT m_MsaaQualityLevels = 0;
 	bool m_MsaaEnable = true;
 
-	// ë””ìŠ¤í¬ë¦½í„° ì¦ê°€ ì‚¬ì´ì¦ˆ ê´€ë ¨
+	// µğ½ºÅ©¸³ÅÍ Áõ°¡ »çÀÌÁî °ü·Ã
 	UINT m_CbvSrvDescIncrSize = 0;
 	UINT m_RtvDescIncrSize = 0;
 	UINT m_DsvDescIncrSize = 0;
 
-	// ë””ë°”ì´ìŠ¤, ê±´ë“¤ í•„ìš” ì—†ë‹¤.
+	// µğ¹ÙÀÌ½º, °Çµé ÇÊ¿ä ¾ø´Ù.
 	ComPtr<IDXGIFactory4> m_Factory;
 	ComPtr<ID3D12Device> m_Device;
 	ComPtr<ID3D12Fence> m_Fence;
 	ComPtr<IDXGISwapChain3> m_SwapChain;
 
-	// ë Œë”íƒ€ê²Ÿì˜ ê°¯ìˆ˜ ë§Œí¼ì˜ íœìŠ¤ ê°ì²´
+	// ·»´õÅ¸°ÙÀÇ °¹¼ö ¸¸Å­ÀÇ Ææ½º °´Ã¼
 	UINT64 m_FenceValues[m_NumSwapChainBuffers] = { 0 };
 	HANDLE m_FenceEvent = 0;;
 
-	// rtv, dsv ë””ìŠ¤í¬ë¦½í„° í™
+	// rtv, dsv µğ½ºÅ©¸³ÅÍ Èü
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
-	// ë Œë”íƒ€ê²Ÿë²„í¼, ëìŠ¤ìŠ¤í…ì‹¤ë²„í¼
+	// ·»´õÅ¸°Ù¹öÆÛ, µª½º½ºÅÙ½Ç¹öÆÛ
 	COOLResourcePtr m_RenderTargetBuffer[m_NumSwapChainBuffers];
 	COOLResourcePtr m_DepthStencilBuffer;
 
-	// ì»¤ë§¨ë“œí
+	// Ä¿¸ÇµåÅ¥
 	size_t m_MainCommandIdx = 0;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;
 
-	// ì»¤ë§¨ë“œë¦¬ìŠ¤íŠ¸ë“¤
+	// Ä¿¸Çµå¸®½ºÆ®µé
 	std::vector<ComPtr<ID3D12CommandAllocator>> m_CommandAllocators;
 	std::vector<ComPtr<ID3D12GraphicsCommandList>> m_GraphicsCommandLists;
 
-	// ì£¼ë¡œ ì‚¬ìš©í•˜ëŠ” ì»¤ë§¨ë“œë¦¬ìŠ¤íŠ¸
+	// ÁÖ·Î »ç¿ëÇÏ´Â Ä¿¸Çµå¸®½ºÆ®
 	ComPtr<ID3D12CommandAllocator> m_MainCommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> m_MainCommandList;
 
-	// ë£¨íŠ¸ì‹œê·¸ë‹ˆì³, ë³€ê²½ë  ì¼ ì—†ë‹¤.
+	// ·çÆ®½Ã±×´ÏÃÄ, º¯°æµÉ ÀÏ ¾ø´Ù.
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
-	// ì‰ì´ë”ë“¤. ì‰ì´ë” ë˜í•œ ì”¬ ë³€ê²½ì‹œ ë§ˆë‹¤ ë¹„ì›Œì¤„ê¹Œ?
+	// ½¦ÀÌ´õµé. ½¦ÀÌ´õ ¶ÇÇÑ ¾À º¯°æ½Ã ¸¶´Ù ºñ¿öÁÙ±î?
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
 	
-	// í˜„ì¬ ë“¤ê³  ìˆëŠ” ë¦¬ì†ŒìŠ¤. ì”¬ ë³€ê²½ì‹œ ë§ˆë‹¤ ì´ê±¸ ë¹„ì›Œì¤˜ì•¼ í•œë‹¤.
+	// ÇöÀç µé°í ÀÖ´Â ¸®¼Ò½º. ¾À º¯°æ½Ã ¸¶´Ù ÀÌ°É ºñ¿öÁà¾ß ÇÑ´Ù.
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
 	std::vector<COOLResourcePtr> m_Resources;
 
-	// ë¦¬ì†ŒìŠ¤í™
+	// ¸®¼Ò½ºÈü
 	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
 	std::vector<ID3D12Resource*> m_UploadResources;
 
-	// ì„ì‹œ
+	// ÀÓ½Ã
 	std::vector<Mesh> m_Meshes;
 	Camera* m_Camera;
 
@@ -193,8 +196,9 @@ public:
 	COOLResourcePtr GetResourceFromIndex(int idx);
 	COOLResourcePtr GetVertexDataFromIndex(int idx);
 
-
-	// ì„ì‹œ
+	ComPtr<ID3D12CommandAllocator> GetCommandAllocator(size_t idx) { return  m_CommandAllocators[idx]; }
+	ComPtr<ID3D12GraphicsCommandList> GetCommandList(size_t idx) { return  m_GraphicsCommandLists[idx]; }
+	// ÀÓ½Ã
 	//void MouseInput(int x, int y);
 
 };

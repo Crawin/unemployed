@@ -5,7 +5,10 @@
 // 
 // DOD(Data Oriented Design, 캐시미스를 줄이기 위해 연속 사용 하는 것들 중 작은 것들을 연속된 메모리에 넣는다. 
 // boundingorientedbox의 크기가 40, xmfloat4x4의 크기가 64이다. 
-// 캐시에 가져오는 블럭의 크기가 64바이트인데 과연 효과가 있을까? 차라리 본인이 가지게
+// 보통 캐시가 가져오는 블럭의 크기가 64바이트인데 과연 효과가 있을까? 차라리 본인이 가지게
+// 실험 결과 큰 사이즈의 데이터를 dod로 만들어도 큰 이득은 없다.
+// 이득을 보고 싶다면 position같은 것만 묶는게 이득일 듯 하다.
+// 
 // 
 // 
 //		ex) 컬링과 충돌체크 때 사용될 바운딩 박스
@@ -23,12 +26,12 @@ class ObjectBase;
 class ObjectManager
 {
 public:
-	ObjectManager() {}
-	~ObjectManager() {}
+	ObjectManager();
+	~ObjectManager();
 
-	void Init() {}
+	bool LoadFolder(const std::string& pathName);
 
-	void InsertObject(ObjectBase* obj);
+	ObjectBase* GetObjectFromName(const std::string& name);
 
 	void Update(float deltaTime);
 
@@ -36,7 +39,6 @@ private:
 	int m_NextID = 0;
 
 	std::vector<ObjectBase*> m_Objects;
-	std::vector<BoundingOrientedBox> m_ObjectOBBs;
-	std::vector<XMFLOAT4X4> m_ObjectWorldMatrices;
+
 };
 

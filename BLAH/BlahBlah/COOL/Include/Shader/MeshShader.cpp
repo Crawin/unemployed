@@ -7,7 +7,7 @@
 bool MeshShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap)
 {
 	// 임시
-	tempMesh.LoadFile(commandList, "satodiatemptemp.bin");
+	//tempMesh.LoadFile(commandList, "satodiatemptemp.bin");
 
 	return CreateShader(device, commandList, rootSignature);
 }
@@ -18,7 +18,7 @@ void MeshShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// 임시
 	XMFLOAT4X4 t = Matrix4x4::Identity();
-	tempMesh.Render(commandList, t);
+	//tempMesh.Render(commandList, t);
 }
 
 D3D12_SHADER_BYTECODE MeshShader::CreateVertexShader()

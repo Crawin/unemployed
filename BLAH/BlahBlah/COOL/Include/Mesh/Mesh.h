@@ -27,6 +27,8 @@ class Mesh
 {
 private:
 
+	friend class MeshManager;
+
 #ifdef INTERLEAVED_VERTEX
 	int m_VertexBuffer = -1;								// 인터리브 방식
 	D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView = {};
@@ -55,13 +57,21 @@ private:
 	// bounding box
 	XMFLOAT3 m_AABBCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	XMFLOAT3 m_AABBExtents = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	
+
+
 	BoundingOrientedBox m_ModelBoundingBox;
+
+	// todo mesh loader에 아래 데이터 추가 
+	XMFLOAT3 m_Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT4 m_Rotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	XMFLOAT3 m_Scale = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	// 부모와 상대적인 변환행렬
 	XMFLOAT4X4 m_LocalTransform = Matrix4x4::Identity();
 	XMFLOAT4X4 m_RootTransform = Matrix4x4::Identity();
 
-	std::vector<Mesh> m_Childs;
+	std::vector<Mesh*> m_Childs;
 
 	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file);
 
@@ -71,7 +81,7 @@ public:
 	Mesh() {}
 	~Mesh() {}
 
-	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
+	//bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
 
 #ifdef INTERLEAVED_VERTEX
 	void SetVertexBuffer(int idx)		{ m_VertexBuffer = idx; }

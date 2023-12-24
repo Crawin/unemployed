@@ -3,6 +3,7 @@
 // 윈도우를 초기화 하고 게임의 메인루프가 있는 곳
 // 별로 볼 일 없을 것이다...
 
+class SceneManager;
 
 class Application
 {
@@ -47,5 +48,6 @@ private:
 	bool m_GameLoop = true;
 
 	//FMOD_SYSTEM* m_pSoundSystem;
+	SceneManager* m_SceneManager = nullptr;
 
 };

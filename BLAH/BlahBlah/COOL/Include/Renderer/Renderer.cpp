@@ -569,24 +569,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		m_Camera->Init();
 
 		// 업로드버퍼같은거 실행
-		commandList->Close();
-		ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
-		m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
-
-		UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
-		HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
-		if (m_Fence->GetCompletedValue() < fenceValue) {
-			hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
-			WaitForSingleObject(m_FenceEvent, INFINITE);
-		}
-
-		for (int i = 0; i < m_UploadResources.size(); ++i) {
-			if (m_UploadResources[i]) {
-				m_UploadResources[i]->Release();
-				m_UploadResources[i] = nullptr;
-			}
-		}
-		m_UploadResources.clear();
+		ExecuteAndEraseUploadHeap(commandList);
 	}
 #endif // _DEBUG
 
@@ -850,6 +833,28 @@ UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
 {
 	m_Resources.push_back(resource);
 	return m_Resources.size() - 1;
+}
+
+void Renderer::ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	commandList->Close();
+	ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
+	m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
+
+	UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
+	HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
+	if (m_Fence->GetCompletedValue() < fenceValue) {
+		hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
+		WaitForSingleObject(m_FenceEvent, INFINITE);
+	}
+
+	for (int i = 0; i < m_UploadResources.size(); ++i) {
+		if (m_UploadResources[i]) {
+			m_UploadResources[i]->Release();
+			m_UploadResources[i] = nullptr;
+		}
+	}
+	m_UploadResources.clear();
 }
 
 void Renderer::Render()

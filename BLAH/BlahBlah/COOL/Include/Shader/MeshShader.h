@@ -19,6 +19,6 @@ private:
 
 	// test
 
-	Mesh tempMesh;
+	//Mesh tempMesh;
 };
 
