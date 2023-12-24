@@ -71,8 +71,12 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	Rid[0].hwndTarget = m_hWnd;
 	CHECK_CREATE_FAILED(RegisterRawInputDevices(Rid, 1, sizeof(Rid[0])), "RegisterRawInputDevices 실패");
 
+	// 메쉬 매니저의 생성?
+
+	// 오브젝트 매니저의 생성?
+
 	// 씬매니저의 생성 및 로드?
-	CHECK_CREATE_FAILED(SceneManager::GetInstance().Init(), "씬매니저 생성 실패");
+	CHECK_CREATE_FAILED(SceneManager::GetInstance().Init(""), "씬매니저 생성 실패");
 
 	return true;
 }

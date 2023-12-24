@@ -825,7 +825,7 @@ void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLR
 	dest->TransToState(commandList, curDestState);
 }
 
-void Renderer::SetViewportScissorRect()
+void Renderer::SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	D3D12_VIEWPORT vp;
 	vp.TopLeftX = 0.0f;
@@ -837,13 +837,13 @@ void Renderer::SetViewportScissorRect()
 
 	RECT scRect = { 0, 0, m_ScreenSize.cx, m_ScreenSize.cy };
 
-	SetViewportScissorRect(1, vp, scRect);
+	SetViewportScissorRect(commandList, 1, vp, scRect);
 }
 
-void Renderer::SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect)
+void Renderer::SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList, UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect)
 {
-	m_MainCommandList->RSSetViewports(numOfViewPort, &viewport);
-	m_MainCommandList->RSSetScissorRects(numOfViewPort, &scissorRect);
+	commandList->RSSetViewports(numOfViewPort, &viewport);
+	commandList->RSSetScissorRects(numOfViewPort, &scissorRect);
 }
 
 UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
@@ -868,7 +868,7 @@ void Renderer::Render()
 	m_MainCommandList->SetDescriptorHeaps(1, m_ResourceHeap.GetAddressOf());
 	m_MainCommandList->SetGraphicsRootDescriptorTable(0, m_ResourceHeap->GetGPUDescriptorHandleForHeapStart());
 
-	SetViewportScissorRect();
+	SetViewportScissorRect(m_MainCommandList);
 
 	// present를 기다려야 하지 않을까
 

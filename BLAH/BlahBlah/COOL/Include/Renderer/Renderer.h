@@ -106,16 +106,16 @@ public:
 	
 	// 아래 두 함수 추후에 다른 클래스로 빼야 함 (Camera같은 곳으로)
 	// 윈도우 전체에 설정
-	void SetViewportScissorRect();
+	void SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList);
 	// 지정해준 사이즈로 설정
-	void SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
+	void SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList, UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect);
 
 	// ------------------- 리소스 관리하는 저거들 묶음 -------------------
 
 	// 해당 리소스의 인덱스 번호를 되돌려줌
 	UINT RegisterShaderResource(COOLResourcePtr resource);
 
-	// render
+	// render, 씬의 렌더러로 바꿀 예정이니 얘는 삭제 예정
 	void Render();
 
 	Renderer* GetRendererPtr();
@@ -124,6 +124,7 @@ private:
 	static const UINT m_NumSwapChainBuffers = 2;
 	UINT m_CurSwapChainIndex = 0;
 
+	// 윈도우 관련
 	HWND m_hWnd = 0;
 	SIZE m_ScreenSize = { 1280,720 };
 	bool m_Windowed = true;
@@ -132,43 +133,54 @@ private:
 	UINT m_MsaaQualityLevels = 0;
 	bool m_MsaaEnable = true;
 
+	// 디스크립터 증가 사이즈 관련
 	UINT m_CbvSrvDescIncrSize = 0;
 	UINT m_RtvDescIncrSize = 0;
 	UINT m_DsvDescIncrSize = 0;
 
+	// 디바이스, 건들 필요 없다.
 	ComPtr<IDXGIFactory4> m_Factory;
 	ComPtr<ID3D12Device> m_Device;
 	ComPtr<ID3D12Fence> m_Fence;
 	ComPtr<IDXGISwapChain3> m_SwapChain;
 
+	// 렌더타겟의 갯수 만큼의 펜스 객체
 	UINT64 m_FenceValues[m_NumSwapChainBuffers] = { 0 };
 	HANDLE m_FenceEvent = 0;;
 
+	// rtv, dsv 디스크립터 힙
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
+	// 렌더타겟버퍼, 뎁스스텐실버퍼
 	COOLResourcePtr m_RenderTargetBuffer[m_NumSwapChainBuffers];
 	COOLResourcePtr m_DepthStencilBuffer;
 
+	// 커맨드큐
 	size_t m_MainCommandIdx = 0;
 	ComPtr<ID3D12CommandQueue> m_CommandQueue;
 
+	// 커맨드리스트들
 	std::vector<ComPtr<ID3D12CommandAllocator>> m_CommandAllocators;
 	std::vector<ComPtr<ID3D12GraphicsCommandList>> m_GraphicsCommandLists;
 
+	// 주로 사용하는 커맨드리스트
 	ComPtr<ID3D12CommandAllocator> m_MainCommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> m_MainCommandList;
 
+	// 루트시그니쳐, 변경될 일 없다.
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
+	// 쉐이더들. 쉐이더 또한 씬 변경시 마다 비워줄까?
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
+	
+	// 현재 들고 있는 리소스. 씬 변경시 마다 이걸 비워줘야 한다.
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
-
-	// 리소스힙 관련
-	std::vector<ID3D12Resource*> m_UploadResources;
-
 	std::vector<COOLResourcePtr> m_Resources;
+
+	// 리소스힙
 	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
+	std::vector<ID3D12Resource*> m_UploadResources;
 
 	// 임시
 	std::vector<Mesh> m_Meshes;

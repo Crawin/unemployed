@@ -14,8 +14,12 @@ SceneManager::~SceneManager()
 	if (m_NextScene) delete m_NextScene;
 }
 
-bool SceneManager::Init()
+bool SceneManager::Init(const char* firstScene)
 {
+
+
+
+	//m_CurrentScene = new Scene();
 
 	return true;
 }

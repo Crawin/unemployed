@@ -35,7 +35,7 @@ class Camera :
 public:
 	Camera();
 	Camera(float fov, float aspect, float nearPlane, float farPlane);
-	~Camera();
+	virtual ~Camera();
 
 	void Init();
 	

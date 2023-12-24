@@ -17,6 +17,8 @@ private:
 	// 업데이트 O 렌더 X
 	bool m_RenderOn = true;
 
+	int m_Index = -1;
+
 protected:
 	// local position
 	XMFLOAT3 m_LocalScale = { 1.0f, 1.0f, 1.0f };
@@ -29,7 +31,7 @@ protected:
 	XMFLOAT3 m_Scale = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT4 m_Rotate = { 0.0f, 0.0f, 0.0f, 0.0f };				// 쿼터니언이다.
 	XMFLOAT3 m_Position = { 0.0f, 0.0f, 0.0f };
-	XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();
+	XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();			// to-root * world, 실제 shader에 넘길 값
 
 	// 자식들임
 	std::vector<ObjectBase*> m_Children;
@@ -39,7 +41,7 @@ protected:
 	virtual void Animate() {}
 
 public:
-	virtual void Update() {}
+	virtual void Update(float deltaTime) {}
 	
 	// 사실상 이름이 animate여야 하지 않을까 싶긴 한데 뭐 어쩌겠어요
 	void SetChildWorlTransform(const ObjectBase* parent);
@@ -47,6 +49,7 @@ public:
 public:
 	bool GetActive() const { return m_Active; }
 	bool GetRenderOn() const { return m_RenderOn; }
+	int GetIndex() const { return m_Index; }
 	XMFLOAT4 GetLocalScale() const { return m_LocalRotate; }
 	XMFLOAT3 GetLocalRotate() const { return m_LocalScale; }
 	XMFLOAT3 GetLocalPosition() const { return m_LocalPosition; }
@@ -56,6 +59,7 @@ public:
 
 	void SetActive(bool active) { m_Active = active; }
 	void SetRenderOn(bool active) { m_RenderOn = active; }
+	void SetIndex(int idx) { m_Index = idx; }
 	void SetLocalScale(const XMFLOAT3& scale) { m_LocalScale = scale; }
 	void SetLocalRotate(const XMFLOAT4& rotate) { m_LocalRotate = rotate; }
 	void SetLocalPosition(const XMFLOAT3& position) { m_LocalPosition = position; }

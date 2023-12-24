@@ -114,6 +114,9 @@
     <ClInclude Include="Include\Object\Actor\Actor.h">
       <Filter>소스 파일\Object\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Object\ObjectManager.h">
+      <Filter>소스 파일\Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="Include\Object\Actor\Actor.cpp">
       <Filter>소스 파일\Object\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Object\ObjectManager.cpp">
+      <Filter>소스 파일\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
