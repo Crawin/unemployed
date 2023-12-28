@@ -23,6 +23,8 @@ private:
 	std::vector<std::thread> vRoomThreads;
 	std::vector<sockaddr_in> vAcceptSockets;
 	std::vector<sockaddr_in> vRunningSockets;
+
+	SOCKET listen_sock;
 public:
 	CRoomServer();
 	~CRoomServer();
@@ -30,6 +32,7 @@ public:
 	bool Run();
 	bool ListenThread();
 	bool Join();
+	bool CloseListen();
 };
 
 class CGameServer : CServer {
@@ -44,8 +47,8 @@ public:
 class CServerManager : CServer{
 private:
 	CRoomServer* RoomServer;
-	std::vector<CGameServer*> GameServers;
-	std::thread CommandServer;
+	std::vector<CGameServer*> vGameServers;
+	std::array<std::thread, 1> vCommandThread;
 public:
 	CServerManager();
 	~CServerManager();

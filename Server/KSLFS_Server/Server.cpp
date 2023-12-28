@@ -63,7 +63,8 @@ bool CRoomServer::ListenThread()
 		return 1;
 
 	// 소켓 생성
-	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	//SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
 	// bind()
@@ -102,7 +103,7 @@ bool CRoomServer::ListenThread()
 	}
 
 	// 소켓 닫기
-	closesocket(listen_sock);
+	//closesocket(listen_sock);
 
 	// 윈속 종료
 	WSACleanup();
@@ -116,6 +117,12 @@ bool CRoomServer::Join()
 	{
 		start->join();
 	}
+	return false;
+}
+
+bool CRoomServer::CloseListen()
+{
+	closesocket(listen_sock);
 	return false;
 }
 
@@ -149,8 +156,9 @@ bool CServerManager::Run()
 {
 	PrintInfo("Run");
 
-	std::thread CT(&CServerManager::CommandThread, this);		// 명령어 입력 쓰레드 실행
-	CT.detach();
+	vCommandThread[0] = std::thread(&CServerManager::CommandThread, this);
+	//std::thread CT(&CServerManager::CommandThread, this);		// 명령어 입력 쓰레드 실행
+	//CT.detach();
 
 	RoomServer->Run();	// 룸 서버 실행
 	return false;
@@ -158,6 +166,7 @@ bool CServerManager::Run()
 
 bool CServerManager::Join()
 {
+	vCommandThread[0].join();
 	RoomServer->Join();
 	return false;
 }
@@ -168,8 +177,12 @@ bool CServerManager::CommandThread()
 
 	std::cout << "CommandThread Run" << std::endl;
 	std::string input;
-	std::map<std::string, std::function<void()>> commands = {
-		{"stop",[&CommandState]() { CommandState = false; std::cout << "정지." << std::endl; }}
+	std::map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
+		{"stop",[&CommandState, this]() {
+			CommandState = false;
+			std::cout << "정지." << std::endl;
+			RoomServer->CloseListen();
+		}}
 	};
 	
 	std::cout << "명령어 모음: ";
