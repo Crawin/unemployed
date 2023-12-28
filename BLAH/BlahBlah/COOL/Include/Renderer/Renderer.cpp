@@ -342,39 +342,11 @@ bool Renderer::CreateRootSignature()
 	return true;
 }
 
-bool Renderer::CreateTestRootSignature()
-{
-	D3D12_ROOT_PARAMETER rootParam = {};
-
-	D3D12_DESCRIPTOR_RANGE descriptorRanges[1];
-
-
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.NumParameters = 0;
-	rootSignatureDesc.NumStaticSamplers = 0;
-	rootSignatureDesc.pParameters = nullptr;
-	rootSignatureDesc.pStaticSamplers = nullptr;
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-	// 루트시그니처 생성
-	ComPtr<ID3DBlob> signatureBlob = nullptr;;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
-	m_Device->CreateRootSignature(
-		0,
-		signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(),
-		IID_PPV_ARGS(m_RootSignature.GetAddressOf()));
-
-	CHECK_CREATE_FAILED(m_RootSignature, "CreateRootSignature Failed!!");
-	return true;
-}
-
 bool Renderer::CreateResourceDescriptorHeap()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
 	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
-	descriptorDesc.NumDescriptors = m_Resources.size();										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
+	descriptorDesc.NumDescriptors = static_cast<UINT>(m_Resources.size());										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
 	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descriptorDesc.NodeMask = 0;
@@ -710,7 +682,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	}
 
 	// 리소스 디스크립터
-	UINT64 numObSUbresource = GetRequiredIntermediateSize(texture, 0, subResources.size());
+	UINT64 numObSUbresource = GetRequiredIntermediateSize(texture, 0, static_cast<UINT>(subResources.size()));
 
 	D3D12_RESOURCE_DESC resDesc = {};
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -741,7 +713,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	uploadResource->SetName((temp + L" - upload buffer").c_str());
 
 	// 복사 및 상태 전이
-	UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
+	UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, static_cast<UINT>(subResources.size()), &subResources[0]);
 
 	D3D12_RESOURCE_BARRIER resourceBarrier = {};
 	resourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -764,7 +736,7 @@ int Renderer::LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, co
 {
 	std::vector<int> data;
 
-	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, data.size());
+	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, static_cast<UINT>(data.size()));
 
 
 	return 0;
@@ -784,11 +756,11 @@ int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES 
 		resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER ||
 		toMapData != nullptr) {
 		m_VertexIndexDatas.push_back(resource);
-		return m_VertexIndexDatas.size() - 1;
+		return static_cast<int>(m_VertexIndexDatas.size()) - 1;
 	}
 	else {
 		m_Resources.push_back(resource);
-		return m_Resources.size() - 1;
+		return static_cast<int>(m_Resources.size()) - 1;
 	}
 
 	return -1;
@@ -832,7 +804,7 @@ void Renderer::SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandL
 UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
 {
 	m_Resources.push_back(resource);
-	return m_Resources.size() - 1;
+	return static_cast<UINT>(m_Resources.size()) - 1;
 }
 
 void Renderer::ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList)

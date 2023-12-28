@@ -25,7 +25,7 @@ void MeshManager::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::
 	mesh->m_Childs.reserve(childNum);
 
 	// 9. 서브메쉬(재귀)
-	for (int i = 0; i < childNum; ++i) {
+	for (unsigned int i = 0; i < childNum; ++i) {
 		Mesh* child = new Mesh;
 		BuildMesh(commandList, file, child);
 		mesh->m_Childs.push_back(child);
@@ -57,8 +57,6 @@ bool MeshManager::LoadFolder(ComPtr<ID3D12GraphicsCommandList> commandList, cons
 	}
 
 	for (const auto& file : std::filesystem::directory_iterator(pathName)) {
-		file.path().filename();
-
 		std::string fileName = pathName + file.path().filename().string();
 		if (LoadFile(commandList, fileName) == false) return false;
 	}

@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "Timer.h"
 
 Timer::Timer()
@@ -42,5 +42,6 @@ void Timer::Update()
 void Timer::Reset()
 {
 	Start();
-	m_LastTime = 0.0f;
+	m_LastTime = 0;
+	m_deltaTime = 0.0f;
 }

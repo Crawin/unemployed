@@ -34,7 +34,6 @@ private:
 	bool CreateDSV();
 
 	bool CreateRootSignature();
-	bool CreateTestRootSignature();
 	bool CreateResourceDescriptorHeap();
 	bool LoadShaders();
 
@@ -64,7 +63,7 @@ public:
 	template <class T>
 	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
-		UINT bytes = data.size() * sizeof(T);
+		UINT bytes = static_cast<UINT>(data.size()) * sizeof(T);
 		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COPY_DEST, bytes, name);
 		auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes, std::format("{} upload resource", name));
 		uploadResource->DontReleaseOnDesctruct();
@@ -81,11 +80,11 @@ public:
 		if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
 			resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER) {
 			m_VertexIndexDatas.push_back(resource);
-			return m_VertexIndexDatas.size() - 1;
+			return static_cast<int>(m_VertexIndexDatas.size()) - 1;
 		}
 		else {
 			m_Resources.push_back(resource);
-			return m_Resources.size() - 1;
+			return static_cast<int>(m_Resources.size()) - 1;
 		}
 
 		//::ZeroMemory(&d3dSubResourceData, sizeof(D3D12_SUBRESOURCE_DATA));
