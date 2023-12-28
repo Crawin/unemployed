@@ -49,6 +49,9 @@
     <Filter Include="소스 파일\Object\Actor">
       <UniqueIdentifier>{84939733-13ee-41d9-aeae-378d69c23650}</UniqueIdentifier>
     </Filter>
+    <Filter Include="외부">
+      <UniqueIdentifier>{17114279-4526-436c-a421-b86b3c469be8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -80,12 +83,6 @@
     </ClInclude>
     <ClInclude Include="Include\Shader\SkyboxShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Material.h">
-      <Filter>소스 파일\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\DDSTextureLoader12.h">
-      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Include\Mesh\Mesh.h">
       <Filter>소스 파일\Mesh</Filter>
@@ -120,6 +117,18 @@
     <ClInclude Include="Include\Mesh\MeshManager.h">
       <Filter>소스 파일\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Timer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Material\MaterialManager.h">
+      <Filter>소스 파일\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Material\Material.h">
+      <Filter>소스 파일\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\DDSTextureLoader12.h">
+      <Filter>외부</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -149,13 +158,7 @@
     <ClCompile Include="Include\Shader\SkyboxShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Material.cpp">
-      <Filter>소스 파일\Material</Filter>
-    </ClCompile>
     <ClCompile Include="Include\framework.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\DDSTextureLoader12.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Include\Mesh\Mesh.cpp">
@@ -187,6 +190,18 @@
     </ClCompile>
     <ClCompile Include="Include\Mesh\MeshManager.cpp">
       <Filter>소스 파일\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Timer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Material\MaterialManager.cpp">
+      <Filter>소스 파일\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Material\Material.cpp">
+      <Filter>소스 파일\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\DDSTextureLoader12.cpp">
+      <Filter>외부</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

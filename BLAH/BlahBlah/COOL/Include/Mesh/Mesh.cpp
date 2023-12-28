@@ -4,23 +4,23 @@
 
 void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file)
 {
-	// ¸Ş½¬ ÆÄÀÏ ±¸Á¶
-	// 1. ÀÌ¸§ ±æÀÌ					// int
-	// 2. ÀÌ¸§						// char*
-	// 3. ¹Ù¿îµù¹Ú½º					// float3 x 3
-	// 4. ºÎ¸ğ »ó´ë º¯È¯ Çà·Ä			// float4x4
-	// 5. ¹öÅØ½º Å¸ÀÔ				// int
-	// 6. ¹öÅØ½º Á¤º¸				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
-	// 7. ÀÎµ¦½º Á¤º¸				// int int*int
-	// 8. ¼­ºê¸Ş½¬ °³¼ö				// int
-	// 9. ¼­ºê¸Ş½¬(ÀÌ¸§±æÀÌ ÀÌ¸§ ¹öÅØ½ºÁ¤º¸ ¼­ºê¸Ş½¬...°³¼ö)		// Àç±Í·Î ÆÄ°íµé¾î¶ó
+	// ë©”ì‰¬ íŒŒì¼ êµ¬ì¡°
+	// 1. ì´ë¦„ ê¸¸ì´					// int
+	// 2. ì´ë¦„						// char*
+	// 3. ë°”ìš´ë”©ë°•ìŠ¤					// float3 x 3
+	// 4. ë¶€ëª¨ ìƒëŒ€ ë³€í™˜ í–‰ë ¬			// float4x4
+	// 5. ë²„í…ìŠ¤ íƒ€ì…				// int
+	// 6. ë²„í…ìŠ¤ ì •ë³´				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
+	// 7. ì¸ë±ìŠ¤ ì •ë³´				// int int*int
+	// 8. ì„œë¸Œë©”ì‰¬ ê°œìˆ˜				// int
+	// 9. ì„œë¸Œë©”ì‰¬(ì´ë¦„ê¸¸ì´ ì´ë¦„ ë²„í…ìŠ¤ì •ë³´ ì„œë¸Œë©”ì‰¬...ê°œìˆ˜)		// ì¬ê·€ë¡œ íŒŒê³ ë“¤ì–´ë¼
 	//
 
-	// 1. ÀÌ¸§ ±æÀÌ
+	// 1. ì´ë¦„ ê¸¸ì´
 	unsigned int size;
 	file.read((char*)&size, sizeof(unsigned int));
 
-	// 2. ÀÌ¸§
+	// 2. ì´ë¦„
 	if (size > 0) {
 		char* name = new char[size + 1];
 		name[size] = '\0';
@@ -29,21 +29,21 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		delete[] name;
 	}
 
-	// 3. ¹Ù¿îµù¹Ú½º	
+	// 3. ë°”ìš´ë”©ë°•ìŠ¤	
 	XMFLOAT3 min, max;
 	file.read((char*)&min, sizeof(XMFLOAT3));
 	file.read((char*)&max, sizeof(XMFLOAT3));
 	file.read((char*)&m_AABBCenter, sizeof(XMFLOAT3));
 	m_AABBExtents = XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
 
-	// 4. ºÎ¸ğ »ó´ë º¯È¯ Çà·Ä		// float4x4
+	// 4. ë¶€ëª¨ ìƒëŒ€ ë³€í™˜ í–‰ë ¬		// float4x4
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
-	// 5. ¹öÅØ½º Å¸ÀÔ // ??????? »ç¿ëÇÏÁö ¾ÊÀ»µí ÇÏ´Ù
+	// 5. ë²„í…ìŠ¤ íƒ€ì… // ì‚¬ìš© í•  ë“¯ í•˜ë‹¤. ex) ìŠ¤í‚¨ë©”ì‰¬ vs ì¼ë°˜ë©”ì‰¬
 	unsigned int t;
 	file.read((char*)&t, sizeof(unsigned int));
 
-	// 6. ¹öÅØ½º Á¤º¸
+	// 6. ë²„í…ìŠ¤ ì •ë³´
 	unsigned int vertexLen = 0;
 
 #ifdef INTERLEAVED_VERTEX
@@ -65,7 +65,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// position
 	file.read((char*)&vertexLen, sizeof(unsigned int));
 	if (vertexLen > 0) {
-		// vertexLen¸¸Å­ ¹öÅØ½º¸¦ »ı¼º
+		// vertexLenë§Œí¼ ë²„í…ìŠ¤ë¥¼ ìƒì„±
 		std::vector<XMFLOAT3> position(vertexLen);
 		file.read((char*)(&position[0]), sizeof(XMFLOAT3) * vertexLen);
 		// todo
@@ -117,7 +117,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		m_TexCoord0BufferView.SizeInBytes = sizeof(XMFLOAT2) * vertexLen;
 	}
 
-	// 7. ÀÎµ¦½º Á¤º¸				// int int*int
+	// 7. ì¸ë±ìŠ¤ ì •ë³´				// int int*int
 	unsigned int indexNum = 0;
 	file.read((char*)&indexNum, sizeof(unsigned int));
 	if (indexNum > 0) {
@@ -139,8 +139,8 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	//unsigned int childNum;
 	//file.read((char*)&childNum, sizeof(unsigned int));
 
-	//// 8. ¼­ºê¸Ş½¬ °³¼ö
-	//// 9. ¼­ºê¸Ş½¬(Àç±Í)
+	//// 8. ì„œë¸Œë©”ì‰¬ ê°œìˆ˜
+	//// 9. ì„œë¸Œë©”ì‰¬(ì¬ê·€)
 	//m_Childs.reserve(childNum);
 	//for (int i = 0; i < childNum; ++i) {
 	//	Mesh* newMesh = new Mesh;
@@ -180,7 +180,7 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 		commandList->IASetIndexBuffer(&m_IndexBufferView);
 
 #endif
-		// ÀÓ½Ã
+		// ì„ì‹œ
 		int tempi[16] = { 5, 0, };
 
 		if (m_Name == "Hair") tempi[0] = 3;

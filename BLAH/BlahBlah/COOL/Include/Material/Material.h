@@ -1,11 +1,15 @@
 #pragma once
 
+class Shader;
+
 class Material
 {
 public:
 	Material() {}
 	Material(std::string_view name) : m_Name{ name } {};
 	~Material() {}
+
+	const std::string& GetName() const { return m_Name; }
 
 	void SetName(std::string_view name) { m_Name = name; }
 
@@ -17,9 +21,12 @@ public:
 	void SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx);
 
 private:
-	std::string m_Name = "ÀÌ¸§À» Áö¾îÁÖ¼¼¿ä";
+	std::string m_Name = "ì´ë¦„ì—†ìŒ";
 
 	int m_TextureIndex[16] = {};
+
+	Shader* m_Shader = nullptr;
+
 
 };
 

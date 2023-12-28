@@ -1,6 +1,6 @@
 #include "../framework.h"
 #include "Shader.h"
-#include "../Material.h"
+#include "../Material/Material.h"
 
 #define FILE_PATH "Include/Shader/HLSL/"
 
@@ -47,7 +47,7 @@ D3D12_BLEND_DESC Shader::GetBlendDesc()
 {
 	D3D12_BLEND_DESC desc = {};
 	desc.AlphaToCoverageEnable = false;
-	desc.IndependentBlendEnable = false;		// ²ô¸é mrt¿¡¼­µµ rt0À» ±âÁØÀ¸·Î ÇÑ´Ù
+	desc.IndependentBlendEnable = false;		// ë„ë©´ mrtì—ì„œë„ rt0ì„ ê¸°ì¤€ìœ¼ë¡œ í•œë‹¤
 	desc.RenderTarget[0].BlendEnable = false;
 	desc.RenderTarget[0].LogicOpEnable = false;
 	desc.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
@@ -171,17 +171,17 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 {
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.pRootSignature = rootSignature.Get();
-	psoDesc.VS = CreateVertexShader();															// ¾øÀ½
-	psoDesc.HS = CreateHullShader();															// ±âº»°ª(¾øÀ½)
-	psoDesc.DS = CreateDomainShader();															// ±âº»°ª(¾øÀ½)
-	psoDesc.GS = CreateGeometryShader();														// ±âº»°ª(¾øÀ½)
-	psoDesc.PS = CreatePixelShader();															// ¾øÀ½
-	psoDesc.StreamOutput = GetStreamOutputDesc();												// ±âº»°ª(¾øÀ½)
-	psoDesc.BlendState = GetBlendDesc();														// ±âº»°ª
+	psoDesc.VS = CreateVertexShader();															// ì—†ìŒ
+	psoDesc.HS = CreateHullShader();															// ê¸°ë³¸ê°’(ì—†ìŒ)
+	psoDesc.DS = CreateDomainShader();															// ê¸°ë³¸ê°’(ì—†ìŒ)
+	psoDesc.GS = CreateGeometryShader();														// ê¸°ë³¸ê°’(ì—†ìŒ)
+	psoDesc.PS = CreatePixelShader();															// ì—†ìŒ
+	psoDesc.StreamOutput = GetStreamOutputDesc();												// ê¸°ë³¸ê°’(ì—†ìŒ)
+	psoDesc.BlendState = GetBlendDesc();														// ê¸°ë³¸ê°’
 	psoDesc.SampleMask = m_SampleMask;															// UINT_MAX
-	psoDesc.RasterizerState = GetRasterizerStateDesc();											// ±âº»°ª
-	psoDesc.DepthStencilState = GetDepthStencilState();											// ±âº»°ª
-	psoDesc.InputLayout = GetInputLayout();														// ¾øÀ½
+	psoDesc.RasterizerState = GetRasterizerStateDesc();											// ê¸°ë³¸ê°’
+	psoDesc.DepthStencilState = GetDepthStencilState();											// ê¸°ë³¸ê°’
+	psoDesc.InputLayout = GetInputLayout();														// ì—†ìŒ
 	psoDesc.PrimitiveTopologyType = m_PrimitiveTopologyType;									// D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 	psoDesc.NumRenderTargets = m_NumRenderTargets;												// 1
 	for (UINT i = 0; i < m_NumRenderTargets; ++i) psoDesc.RTVFormats[i] = m_RTFormats[i];		// DXGI_FORMAT_R8G8B8A8_UNORM
@@ -192,7 +192,7 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 	device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(m_PipelineState.GetAddressOf()));
 	CHECK_CREATE_FAILED(m_PipelineState, "m_PipelineState Create Failed!!");
 
-	// comptrÀÌ¶ó release ÇÊ¿ä ¾øÀÌ ³ÎÆ÷ÀÎÅÍ·Î ¸¸µé¾îÁÖ¸é µÈ´Ù ¾Æ¸¶µµ? Ã¼Å© ÇÔ ÇØºÁ¾ßÇÔ
+	// comptrì´ë¼ release í•„ìš” ì—†ì´ ë„í¬ì¸í„°ë¡œ ë§Œë“¤ì–´ì£¼ë©´ ëœë‹¤ ì•„ë§ˆë„? ì²´í¬ í•¨ í•´ë´ì•¼í•¨
 	if (m_VertxShaderBlob) m_VertxShaderBlob = nullptr;
 	if (m_HullShaderBlob) m_HullShaderBlob = nullptr;
 	if (m_DomainShaderBlob) m_DomainShaderBlob = nullptr;

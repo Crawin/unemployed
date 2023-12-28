@@ -19,12 +19,12 @@ void MeshManager::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::
 
 	m_MeshMap[mesh->m_Name] = mesh;
 
-	// 8. ¼­ºê¸Þ½¬ °³¼ö
+	// 8. ì„œë¸Œë©”ì‰¬ ê°œìˆ˜
 	unsigned int childNum;
 	file.read((char*)&childNum, sizeof(unsigned int));
 	mesh->m_Childs.reserve(childNum);
 
-	// 9. ¼­ºê¸Þ½¬(Àç±Í)
+	// 9. ì„œë¸Œë©”ì‰¬(ìž¬ê·€)
 	for (int i = 0; i < childNum; ++i) {
 		Mesh* child = new Mesh;
 		BuildMesh(commandList, file, child);
@@ -46,7 +46,7 @@ bool MeshManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	BuildMesh(commandList, meshFile, mesh);
 
 
-	DebugPrint(std::format("load path: {}, file name: {}", fileName, mesh->m_Name));
+	DebugPrint(std::format("loaded file name: {}", mesh->m_Name));
 	return true;
 }
 

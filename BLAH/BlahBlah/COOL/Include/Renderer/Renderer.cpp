@@ -1,4 +1,4 @@
-﻿#include "../framework.h"
+#include "../framework.h"
 #include "Renderer.h"
 #include "COOLResource.h"
 #include "../Camera/Camera.h"
@@ -10,7 +10,7 @@
 #include "../Shader/TestShader.h"
 #include "../Shader/SkyboxShader.h"
 #include "../Shader/MeshShader.h"
-#include "../Material.h"
+#include "../Material/Material.h"
 #include "../Mesh/Mesh.h"
 #endif
 

@@ -156,7 +156,8 @@
     <ClInclude Include="Include\DDSTextureLoader12.h" />
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\framework.h" />
-    <ClInclude Include="Include\Material.h" />
+    <ClInclude Include="Include\Material\Material.h" />
+    <ClInclude Include="Include\Material\MaterialManager.h" />
     <ClInclude Include="Include\Math.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
     <ClInclude Include="Include\Mesh\MeshManager.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Include\Shader\Shader.h" />
     <ClInclude Include="Include\Shader\SkyboxShader.h" />
     <ClInclude Include="Include\Shader\TestShader.h" />
+    <ClInclude Include="Include\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\Application.cpp" />
@@ -186,7 +188,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Include\main.cpp" />
-    <ClCompile Include="Include\Material.cpp" />
+    <ClCompile Include="Include\Material\Material.cpp" />
+    <ClCompile Include="Include\Material\MaterialManager.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
     <ClCompile Include="Include\Mesh\MeshManager.cpp" />
     <ClCompile Include="Include\Object\Actor\Actor.cpp" />
@@ -206,6 +209,7 @@
     <ClCompile Include="Include\Shader\Shader.cpp" />
     <ClCompile Include="Include\Shader\SkyboxShader.cpp" />
     <ClCompile Include="Include\Shader\TestShader.cpp" />
+    <ClCompile Include="Include\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt" />

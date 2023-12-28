@@ -1,6 +1,6 @@
-#include "framework.h"
+#include "../framework.h"
 #include "Material.h"
-#include "Renderer/Renderer.h"
+#include "../Renderer/Renderer.h"
 
 bool Material::LoadTexture(ComPtr<ID3D12GraphicsCommandList> cmdList, const char* fileName)
 {
@@ -12,11 +12,11 @@ bool Material::LoadTexture(ComPtr<ID3D12GraphicsCommandList> cmdList, const char
 		return false;
 	}
 
-	// ÆÄÀÏ ¾È¿¡
+	// íŒŒì¼ ì•ˆì—
 	// "albedo" : skybox.dds
 	// ""
 	
-	// ÀÏ´Ü ÀÓ½Ã·Î °Á ÀĞ¾îº¸ÀÚ
+	// ì¼ë‹¨ ì„ì‹œë¡œ ê± ì½ì–´ë³´ì
 
 
 

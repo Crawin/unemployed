@@ -1,4 +1,4 @@
-#include "../framework.h"
+ï»¿#include "../framework.h"
 #include "Camera.h"
 #include "../Renderer/Renderer.h"
 
@@ -17,7 +17,7 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	// Çà·Ä »ı¼º
+	// í–‰ë ¬ ìƒì„±
 	BuildViewMatrix();
 	BuildProjectionMatrix();
 
@@ -25,11 +25,11 @@ void Camera::Init()
 	//{
 	//	matrix viewMatrix;
 	//	matrix projectionMatrix;
-	//	// float3 cameraPosition : packoffset(c8); <- ÀÌ°Ç ºäº¯È¯ Çà·Ä¿¡¼­ »Ì¾Æ ¾²ÀÚ
+	//	// float3 cameraPosition : packoffset(c8); <- ì´ê±´ ë·°ë³€í™˜ í–‰ë ¬ì—ì„œ ë½‘ì•„ ì“°ì
 	//};
 
 	// todo 
-	// map ÇÏ´Â resourceµéÀº µû·Î °ü¸®ÇÏÀÚ
+	// map í•˜ëŠ” resourceë“¤ì€ ë”°ë¡œ ê´€ë¦¬í•˜ì
 	m_MappedShaderData = Renderer::GetInstance().CreateEmptyBuffer(
 		D3D12_HEAP_TYPE_UPLOAD, 
 		D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER*/, 
@@ -55,7 +55,7 @@ void Camera::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 void Camera::BuildViewMatrix()
 {
 
-	// ¾Æ·¡ ÇÔ¼ö´Â lookÀÌ ¾Æ´Ï¶ó atÀÌ¶ó°í ºÁ¾ßÇÔ
+	// ì•„ë˜ í•¨ìˆ˜ëŠ” lookì´ ì•„ë‹ˆë¼ atì´ë¼ê³  ë´ì•¼í•¨
 	//m_ViewMatrix = Matrix4x4::LookAtLH(m_Position, m_Look, m_Up);
 
 	m_Look = Vector3::Normalize(m_Look);

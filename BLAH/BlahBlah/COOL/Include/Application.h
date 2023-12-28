@@ -1,9 +1,10 @@
 #pragma once
 
-// À©µµ¿ì¸¦ ÃÊ±âÈ­ ÇÏ°í °ÔÀÓÀÇ ¸ŞÀÎ·çÇÁ°¡ ÀÖ´Â °÷
-// º°·Î º¼ ÀÏ ¾øÀ» °ÍÀÌ´Ù...
+// ìœˆë„ìš°ë¥¼ ì´ˆê¸°í™” í•˜ê³  ê²Œì„ì˜ ë©”ì¸ë£¨í”„ê°€ ìˆëŠ” ê³³
+// ë³„ë¡œ ë³¼ ì¼ ì—†ì„ ê²ƒì´ë‹¤...
 
 class SceneManager;
+class Timer;
 
 class Application
 {
@@ -39,10 +40,11 @@ private:
 	HDC			m_hdc = 0;
 	SIZE		m_windowSize = {};
 
-	LARGE_INTEGER m_Sec;
-	LARGE_INTEGER m_Time;
-	float m_DeltaTime = 0;
-	float m_TimeCnt = 0;
+	Timer* m_Timer = nullptr;
+	//LARGE_INTEGER m_Sec;
+	//LARGE_INTEGER m_Time;
+	//float m_DeltaTime = 0;
+	//float m_TimeCnt = 0;
 
 	bool m_ShowGrid = false;
 	bool m_GameLoop = true;

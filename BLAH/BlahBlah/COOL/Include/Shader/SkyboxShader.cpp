@@ -1,6 +1,6 @@
 #include "../framework.h"
 #include "SkyboxShader.h"
-#include "../Material.h"
+#include "../Material/Material.h"
 
 SkyboxShader::SkyboxShader(int queue, std::string_view shaderName) :
 	Shader(queue, shaderName)
@@ -13,7 +13,7 @@ SkyboxShader::~SkyboxShader()
 
 bool SkyboxShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap)
 {
-	// ÇÊ¿äÇÑ ÅØ½ºÃÄµé ·ÎµåÇÔ ¿©±â¼­ ÇØ¾ßÇÏ³ª? ±×°Ç Á»ÀÎ°¡? ¤Æ
+	// í•„ìš”í•œ í…ìŠ¤ì³ë“¤ ë¡œë“œí•¨ ì—¬ê¸°ì„œ í•´ì•¼í•˜ë‚˜? ê·¸ê±´ ì¢€ì¸ê°€? ã…–
 
 
 	return CreateShader(device, commandList, rootSignature);

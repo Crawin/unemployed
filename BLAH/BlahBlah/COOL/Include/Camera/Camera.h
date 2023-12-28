@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "../Object/ObjectBase.h"
 struct CameraShaderData {
 	XMFLOAT4X4 m_ViewMatrix;
@@ -6,9 +6,9 @@ struct CameraShaderData {
 	XMFLOAT3 m_CameraPosition;
 };
 
-// ±âº» Ä«¸Ş¶ó Å¬·¡½º
-// ³ªÁß¿¡ 1ÀÎÄª Ä«¸Ş¶ó³ª
-// CCTV Ä«¸Ş¶ó³ª ÀÌ·±°É »ó¼Ó½ÃÅ°ÀÚ
+// ê¸°ë³¸ ì¹´ë©”ë¼ í´ë˜ìŠ¤
+// ë‚˜ì¤‘ì— 1ì¸ì¹­ ì¹´ë©”ë¼ë‚˜
+// CCTV ì¹´ë©”ë¼ë‚˜ ì´ëŸ°ê±¸ ìƒì†ì‹œí‚¤ì
 
 class Camera : 
 	public ObjectBase
@@ -25,7 +25,7 @@ class Camera :
 	float m_Near = 0.1f;
 	float m_Far = 1000.0f;
 
-	// ÄÃ¸µ¿ë
+	// ì»¬ë§ìš©
 	BoundingFrustum m_BoundingFrustum{};
 
 	// root signature
@@ -53,7 +53,7 @@ public:
 	void Render(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 private:
-	// Çà·Ä Àç»ı¼º
+	// í–‰ë ¬ ì¬ìƒì„±
 	void BuildViewMatrix();
 	void BuildProjectionMatrix();
 
