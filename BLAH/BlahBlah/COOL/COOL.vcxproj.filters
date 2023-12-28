@@ -52,6 +52,12 @@
     <Filter Include="외부">
       <UniqueIdentifier>{17114279-4526-436c-a421-b86b3c469be8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="외부\DDS">
+      <UniqueIdentifier>{e06e492f-e40b-4485-915c-9878aa6f50b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="외부\rapidjson">
+      <UniqueIdentifier>{795883de-555c-4e1e-b303-0ae47cb96f33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -126,8 +132,8 @@
     <ClInclude Include="Include\Material\Material.h">
       <Filter>소스 파일\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Include\DDSTextureLoader12.h">
-      <Filter>외부</Filter>
+    <ClInclude Include="Include\External\DDSTextureLoader12.h">
+      <Filter>외부\DDS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,8 +206,8 @@
     <ClCompile Include="Include\Material\Material.cpp">
       <Filter>소스 파일\Material</Filter>
     </ClCompile>
-    <ClCompile Include="Include\DDSTextureLoader12.cpp">
-      <Filter>외부</Filter>
+    <ClCompile Include="Include\External\DDSTextureLoader12.cpp">
+      <Filter>외부\DDS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
