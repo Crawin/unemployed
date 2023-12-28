@@ -1,6 +1,21 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "Material.h"
 #include "Renderer/Renderer.h"
+
+Material::Material()
+{
+	memset(m_TextureIndex, -1, _countof(m_TextureIndex));
+}
+
+Material::Material(std::string_view name)
+	: m_Name{ name }
+{
+	memset(m_TextureIndex, -1, _countof(m_TextureIndex));
+}
+
+Material::~Material()
+{
+}
 
 bool Material::LoadTexture(ComPtr<ID3D12GraphicsCommandList> cmdList, const char* fileName)
 {

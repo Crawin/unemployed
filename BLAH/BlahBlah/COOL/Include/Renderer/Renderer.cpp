@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "Renderer.h"
 #include "COOLResource.h"
 #include "Camera/Camera.h"
@@ -236,7 +236,7 @@ bool Renderer::CreateRootSignature()
 	// 디스크립터힙 내부: (Texture2D, TextureCube, Texture2D, ...) 
 	// 쉐이더 에서 TexCubeList[1]로 사용 해야 함
 
-	const int numParams = ROOT_SIGNATURE_IDX_MAX;
+	const int numParams = ROOT_SIGNATURE_IDX::ROOT_SIGNATURE_IDX_MAX;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
 
 	//  ...ROOT_SIGNATURE_IDX enum 참고
@@ -545,7 +545,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 		// 2번이긴 하지?
 		const char* materialLoadList[] = { "SkyBox.json", };
-
+		/*
 		for (int i = 0; i < _countof(materialLoadList); ++i) {
 			Material* temp = new Material("임시");
 			temp->LoadTexture(commandList, materialLoadList[i]);
@@ -559,6 +559,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 			m_Shaders.back()->AddMaterial(temp);
 		}
+		*/
 
 		// 3번이긴 하지?
 		//Mesh tempMesh;
@@ -569,7 +570,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		m_Camera->Init();
 
 		// 업로드버퍼같은거 실행
-		ExecuteAndEraseUploadHeap(commandList);
+		//ExecuteAndEraseUploadHeap(commandList);
 	}
 #endif // _DEBUG
 
@@ -687,7 +688,6 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	bool isCubeMap = false;
 
 	std::wstring temp(fileName);
-	std::string strTemp(temp.begin(), temp.end());
 
 	// dds를 로드한다
 	HRESULT res = DirectX::LoadDDSTextureFromFileEx(m_Device.Get(), fileName, 0, D3D12_RESOURCE_FLAG_NONE, DDS_LOADER_DEFAULT, &texture, ddsData, subResources, &ddsAlphaMode, &isCubeMap);
@@ -755,7 +755,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	COOLResourcePtr newResource(new COOLResource(texture, resourceState, D3D12_HEAP_TYPE_DEFAULT));
 	newResource->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 
-	newResource->SetName(strTemp);
+	newResource->SetName(fileName);
 
 	return RegisterShaderResource(newResource);
 }

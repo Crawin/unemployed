@@ -1,13 +1,13 @@
-# Visual Studioê°€ C++ ì„¤ì •ì„ ì‚¬ìš©í•˜ì—¬ .editorconfig íŒŒì¼ì„ ìƒì„±í–ˆìŠµë‹ˆë‹¤.
+# Visual Studioê°? C++ ?„¤? •?„ ?‚¬?š©?•˜?—¬ .editorconfig ?ŒŒ?¼?„ ?ƒ?„±?–ˆ?Šµ?‹ˆ?‹¤.
 root = true
 
 [*.{c++,cc,cpp,cppm,cxx,h,h++,hh,hpp,hxx,inl,ipp,ixx,tlh,tli}]
 
-# Visual C++ ì½”ë“œ ìŠ¤íƒ€ì¼ ì„¤ì •
+# Visual C++ ì½”ë“œ ?Š¤????¼ ?„¤? •
 
 cpp_generate_documentation_comments = xml
 
-# Visual C++ ì„œì‹ ì„¤ì •
+# Visual C++ ?„œ?‹ ?„¤? •
 
 cpp_indent_braces = false
 cpp_indent_multi_line_relative_to = innermost_parenthesis
@@ -69,7 +69,7 @@ cpp_space_around_ternary_operator = insert
 cpp_use_unreal_engine_macro_formatting = true
 cpp_wrap_preserve_blocks = one_liners
 
-# Visual C++ ì •ë¦¬ ì„¤ì •
+# Visual C++ ? •ë¦? ?„¤? •
 
 cpp_include_cleanup_add_missing_error_tag_type = suggestion
 cpp_include_cleanup_remove_unused_error_tag_type = dimmed
@@ -81,4 +81,4 @@ cpp_includes_style = default
 cpp_includes_use_forward_slash = true
 
 [*]
-charset = utf-8
+charset = utf-8-bom

@@ -1,13 +1,16 @@
-#pragma once
+﻿#pragma once
+
+
 
 class Shader;
 
 class Material
 {
+	friend class MaterialManager;
 public:
-	Material() {}
-	Material(std::string_view name) : m_Name{ name } {};
-	~Material() {}
+	Material();
+	Material(std::string_view name);
+	~Material();
 
 	const std::string& GetName() const { return m_Name; }
 
@@ -26,7 +29,6 @@ private:
 	int m_TextureIndex[16] = {};
 
 	Shader* m_Shader = nullptr;
-
 
 };
 

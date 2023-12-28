@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "ObjectBase.h"
 
 void ObjectBase::SetChildWorlTransform(const ObjectBase* parent)

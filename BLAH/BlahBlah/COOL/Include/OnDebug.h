@@ -1,13 +1,13 @@
 #pragma once
-// µğ¹ö±× ¸ğµå È°¼ºÈ­ µÉ °Íµé ¸ğÀ½Áı.txt
+// ë””ë²„ê·¸ ëª¨ë“œ í™œì„±í™” ë  ê²ƒë“¤ ëª¨ìŒì§‘.txt
 
 
-// µğ¹ö±× ¸ğµå¿¡ Å×½ºÆ®¿ë
+// ë””ë²„ê·¸ ëª¨ë“œì— í…ŒìŠ¤íŠ¸ìš©
 #ifdef _DEBUG
 #include <iostream>
 #include <dxgidebug.h>
 
-// ÄÜ¼ÖÃ¢ È°¼ÍÈ­
+// ì½˜ì†”ì°½ í™œì…©í™”
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #else
@@ -16,7 +16,7 @@
 #endif
 
 
-// ½ºÆ®¸µÀ» Ãâ·ÂÇÑ´Ù
+// ìŠ¤íŠ¸ë§ì„ ì¶œë ¥í•œë‹¤
 inline void DebugPrint(const std::string& str)
 {
 #ifdef _DEBUG
@@ -28,3 +28,4 @@ inline void DebugPrint(const std::string& str)
 // 
 #define CHECK_CREATE_FAILED(result, msg) if (!result) { DebugPrint(std::format("Failed! {}({}) {}", __FUNCTION__, __LINE__, msg)); return false; }
 #define PRINT_ERROR(msg) DebugPrint(std::format("{}: {}", __LINE__, msg))
+#define ERROR_QUIT(msg) { DebugPrint(msg); DebugPrint("\nExiting program.."); system("pause"); exit(-1); }

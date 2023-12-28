@@ -161,6 +161,7 @@
     <ClInclude Include="Include\Application.h" />
     <ClInclude Include="Include\Camera\Camera.h" />
     <ClInclude Include="Include\DXMath.h" />
+    <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Material\Material.h" />
     <ClInclude Include="Include\Material\MaterialManager.h" />

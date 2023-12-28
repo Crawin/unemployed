@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
 #include "Scene/SceneManager.h"
@@ -80,13 +80,11 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	Rid[0].hwndTarget = m_hWnd;
 	CHECK_CREATE_FAILED(RegisterRawInputDevices(Rid, 1, sizeof(Rid[0])), "RegisterRawInputDevices 실패");
 
-	// 메쉬 매니저의 생성?
-
-	// 오브젝트 매니저의 생성?
-
 	// 씬매니저의 생성 및 로드?
+	auto commandList = Renderer::GetInstance().GetCommandList(0);
 	m_SceneManager = new SceneManager();
-	CHECK_CREATE_FAILED(m_SceneManager->Init(Renderer::GetInstance().GetCommandList(0), "Test"), "씬매니저 생성 실패");
+	CHECK_CREATE_FAILED(m_SceneManager->Init(commandList, "Test"), "씬매니저 생성 실패");
+	Renderer::GetInstance().ExecuteAndEraseUploadHeap(commandList);
 
 	return true;
 }

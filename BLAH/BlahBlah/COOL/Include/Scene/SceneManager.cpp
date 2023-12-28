@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "SceneManager.h"
 #include "Scene.h"
 
@@ -37,8 +37,7 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 void SceneManager::ChangeScene(Scene* newScene)
 {
 	if (newScene == nullptr) {
-		DebugPrint("ERROR!!!! NO SCENE");
-		exit(1);
+		ERROR_QUIT("ERROR!!!! NO SCENE")
 		return;
 	}
 

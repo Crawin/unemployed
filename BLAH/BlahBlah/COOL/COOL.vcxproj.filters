@@ -132,6 +132,9 @@
     <ClInclude Include="External\Include\DDSTextureLoader12.h">
       <Filter>외부\DDS</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Enums.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">

@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "Shader.h"
 #include "Material/Material.h"
 
@@ -212,7 +212,7 @@ void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->SetPipelineState(m_PipelineState.Get());
 
 	for (const auto& mat : m_Materials) {
-		mat->SetDatas(commandList, DESCRIPTOR_IDX_CONSTANT);
+		mat->SetDatas(commandList, ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT);
 		// mat->SetDatas(commandList);
 		// auto objects = Mapper->Get(mat);
 		// for (auto obj : objects) 
