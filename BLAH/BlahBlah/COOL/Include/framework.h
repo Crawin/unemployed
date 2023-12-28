@@ -60,6 +60,7 @@ using Microsoft::WRL::ComPtr;
 
 #pragma comment(lib, "dxguid.lib")
 
+#pragma comment(lib, "jsoncpp.lib")
 
 enum ROOT_SIGNATURE_IDX {
 	DESCRIPTOR_HEAP = 0,			// 디스크립터힙
