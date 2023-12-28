@@ -1,7 +1,7 @@
 #include "Common.h"
 #include "Server.h"
 
-bool CServer::SetSTtype(ServerType type)
+bool CServer::SetSTtype(const ServerType& type)
 {
 	stType = type;
 	return false;
@@ -49,7 +49,7 @@ bool CRoomServer::Run()
 {
 	PrintInfo("Run");
 	vRoomThreads.push_back(std::thread(&CRoomServer::ListenThread, this));
-	std::cout << "listenThread 실행 중" << std::endl;
+	std::cout << "listenThread Run" << std::endl;
 	return false;
 }
 
@@ -92,6 +92,7 @@ bool CRoomServer::ListenThread()
 			err_display("accept()");
 			break;
 		}
+		vAcceptSockets.push_back(clientaddr);				// 현재 ACCEPT된 클라이언트 목록들
 
 		// 접속한 클라이언트 정보 출력
 		char addr[INET_ADDRSTRLEN];
@@ -105,6 +106,7 @@ bool CRoomServer::ListenThread()
 
 	// 윈속 종료
 	WSACleanup();
+	std::cout << "ListenThread STOP" << std::endl;
 	return false;
 }
 
@@ -146,12 +148,48 @@ CServerManager::~CServerManager()
 bool CServerManager::Run()
 {
 	PrintInfo("Run");
-	RoomServer->Run();
+
+	std::thread CT(&CServerManager::CommandThread, this);		// 명령어 입력 쓰레드 실행
+	CT.detach();
+
+	RoomServer->Run();	// 룸 서버 실행
 	return false;
 }
 
 bool CServerManager::Join()
 {
 	RoomServer->Join();
+	return false;
+}
+
+bool CServerManager::CommandThread()
+{
+	bool CommandState = true;
+
+	std::cout << "CommandThread Run" << std::endl;
+	std::string input;
+	std::map<std::string, std::function<void()>> commands = {
+		{"stop",[&CommandState]() { CommandState = false; std::cout << "정지." << std::endl; }}
+	};
+	
+	std::cout << "명령어 모음: ";
+	for (const auto& a : commands)
+	{
+		std::cout << a.first << ", ";
+	}
+	std::cout << std::endl;
+
+	while (CommandState)
+	{
+		std::string input;
+		std::cin >> input;
+
+		auto result = commands.find(input);
+		if (result != commands.end())
+		{
+			result->second();
+		}
+	}
+	std::cout << "CommandThread Stop" << std::endl;
 	return false;
 }

@@ -12,7 +12,7 @@ private:
 	ServerType stType;
 	u_short usServerport = 9000;
 public:
-	bool SetSTtype(ServerType);
+	bool SetSTtype(const ServerType&);
 	void PrintInfo(const std::string);
 	u_short getPort();
 	virtual bool Run();
@@ -21,6 +21,8 @@ public:
 class CRoomServer : CServer {
 private:
 	std::vector<std::thread> vRoomThreads;
+	std::vector<sockaddr_in> vAcceptSockets;
+	std::vector<sockaddr_in> vRunningSockets;
 public:
 	CRoomServer();
 	~CRoomServer();
@@ -43,10 +45,12 @@ class CServerManager : CServer{
 private:
 	CRoomServer* RoomServer;
 	std::vector<CGameServer*> GameServers;
+	std::thread CommandServer;
 public:
 	CServerManager();
 	~CServerManager();
 
 	bool Run();
 	bool Join();
+	bool CommandThread();
 };

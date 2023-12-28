@@ -19,6 +19,10 @@ void err_display(const char* msg);
 void err_display(int errcode);
 
 #include <iostream>
+#include <thread>
+#include <functional>
+
 #include <string>
 #include <vector>
-#include <thread>
+#include <array>
+#include <map>
