@@ -1,12 +1,12 @@
-#include "../framework.h"
+#include "framework.h"
 #include "MeshShader.h"
 
-// ÀÓ½Ã
-#include "../Mesh/Mesh.h"
+// ìž„ì‹œ
+#include "Mesh/Mesh.h"
 
 bool MeshShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap)
 {
-	// ÀÓ½Ã
+	// ìž„ì‹œ
 	//tempMesh.LoadFile(commandList, "satodiatemptemp.bin");
 
 	return CreateShader(device, commandList, rootSignature);
@@ -16,7 +16,7 @@ void MeshShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	Shader::Render(commandList);
 
-	// ÀÓ½Ã
+	// ìž„ì‹œ
 	XMFLOAT4X4 t = Matrix4x4::Identity();
 	//tempMesh.Render(commandList, t);
 }

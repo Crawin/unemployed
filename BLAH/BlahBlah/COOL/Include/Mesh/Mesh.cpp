@@ -1,5 +1,5 @@
-#include "../framework.h"
-#include "../Renderer/Renderer.h"
+#include "framework.h"
+#include "Renderer/Renderer.h"
 #include "Mesh.h"
 
 void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file)

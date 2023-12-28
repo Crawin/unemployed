@@ -1,6 +1,6 @@
-#include "../framework.h"
+#include "framework.h"
 #include "Material.h"
-#include "../Renderer/Renderer.h"
+#include "Renderer/Renderer.h"
 
 bool Material::LoadTexture(ComPtr<ID3D12GraphicsCommandList> cmdList, const char* fileName)
 {

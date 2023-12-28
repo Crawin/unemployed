@@ -1,4 +1,4 @@
-#include "../framework.h"
+#include "framework.h"
 #include "TestMainScene.h"
 
 bool TestMainScene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)

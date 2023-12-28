@@ -1,6 +1,6 @@
-#include "../framework.h"
+#include "framework.h"
 #include "Shader.h"
-#include "../Material/Material.h"
+#include "Material/Material.h"
 
 #define FILE_PATH "Include/Shader/HLSL/"
 

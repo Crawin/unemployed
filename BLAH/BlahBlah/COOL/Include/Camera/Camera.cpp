@@ -1,6 +1,6 @@
-﻿#include "../framework.h"
+#include "framework.h"
 #include "Camera.h"
-#include "../Renderer/Renderer.h"
+#include "Renderer/Renderer.h"
 
 Camera::Camera()
 {

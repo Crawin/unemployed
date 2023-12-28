@@ -1,4 +1,4 @@
-#include "../framework.h"
+#include "framework.h"
 #include "SceneManager.h"
 #include "Scene.h"
 
@@ -18,7 +18,7 @@ SceneManager::~SceneManager()
 
 bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const char* firstScene)
 {
-	// ÀÓ½Ã
+	// ìž„ì‹œ
 #ifdef _DEBUG
 	std::string testscene = "Test";
 	if (testscene == firstScene) 

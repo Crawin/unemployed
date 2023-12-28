@@ -1,12 +1,12 @@
 #pragma once
-#include "../ObjectBase.h"
+#include "Object/ObjectBase.h"
 
 class Actor :
     public ObjectBase
 {
-	// ¾øÀ¸¸é -1
+	// ì—†ìœ¼ë©´ -1
 	int m_MeshID = -1;
-	// ¾øÀ¸¸é -1
+	// ì—†ìœ¼ë©´ -1
 	int m_MaterialID = -1;
 
 public:

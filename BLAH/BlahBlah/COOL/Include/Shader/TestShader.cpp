@@ -1,4 +1,4 @@
-#include "../framework.h"
+#include "framework.h"
 #include "TestShader.h"
 
 TestShader::TestShader(int queue, std::string_view name) :

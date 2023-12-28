@@ -1,4 +1,4 @@
-#include "../framework.h"
+#include "framework.h"
 #include "ObjectManager.h"
 #include "ObjectBase.h"
 
@@ -47,7 +47,7 @@ void ObjectManager::Update(float deltaTime)
 	for (int i = 0; i < m_NextID; ++i) {
 		m_Objects[i]->Update(deltaTime);
 
-		// obb ¾÷µ¥ÀÌÆ®
+		// obb ì—…ë°ì´íŠ¸
 		//XMMATRIX matrix = XMLoadFloat4x4(&m_ObjectWorldMatrices[i]);
 		//m_ObjectOBBs[i].Transform(m_ObjectOBBs[i], matrix);
 	}

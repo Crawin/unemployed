@@ -17,7 +17,7 @@
 // http://go.microsoft.com/fwlink/?LinkId=248926
 // http://go.microsoft.com/fwlink/?LinkID=615561
 //--------------------------------------------------------------------------------------
-#include "../framework.h"
+#include "framework.h"
 #include "DDSTextureLoader12.h"
 
 //--------------------------------------------------------------------------------------

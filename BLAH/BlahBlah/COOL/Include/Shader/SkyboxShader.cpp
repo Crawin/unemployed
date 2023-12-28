@@ -1,6 +1,6 @@
-#include "../framework.h"
+#include "framework.h"
 #include "SkyboxShader.h"
-#include "../Material/Material.h"
+#include "Material/Material.h"
 #include "json/json.h"
 
 SkyboxShader::SkyboxShader(int queue, std::string_view shaderName) :

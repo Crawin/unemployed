@@ -1,9 +1,9 @@
-#include "../framework.h"
+#include "framework.h"
 #include "ObjectBase.h"
 
 void ObjectBase::SetChildWorlTransform(const ObjectBase* parent)
 {
-	// 1. º»ÀÎÀÇ ·ÎÄÃ Çà·ÄÀ» »ı¼º
+	// 1. ë³¸ì¸ì˜ ë¡œì»¬ í–‰ë ¬ì„ ìƒì„±
 	//XMMatrixRotationAxis();
 	Animate();
 
@@ -16,9 +16,9 @@ void ObjectBase::SetChildWorlTransform(const ObjectBase* parent)
 	XMStoreFloat4x4(&m_LocalWorldMatrix, worldMatrix);
 
 	if (parent) {
-		// ºÎ¸ğ Çà·ÄÀÌ ÀÖ´Ù¸é ºÎ¸ğ¿Í °öÇÑ °ªÀ» world¿¡ ³Ö´Â´Ù
+		// ë¶€ëª¨ í–‰ë ¬ì´ ìˆë‹¤ë©´ ë¶€ëª¨ì™€ ê³±í•œ ê°’ì„ worldì— ë„£ëŠ”ë‹¤
 		// todo
-		// ºÎ¸ğÀÇ Çà·ÄÀ» ÀÚ½Ä¿¡´Ù°¡ º¯È¯ÇÏÀÚ.
+		// ë¶€ëª¨ì˜ í–‰ë ¬ì„ ìì‹ì—ë‹¤ê°€ ë³€í™˜í•˜ì.
 		const XMFLOAT4X4& parentMatrix = parent->m_WorldMatrix;
 		XMMATRIX parent = XMLoadFloat4x4(&parentMatrix);
 
@@ -26,7 +26,7 @@ void ObjectBase::SetChildWorlTransform(const ObjectBase* parent)
 		XMStoreFloat4x4(&m_WorldMatrix, realWorld);
 	}
 	else {
-		// ºÎ¸ğ°¡ ¾ø´Ù¸é º»ÀÎÀÇ ·ÎÄÃ Çà·ÄÀÌ ¿ùµåÇà·ÄÀÌ µÊ
+		// ë¶€ëª¨ê°€ ì—†ë‹¤ë©´ ë³¸ì¸ì˜ ë¡œì»¬ í–‰ë ¬ì´ ì›”ë“œí–‰ë ¬ì´ ë¨
 		XMStoreFloat4x4(&m_WorldMatrix, worldMatrix);
 	}
 

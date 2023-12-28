@@ -1,8 +1,8 @@
 #include "Scene.h"
-#include "../Renderer/Renderer.h"
-#include "../framework.h"
-#include "../Mesh/MeshManager.h"
-#include "../Object/ObjectManager.h"
+#include "Renderer/Renderer.h"
+#include "framework.h"
+#include "Mesh/MeshManager.h"
+#include "Object/ObjectManager.h"
 
 Scene::Scene()
 {
@@ -43,7 +43,7 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 //{
 //	m_SceneName = "Base";
 //	//pRenederer = Renderer::GetInstance().GetRendererPtr();
-//	DebugPrint(std::format("¾À: {} »ı¼º", m_SceneName));
+//	DebugPrint(std::format("ì”¬: {} ìƒì„±", m_SceneName));
 //	return true;
 //}
 

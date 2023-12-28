@@ -1,5 +1,5 @@
-﻿#pragma once
-#include "../Object/ObjectBase.h"
+#pragma once
+#include "Object/ObjectBase.h"
 struct CameraShaderData {
 	XMFLOAT4X4 m_ViewMatrix;
 	XMFLOAT4X4 m_ProjMatrix;

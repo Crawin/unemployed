@@ -66,7 +66,7 @@
     <ClInclude Include="Include\Application.h">
       <Filter>소스 파일\App</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Math.h">
+    <ClInclude Include="Include\mymath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Include\Renderer\Renderer.h">
