@@ -732,16 +732,6 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	return RegisterShaderResource(newResource);
 }
 
-int Renderer::LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
-{
-	std::vector<int> data;
-
-	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, static_cast<UINT>(data.size()));
-
-
-	return 0;
-}
-
 int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
 {
 	UINT createBytes = ((bytes + 255) & ~255);

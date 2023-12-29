@@ -60,6 +60,10 @@ bool MaterialManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, co
 		material->m_TextureIndex[i] = m_TextureIndexMap[name];
 	}
 
+	// todo
+	// 연결 할 쉐이더 또한 필요하다
+	material->m_Shader = nullptr;
+
 	m_Materials.push_back(material);
 
 	return true;
@@ -73,12 +77,16 @@ bool MaterialManager::LoadFolder(ComPtr<ID3D12GraphicsCommandList> commandList, 
 		DebugPrint(std::format("ERROR!! no such path!!, path: {}", pathName));
 	}
 
+	DebugPrint(std::format("Material Directory ::::::: {}", pathName));
+
 	for (const auto& file : std::filesystem::directory_iterator(pathName)) {
 		if (file.is_directory()) continue;
 
 		std::string fileName = pathName + file.path().filename().string();
 		if (LoadFile(commandList, fileName) == false) return false;
 	}
+
+	DebugPrint("\n");
 
 	return true;
 }

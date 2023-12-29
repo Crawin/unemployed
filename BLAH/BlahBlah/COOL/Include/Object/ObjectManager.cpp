@@ -27,6 +27,9 @@ bool ObjectManager::LoadFolder(const std::string& pathName)
 		DebugPrint(std::format("ERROR!! no such path!!, path: {}", pathName));
 	}
 
+	DebugPrint(std::format("Object Directory ::::::: {}", pathName));
+
+	DebugPrint("\n");
 
 	return true;
 }

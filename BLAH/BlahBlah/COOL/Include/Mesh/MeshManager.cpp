@@ -56,10 +56,16 @@ bool MeshManager::LoadFolder(ComPtr<ID3D12GraphicsCommandList> commandList, cons
 		DebugPrint(std::format("ERROR!! no such path!!, path: {}", pathName));
 	}
 
+	DebugPrint(std::format("Mesh Directory ::::::: {}", pathName));
+
 	for (const auto& file : std::filesystem::directory_iterator(pathName)) {
+		if (file.is_directory()) continue;
+
 		std::string fileName = pathName + file.path().filename().string();
 		if (LoadFile(commandList, fileName) == false) return false;
 	}
+
+	DebugPrint("\n");
 
 	return true;
 }
