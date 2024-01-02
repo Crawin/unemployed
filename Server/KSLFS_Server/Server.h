@@ -13,11 +13,11 @@ private:
 	u_short usServerport = 9000;
 	u_short usBufsize = 512;
 public:
-	bool SetSTtype(const ServerType&);
+	void SetSTtype(const ServerType&);
 	void PrintInfo(const std::string);
 	u_short getPort();
 	u_short getBufsize();
-	virtual bool Run();
+	virtual void Run();
 };
 
 class CRoomServer : CServer {
@@ -31,11 +31,11 @@ public:
 	CRoomServer();
 	~CRoomServer();
 
-	bool Run();
-	bool ListenThread();
-	bool RecvThread(const SOCKET&);
-	bool Join();
-	bool CloseListen();
+	void Run();
+	void ListenThread();
+	void RecvThread(const SOCKET&);
+	void Join();
+	void CloseListen();
 };
 
 class CGameServer : CServer {
@@ -44,7 +44,7 @@ public:
 	CGameServer();
 	~CGameServer();
 
-	//bool Run();
+	void Run();
 };
 
 class CServerManager : CServer{
@@ -56,7 +56,7 @@ public:
 	CServerManager();
 	~CServerManager();
 
-	bool Run();
-	bool Join();
-	bool CommandThread();
+	void Run();
+	void Join();
+	void CommandThread();
 };

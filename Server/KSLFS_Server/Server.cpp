@@ -1,10 +1,9 @@
 #include "Common.h"
 #include "Server.h"
 
-bool CServer::SetSTtype(const ServerType& type)
+void CServer::SetSTtype(const ServerType& type)
 {
 	stType = type;
-	return false;
 }
 
 void CServer::PrintInfo(const std::string word)
@@ -35,10 +34,9 @@ u_short CServer::getBufsize()
 	return usBufsize;
 }
 
-bool CServer::Run()
+void CServer::Run()
 {
 	PrintInfo("Run");
-	return false;
 }
 
 CRoomServer::CRoomServer()
@@ -50,14 +48,13 @@ CRoomServer::~CRoomServer()
 {
 }
 
-bool CRoomServer::Run()
+void CRoomServer::Run()
 {
 	PrintInfo("Run");
 	vRoomThreads.push_back(std::thread(&CRoomServer::ListenThread, this));		// ListenThread 실행, vRoomThreads에 ListenThread 추가
-	return false;
 }
 
-bool CRoomServer::ListenThread()
+void CRoomServer::ListenThread()
 {
 	std::cout << "listenThread Run" << std::endl;
 
@@ -66,7 +63,7 @@ bool CRoomServer::ListenThread()
 	// 윈속 초기화
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-		return 1;
+		return;
 
 	// 소켓 생성
 	//SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -115,10 +112,9 @@ bool CRoomServer::ListenThread()
 	// 윈속 종료
 	WSACleanup();
 	std::cout << "ListenThread STOP" << std::endl;
-	return false;
 }
 
-bool CRoomServer::RecvThread(const SOCKET& arg)
+void CRoomServer::RecvThread(const SOCKET& arg)
 {
 	std::cout << "RecvThread Run" << std::endl;
 	
@@ -149,6 +145,15 @@ bool CRoomServer::RecvThread(const SOCKET& arg)
 		buf[retval] = '\0';
 		printf("[TCP/%s:%d] %s\n", addr, ntohs(clientaddr.sin_port), buf);
 
+
+		if (strcmp(buf, "방생성") == 0)
+		{
+			std::cout << "방을 생성합니다." << std::endl;
+			// gameThread를 생성해서 게임을 돌리자
+
+		}
+
+
 		// 데이터 보내기
 		retval = send(client_sock, buf, retval, 0);
 		if (retval == SOCKET_ERROR) {
@@ -164,23 +169,20 @@ bool CRoomServer::RecvThread(const SOCKET& arg)
 
 	delete[] buf;
 	std::cout << "RecvThread STOP" << std::endl;
-	return false;
 }
 
-bool CRoomServer::Join()
+void CRoomServer::Join()
 {
 	for (auto start = vRoomThreads.begin(); start != vRoomThreads.end(); ++start)
 	{
 		start->join();
 		std::cout <<"vRoomThread join complete" << std::endl;
 	}
-	return false;
 }
 
-bool CRoomServer::CloseListen()
+void CRoomServer::CloseListen()
 {
 	closesocket(listen_sock);
-	return false;
 }
 
 CGameServer::CGameServer()
@@ -193,11 +195,10 @@ CGameServer::~CGameServer()
 {
 }
 
-//bool CGameServer::Run()
-//{
-//	PrintInfo("Run");
-//	return false;
-//}
+void CGameServer::Run()
+{
+	PrintInfo("Run");
+}
 
 CServerManager::CServerManager()
 {
@@ -209,25 +210,23 @@ CServerManager::~CServerManager()
 {
 }
 
-bool CServerManager::Run()
+void CServerManager::Run()
 {
 	PrintInfo("Run");
 
 	vCommandThread[0] = std::thread(&CServerManager::CommandThread, this); //명령어 입력 쓰레드 실행, 쓰레드를 vCommandThread 에 추가.
 
 	RoomServer->Run();	// 룸 서버 실행
-	return false;
 }
 
-bool CServerManager::Join()
+void CServerManager::Join()
 {
 	vCommandThread[0].join();
 	std::cout<<"CommandThread join complete" << std::endl;
 	RoomServer->Join();
-	return false;
 }
 
-bool CServerManager::CommandThread()
+void CServerManager::CommandThread()
 {
 	bool CommandState = true;
 
@@ -264,5 +263,4 @@ bool CServerManager::CommandThread()
 		}
 	}
 	std::cout << "CommandThread Stop" << std::endl;
-	return false;
 }
