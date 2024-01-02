@@ -1,6 +1,8 @@
 ﻿#include "framework.h"
 #include "Material.h"
 #include "Renderer/Renderer.h"
+#include "MaterialManager.h"
+#include <json/json.h>
 
 Material::Material()
 {
@@ -17,8 +19,9 @@ Material::~Material()
 {
 }
 
-bool Material::LoadTexture(ComPtr<ID3D12GraphicsCommandList> cmdList, const char* fileName)
+bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager)
 {
+	// load file
 	std::ifstream file(fileName);
 
 	if (file.is_open() == false) 
@@ -27,20 +30,40 @@ bool Material::LoadTexture(ComPtr<ID3D12GraphicsCommandList> cmdList, const char
 		return false;
 	}
 
-	// 파일 안에
-	// "albedo" : skybox.dds
-	// ""
-	
-	// 일단 임시로 걍 읽어보자
+
+	// json 파일을 파싱 해야한다.
+	Json::Value root;
+	Json::Reader reader;
+
+	if (false == reader.parse(file, root)) {
+		DebugPrint(std::format("Failed to open material file!! fileName: {}", fileName));
+		return false;
+	};
 
 
+	m_Name = root["name"].asString();
+	//material->m_Name = root["name"].asString();
 
-	//ParseJsonFileToMap();
+	// todo 유지보수 에러!!!!!!!!!!!!!!!!!!
+	// MATERIAL_TYPES
+	const char* materialTypes[] = { "BaseColor", "Roughness", "Metalic", "Specular", "Normal" };
 
+	for (int i = 0; i < MATERIAL_TYPES::MATERIAL_END; ++i) {
+		if (root[materialTypes[i]].isNull()) continue;
 
-	Renderer::GetInstance().CreateTextureFromDDSFile(cmdList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+		// texture의 이름
+		std::string name = root[materialTypes[i]].asString();
 
+		int idx = manager->LoadOrGetTexture(cmdList, name);
 
+		m_TextureIndex[i] = idx;
+	}
+
+	// todo
+	// 연결 할 쉐이더 또한 필요하다
+	m_Shader = nullptr;
+
+	//Renderer::GetInstance().CreateTextureFromDDSFile(cmdList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 	return true;
 }

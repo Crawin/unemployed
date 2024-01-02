@@ -55,6 +55,9 @@
     <Filter Include="외부\DDS">
       <UniqueIdentifier>{e06e492f-e40b-4485-915c-9878aa6f50b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ManagerClass">
+      <UniqueIdentifier>{9deb2ac8-ce7d-4f11-9305-b70bafd3b085}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -135,6 +138,12 @@
     <ClInclude Include="Include\Enums.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Shader\ShaderManager.h">
+      <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Vertex.h">
+      <Filter>소스 파일\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -208,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp">
       <Filter>외부\DDS</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Shader\ShaderManager.cpp">
+      <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

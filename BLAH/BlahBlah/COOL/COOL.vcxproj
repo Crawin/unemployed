@@ -180,9 +180,11 @@
     <ClInclude Include="Include\Scene\TestMainScene.h" />
     <ClInclude Include="Include\Shader\MeshShader.h" />
     <ClInclude Include="Include\Shader\Shader.h" />
+    <ClInclude Include="Include\Shader\ShaderManager.h" />
     <ClInclude Include="Include\Shader\SkyboxShader.h" />
     <ClInclude Include="Include\Shader\TestShader.h" />
     <ClInclude Include="Include\Timer.h" />
+    <ClInclude Include="Include\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp" />
@@ -214,6 +216,7 @@
     </ClCompile>
     <ClCompile Include="Include\Shader\MeshShader.cpp" />
     <ClCompile Include="Include\Shader\Shader.cpp" />
+    <ClCompile Include="Include\Shader\ShaderManager.cpp" />
     <ClCompile Include="Include\Shader\SkyboxShader.cpp" />
     <ClCompile Include="Include\Shader\TestShader.cpp" />
     <ClCompile Include="Include\Timer.cpp" />

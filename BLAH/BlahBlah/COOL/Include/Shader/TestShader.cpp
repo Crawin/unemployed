@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "TestShader.h"
 
 TestShader::TestShader(int queue, std::string_view name) :
@@ -17,7 +17,8 @@ bool TestShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCo
 	// 
 	// 
 
-	return CreateShader(device, commandList, rootSignature);
+	//return CreateShader(device, commandList, rootSignature);
+	return false;
 }
 
 void TestShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)

@@ -29,6 +29,7 @@ enum SCENE_TYPE {
 class MeshManager;
 class ObjectManager;
 class MaterialManager;
+class ShaderManager;
 
 class ObjectBase;
 class Camera;
@@ -47,6 +48,7 @@ protected:
 	MeshManager* m_MeshManager = nullptr;
 	ObjectManager* m_ObjectManager = nullptr;
 	MaterialManager* m_MaterialManager = nullptr;
+	ShaderManager* m_ShaderManager = nullptr;
 
 	//virtual bool Init();
 private:

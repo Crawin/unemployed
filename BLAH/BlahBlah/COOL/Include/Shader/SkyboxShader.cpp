@@ -17,7 +17,8 @@ bool SkyboxShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12Graphics
 	// 필요한 텍스쳐들 로드함 여기서 해야하나? 그건 좀인가? ㅖ
 
 
-	return CreateShader(device, commandList, rootSignature);
+	//return CreateShader(device, commandList, rootSignature);
+	return false;
 }
 
 void SkyboxShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)

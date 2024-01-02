@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class Material;
 
@@ -13,7 +13,7 @@ enum class SHADER_TYPE {
 class Shader
 {
 public:
-	Shader() = delete;
+	Shader();
 	Shader(int queue, std::string_view name);
 	virtual ~Shader();
 
@@ -25,31 +25,40 @@ public:
 
 	void AddMaterial(Material* mat) { m_Materials.push_back(mat); }
 
-	virtual bool InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap = nullptr) = 0;
+	//virtual bool InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, ComPtr<ID3D12DescriptorHeap> resHeap = nullptr);
 
 	std::strong_ordering operator<=>(const Shader& other) { return m_RenderQueue <=> other.m_RenderQueue; }
 
 protected:
-	// PSO »ı¼º¿¡ ÇÊ¿äÇÑ ÇÔ¼ö, º¯¼öµé
-	// ÇÊ¿ä¿¡ µû¶ó ¿À¹ö¶óÀÌµùÇØ ¹Ù²ã¼­ »ı¼ºÇÑ´Ù
+	// PSO ìƒì„±ì— í•„ìš”í•œ í•¨ìˆ˜, ë³€ìˆ˜ë“¤
+	// í•„ìš”ì— ë”°ë¼ ì˜¤ë²„ë¼ì´ë”©í•´ ë°”ê¿”ì„œ ìƒì„±í•œë‹¤
 
-	virtual D3D12_SHADER_BYTECODE CreateVertexShader() = 0;		// ÀçÁ¤ÀÇ ÇÊ¿ä
-	virtual D3D12_SHADER_BYTECODE CreateHullShader();			// ¾øÀ½
-	virtual D3D12_SHADER_BYTECODE CreateDomainShader();			// ¾øÀ½
-	virtual D3D12_SHADER_BYTECODE CreateGeometryShader();		// ¾øÀ½
-	virtual D3D12_SHADER_BYTECODE CreatePixelShader() = 0;		// ÀçÁ¤ÀÇ ÇÊ¿ä
-	virtual D3D12_STREAM_OUTPUT_DESC GetStreamOutputDesc();		// ¾øÀ½
-	virtual D3D12_BLEND_DESC GetBlendDesc();					// Normal
-	virtual D3D12_RASTERIZER_DESC GetRasterizerStateDesc();		// Normal
-	virtual D3D12_DEPTH_STENCIL_DESC GetDepthStencilState();	// Normal
-	virtual D3D12_INPUT_LAYOUT_DESC GetInputLayout();			// ±øÅë
-	virtual DXGI_SAMPLE_DESC GetSampleDesc();					// Normal
+	//virtual D3D12_SHADER_BYTECODE CreateVertexShader(const std::string& fileName);			// ì¬ì •ì˜ í•„ìš”
+	//virtual D3D12_SHADER_BYTECODE CreateHullShader(const std::string& fileName);			// ì—†ìŒ
+	//virtual D3D12_SHADER_BYTECODE CreateDomainShader(const std::string& fileName);			// ì—†ìŒ
+	//virtual D3D12_SHADER_BYTECODE CreateGeometryShader(const std::string& fileName);		// ì—†ìŒ
+	//virtual D3D12_SHADER_BYTECODE CreatePixelShader(const std::string& fileName);			// ì¬ì •ì˜ í•„ìš”
+	virtual D3D12_STREAM_OUTPUT_DESC GetStreamOutputDesc(int presetID);						// ì—†ìŒ
+	virtual D3D12_BLEND_DESC GetBlendDesc(int presetID);;									// Normal
+	virtual D3D12_RASTERIZER_DESC GetRasterizerStateDesc(int presetID);						// Normal
+	virtual D3D12_DEPTH_STENCIL_DESC GetDepthStencilState(int presetID);					// Normal
+	virtual D3D12_INPUT_LAYOUT_DESC GetInputLayout(int presetID);							// ê¹¡í†µ
+	virtual DXGI_SAMPLE_DESC GetSampleDesc();												// Normal
 
 	UINT m_SampleMask = UINT_MAX;
 	D3D12_PRIMITIVE_TOPOLOGY_TYPE m_PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	D3D_PRIMITIVE_TOPOLOGY m_PrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	UINT m_NumRenderTargets = 1;
-	DXGI_FORMAT m_RTFormats[8] = { DXGI_FORMAT_R8G8B8A8_UNORM, };
+	DXGI_FORMAT m_RTFormats[8] = { 
+		DXGI_FORMAT_R8G8B8A8_UNORM, 
+		DXGI_FORMAT_R8G8B8A8_UNORM, 
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+	};
 	DXGI_FORMAT m_DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	D3D12_PIPELINE_STATE_FLAGS m_PsoFlags = D3D12_PIPELINE_STATE_FLAG_NONE;
 
@@ -62,7 +71,10 @@ protected:
 	static D3D12_SHADER_BYTECODE CompileShaderCode(std::string_view fileName, SHADER_TYPE shaderType, ComPtr<ID3DBlob>& shaderBlob);
 
 //private:
-	bool CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature);
+	//bool CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature);
+
+public:
+	bool CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, const std::string& fileName);
 
 public:
 	virtual void Render(ComPtr<ID3D12GraphicsCommandList> commandList);

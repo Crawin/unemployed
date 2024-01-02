@@ -24,48 +24,16 @@ bool MaterialManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, co
 		return false;
 	}
 	
-	// json 파일을 파싱 해야한다.
-	Json::Value root;
-	Json::Reader reader;
-	if (false == reader.parse(matFile, root)) {
-		DebugPrint(std::format("Failed to open material file!! fileName: {}", fileName));
-		return false;
-	};
-
 	Material* material = new Material;
-
-	material->m_Name = root["name"].asString();
-	//material->m_Name = root["name"].asString();
-
-	// todo 유지보수 에러!!!!!!!!!!!!!!!!!!
-	// MATERIAL_TYPES
-	const char* materialTypes[] = { "BaseColor", "Roughness", "Metalic", "Specular", "Normal" };
-
-	for (int i = 0; i < MATERIAL_TYPES::MATERIAL_END; ++i) {
-		if (root[materialTypes[i]].isNull()) continue;
-
-		// texture의 이름
-		std::string name = root[materialTypes[i]].asString();
-
-		// 없다면 새로 추가한다
-		if (false == m_TextureIndexMap.contains(name)) {
-			std::string dds = m_CurrentPath + "Texture\\" + name;
-			std::wstring fileNamewstr(dds.begin(), dds.end());
-
-			int idx = Renderer::GetInstance().CreateTextureFromDDSFile(commandList, fileNamewstr.c_str());
-
-			m_TextureIndexMap[name] = idx;
-		}
-
-		material->m_TextureIndex[i] = m_TextureIndexMap[name];
+	if (false == material->LoadFile(commandList, fileName, this)) {
+		DebugPrint(std::format("Failed to load material file!! fileName: {}", fileName));
+		delete material;
+		return false;
 	}
-
-	// todo
-	// 연결 할 쉐이더 또한 필요하다
-	material->m_Shader = nullptr;
 
 	m_Materials.push_back(material);
 
+	DebugPrint(std::format("loaded file name: {}", material->m_Name));
 	return true;
 }
 
@@ -97,4 +65,19 @@ Material* MaterialManager::GetMaterial(const std::string& name)
 		if (mat->GetName() == name) return mat;
 
 	return nullptr;
+}
+
+int MaterialManager::LoadOrGetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name)
+{
+	// 없다면 새로 추가한다
+	if (false == m_TextureIndexMap.contains(name)) {
+		std::string dds = m_CurrentPath + "Texture\\" + name;
+		std::wstring fileNamewstr(dds.begin(), dds.end());
+
+		int idx = Renderer::GetInstance().CreateTextureFromDDSFile(commandList, fileNamewstr.c_str());
+
+		m_TextureIndexMap[name] = idx;
+	}
+
+	return m_TextureIndexMap[name];
 }

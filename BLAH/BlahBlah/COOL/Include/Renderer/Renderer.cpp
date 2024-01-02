@@ -426,19 +426,19 @@ bool Renderer::LoadShaders()
 
 
 #ifdef TEST_SHADER
-	auto shader = std::make_shared<TestShader>(1, "TestShader");
-	m_Shaders.push_back(shader);
+	//auto shader = std::make_shared<TestShader>(1, "TestShader");
+	//m_Shaders.push_back(shader);
 
-	//auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
-	//m_Shaders.push_back(tshader);
+	////auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
+	////m_Shaders.push_back(tshader);
 
-	auto tttShader = std::make_shared<MeshShader>(1001, "meshShader");
-	m_Shaders.push_back(tttShader);
+	//auto tttShader = std::make_shared<MeshShader>(1001, "meshShader");
+	//m_Shaders.push_back(tttShader);
 
-	for (auto& sha : m_Shaders) {
-		// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
-		CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
-	}
+	//for (auto& sha : m_Shaders) {
+	//	// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
+	//	CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
+	//}
 #endif
 
 	// 렌더큐 기준으로 오름차순 정렬한다
@@ -649,6 +649,11 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 		IID_PPV_ARGS(&temp));
 
 	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
+}
+
+bool Renderer::CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader)
+{
+	return shader->CreateShader(m_Device, commandList, m_RootSignature, fileName);
 }
 
 int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)

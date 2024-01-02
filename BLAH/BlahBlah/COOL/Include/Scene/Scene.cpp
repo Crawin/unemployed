@@ -4,12 +4,14 @@
 #include "Mesh/MeshManager.h"
 #include "Object/ObjectManager.h"
 #include "Material/MaterialManager.h"
+#include "Shader/ShaderManager.h"
 
 Scene::Scene()
 {
 	m_MeshManager = new MeshManager;
 	m_ObjectManager = new ObjectManager;
 	m_MaterialManager = new MaterialManager;
+	m_ShaderManager = new ShaderManager;
 }
 
 Scene::~Scene()
@@ -17,19 +19,26 @@ Scene::~Scene()
 	if (m_MeshManager) delete m_MeshManager;
 	if (m_ObjectManager) delete m_ObjectManager;
 	if (m_MaterialManager) delete m_MaterialManager;
-
+	if (m_ShaderManager) delete m_ShaderManager;
 }
+
+#define SCENE_PATH "SceneData\\"
+#define SHADER_PATH "SceneData\\Shader\\"
 
 bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
+	// load shader first
+	std::string shaderPath = SHADER_PATH;
+	CHECK_CREATE_FAILED(m_ShaderManager->LoadFolder(commandList, shaderPath), "failed to load shader");
+
 	std::string meshPath = sceneName + "\\Mesh\\";
 	CHECK_CREATE_FAILED(m_MeshManager->LoadFolder(commandList, meshPath), "failed to load mesh");
 
-	std::string objPath = sceneName + "\\Object\\";
-	CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
-
 	std::string matPath = sceneName + "\\Material\\";
 	CHECK_CREATE_FAILED(m_MaterialManager->LoadFolder(commandList, matPath), "failed to load Material");
+
+	std::string objPath = sceneName + "\\Object\\";
+	CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
 
 	return true;
 }

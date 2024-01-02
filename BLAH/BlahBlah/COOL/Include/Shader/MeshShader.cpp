@@ -9,7 +9,8 @@ bool MeshShader::InitShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCo
 	// 임시
 	//tempMesh.LoadFile(commandList, "satodiatemptemp.bin");
 
-	return CreateShader(device, commandList, rootSignature);
+	//return CreateShader(device, commandList, rootSignature);
+	return false;
 }
 
 void MeshShader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
