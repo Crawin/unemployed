@@ -19,7 +19,7 @@ Material::~Material()
 {
 }
 
-bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager)
+bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager, std::string& shaderName)
 {
 	// load file
 	std::ifstream file(fileName);
@@ -40,6 +40,10 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 		return false;
 	};
 
+	if (root["name"].isNull()) {
+		DebugPrint("ERROR!! has no name!!");
+		return false;
+	}
 
 	m_Name = root["name"].asString();
 	//material->m_Name = root["name"].asString();
@@ -59,8 +63,16 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 		m_TextureIndex[i] = idx;
 	}
 
-	// todo
+	// 
 	// 연결 할 쉐이더 또한 필요하다
+	// 이것은 manager에서 해준다.
+	if (root["Shader"].isNull())
+	{
+		DebugPrint("ERROR!! has no shader");
+		return false;
+	}
+
+	shaderName = root["Shader"].asString();
 	m_Shader = nullptr;
 
 	//Renderer::GetInstance().CreateTextureFromDDSFile(cmdList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);

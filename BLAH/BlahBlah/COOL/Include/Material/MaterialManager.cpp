@@ -2,6 +2,7 @@
 #include "MaterialManager.h"
 #include "Material.h"
 #include "Renderer/Renderer.h"
+#include "Shader/ShaderManager.h"
 #include <json/json.h>
 
 
@@ -18,11 +19,15 @@ MaterialManager::~MaterialManager()
 bool MaterialManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName)
 {
 	Material* material = new Material;
-	if (false == material->LoadFile(commandList, fileName, this)) {
+	std::string shaderName;
+	if (false == material->LoadFile(commandList, fileName, this, shaderName)) {
 		DebugPrint(std::format("Failed to load material file!! fileName: {}", fileName));
 		delete material;
 		return false;
 	}
+
+	m_ShaderManager->AddMaterial(shaderName, material);
+	material->m_Shader = m_ShaderManager->GetShader(shaderName);
 
 	m_Materials.push_back(material);
 

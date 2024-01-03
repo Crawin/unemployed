@@ -4,5 +4,6 @@
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,
-	"Normal": null
+	"Normal": null,
+	"Shader": "TestMesh"
 }

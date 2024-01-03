@@ -21,6 +21,13 @@ ObjectManager::~ObjectManager()
 	}
 }
 
+bool ObjectManager::LoadFile(const std::string& fileName)
+{
+
+
+	return true;
+}
+
 bool ObjectManager::LoadFolder(const std::string& pathName)
 {
 	if (std::filesystem::exists(pathName) == false) {
@@ -28,6 +35,12 @@ bool ObjectManager::LoadFolder(const std::string& pathName)
 	}
 
 	DebugPrint(std::format("Object Directory ::::::: {}", pathName));
+	for (const auto& file : std::filesystem::directory_iterator(pathName)) {
+		if (file.is_directory()) continue;
+
+		std::string fileName = pathName + file.path().filename().string();
+		if (LoadFile(fileName) == false) return false;
+	}
 
 	DebugPrint("\n");
 

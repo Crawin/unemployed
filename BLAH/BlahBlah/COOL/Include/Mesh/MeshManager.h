@@ -1,6 +1,11 @@
-#pragma once
+﻿#pragma once
 
-// ��� �Ŵ��� Ŭ������ �̱����� �ƴϰ� �� �����̴�.
+// 모든 매니저 클래스는 싱글톤이 아니게 될 예정이다.
+
+// todo
+// mesh의 상속된 타입을 변경 가능하게 설정
+// ex) Mesh, SkinedMesh
+// 파일에 메쉬의 타입이 있음
 
 class Mesh;
 

@@ -1,0 +1,11 @@
+{
+	"Transform": {
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0],
+		"Scale": [0.0, 0.0, 0.0]
+	},
+	"Material":{
+		"Body": "SatoBody",
+		"Hair": "SatoHair"
+	}
+}

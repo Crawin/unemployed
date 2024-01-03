@@ -20,7 +20,7 @@ public:
 	void SetAlbedoTextureIndex(int idx) { m_TextureIndex[0] = idx; }
 	//void SetAlbedoTextureIndex(int idx) { m_TextureIndex._11 = idx; }
 
-	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager);
+	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager, std::string& shaderName);
 
 	void SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx);
 
@@ -29,7 +29,7 @@ private:
 
 	int m_TextureIndex[16] = {};
 
-	Shader* m_Shader = nullptr;
+	std::shared_ptr<Shader> m_Shader = nullptr;
 
 };
 

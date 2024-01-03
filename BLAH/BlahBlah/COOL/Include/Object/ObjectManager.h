@@ -1,24 +1,24 @@
-#pragma once
+ï»¿#pragma once
 
-// ¾ê°¡ ÇÒ ÀÏ
-// Ä«¸Þ¶ó ÄÃ¸µÀ» ÇØ¼­ ¼±º°µÈ ¿ÀºêÁ§Æ®ÀÇ ÀÎµ¦½º¸¦ ³Ñ±è
+// ì–˜ê°€ í•  ì¼
+// ì¹´ë©”ë¼ ì»¬ë§ì„ í•´ì„œ ì„ ë³„ëœ ì˜¤ë¸Œì íŠ¸ì˜ ì¸ë±ìŠ¤ë¥¼ ë„˜ê¹€
 // 
-// DOD(Data Oriented Design, Ä³½Ã¹Ì½º¸¦ ÁÙÀÌ±â À§ÇØ ¿¬¼Ó »ç¿ë ÇÏ´Â °Íµé Áß ÀÛÀº °ÍµéÀ» ¿¬¼ÓµÈ ¸Þ¸ð¸®¿¡ ³Ö´Â´Ù. 
-// boundingorientedboxÀÇ Å©±â°¡ 40, xmfloat4x4ÀÇ Å©±â°¡ 64ÀÌ´Ù. 
-// º¸Åë Ä³½Ã°¡ °¡Á®¿À´Â ºí·°ÀÇ Å©±â°¡ 64¹ÙÀÌÆ®ÀÎµ¥ °ú¿¬ È¿°ú°¡ ÀÖÀ»±î? Â÷¶ó¸® º»ÀÎÀÌ °¡Áö°Ô
-// ½ÇÇè °á°ú Å« »çÀÌÁîÀÇ µ¥ÀÌÅÍ¸¦ dod·Î ¸¸µé¾îµµ Å« ÀÌµæÀº ¾ø´Ù.
-// ÀÌµæÀ» º¸°í ½Í´Ù¸é position°°Àº °Í¸¸ ¹­´Â°Ô ÀÌµæÀÏ µí ÇÏ´Ù.
+// DOD(Data Oriented Design, ìºì‹œë¯¸ìŠ¤ë¥¼ ì¤„ì´ê¸° ìœ„í•´ ì—°ì† ì‚¬ìš© í•˜ëŠ” ê²ƒë“¤ ì¤‘ ìž‘ì€ ê²ƒë“¤ì„ ì—°ì†ëœ ë©”ëª¨ë¦¬ì— ë„£ëŠ”ë‹¤. 
+// boundingorientedboxì˜ í¬ê¸°ê°€ 40, xmfloat4x4ì˜ í¬ê¸°ê°€ 64ì´ë‹¤. 
+// ë³´í†µ ìºì‹œê°€ ê°€ì ¸ì˜¤ëŠ” ë¸”ëŸ­ì˜ í¬ê¸°ê°€ 64ë°”ì´íŠ¸ì¸ë° ê³¼ì—° íš¨ê³¼ê°€ ìžˆì„ê¹Œ? ì°¨ë¼ë¦¬ ë³¸ì¸ì´ ê°€ì§€ê²Œ
+// ì‹¤í—˜ ê²°ê³¼ í° ì‚¬ì´ì¦ˆì˜ ë°ì´í„°ë¥¼ dodë¡œ ë§Œë“¤ì–´ë„ í° ì´ë“ì€ ì—†ë‹¤.
+// ì´ë“ì„ ë³´ê³  ì‹¶ë‹¤ë©´ positionê°™ì€ ê²ƒë§Œ ë¬¶ëŠ”ê²Œ ì´ë“ì¼ ë“¯ í•˜ë‹¤.
 // 
 // 
 // 
-//		ex) ÄÃ¸µ°ú Ãæµ¹Ã¼Å© ¶§ »ç¿ëµÉ ¹Ù¿îµù ¹Ú½º
-// ±×·³ ¾ê°¡ °¡Áö°í ÀÖÀ» °ÍÀº?
-// ¿ÀºêÁ§Æ®µéÀÇ ¹è¿­
-// ¿ÀºêÁ§Æ®µéÀÇ OBB ¹è¿­
-// ¿ÀºêÁ§Æ®µéÀÇ Çà·Ä ¹è¿­ <- ÇÊ¿äÇÒ±î? ÀÏ´Ü ÁÖ¼®Ã³¸® ÇÏÀÚ
-// ¾À¸¶´Ù Á¸ÀçÇØ¾ß ÇÏ±â ¶§¹®¿¡ ½Ì±ÛÅæÀ¸·Î ÇÏÁö ¾Ê´Â´Ù.
-//		¾À¸¶´Ù Á¸ÀçÇØ¾ß ÇÏ´Â ÀÌÀ¯
-//		A¾À ÇÃ·¹ÀÌ Áß B¾À ·Îµå ½Ã ²¿ÀÎ´Ù.
+//		ex) ì»¬ë§ê³¼ ì¶©ëŒì²´í¬ ë•Œ ì‚¬ìš©ë  ë°”ìš´ë”© ë°•ìŠ¤
+// ê·¸ëŸ¼ ì–˜ê°€ ê°€ì§€ê³  ìžˆì„ ê²ƒì€?
+// ì˜¤ë¸Œì íŠ¸ë“¤ì˜ ë°°ì—´
+// ì˜¤ë¸Œì íŠ¸ë“¤ì˜ OBB ë°°ì—´
+// ì˜¤ë¸Œì íŠ¸ë“¤ì˜ í–‰ë ¬ ë°°ì—´ <- í•„ìš”í• ê¹Œ? ì¼ë‹¨ ì£¼ì„ì²˜ë¦¬ í•˜ìž
+// ì”¬ë§ˆë‹¤ ì¡´ìž¬í•´ì•¼ í•˜ê¸° ë•Œë¬¸ì— ì‹±ê¸€í†¤ìœ¼ë¡œ í•˜ì§€ ì•ŠëŠ”ë‹¤.
+//		ì”¬ë§ˆë‹¤ ì¡´ìž¬í•´ì•¼ í•˜ëŠ” ì´ìœ 
+//		Aì”¬ í”Œë ˆì´ ì¤‘ Bì”¬ ë¡œë“œ ì‹œ ê¼¬ì¸ë‹¤.
 
 
 class ObjectBase;
@@ -28,6 +28,8 @@ class ObjectManager
 public:
 	ObjectManager();
 	~ObjectManager();
+
+	bool LoadFile(const std::string& fileName);
 
 	bool LoadFolder(const std::string& pathName);
 

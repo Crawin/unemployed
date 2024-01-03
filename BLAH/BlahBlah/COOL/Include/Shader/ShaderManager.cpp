@@ -53,6 +53,19 @@ bool ShaderManager::LoadFolder(ComPtr<ID3D12GraphicsCommandList> commandList, co
 	return true;
 }
 
+void ShaderManager::AddMaterial(const std::string& shaderName, Material* material)
+{
+	for (auto& shader : m_Shaders) {
+		if (shader->GetName() == shaderName) {
+			shader->AddMaterial(material);
+			return;
+		}
+	}
+
+	// 해당 쉐이더가 없다,
+	DebugPrint(std::format("ERROR!!! No Such Shader!!!!, shader name: {}", shaderName));
+}
+
 std::shared_ptr<Shader> ShaderManager::GetShader(const std::string& name)
 {
 	for (auto& shader : m_Shaders)

@@ -1,6 +1,6 @@
 {
-	"name": "SatoBody",
-	"BaseColor": "satob.dds",
+	"name": "NoMaterial",
+	"BaseColor": "uv_checker.dds",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,

@@ -236,7 +236,8 @@ D3D12_SHADER_BYTECODE Shader::CompileShaderCode(std::string_view fileName, SHADE
 		mbstowcs(pstrDebug, pErrorString, 256);
 		//OutputDebugString(pstrDebug);
 
-		DebugPrint(pErrorString);
+		// 임시로 지운다.
+		//DebugPrint(pErrorString);
 	}
 
 	D3D12_SHADER_BYTECODE result;

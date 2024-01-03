@@ -2,6 +2,7 @@
 
 class Material;
 class Shader;
+class ShaderManager;
 
 class MaterialManager
 {
@@ -9,7 +10,8 @@ public:
 	MaterialManager();
 	~MaterialManager();
 
-	
+	void RegisterShaderManager(ShaderManager* shaderManager) { m_ShaderManager = shaderManager; }
+
 private:
 	// load file
 	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName);
@@ -31,6 +33,10 @@ private:
 	std::vector <Material*> m_Materials;
 
 	std::string m_CurrentPath = "";
+
+	// delete 금지, 여기서 소유 중인 객체가 아니다.
+	// shared_ptr로 변경할까
+	ShaderManager* m_ShaderManager = nullptr;
 
 	//std::map <Shader*, Material*> m_MaterialMap;
 
