@@ -191,7 +191,7 @@ D3D12_SHADER_BYTECODE Shader::CompileShaderCode(std::string_view fileName, SHADE
 {
 	// 없으면 뛰어넘음
 	if (fileName == "") {
-		DebugPrint("No Shader! SKIP!!");
+		//DebugPrint("No Shader! SKIP!!");
 		return D3D12_SHADER_BYTECODE();
 	}
 
@@ -311,11 +311,11 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 	psoDesc.pRootSignature = rootSignature.Get();
 #ifdef COMPILE_SHADER
-	psoDesc.VS = CompileShaderCode(root["VS"].asString(), SHADER_TYPE::vs_5_1, m_VertxShaderBlob);													// 없음
-	psoDesc.HS = CompileShaderCode(root["HS"].asString(), SHADER_TYPE::hs_5_1, m_HullShaderBlob);													// 기본값(없음)
-	psoDesc.DS = CompileShaderCode(root["DS"].asString(), SHADER_TYPE::ds_5_1, m_DomainShaderBlob);													// 기본값(없음)
-	psoDesc.GS = CompileShaderCode(root["GS"].asString(), SHADER_TYPE::gs_5_1, m_GeometryShaderBlob);												// 기본값(없음)
-	psoDesc.PS = CompileShaderCode(root["PS"].asString(), SHADER_TYPE::ps_5_1, m_PixelShaderBlob);													// 없음
+	psoDesc.VS = CompileShaderCode(root["VS"].asString(), SHADER_TYPE::vs_5_1, m_VertxShaderBlob);
+	psoDesc.HS = CompileShaderCode(root["HS"].asString(), SHADER_TYPE::hs_5_1, m_HullShaderBlob);
+	psoDesc.DS = CompileShaderCode(root["DS"].asString(), SHADER_TYPE::ds_5_1, m_DomainShaderBlob);
+	psoDesc.GS = CompileShaderCode(root["GS"].asString(), SHADER_TYPE::gs_5_1, m_GeometryShaderBlob);
+	psoDesc.PS = CompileShaderCode(root["PS"].asString(), SHADER_TYPE::ps_5_1, m_PixelShaderBlob);
 #else
 	// todo 
 	// 컴파일 된 쉐이더로 해야한다.
@@ -338,13 +338,16 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 	psoDesc.SampleDesc = GetSampleDesc();														// count = 1
 	psoDesc.Flags = m_PsoFlags;																	// D3D12_PIPELINE_STATE_FLAG_NONE
 
+	device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(m_PipelineState.GetAddressOf()));
+	CHECK_CREATE_FAILED(m_PipelineState, "m_PipelineState Create Failed!!");
+
 	if (m_VertxShaderBlob) m_VertxShaderBlob = nullptr;
 	if (m_HullShaderBlob) m_HullShaderBlob = nullptr;
 	if (m_DomainShaderBlob) m_DomainShaderBlob = nullptr;
 	if (m_GeometryShaderBlob) m_GeometryShaderBlob = nullptr;
 	if (m_PixelShaderBlob) m_PixelShaderBlob = nullptr;
 
-	return false;
+	return true;
 }
 
 void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)

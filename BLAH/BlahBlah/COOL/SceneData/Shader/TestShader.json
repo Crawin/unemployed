@@ -1,12 +1,12 @@
-﻿{
+{
 	"NumRenderTargets": 1,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
-	"VS": null,
+	"VS": "TestMeshShader.hlsl",
 	"HS": null,
 	"DS": null,
 	"GS": null,
-	"PS": null,
+	"PS": "TestMeshShader.hlsl",
 	"StreamOutput": 0,
 	"BlendState": 0,
 	"RasterizerState": 0,

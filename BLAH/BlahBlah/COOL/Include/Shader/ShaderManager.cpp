@@ -13,14 +13,14 @@ ShaderManager::~ShaderManager()
 
 bool ShaderManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName)
 {
-	std::ifstream shaderFile(fileName, std::ios::binary);
+	//std::ifstream shaderFile(fileName, std::ios::binary);
 
-	if (shaderFile.fail()) {
-		DebugPrint(std::format("Failed to open shader file!! fileName: {}", fileName));
-		return false;
-	}
+	//if (shaderFile.fail()) {
+	//	DebugPrint(std::format("Failed to open shader file!! fileName: {}", fileName));
+	//	return false;
+	//}
 
-	std::shared_ptr<Shader> shader = std::shared_ptr<Shader>();
+	std::shared_ptr<Shader> shader = std::make_shared<Shader>();
 	if (false == Renderer::GetInstance().CreateShader(commandList, fileName, shader)) {
 		DebugPrint(std::format("Failed to load shader file!! fileName: {}", fileName));
 		return false;

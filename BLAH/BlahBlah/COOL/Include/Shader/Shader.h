@@ -31,7 +31,7 @@ public:
 
 protected:
 	// PSO 생성에 필요한 함수, 변수들
-	// 필요에 따라 오버라이딩해 바꿔서 생성한다
+	// json에서 받아서 변경한다.
 
 	//virtual D3D12_SHADER_BYTECODE CreateVertexShader(const std::string& fileName);			// 재정의 필요
 	//virtual D3D12_SHADER_BYTECODE CreateHullShader(const std::string& fileName);			// 없음

@@ -17,13 +17,6 @@ MaterialManager::~MaterialManager()
 
 bool MaterialManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName)
 {
-	std::ifstream matFile(fileName, std::ios::binary);
-
-	if (matFile.fail()) {
-		DebugPrint(std::format("Failed to open material file!! fileName: {}", fileName));
-		return false;
-	}
-	
 	Material* material = new Material;
 	if (false == material->LoadFile(commandList, fileName, this)) {
 		DebugPrint(std::format("Failed to load material file!! fileName: {}", fileName));
