@@ -12,6 +12,8 @@ enum class SHADER_TYPE {
 
 class Shader
 {
+	friend class ShaderManager;
+
 public:
 	Shader();
 	Shader(int queue, std::string_view name);

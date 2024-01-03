@@ -303,6 +303,8 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 		return false;
 	};
 
+	m_Name = root["name"].asString();
+
 	// num of rendertargets
 	m_NumRenderTargets = root["NumRenderTargets"].asInt();
 	m_PrimitiveTopologyType = static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(root["PrimitiveTopologyType"].asInt());

@@ -28,6 +28,8 @@ bool ShaderManager::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, cons
 
 	m_Shaders.push_back(shader);
 
+	DebugPrint(std::format("loaded file name: {}", shader->m_Name));
+	
 	return true;
 }
 

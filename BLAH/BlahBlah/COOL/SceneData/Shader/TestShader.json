@@ -1,4 +1,5 @@
 {
+	"name": "TestMesh",
 	"NumRenderTargets": 1,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
