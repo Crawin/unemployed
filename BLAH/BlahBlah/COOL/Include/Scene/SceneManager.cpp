@@ -24,7 +24,7 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 	if (testscene == firstScene) 
 	{
 		m_CurrentScene = new TestMainScene;
-		m_CurrentScene->m_SceneName = m_BaseScenePath + "Test";
+		m_CurrentScene->m_SceneName = "Test";
 		m_CurrentScene->Enter(commandList);
 	}
 #endif

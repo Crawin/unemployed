@@ -22,8 +22,10 @@ Scene::~Scene()
 	if (m_ShaderManager) delete m_ShaderManager;
 }
 
-#define SCENE_PATH "SceneData\\"
 #define SHADER_PATH "SceneData\\Shader\\"
+#define MESH_PATH "SceneData\\Mesh\\"
+#define MATERIAL_PATH "SceneData\\Material\\"
+#define SCENE_PATH "SceneData\\Scene\\"
 
 bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
@@ -31,13 +33,14 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	std::string shaderPath = SHADER_PATH;
 	CHECK_CREATE_FAILED(m_ShaderManager->LoadFolder(commandList, shaderPath), "failed to load shader");
 
-	std::string meshPath = sceneName + "\\Mesh\\";
+	std::string meshPath = MESH_PATH;
 	CHECK_CREATE_FAILED(m_MeshManager->LoadFolder(commandList, meshPath), "failed to load mesh");
 
-	std::string matPath = sceneName + "\\Material\\";
+	std::string matPath = MATERIAL_PATH;
 	CHECK_CREATE_FAILED(m_MaterialManager->LoadFolder(commandList, matPath), "failed to load Material");
 
-	std::string objPath = sceneName + "\\Object\\";
+	std::string objPath(SCENE_PATH);
+	objPath += sceneName + "\\Object\\";				// SceneData/Scene/ scenename / Object
 	CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
 
 	return true;
