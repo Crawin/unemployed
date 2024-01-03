@@ -3,7 +3,9 @@
 enum ServerType {
 	MANAGER,
 	ROOM,
-	GAME
+	GAME_RECV,
+	LISTEN,
+	ROOM_RECV
 };
 
 class CServer
@@ -22,10 +24,9 @@ public:
 
 class CRoomServer : CServer {
 private:
+	//std::map<SOCKET, std::thread> mRoomThreads;
 	std::vector<std::thread> vRoomThreads;
-	std::vector<SOCKET> vAcceptSockets;
-	//std::vector<sockaddr_in> vRunningSockets;
-
+	std::vector<std::thread> vGameThreads;
 	SOCKET listen_sock;
 public:
 	CRoomServer();
@@ -36,22 +37,13 @@ public:
 	void RecvThread(const SOCKET&);
 	void Join();
 	void CloseListen();
-};
-
-class CGameServer : CServer {
-	int iRoomCode;
-public:
-	CGameServer();
-	~CGameServer();
-
-	void Run();
+	//SOCKET GetRoomThreads();
 };
 
 class CServerManager : CServer{
 private:
 	CRoomServer* RoomServer;
-	std::vector<CGameServer*> vGameServers;
-	std::array<std::thread, 1> vCommandThread;
+	std::array<std::thread, 1> aCommandThread;
 public:
 	CServerManager();
 	~CServerManager();
