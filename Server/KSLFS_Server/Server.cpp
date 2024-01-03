@@ -17,9 +17,6 @@ void CServer::PrintInfo(const std::string word)
 	case 1:
 		std::cout << "ROOM";
 		break;
-	case 2:
-		std::cout << "GAME";
-		break;
 	}
 	std::cout<< " ] " << word << std::endl;
 }
@@ -36,13 +33,13 @@ std::string CServer::GetServerType(const ServerType& s)
 		answer = "ROOM";
 		break;
 	case 2:
-		answer = "GAME_RECV";
-		break;
-	case 3:
 		answer = "LISTEN";
 		break;
-	case 4:
+	case 3:
 		answer = "ROOM_RECV";
+		break;
+	case 4:
+		answer = "GAME_RECV";
 		break;
 	default:
 		answer = "ERROR";
@@ -78,9 +75,7 @@ CRoomServer::~CRoomServer()
 void CRoomServer::Run()
 {
 	PrintInfo("Run");
-	//vRoomThreads.push_back(std::thread(&CRoomServer::ListenThread, this));		// ListenThread 실행, vRoomThreads에 ListenThread 추가
-	vRoomThreads.push_back(std::make_pair(LISTEN, std::thread(&CRoomServer::ListenThread, this)));
-	//mRoomThreads.insert({ LISTEN, std::thread(&CRoomServer::ListenThread, this) });
+	vRoomThreads.push_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, vRoomThreads에 ListenThread 추가
 }
 
 void CRoomServer::ListenThread()
@@ -95,7 +90,6 @@ void CRoomServer::ListenThread()
 		return;
 
 	// 소켓 생성
-	//SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
@@ -132,13 +126,8 @@ void CRoomServer::ListenThread()
 		printf("\n[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
 			addr, ntohs(clientaddr.sin_port));
 
-		//vRoomThreads.push_back(std::thread(&CRoomServer::RecvThread, this, client_sock));		// Accept 될때마다 Recv쓰레드를 한 개씩 생성 및 vRommThreads에 추가
-		vRoomThreads.push_back(std::make_pair(ROOM_RECV, std::thread(&CRoomServer::RecvThread, this, client_sock)));
-		//mRoomThreads.insert({ client_sock,std::thread(&CRoomServer::RecvThread,this,client_sock) });		// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (소켓,쓰레드)
+		vRoomThreads.push_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
 	}
-
-	// 소켓 닫기
-	//closesocket(listen_sock);			이제 이거는 CommandThread 에서 stop 입력시 진행
 
 	// 윈속 종료
 	WSACleanup();
@@ -182,6 +171,8 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 		{
 			std::cout << "방을 생성합니다." << std::endl;
 			bRoom = false;
+			//vGameThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
+			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, 100), std::thread(&CRoomServer::GameThread, this, client_sock)));			// 여기서 100은 방 번호로, 바꿔줘야한다.
 		}
 
 
@@ -203,11 +194,6 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 void CRoomServer::Join()
 {
-	//for (auto start = mRoomThreads.begin(); start != mRoomThreads.end(); ++start)
-	//{
-	//	start->second.join();
-	//	std::cout << start->first << " mRoomThread Join" << std::endl;
-	//}
 	for (auto start = vRoomThreads.begin(); start != vRoomThreads.end(); ++start)
 	{
 		start->second.join();
@@ -224,29 +210,74 @@ void CRoomServer::PrintThreads()
 {
 	for (auto start = vRoomThreads.begin(); start != vRoomThreads.end(); ++start)
 	{
-		std::cout << "\t" << GetServerType(start->first) << std::endl;
+		std::cout << "\t" << GetServerType(start->first.first) << std::endl;
+	}
+	for (auto start = vGameThreads.begin(); start != vGameThreads.end(); ++start)
+	{
+		std::cout << "\t" << GetServerType(start->first.first) << std::endl;
 	}
 }
 
-//SOCKET CRoomServer::GetRoomThreads()
-//{
-//	return mRoomThreads;
-//}
+void CRoomServer::GameThread(const SOCKET& arg)
+{
+	std::cout << arg << " GameThread Run" << std::endl;
 
-//CGameServer::CGameServer()
-//{
-//	SetSTtype(GAME);
-//	iRoomCode = 123;
-//}
-//
-//CGameServer::~CGameServer()
-//{
-//}
-//
-//void CGameServer::Run()
-//{
-//	PrintInfo("Run");
-//}
+	for (auto a = vRoomThreads.begin(); a != vRoomThreads.end(); ++a)
+	{
+		if (a->first.second == arg)
+		{
+			a->second.join();
+			vRoomThreads.erase(a);
+			std::cout << arg << " RoomThread 삭제 완료" << std::endl;
+			break;
+		}
+	}
+
+	//std::cout << "삭제 완료" << std::endl;
+	
+	int retval;
+	SOCKET client_sock = (SOCKET)arg;
+	struct sockaddr_in clientaddr;
+	char addr[INET_ADDRSTRLEN];
+	int addrlen;
+	u_short bufsize = getBufsize();
+	char* buf = new char[bufsize + 1];
+
+	// 클라이언트 정보 얻기
+	addrlen = sizeof(clientaddr);
+	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
+	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
+
+	bool bRoom = true;
+	while (bRoom) {
+		// 데이터 받기
+		retval = recv(client_sock, buf, bufsize, 0);
+		if (retval == SOCKET_ERROR) {
+			err_display("recv()");
+			break;
+		}
+		else if (retval == 0)
+			break;
+
+		// 받은 데이터 출력
+		buf[retval] = '\0';
+		printf("[TCP/%s:%d] %s\n", addr, ntohs(clientaddr.sin_port), buf);
+
+		// 데이터 보내기
+		retval = send(client_sock, buf, retval, 0);
+		if (retval == SOCKET_ERROR) {
+			err_display("send()");
+			break;
+		}
+	}
+
+	// 소켓 닫기
+	closesocket(client_sock);
+	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
+		addr, ntohs(clientaddr.sin_port));
+
+	delete[] buf;
+}
 
 CServerManager::CServerManager()
 {
@@ -263,7 +294,6 @@ void CServerManager::Run()
 {
 	PrintInfo("Run");
 
-	//aCommandThread[0] = std::thread(&CServerManager::CommandThread, this); //명령어 입력 쓰레드 실행, 쓰레드를 vCommandThread 에 추가.
 	aCommandThread = std::make_pair(MANAGER, std::thread(&CServerManager::CommandThread, this));	//명령어 입력 쓰레드 실행, 쓰레드를 vCommandThread 에 추가.
 
 	RoomServer->Run();	// 룸 서버 실행
@@ -286,7 +316,6 @@ void CServerManager::CommandThread()
 	std::map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
 		{"stop",[&CommandState, this]() {
 			CommandState = false;
-			std::cout << "정지." << std::endl;
 			RoomServer->CloseListen();
 		}},
 		{"쓰레드",[this]() {
@@ -320,5 +349,4 @@ void CServerManager::CommandThread()
 			std::cout << "존재하지 않는 명령어 입니다." << std::endl;
 		}
 	}
-	std::cout << "CommandThread Stop" << std::endl;
 }
