@@ -185,10 +185,12 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 	}
 
 	// 소켓 닫기
-	closesocket(client_sock);
-	printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
-		addr, ntohs(clientaddr.sin_port));
-
+	if (bRoom)
+	{
+		closesocket(client_sock);
+		printf("[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
+			addr, ntohs(clientaddr.sin_port));
+	}
 	delete[] buf;
 }
 
