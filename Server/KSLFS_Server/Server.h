@@ -39,6 +39,7 @@ public:
 	void Join();
 	void CloseListen();
 	void PrintThreads();
+	void DeleteThread(const std::string&, const SOCKET&);
 };
 
 class CServerManager : CServer{
