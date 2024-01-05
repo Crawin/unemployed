@@ -256,8 +256,7 @@ void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg)
 
 void CRoomServer::GameThread(const SOCKET& arg)
 {
-	std::cout << arg << " GameThread Run" << std::endl;
-	
+	std::cout << arg << " GameThread Run " << std::endl;
 	int retval;
 	SOCKET client_sock = (SOCKET)arg;
 	struct sockaddr_in clientaddr;
@@ -280,6 +279,9 @@ void CRoomServer::GameThread(const SOCKET& arg)
 			err_display("recv()");
 			break;
 		}
+		else if (retval == 0)
+			break;
+
 		if (buf[0] == 'w')
 		{
 			std::cout << x << ", " << ++y << std::endl;
@@ -296,26 +298,24 @@ void CRoomServer::GameThread(const SOCKET& arg)
 		{
 			std::cout << ++x << ", " << y << std::endl;
 		}
-		//else if (retval == 0)
-		//	break;
 
-		//// 받은 데이터 출력
-		//buf[retval] = '\0';
-		//printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
+		// 받은 데이터 출력
+		buf[retval] = '\0';
+		printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
 
-		//// 데이터 보내기
-		//retval = send(client_sock, buf, retval, 0);
-		//if (retval == SOCKET_ERROR) {
-		//	err_display("send()");
-		//	break;
-		//}
+		// 데이터 보내기
+		retval = send(client_sock, buf, retval, 0);
+		if (retval == SOCKET_ERROR) {
+			err_display("send()");
+			break;
+		}
 	}
 
 	// 소켓 닫기
 	closesocket(client_sock);
 	printf("[GAME_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		addr, ntohs(clientaddr.sin_port));
-	std::thread t(&CRoomServer::DeleteThread, this, "vGameThreads", client_sock);
+	std::thread t(&CRoomServer::DeleteThread, this, "vGameThreads", 100);
 	t.detach();
 	delete[] buf;
 }
