@@ -172,6 +172,8 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			bRoom = false;
 			//vGameThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
 			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, 100), std::thread(&CRoomServer::GameThread, this, client_sock)));			// 여기서 100은 방 번호로, 바꿔줘야한다.
+			std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock);
+			t.detach();
 		}
 
 
@@ -189,6 +191,8 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 		closesocket(client_sock);
 		printf("[ROOM_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 			addr, ntohs(clientaddr.sin_port));
+		std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock);
+		t.detach();
 	}
 	delete[] buf;
 }
