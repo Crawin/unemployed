@@ -169,6 +169,9 @@ void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint
 // 재귀적으로 노드를 탐색하여 정점과 인덱스를 추출하는 함수
 void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices, std::vector<uint16_t>& indices)
 {
+	// 이름
+	myMesh.name = node->GetName();
+
 	// 노드에 메시가 있는지 확인
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
 	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh)
@@ -189,8 +192,7 @@ void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices,
 			for (int j = 0; j < 4; ++j)
 				myMesh.localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
 
-		// 이름
-		myMesh.name = node->GetName();
+
 
 		// 정점 추출
 		ExtractVertices(mesh, myMesh.vertices, node->GetNodeAttribute());
