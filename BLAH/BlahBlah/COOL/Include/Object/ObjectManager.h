@@ -21,6 +21,9 @@
 //		A씬 플레이 중 B씬 로드 시 꼬인다.
 
 
+class MaterialManager;
+class MeshManager;
+
 class ObjectBase;
 
 class ObjectManager
@@ -28,6 +31,9 @@ class ObjectManager
 public:
 	ObjectManager();
 	~ObjectManager();
+
+	void RegisterMaterialManager(MaterialManager* materialManager) { m_MaterialManager = materialManager; }
+	void RegisterMeshManager(MeshManager* meshManager) { m_MeshManager = meshManager; }
 
 	bool LoadFile(const std::string& fileName);
 
@@ -41,6 +47,12 @@ private:
 	int m_NextID = 0;
 
 	std::vector<ObjectBase*> m_Objects;
+
+	// delete 금지! 여기서 관리하는 객체가 아님
+	MaterialManager* m_MaterialManager = nullptr;
+
+	// delete 금지! 여기서 관리하는 객체가 아님
+	MeshManager* m_MeshManager = nullptr;
 
 };
 

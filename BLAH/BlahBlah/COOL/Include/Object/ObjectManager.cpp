@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "ObjectManager.h"
 #include "ObjectBase.h"
+#include <json/json.h>
 
 //void ObjectManager::InsertObject(ObjectBase* obj)
 //{
@@ -23,6 +24,39 @@ ObjectManager::~ObjectManager()
 
 bool ObjectManager::LoadFile(const std::string& fileName)
 {
+	DebugPrint(std::format("name: {}", fileName));
+
+	std::ifstream file(fileName);
+
+	if (file.is_open() == false) {
+		DebugPrint(std::format("file open failed!! file name: {}", ExtractFileName(fileName)));
+		return false;
+	}
+
+	Json::Reader reader;
+	Json::Value root;
+
+	reader.parse(file, root);
+	
+	ObjectBase* obj = nullptr;
+
+	// 여기에 파일 로드
+	switch (root["type"].asInt()) {
+	case 0:
+	default:
+	{
+		// default, ObjectBase
+		//obj = new ObjectBase(root, );
+		break;
+	}
+	case 1:
+	{
+		// actor
+
+		break;
+	}
+	}
+	
 
 
 	return true;
@@ -30,6 +64,11 @@ bool ObjectManager::LoadFile(const std::string& fileName)
 
 bool ObjectManager::LoadFolder(const std::string& pathName)
 {
+	if (m_MaterialManager == nullptr || m_MeshManager == nullptr) {
+		DebugPrint("ERROR!! no manager registered!!");
+		return false;
+	}
+
 	if (std::filesystem::exists(pathName) == false) {
 		DebugPrint(std::format("ERROR!! no such path!!, path: {}", pathName));
 	}
@@ -39,7 +78,8 @@ bool ObjectManager::LoadFolder(const std::string& pathName)
 		if (file.is_directory()) continue;
 
 		std::string fileName = pathName + file.path().filename().string();
-		if (LoadFile(fileName) == false) return false;
+		CHECK_CREATE_FAILED(LoadFile(fileName), "File Load Failed!!");
+		//if (LoadFile(fileName) == false) return false;
 	}
 
 	DebugPrint("\n");

@@ -11,7 +11,8 @@ class Mesh;
 
 class MeshManager
 {
-	std::map<std::string, Mesh*> m_MeshMap;
+	std::vector<Mesh*> m_Meshes;
+	//std::map<std::string, Mesh*> m_MeshMap;
 
 public:
 	MeshManager();
@@ -29,5 +30,6 @@ public:
 	bool LoadFolder(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& pathName);
 
 	Mesh* GetMesh(const std::string& name);
+	Mesh* GetMesh(int idx);
 };
 

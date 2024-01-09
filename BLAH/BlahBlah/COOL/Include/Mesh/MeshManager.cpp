@@ -8,8 +8,8 @@ MeshManager::MeshManager()
 
 MeshManager::~MeshManager()
 {
-	for (auto& pair : m_MeshMap) {
-		delete pair.second;
+	for (auto& mesh : m_Meshes) {
+		delete mesh;
 	}
 }
 
@@ -17,7 +17,9 @@ void MeshManager::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::
 {
 	mesh->BuildMesh(commandList, file);
 
-	m_MeshMap[mesh->m_Name] = mesh;
+	m_Meshes.push_back(mesh);
+	//m_MeshMap[mesh->m_Name] = mesh;
+
 
 	// 8. 서브메쉬 개수
 	unsigned int childNum;
@@ -72,11 +74,18 @@ bool MeshManager::LoadFolder(ComPtr<ID3D12GraphicsCommandList> commandList, cons
 
 Mesh* MeshManager::GetMesh(const std::string& name)
 {
-    Mesh* mesh = m_MeshMap[name];
+	for (const auto& mesh : m_Meshes) 
+		if (mesh->m_Name == name) return mesh;
 
-	if (mesh == nullptr) {
-		DebugPrint(std::format("ERROR!! no such mesh, name: {}", name));
-	}
+	DebugPrint(std::format("ERROR!! no such mesh, name: {}", name));
+    return nullptr;
+}
 
-    return mesh;
+Mesh* MeshManager::GetMesh(int idx)
+{
+	if (0 <= idx && idx < m_Meshes.size()) 
+		return m_Meshes[idx];
+
+	DebugPrint(std::format("ERROR!! MeshManager out of index!! mesh idx: {}", idx));
+	return nullptr;
 }

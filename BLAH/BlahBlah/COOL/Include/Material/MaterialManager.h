@@ -23,6 +23,8 @@ public:
 	// get material
 	Material* GetMaterial(const std::string& name);
 
+	Material* GetMaterial(int idx);
+
 	// texturemap 에서 로드 혹은 새로 받아옴
 	int LoadOrGetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name);
 

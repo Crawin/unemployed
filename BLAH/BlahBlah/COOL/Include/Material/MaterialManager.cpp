@@ -3,7 +3,6 @@
 #include "Material.h"
 #include "Renderer/Renderer.h"
 #include "Shader/ShaderManager.h"
-#include <json/json.h>
 
 
 MaterialManager::MaterialManager()
@@ -62,6 +61,16 @@ Material* MaterialManager::GetMaterial(const std::string& name)
 	for (auto& mat : m_Materials)
 		if (mat->GetName() == name) return mat;
 
+	DebugPrint(std::format("ERROR!! no such material, name: {}", name));
+	return nullptr;
+}
+
+Material* MaterialManager::GetMaterial(int idx)
+{
+	if (0 <= idx && idx < m_Materials.size())
+		return m_Materials[idx];
+
+	DebugPrint(std::format("ERROR!! MaterialManager out of index!! mesh idx: {}", idx));
 	return nullptr;
 }
 

@@ -1,9 +1,13 @@
-#pragma once
+ï»¿#pragma once
 
-// ±âº»ÀÌ µÇ´Â ¿ÀºêÁ§Æ®
-// ¾À¿¡ ¹èÄ¡µÇ´Â °ÍµéÀº ¸ğµÎ ¾ê »ó¼Ó ¹ŞÀ½
-// ¶óÀÌÆ®µµ ¿ÀºêÁ§Æ®º£ÀÌ½º¸¦ »ó¼Ó
-// Ä«¸Ş¶óµµ ¿ÀºêÁ§Æ®º£ÀÌ½º¸¦ »ó¼Ó
+// ê¸°ë³¸ì´ ë˜ëŠ” ì˜¤ë¸Œì íŠ¸
+// ì”¬ì— ë°°ì¹˜ë˜ëŠ” ê²ƒë“¤ì€ ëª¨ë‘ ì–˜ ìƒì† ë°›ìŒ
+// ë¼ì´íŠ¸ë„ ì˜¤ë¸Œì íŠ¸ë² ì´ìŠ¤ë¥¼ ìƒì†
+// ì¹´ë©”ë¼ë„ ì˜¤ë¸Œì íŠ¸ë² ì´ìŠ¤ë¥¼ ìƒì†
+
+//class Json::Value;
+//class MeshManager;
+//class MaterialManager;
 
 class ObjectBase
 {
@@ -12,11 +16,11 @@ public:
 	virtual ~ObjectBase() {}
 
 private:
-	// ¾÷µ¥ÀÌÆ® X ·»´õ X
+	// ì—…ë°ì´íŠ¸ X ë Œë” X
 	bool m_Active = true;
-	// ¾÷µ¥ÀÌÆ® O ·»´õ X
+	// ì—…ë°ì´íŠ¸ O ë Œë” X
 	bool m_RenderOn = true;
-	// ÀÚ½ÄÀÌ ¾Æ´Ñ ¿ÀºêÁ§Æ®ÀÎ°¡? (Çà·Ä ¾÷µ¥ÀÌÆ® ÇÒ ¶§ »ç¿ë)
+	// ìì‹ì´ ì•„ë‹Œ ì˜¤ë¸Œì íŠ¸ì¸ê°€? (í–‰ë ¬ ì—…ë°ì´íŠ¸ í•  ë•Œ ì‚¬ìš©)
 	bool m_IsRoot = true;
 
 	std::string m_Name = "No Name";
@@ -24,31 +28,31 @@ private:
 protected:
 	// local position, animation
 	XMFLOAT3 m_LocalScale = { 1.0f, 1.0f, 1.0f };
-	XMFLOAT4 m_LocalRotate = { 0.0f, 0.0f, 0.0f, 0.0f };		// ÄõÅÍ´Ï¾ğÀÌ´Ù.
+	XMFLOAT4 m_LocalRotate = { 0.0f, 0.0f, 0.0f, 0.0f };		// ì¿¼í„°ë‹ˆì–¸ì´ë‹¤.
 	XMFLOAT3 m_LocalPosition = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4X4 m_LocalWorldMatrix = Matrix4x4::Identity();
 
 //private:
-	// world position, ºÎ¸ğÀÇ °ÍÀ» ¹Ş¾Æ¿Í¼­ ½ÇÁ¦ Çà·ÄÀ» ¸¸µç´Ù
+	// world position, ë¶€ëª¨ì˜ ê²ƒì„ ë°›ì•„ì™€ì„œ ì‹¤ì œ í–‰ë ¬ì„ ë§Œë“ ë‹¤
 	XMFLOAT3 m_Scale = { 1.0f, 1.0f, 1.0f };
-	XMFLOAT4 m_Rotate = { 0.0f, 0.0f, 0.0f, 0.0f };				// ÄõÅÍ´Ï¾ğÀÌ´Ù.
+	XMFLOAT4 m_Rotate = { 0.0f, 0.0f, 0.0f, 0.0f };				// ì¿¼í„°ë‹ˆì–¸ì´ë‹¤.
 	XMFLOAT3 m_Position = { 0.0f, 0.0f, 0.0f };
-	XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();			// to-root * world, ½ÇÁ¦ shader¿¡ ³Ñ±æ °ª
+	XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();			// to-root * world, ì‹¤ì œ shaderì— ë„˜ê¸¸ ê°’
 
 
 	BoundingOrientedBox m_BoundingBox{};
 
-	// ÀÚ½ÄµéÀÓ
+	// ìì‹ë“¤ì„
 	std::vector<ObjectBase*> m_Children;
 
 protected:
-	// ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ÀÖ´Ù¸é animate ÇÔ¼ö¿¡¼­ local s, r, t¸¦ º¯°æÇÑ´Ù.
+	// ì• ë‹ˆë©”ì´ì…˜ì´ ìˆë‹¤ë©´ animate í•¨ìˆ˜ì—ì„œ local s, r, të¥¼ ë³€ê²½í•œë‹¤.
 	virtual void Animate() {}
 
 public:
 	virtual void Update(float deltaTime) {}
 	
-	// »ç½Ç»ó ÀÌ¸§ÀÌ animate¿©¾ß ÇÏÁö ¾ÊÀ»±î ½Í±ä ÇÑµ¥ ¹¹ ¾îÂ¼°Ú¾î¿ä
+	// ì‚¬ì‹¤ìƒ ì´ë¦„ì´ animateì—¬ì•¼ í•˜ì§€ ì•Šì„ê¹Œ ì‹¶ê¸´ í•œë° ë­ ì–´ì©Œê² ì–´ìš”
 	void SetChildWorlTransform(const ObjectBase* parent);
 
 public:
