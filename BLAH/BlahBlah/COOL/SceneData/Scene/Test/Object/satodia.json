@@ -1,12 +1,14 @@
 {
 	"Type": 0,
-	"Transform": {
-		"Position": [0.0, 0.0, 0.0],
-		"Rotate": [0.0, 0.0, 0.0],
-		"Scale": [0.0, 0.0, 0.0]
-	},
-	"Materials": {
-		"satodia_Body": "SatoBody",
-		"satodia_Hair": "SatoHair"
+	"Components":{
+		"Transform": {
+			"Position": [0.0, 0.0, 0.0],
+			"Rotate": [0.0, 0.0, 0.0],
+			"Scale": [0.0, 0.0, 0.0]
+		},
+		"Materials": {
+			"satodia_Body": "SatoBody",
+			"satodia_Hair": "SatoHair"
+		}
 	}
 }

@@ -1,6 +1,9 @@
 ﻿#include "framework.h"
 #include "ObjectManager.h"
+
+//
 #include "ObjectBase.h"
+#include "Actor/Actor.h"
 #include <json/json.h>
 
 //void ObjectManager::InsertObject(ObjectBase* obj)
@@ -36,7 +39,10 @@ bool ObjectManager::LoadFile(const std::string& fileName)
 	Json::Reader reader;
 	Json::Value root;
 
-	reader.parse(file, root);
+	if (reader.parse(file, root) == false) {
+		DebugPrint(std::format("{} parse false!!\nERROR MESSAGE\n{}", ExtractFileName(fileName), reader.getFormattedErrorMessages()));
+		return false;
+	}
 	
 	ObjectBase* obj = nullptr;
 
@@ -44,20 +50,20 @@ bool ObjectManager::LoadFile(const std::string& fileName)
 	switch (root["type"].asInt()) {
 	case 0:
 	default:
-	{
-		// default, ObjectBase
-		//obj = new ObjectBase(root, );
+		obj = new ObjectBase;
 		break;
-	}
 	case 1:
-	{
-		// actor
-
+		obj = new Actor;
 		break;
-	}
 	}
 	
+	// json 파일을 직접 줘서 너가 만들어라 한다
+	if (obj->Init(root) == false) {
+		DebugPrint(std::format("Failed to init obj!!, file name: {}", fileName));
+		return false;
+	};
 
+	m_Objects.push_back(obj);
 
 	return true;
 }

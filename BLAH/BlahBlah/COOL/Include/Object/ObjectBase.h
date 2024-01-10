@@ -5,6 +5,9 @@
 // 라이트도 오브젝트베이스를 상속
 // 카메라도 오브젝트베이스를 상속
 
+namespace Json {
+	class Value;
+}
 //class Json::Value;
 //class MeshManager;
 //class MaterialManager;
@@ -12,8 +15,10 @@
 class ObjectBase
 {
 public:
-	ObjectBase() {}
-	virtual ~ObjectBase() {}
+	ObjectBase();
+	virtual ~ObjectBase();
+
+	virtual bool Init(Json::Value root);
 
 private:
 	// 업데이트 X 렌더 X

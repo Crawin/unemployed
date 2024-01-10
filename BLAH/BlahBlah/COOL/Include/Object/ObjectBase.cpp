@@ -1,5 +1,21 @@
 ﻿#include "framework.h"
 #include "ObjectBase.h"
+#include <json/json.h>
+
+ObjectBase::ObjectBase()
+{
+}
+
+ObjectBase::~ObjectBase()
+{
+}
+
+bool ObjectBase::Init(Json::Value root)
+{
+
+
+	return false;
+}
 
 void ObjectBase::SetChildWorlTransform(const ObjectBase* parent)
 {

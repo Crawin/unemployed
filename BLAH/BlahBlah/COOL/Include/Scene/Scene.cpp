@@ -14,6 +14,8 @@ Scene::Scene()
 	m_ShaderManager = new ShaderManager;
 
 	m_MaterialManager->RegisterShaderManager(m_ShaderManager);
+	m_ObjectManager->RegisterMaterialManager(m_MaterialManager);
+	m_ObjectManager->RegisterMeshManager(m_MeshManager);
 }
 
 Scene::~Scene()
