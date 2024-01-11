@@ -271,7 +271,7 @@ void CRoomServer::GameThread(const SOCKET& arg)
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 
 	bool bRoom = true;
-	int x = 0, y = 0;
+	SendPosition sp;
 	while (bRoom) {
 		// 데이터 받기
 		retval = recv(client_sock, buf, bufsize, 0);
@@ -282,26 +282,24 @@ void CRoomServer::GameThread(const SOCKET& arg)
 		else if (retval == 0)
 			break;
 
-		if (buf[0] == 'w')
+		switch (buf[0])
 		{
-			std::cout << x << ", " << ++y << std::endl;
+		case 0:				// POSITION
+			memcpy(&sp, buf, retval);
+			std::cout << "Type: " << sp.type << " , X: " << sp.x << " , Y: " << sp.y << std::endl;
+			break;
+		default:
+			// 받은 데이터 출력
+			buf[retval] = '\0';
+			printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
+			break;
 		}
-		if (buf[0] == 'a')
-		{
-			std::cout << --x << ", " << y << std::endl;
-		}
-		if (buf[0] == 's')
-		{
-			std::cout << x << ", " << --y << std::endl;
-		}
-		if (buf[0] == 'd')
-		{
-			std::cout << ++x << ", " << y << std::endl;
-		}
+		//// 받은 데이터 출력
+		//buf[retval] = '\0';
+		//printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
 
-		// 받은 데이터 출력
-		buf[retval] = '\0';
-		printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
+		
+
 
 		// 데이터 보내기
 		retval = send(client_sock, buf, retval, 0);

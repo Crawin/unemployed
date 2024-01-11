@@ -8,6 +8,17 @@ enum ServerType {
 	GAME_RECV
 };
 
+enum SendType
+{
+	POSITION
+};
+
+struct SendPosition {
+	SendType type;
+	int x;
+	int y;
+};
+
 class CServer
 {
 private:
