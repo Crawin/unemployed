@@ -4,10 +4,20 @@
 
 Client::Client()
 {
+	m_cpServerIP = (char*)"192.168.45.129";
+	m_Sock = NULL;
 }
 
 Client::~Client()
 {
+	std::cout << "Client 소멸자 호출" << std::endl;
+
+	// 소켓 닫기
+	closesocket(m_Sock);
+
+	// 윈속 종료
+	WSACleanup();
+	
 }
 
 int Client::Connect_Server()
