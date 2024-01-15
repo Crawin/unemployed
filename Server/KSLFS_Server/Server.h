@@ -17,6 +17,7 @@ struct SendPosition {
 	SendType type;
 	int x;
 	int y;
+	int z;
 };
 
 class CServer

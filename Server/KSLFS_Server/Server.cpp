@@ -286,7 +286,7 @@ void CRoomServer::GameThread(const SOCKET& arg)
 		{
 		case 0:				// POSITION
 			memcpy(&sp, buf, retval);
-			std::cout << "Type: " << sp.type << " , X: " << sp.x << " , Y: " << sp.y << std::endl;
+			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
 			break;
 		default:
 			// 받은 데이터 출력
