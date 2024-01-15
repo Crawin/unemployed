@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="Include\Application.h" />
     <ClInclude Include="Include\Camera\Camera.h" />
+    <ClInclude Include="Include\Client.h" />
     <ClInclude Include="Include\DDSTextureLoader12.h" />
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\framework.h" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="Include\Application.cpp" />
     <ClCompile Include="Include\Camera\Camera.cpp" />
+    <ClCompile Include="Include\Client.cpp" />
     <ClCompile Include="Include\DDSTextureLoader12.cpp" />
     <ClCompile Include="Include\framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

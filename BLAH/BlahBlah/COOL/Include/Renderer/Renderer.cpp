@@ -3,6 +3,7 @@
 #include "COOLResource.h"
 #include "../Camera/Camera.h"
 //#include "Shader/Shader.h"
+#include "../Client.h"
 
 #define TEST_SHADER
 
@@ -902,6 +903,9 @@ void Renderer::Render()
 		tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
 		XMFLOAT3 pos = Vector3::Add(m_Camera->GetPosition(), tempMove);
 		m_Camera->SetPosition(pos);
+
+		SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
+		Client::GetInstance().Send_Pos(sp);
 
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };

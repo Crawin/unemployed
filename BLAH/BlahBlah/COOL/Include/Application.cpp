@@ -1,6 +1,7 @@
 #include "framework.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
+#include "Client.h"
 
 Application::Application()
 {
@@ -77,6 +78,9 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 
 int Application::StartProgram()
 {
+	Client::GetInstance().Connect_Server();
+	Client::GetInstance().Send_Str("规积己"); // 烙矫 规积己 傈价.
+
 	MSG Message;
 
 	while (m_GameLoop) {
