@@ -12,6 +12,7 @@
 
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
 #include <iostream>
+#include <thread>
 
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char* msg)
@@ -75,10 +76,13 @@ public:
 private:
 	char* m_cpServerIP;
 	SOCKET m_Sock;
+	std::thread m_Recv_Thread;
+	bool m_bRecv;
 public:
 	Client();
 	~Client();
 	int Connect_Server();
 	void Send_Pos(const SendPosition&);
 	void Send_Str(const char*);
+	void Recv_Data();
 };
