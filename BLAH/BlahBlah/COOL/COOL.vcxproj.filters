@@ -58,6 +58,18 @@
     <Filter Include="소스 파일\ManagerClass">
       <UniqueIdentifier>{9deb2ac8-ce7d-4f11-9305-b70bafd3b085}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ECS">
+      <UniqueIdentifier>{9c4bfa26-398f-4194-97e4-3143a90492f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\Entity">
+      <UniqueIdentifier>{edfa21fd-6b98-48ee-b99b-69c289e41c9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\System">
+      <UniqueIdentifier>{d7409ac2-967e-41e5-8838-634337038398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\Component">
+      <UniqueIdentifier>{b92c5410-29fb-4d6e-af5c-f46060c41c5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -144,6 +156,15 @@
     <ClInclude Include="Include\Vertex.h">
       <Filter>소스 파일\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\Entity.h">
+      <Filter>소스 파일\ECS\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\EneitySystem.h">
+      <Filter>소스 파일\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component.h">
+      <Filter>소스 파일\ECS\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -220,6 +241,15 @@
     </ClCompile>
     <ClCompile Include="Include\Shader\ShaderManager.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Entity.cpp">
+      <Filter>소스 파일\ECS\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\EneitySystem.cpp">
+      <Filter>소스 파일\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Component.cpp">
+      <Filter>소스 파일\ECS\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
