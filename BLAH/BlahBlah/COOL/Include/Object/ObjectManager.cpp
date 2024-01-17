@@ -1,7 +1,10 @@
 ﻿#include "framework.h"
 #include "ObjectManager.h"
-#include "ObjectBase.h"
+
 #include <json/json.h>
+// objs
+#include "ObjectBase.h"
+#include "Actor/Actor.h"
 
 //void ObjectManager::InsertObject(ObjectBase* obj)
 //{
@@ -22,6 +25,35 @@ ObjectManager::~ObjectManager()
 	}
 }
 
+ObjectBase* ObjectManager::LoadObject(Json::Value& root)
+{
+	ObjectBase* obj = nullptr;
+
+	// 여기에 파일 로드
+	switch (root["type"].asInt()) {
+	case 0:
+	default:
+	{
+		// default, Actor
+		obj = new Actor(root, this);
+		break;
+	}
+	case 1:
+	{
+		// actor
+
+		break;
+	}
+	}
+
+	// 자식이 있다면?
+	if (root["Children"].isNull() == false) {
+
+	}
+
+	return obj;
+}
+
 bool ObjectManager::LoadFile(const std::string& fileName)
 {
 	DebugPrint(std::format("name: {}", fileName));
@@ -38,26 +70,9 @@ bool ObjectManager::LoadFile(const std::string& fileName)
 
 	reader.parse(file, root);
 	
-	ObjectBase* obj = nullptr;
-
-	// 여기에 파일 로드
-	switch (root["type"].asInt()) {
-	case 0:
-	default:
-	{
-		// default, ObjectBase
-		//obj = new ObjectBase(root, );
-		break;
-	}
-	case 1:
-	{
-		// actor
-
-		break;
-	}
-	}
 	
 
+	ObjectBase* obj = LoadObject(root);
 
 	return true;
 }

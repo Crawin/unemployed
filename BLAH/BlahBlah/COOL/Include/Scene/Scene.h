@@ -45,9 +45,11 @@ private:
 	std::string m_SceneName = "noname";
 
 protected:
+	// 서로 교환해야 하는 데이터가 많다.
+	// SceneData 클래스로 묶고 한번에 사용할까?
 	MeshManager* m_MeshManager = nullptr;
-	ObjectManager* m_ObjectManager = nullptr;
 	MaterialManager* m_MaterialManager = nullptr;
+	ObjectManager* m_ObjectManager = nullptr;
 	ShaderManager* m_ShaderManager = nullptr;
 
 	//virtual bool Init();

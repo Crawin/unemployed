@@ -1,10 +1,12 @@
 {
+	"Name": "Satono_Diamond_01",
 	"Type": 0,
 	"Transform": {
 		"Position": [0.0, 0.0, 0.0],
-		"Rotate": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0, 0.0],
 		"Scale": [0.0, 0.0, 0.0]
 	},
+	"Mesh":"satodia",
 	"Materials": {
 		"satodia_Body": "SatoBody",
 		"satodia_Hair": "SatoHair"

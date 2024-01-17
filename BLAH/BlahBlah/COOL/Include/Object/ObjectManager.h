@@ -26,6 +26,8 @@ class MeshManager;
 
 class ObjectBase;
 
+namespace Json { class Value; }
+
 class ObjectManager
 {
 public:
@@ -34,6 +36,8 @@ public:
 
 	void RegisterMaterialManager(MaterialManager* materialManager) { m_MaterialManager = materialManager; }
 	void RegisterMeshManager(MeshManager* meshManager) { m_MeshManager = meshManager; }
+
+	ObjectBase* LoadObject(Json::Value& root);
 
 	bool LoadFile(const std::string& fileName);
 

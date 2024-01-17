@@ -5,15 +5,21 @@
 // 라이트도 오브젝트베이스를 상속
 // 카메라도 오브젝트베이스를 상속
 
-//class Json::Value;
+namespace Json { class Value; }
+
+class ObjectManager;
 //class MeshManager;
 //class MaterialManager;
 
 class ObjectBase
 {
+protected:
+	ObjectBase();
+
 public:
-	ObjectBase() {}
-	virtual ~ObjectBase() {}
+	ObjectBase(Json::Value& root, ObjectManager* manager);
+
+	virtual ~ObjectBase();
 
 private:
 	// 업데이트 X 렌더 X
@@ -26,13 +32,14 @@ private:
 	std::string m_Name = "No Name";
 
 protected:
-	// local position, animation
+	// local position, animation, 부모 대비 로컬 좌표
 	XMFLOAT3 m_LocalScale = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT4 m_LocalRotate = { 0.0f, 0.0f, 0.0f, 0.0f };		// 쿼터니언이다.
 	XMFLOAT3 m_LocalPosition = { 0.0f, 0.0f, 0.0f };
 	XMFLOAT4X4 m_LocalWorldMatrix = Matrix4x4::Identity();
 
 //private:
+	// 실제 위치
 	// world position, 부모의 것을 받아와서 실제 행렬을 만든다
 	XMFLOAT3 m_Scale = { 1.0f, 1.0f, 1.0f };
 	XMFLOAT4 m_Rotate = { 0.0f, 0.0f, 0.0f, 0.0f };				// 쿼터니언이다.
