@@ -13,6 +13,7 @@
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
 #include <iostream>
 #include <thread>
+#include <DirectXMath.h>
 
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char* msg)
@@ -61,10 +62,12 @@ enum SendType
 
 struct SendPosition {
 	SendType type;
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
+
+class Camera;
 
 class Client
 {
@@ -78,6 +81,8 @@ private:
 	SOCKET m_Sock;
 	std::thread m_Recv_Thread;
 	bool m_bRecv;
+private:
+	Camera* p1;
 public:
 	Client();
 	~Client();
@@ -85,4 +90,5 @@ public:
 	void Send_Pos(const SendPosition&);
 	void Send_Str(const char*);
 	void Recv_Data();
+	void Set_Player(Camera*);
 };

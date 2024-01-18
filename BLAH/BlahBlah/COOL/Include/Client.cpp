@@ -69,12 +69,21 @@ void Client::Recv_Data()
 			err_display("recv()");
 		}
 		else {
-			SendPosition sp;
-			memcpy(&sp, buf, retval);
-			printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);
-			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
+			if (buf[0] == 0) {
+				SendPosition sp;
+				memcpy(&sp, buf, retval);
+				printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);
+				std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
+				DirectX::XMFLOAT3 pos = { sp.x,sp.y,sp.z };
+				p1->SetPosition(pos);
+			}
 		}
 	}
+}
+
+void Client::Set_Player(Camera* cam)
+{
+	p1 = cam;
 }
 
 //int main(int argc, char* argv[])

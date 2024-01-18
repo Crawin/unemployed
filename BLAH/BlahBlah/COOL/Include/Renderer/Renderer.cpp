@@ -568,6 +568,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
 		m_Camera->SetPosition({ 0.0f, 30.0f, -150.0f });
 		m_Camera->Init();
+		Client::GetInstance().Set_Player(m_Camera);
 
 		// 업로드버퍼같은거 실행
 		commandList->Close();
