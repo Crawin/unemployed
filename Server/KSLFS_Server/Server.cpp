@@ -294,12 +294,6 @@ void CRoomServer::GameThread(const SOCKET& arg)
 			printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
 			break;
 		}
-		//// 받은 데이터 출력
-		//buf[retval] = '\0';
-		//printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
-
-		
-
 
 		// 데이터 보내기
 		retval = send(client_sock, buf, retval, 0);
