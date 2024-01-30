@@ -15,9 +15,9 @@ enum SendType
 
 struct SendPosition {
 	SendType type;
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
 
 class CServer

@@ -906,7 +906,11 @@ void Renderer::Render()
 
 		SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
 		Client::GetInstance().Send_Pos(sp);
-
+		if (Client::GetInstance().Get_Recv_Size())
+		{
+			m_Camera->SetPosition(Client::GetInstance().Get_Recv_Queue());
+			std::cout << "좌표 이동 완료" << std::endl;
+		}
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
 		//XMFLOAT4X4 view = m_Camera->GetViewMat();

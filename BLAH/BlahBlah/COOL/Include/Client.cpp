@@ -71,10 +71,27 @@ void Client::Recv_Data()
 		else {
 			SendPosition sp;
 			memcpy(&sp, buf, retval);
-			printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);
-			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
+			if (sp.type == 0)
+			{
+				printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);
+				std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
+				m_vRecv_Queue.push_back(sp);
+			}
 		}
 	}
+}
+
+DirectX::XMFLOAT3 Client::Get_Recv_Queue()
+{
+	SendPosition temp = m_vRecv_Queue.back();
+	DirectX::XMFLOAT3 pos = { temp.x,temp.y,temp.z };
+	m_vRecv_Queue.clear();
+	return pos;
+}
+
+int Client::Get_Recv_Size()
+{
+	return m_vRecv_Queue.size();
 }
 
 //int main(int argc, char* argv[])
