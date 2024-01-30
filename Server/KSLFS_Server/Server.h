@@ -15,9 +15,9 @@ enum SendType
 
 struct SendPosition {
 	SendType type;
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
 
 class CServer
@@ -66,3 +66,5 @@ public:
 	void Join();
 	void CommandThread();
 };
+
+extern std::mutex Chat_Mutex;
