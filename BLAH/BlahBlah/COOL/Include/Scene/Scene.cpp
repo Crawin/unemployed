@@ -1,5 +1,5 @@
 ﻿#include "Scene.h"
-#include "Renderer/Renderer.h"
+//#include "Renderer/Renderer.h"
 #include "framework.h"
 #include "ResourceManager.h"
 #include "Object/ObjectManager.h"

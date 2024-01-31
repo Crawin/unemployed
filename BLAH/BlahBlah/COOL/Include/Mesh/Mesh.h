@@ -66,7 +66,7 @@ private:
 
 	std::vector<Mesh*> m_Childs;
 
-	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file);
+	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 	int m_VertexNum = 0;
 

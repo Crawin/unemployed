@@ -5,11 +5,12 @@
 
 #include "Material/Material.h"
 #include "Mesh/Mesh.h"
+#include "Shader/Shader.h"
 
-#define SHADER_PATH "SceneData\\Shader\\"
-#define MESH_PATH "SceneData\\Mesh\\"
-#define TEXTURE_PATH "SceneData\\Texture\\"
-#define MATERIAL_PATH "SceneData\\Material\\"
+#define MESH_PATH		"SceneData\\Mesh\\"
+#define SHADER_PATH		"SceneData\\Shader\\"
+#define TEXTURE_PATH	"SceneData\\Texture\\"
+#define MATERIAL_PATH	"SceneData\\Material\\"
 
 ResourceManager::ResourceManager()
 {
@@ -21,27 +22,8 @@ ResourceManager::~ResourceManager()
 		delete mat;
 	for (auto& mes : m_Meshes)
 		delete mes;
-}
-
-void ResourceManager::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, Mesh* mesh)
-{
-	mesh->BuildMesh(commandList, file);
-
-	m_Meshes.push_back(mesh);
-	//m_MeshMap[mesh->m_Name] = mesh;
-
-
-	// 8. 서브메쉬 개수
-	unsigned int childNum;
-	file.read((char*)&childNum, sizeof(unsigned int));
-	mesh->m_Childs.reserve(childNum);
-
-	// 9. 서브메쉬(재귀)
-	for (unsigned int i = 0; i < childNum; ++i) {
-		Mesh* child = new Mesh;
-		BuildMesh(commandList, file, child);
-		mesh->m_Childs.push_back(child);
-	}
+	for (auto& sha : m_Shaders)
+		delete sha;
 }
 
 int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData)
@@ -111,6 +93,14 @@ int ResourceManager::GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsC
 	return -1;
 }
 
+D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)
+{
+	if (0 <= idx && idx < m_Resources.size())
+		return m_Resources[idx]->GetResource()->GetGPUVirtualAddress();
+
+	return -1;
+}
+
 int ResourceManager::GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	// 찾았다
@@ -129,9 +119,7 @@ int ResourceManager::GetMesh(const std::string& name, ComPtr<ID3D12GraphicsComma
 
 		Mesh* mesh = new Mesh;
 		mesh->m_Name = ExtractFileName(fileName);
-		BuildMesh(commandList, meshFile, mesh);
-
-		m_Meshes.push_back(mesh);
+		mesh->BuildMesh(commandList, meshFile, this);
 
 		DebugPrint(std::format("loaded file name: {}", mesh->m_Name));
 		return true;

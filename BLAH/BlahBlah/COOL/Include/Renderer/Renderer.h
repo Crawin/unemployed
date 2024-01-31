@@ -193,10 +193,10 @@ private:
 
 public:
 	D3D12_GPU_VIRTUAL_ADDRESS GetResourceGPUAddress(int idx);
-	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
+	//D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
 
 	COOLResourcePtr GetResourceFromIndex(int idx);
-	COOLResourcePtr GetVertexDataFromIndex(int idx);
+	//COOLResourcePtr GetVertexDataFromIndex(int idx);
 
 	ComPtr<ID3D12CommandAllocator> GetCommandAllocator(size_t idx) { return  m_CommandAllocators[idx]; }
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList(size_t idx) { return  m_GraphicsCommandLists[idx]; }

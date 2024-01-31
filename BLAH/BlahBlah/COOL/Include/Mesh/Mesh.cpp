@@ -1,8 +1,8 @@
 ﻿#include "framework.h"
-#include "Renderer/Renderer.h"
 #include "Mesh.h"
+#include "Scene/ResourceManager.h"
 
-void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file)
+void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager)
 {
 	// 메쉬 파일 구조
 	// 1. 이름 길이					// int
@@ -52,9 +52,13 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		std::vector<Vertex> vertex(vertexLen);
 		file.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
 
-		m_VertexBuffer = Renderer::GetInstance().CreateBufferFromVector(commandList, vertex, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, std::format("{}_vertex data", m_Name));
+		m_VertexBuffer = manager->CreateBufferFromVector(
+			commandList, 
+			vertex, 
+			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, 
+			std::format("{}_vertex data", m_Name));
 
-		m_VertexBufferView.BufferLocation = Renderer::GetInstance().GetVertexDataGPUAddress(m_VertexBuffer);
+		m_VertexBufferView.BufferLocation = manager->GetVertexDataGPUAddress(m_VertexBuffer);
 		m_VertexBufferView.StrideInBytes = sizeof(Vertex);
 		m_VertexBufferView.SizeInBytes = sizeof(Vertex) * vertexLen;
 
@@ -136,17 +140,19 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	}
 #endif
 
-	//unsigned int childNum;
-	//file.read((char*)&childNum, sizeof(unsigned int));
+	manager->AddMesh(this);
 
-	//// 8. 서브메쉬 개수
-	//// 9. 서브메쉬(재귀)
-	//m_Childs.reserve(childNum);
-	//for (int i = 0; i < childNum; ++i) {
-	//	Mesh* newMesh = new Mesh;
-	//	newMesh->BuildMesh(commandList, file);
-	//	m_Childs.push_back(newMesh);
-	//}
+	// 8. 서브메쉬 개수
+	unsigned int childNum;
+	file.read((char*)&childNum, sizeof(unsigned int));
+	m_Childs.reserve(childNum);
+
+	// 9. 서브메쉬(재귀)
+	for (int i = 0; i < childNum; ++i) {
+		Mesh* newMesh = new Mesh;
+		newMesh->BuildMesh(commandList, file, manager);
+		m_Childs.push_back(newMesh);
+	}
 }
 
 //bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)

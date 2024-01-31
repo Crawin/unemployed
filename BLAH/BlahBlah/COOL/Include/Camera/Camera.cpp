@@ -1,6 +1,5 @@
 ﻿#include "framework.h"
 #include "Camera.h"
-//#include "Renderer/Renderer.h"
 #include "Scene/ResourceManager.h"
 
 Camera::Camera()
@@ -40,6 +39,8 @@ void Camera::Init(ResourceManager* resourceManager)
 		"Camera Shader Data",
 		(void**)(&m_ShaderData));
 
+	m_ShaderDataGPUAddr = resourceManager->GetVertexDataGPUAddress(m_MappedShaderData);
+
 	UpdateShaderData();
 
 	BoundingFrustum::CreateFromMatrix(m_BoundingFrustum, XMLoadFloat4x4(&m_ProjMatrix));
@@ -50,9 +51,7 @@ void Camera::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	BuildViewMatrix();
 	UpdateShaderData();
 
-	auto ptr = Renderer::GetInstance().GetVertexDataGPUAddress(m_MappedShaderData);
-
-	commandList->SetGraphicsRootConstantBufferView(ROOT_SIGNATURE_IDX::CAMERA_DATA_CBV, ptr);
+	commandList->SetGraphicsRootConstantBufferView(ROOT_SIGNATURE_IDX::CAMERA_DATA_CBV, m_ShaderDataGPUAddr);
 }
 
 void Camera::BuildViewMatrix()

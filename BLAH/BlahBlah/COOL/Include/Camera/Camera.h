@@ -31,6 +31,7 @@ class Camera :
 	// root signature
 	CameraShaderData* m_ShaderData = nullptr;
 	int m_MappedShaderData = -1;
+	D3D12_GPU_VIRTUAL_ADDRESS m_ShaderDataGPUAddr = 0;
 
 public:
 	Camera();

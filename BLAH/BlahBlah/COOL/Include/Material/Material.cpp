@@ -1,6 +1,6 @@
 ﻿#include "framework.h"
 #include "Material.h"
-#include "Renderer/Renderer.h"
+//#include "Renderer/Renderer.h"
 #include "Scene/ResourceManager.h"
 #include <json/json.h>
 

@@ -3,6 +3,7 @@
 class COOLResource;
 class Material;
 class Mesh;
+class Shader;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
@@ -13,27 +14,34 @@ public:
 	~ResourceManager();
 
 private:
-	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, Mesh* mesh);
 
 public:
 	// for object
 	int CreateObjectResource(UINT size, const std::string resName, void** toMapData);
-
-	void SetDatas();
 
 	// for material, returns index
 	int GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name);
 	int GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 	
 	// for mesh
-
 	int GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
+	void AddMesh(Mesh* mesh) { m_Meshes.push_back(mesh); }
 
-	template<class Type>
-	int Get() 
+	// resource
+	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
+	
+	template <class T>
+	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
+		COOLResourcePtr ptr = Renderer::GetInstance().CreateBufferFromVector(commandList, data, resourceState, name);
 
+		m_VertexIndexDatas.push_back(ptr);
+		
+		return m_VertexIndexDatas.size() - 1;
 	}
+
+	void SetDatas();
+
 
 private:
 	// 메시 데이터
@@ -54,6 +62,9 @@ private:
 	// material, texture
 	std::vector<Material*> m_Materials;
 	std::map<std::string, int> m_TextureIndexMap;
+
+	// shader
+	std::vector<Shader*> m_Shaders;
 
 };
 
