@@ -177,7 +177,7 @@ private:
 	// 쉐이더들. 쉐이더 또한 씬 변경시 마다 비워줄까?
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
 	
-	// 현재 들고 있는 리소스. 씬 변경시 마다 이걸 비워줘야 한다.
+	// 현재 들고 있는 메시 리소스. 씬 변경시 마다 이걸 비워줘야 한다.
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
 	std::vector<COOLResourcePtr> m_Resources;
 
