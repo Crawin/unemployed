@@ -1,7 +1,7 @@
 ﻿#include "framework.h"
 #include "Material.h"
 #include "Renderer/Renderer.h"
-#include "MaterialManager.h"
+#include "Scene/ResourceManager.h"
 #include <json/json.h>
 
 Material::Material()
@@ -19,7 +19,7 @@ Material::~Material()
 {
 }
 
-bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager, std::string& shaderName)
+bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, ResourceManager* manager, std::string& shaderName)
 {
 	// load file
 	std::ifstream file(fileName);
@@ -58,7 +58,7 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 		// texture의 이름
 		std::string name = root[materialTypes[i]].asString();
 
-		int idx = manager->LoadOrGetTexture(cmdList, name);
+		int idx = manager->GetTexture(cmdList, name);
 
 		m_TextureIndex[i] = idx;
 	}

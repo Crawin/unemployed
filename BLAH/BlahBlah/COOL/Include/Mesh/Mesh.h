@@ -20,7 +20,7 @@ class Mesh
 {
 private:
 
-	friend class MeshManager;
+	friend class ResourceManager;
 
 #ifdef INTERLEAVED_VERTEX
 	int m_VertexBuffer = -1;								// 인터리브 방식
@@ -74,6 +74,7 @@ public:
 	Mesh() {}
 	~Mesh() {}
 
+	const std::string& GetName() const { return m_Name; }
 	//bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
 
 #ifdef INTERLEAVED_VERTEX

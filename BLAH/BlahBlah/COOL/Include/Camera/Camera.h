@@ -37,7 +37,7 @@ public:
 	Camera(float fov, float aspect, float nearPlane, float farPlane);
 	virtual ~Camera();
 
-	void Init();
+	virtual void Init(ResourceManager* resourceManager);
 	
 	void SetLook(const XMFLOAT3& look) { m_Look = look; }
 	void SetRight(const XMFLOAT3& right) { m_Right = right; }

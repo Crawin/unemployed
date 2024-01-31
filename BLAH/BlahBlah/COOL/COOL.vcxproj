@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -164,10 +164,9 @@
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Material\Material.h" />
-    <ClInclude Include="Include\Material\MaterialManager.h" />
+    <ClInclude Include="Include\Mesh\MeshManager.h" />
     <ClInclude Include="Include\mymath.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
-    <ClInclude Include="Include\Mesh\MeshManager.h" />
     <ClInclude Include="Include\Object\Actor\Actor.h" />
     <ClInclude Include="Include\Object\ObjectBase.h" />
     <ClInclude Include="Include\Object\ObjectManager.h" />
@@ -175,6 +174,7 @@
     <ClInclude Include="Include\Renderer\COOLDevice.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
+    <ClInclude Include="Include\Scene\ResourceManager.h" />
     <ClInclude Include="Include\Scene\Scene.h" />
     <ClInclude Include="Include\Scene\SceneManager.h" />
     <ClInclude Include="Include\Scene\TestMainScene.h" />
@@ -198,7 +198,6 @@
     </ClCompile>
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material\Material.cpp" />
-    <ClCompile Include="Include\Material\MaterialManager.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
     <ClCompile Include="Include\Mesh\MeshManager.cpp" />
     <ClCompile Include="Include\Object\Actor\Actor.cpp" />
@@ -207,6 +206,7 @@
     <ClCompile Include="Include\Renderer\COOLDevice.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
+    <ClCompile Include="Include\Scene\ResourceManager.cpp" />
     <ClCompile Include="Include\Scene\Scene.cpp" />
     <ClCompile Include="Include\Scene\SceneManager.cpp" />
     <ClCompile Include="Include\Scene\TestMainScene.cpp" />

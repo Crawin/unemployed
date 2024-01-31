@@ -26,10 +26,14 @@ enum SCENE_TYPE {
 
 // 모든 로드는 씬에서 한다.
 
-class MeshManager;
+// 리소스 매니저라는 클래스가 있다 (기존 Mesh, Material, Shader를 통합함)
+// Object를 로드 할 때 ResourceManager에 필요한 리소스를 추가해 가져오거나 재활용 함
+class ResourceManager;
+
 class ObjectManager;
-class MaterialManager;
-class ShaderManager;
+//class MeshManager;
+//class MaterialManager;
+//class ShaderManager;
 
 class ObjectBase;
 class Camera;
@@ -47,10 +51,11 @@ private:
 protected:
 	// 서로 교환해야 하는 데이터가 많다.
 	// SceneData 클래스로 묶고 한번에 사용할까?
-	MeshManager* m_MeshManager = nullptr;
-	MaterialManager* m_MaterialManager = nullptr;
+	ResourceManager* m_ResourceManager = nullptr;
 	ObjectManager* m_ObjectManager = nullptr;
-	ShaderManager* m_ShaderManager = nullptr;
+	//MeshManager* m_MeshManager = nullptr;
+	//MaterialManager* m_MaterialManager = nullptr;
+	//ShaderManager* m_ShaderManager = nullptr;
 
 	//virtual bool Init();
 private:

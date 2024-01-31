@@ -27,7 +27,7 @@ Renderer::~Renderer()
 
 	// 혹시 모르니 여기서 모두 해제
 	m_Resources.clear();
-	m_VertexIndexDatas.clear();
+	//m_VertexIndexDatas.clear();
 
 	// 죽기 전에 살아있는 애들 확인하고 간다
 #if defined(_DEBUG)
@@ -189,7 +189,8 @@ bool Renderer::CreateRTV()
 		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i]->GetResource(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
 
-		RegisterShaderResource(m_RenderTargetBuffer[i]);
+		m_Resources.push_back(m_RenderTargetBuffer[i]);
+		//RegisterShaderResource(m_RenderTargetBuffer[i]);
 
 	}
 
@@ -537,9 +538,9 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 		//Mesh tempMesh;
 		//tempMesh.LoadFile(commandList, "satodia.bin");
 		//m_Meshes.push_back(tempMesh);
-		m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
-		m_Camera->SetWorldPosition({ 0.0f, 30.0f, -150.0f });
-		m_Camera->Init();
+		//m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
+		//m_Camera->SetWorldPosition({ 0.0f, 30.0f, -150.0f });
+		//m_Camera->Init();
 
 		// 업로드버퍼같은거 실행
 		//ExecuteAndEraseUploadHeap(commandList);
@@ -656,7 +657,7 @@ bool Renderer::CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const
 	return shader->CreateShader(m_Device, commandList, m_RootSignature, fileName);
 }
 
-int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)
+COOLResourcePtr Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)
 {
 	ID3D12Resource* texture = nullptr;
 	std::unique_ptr<uint8_t[]> ddsData;
@@ -679,7 +680,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 		str.assign(wstring.begin(), wstring.end());
 
 		DebugPrint(str);
-		return -1;
+		return nullptr;
 	}
 
 	if (ddsAlphaMode != DDS_ALPHA_MODE_UNKNOWN) {
@@ -734,10 +735,10 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 
 	newResource->SetName(fileName);
 
-	return RegisterShaderResource(newResource);
+	return newResource;
 }
 
-int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
+COOLResourcePtr Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
 {
 	UINT createBytes = ((bytes + 255) & ~255);
 	auto resource = CreateEmptyBufferResource(heapType, resourceState, createBytes, name);
@@ -747,18 +748,7 @@ int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES 
 		resource->GetResource()->Map(0, nullptr, toMapData);
 	}
 
-	if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
-		resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER ||
-		toMapData != nullptr) {
-		m_VertexIndexDatas.push_back(resource);
-		return static_cast<int>(m_VertexIndexDatas.size()) - 1;
-	}
-	else {
-		m_Resources.push_back(resource);
-		return static_cast<int>(m_Resources.size()) - 1;
-	}
-
-	return -1;
+	return resource;
 }
 
 void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)
@@ -796,11 +786,11 @@ void Renderer::SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandL
 	commandList->RSSetScissorRects(numOfViewPort, &scissorRect);
 }
 
-UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
-{
-	m_Resources.push_back(resource);
-	return static_cast<UINT>(m_Resources.size()) - 1;
-}
+//UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
+//{
+//	m_Resources.push_back(resource);
+//	return static_cast<UINT>(m_Resources.size()) - 1;
+//}
 
 void Renderer::ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
@@ -942,13 +932,13 @@ D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetResourceGPUAddress(int idx)
 	return 0;
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetVertexDataGPUAddress(int idx)
-{
-	if (0 <= idx && idx < m_VertexIndexDatas.size())
-		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
-
-	return 0;
-}
+//D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetVertexDataGPUAddress(int idx)
+//{
+//	if (0 <= idx && idx < m_VertexIndexDatas.size())
+//		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+//
+//	return 0;
+//}
 
 COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
 {
@@ -958,13 +948,13 @@ COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
 	return nullptr;
 }
 
-COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
-{
-	if (0 <= idx && idx < m_VertexIndexDatas.size())
-		return m_VertexIndexDatas[idx];
-
-	return nullptr;
-}
+//COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
+//{
+//	if (0 <= idx && idx < m_VertexIndexDatas.size())
+//		return m_VertexIndexDatas[idx];
+//
+//	return nullptr;
+//}
 
 /*
 void Renderer::MouseInput(int xin, int yin)

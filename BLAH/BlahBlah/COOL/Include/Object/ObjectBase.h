@@ -5,6 +5,7 @@
 // 라이트도 오브젝트베이스를 상속
 // 카메라도 오브젝트베이스를 상속
 
+class ResourceManager;
 namespace Json { class Value; }
 
 class ObjectManager;
@@ -57,6 +58,7 @@ protected:
 	virtual void Animate() {}
 
 public:
+	virtual void Init(ResourceManager* resManager) {}
 	virtual void Update(float deltaTime) {}
 	
 	// 사실상 이름이 animate여야 하지 않을까 싶긴 한데 뭐 어쩌겠어요

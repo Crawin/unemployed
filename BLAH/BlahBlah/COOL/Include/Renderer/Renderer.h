@@ -58,11 +58,11 @@ public:
 	bool CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader);
 
 	// create texture, returns index of texture..	씬 생성단계에서만 불러줘야 한다. 업로드버퍼가 생기니 주의
-	int CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	COOLResourcePtr CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 
 	// create buffer, returns index of texture..	씬 생성단계에서만 불러줘야 한다. 업로드버퍼가 생기니 주의
 	template <class T>
-	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
+	COOLResourcePtr CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
 		UINT bytes = static_cast<UINT>(data.size()) * sizeof(T);
 		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COPY_DEST, bytes, name);
@@ -78,15 +78,16 @@ public:
 
 		m_UploadResources.push_back(uploadResource->GetResource());
 
-		if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
-			resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER) {
-			m_VertexIndexDatas.push_back(resource);
-			return static_cast<int>(m_VertexIndexDatas.size()) - 1;
-		}
-		else {
-			m_Resources.push_back(resource);
-			return static_cast<int>(m_Resources.size()) - 1;
-		}
+		return resource;
+		//if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
+		//	resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER) {
+		//	m_VertexIndexDatas.push_back(resource);
+		//	return static_cast<int>(m_VertexIndexDatas.size()) - 1;
+		//}
+		//else {
+		//	m_Resources.push_back(resource);
+		//	return static_cast<int>(m_Resources.size()) - 1;
+		//}
 
 		//::ZeroMemory(&d3dSubResourceData, sizeof(D3D12_SUBRESOURCE_DATA));
 		//d3dSubResourceData.pData = pData;
@@ -97,7 +98,7 @@ public:
 	}
 
 	// 그냥 진짜 비어있는 리소스 생성, toMapData를 넣으면 자동으로 데이터 맵핑까지
-	int CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty", void** toMapData = nullptr);
+	COOLResourcePtr CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty", void** toMapData = nullptr);
 
 	// 리소스 복사는 subresourceData로 하자 이건 보류 사용금지!!!!!!!!!!!!!!!!
 	void CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest);
@@ -113,7 +114,7 @@ public:
 	// ------------------- 리소스 관리하는 저거들 묶음 -------------------
 
 	// 해당 리소스의 인덱스 번호를 되돌려줌
-	UINT RegisterShaderResource(COOLResourcePtr resource);
+	//UINT RegisterShaderResource(COOLResourcePtr resource);
 
 	// 커맨드 리스트 execute 하고 업로드힙의 내용을 지운다.
 	void ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
@@ -177,12 +178,13 @@ private:
 	// 쉐이더들. 쉐이더 또한 씬 변경시 마다 비워줄까?
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
 	
+	// 이동
 	// 현재 들고 있는 메시 리소스. 씬 변경시 마다 이걸 비워줘야 한다.
-	std::vector<COOLResourcePtr> m_VertexIndexDatas;
-	std::vector<COOLResourcePtr> m_Resources;
+	//std::vector<COOLResourcePtr> m_VertexIndexDatas;
 
 	// 리소스힙
 	ComPtr<ID3D12DescriptorHeap> m_ResourceHeap;
+	std::vector<COOLResourcePtr> m_Resources;
 	std::vector<ID3D12Resource*> m_UploadResources;
 
 	// 임시

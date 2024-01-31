@@ -3,11 +3,11 @@
 
 
 class Shader;
-class MaterialManager;
+class ResourceManager;
 
 class Material
 {
-	friend class MaterialManager;
+	friend class ResourceManager;
 public:
 	Material();
 	Material(std::string_view name);
@@ -20,7 +20,7 @@ public:
 	void SetAlbedoTextureIndex(int idx) { m_TextureIndex[0] = idx; }
 	//void SetAlbedoTextureIndex(int idx) { m_TextureIndex._11 = idx; }
 
-	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, MaterialManager* manager, std::string& shaderName);
+	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, ResourceManager* manager, std::string& shaderName);
 
 	void SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx);
 

@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "Camera.h"
-#include "Renderer/Renderer.h"
+//#include "Renderer/Renderer.h"
+#include "Scene/ResourceManager.h"
 
 Camera::Camera()
 {
@@ -15,7 +16,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::Init()
+void Camera::Init(ResourceManager* resourceManager)
 {
 	// 행렬 생성
 	BuildViewMatrix();
@@ -30,9 +31,11 @@ void Camera::Init()
 
 	// todo 
 	// map 하는 resource들은 따로 관리하자
-	m_MappedShaderData = Renderer::GetInstance().CreateEmptyBuffer(
-		D3D12_HEAP_TYPE_UPLOAD, 
-		D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER*/, 
+	// 이건 씬데이터가 가지고 있게 바꾸었다.
+	// 초기화 단계에서 씬에게 요청하게 할까?
+	// 쉐이더 리소스가 필요한 오브젝트들의 경우는 어디서 해주어야 할까
+	// init의 인자에 sceneData를 넣어?
+	m_MappedShaderData = resourceManager->CreateObjectResource(
 		sizeof(CameraShaderData), 
 		"Camera Shader Data",
 		(void**)(&m_ShaderData));
