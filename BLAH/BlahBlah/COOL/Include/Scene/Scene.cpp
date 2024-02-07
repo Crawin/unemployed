@@ -9,12 +9,11 @@
 Scene::Scene()
 {
 	m_ResourceManager = new ResourceManager;
-	m_ObjectManager = new ObjectManager;
 }
 
 Scene::~Scene()
 {
-	if (m_ObjectManager) delete m_ObjectManager;
+	if (m_ResourceManager) delete m_ResourceManager;
 }
 
 
@@ -36,6 +35,8 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	//std::string objPath(SCENE_PATH);
 	//objPath += sceneName + "\\Object\\";				// SceneData/Scene/ scenename / Object
 	//CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
+
+	CHECK_CREATE_FAILED(m_ResourceManager->Init(sceneName), std::format("Can't Load Scene, name: {}", sceneName));
 
 	return true;
 }

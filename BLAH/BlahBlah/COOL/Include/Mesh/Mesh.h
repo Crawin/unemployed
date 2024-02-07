@@ -19,7 +19,6 @@
 class Mesh
 {
 private:
-
 	friend class ResourceManager;
 
 #ifdef INTERLEAVED_VERTEX

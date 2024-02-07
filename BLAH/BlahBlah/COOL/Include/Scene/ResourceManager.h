@@ -1,11 +1,19 @@
 ﻿#pragma once
+#include "Material/Material.h"
+#include "Mesh/Mesh.h"
+#include "Object/ObjectBase.h"
 
 class COOLResource;
 class Material;
 class Mesh;
 class Shader;
+class Camera;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
+
+
+// 이따구로 하는 방법 말고는 없을까...
+// todo 생각해보자
 
 class ResourceManager
 {
@@ -14,21 +22,19 @@ public:
 	~ResourceManager();
 
 private:
-
-public:
-	// for object
-	int CreateObjectResource(UINT size, const std::string resName, void** toMapData);
-
 	// for material, returns index
 	int GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name);
 	int GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
-	
+	friend bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, ResourceManager* manager, std::string& shaderName);
+
 	// for mesh
 	int GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 	void AddMesh(Mesh* mesh) { m_Meshes.push_back(mesh); }
+	friend void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
-	// resource
-	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
+	// for object
+	int CreateObjectResource(UINT size, const std::string resName, void** toMapData);
+	friend void Camera::Init(ResourceManager* resourceManager);
 	
 	template <class T>
 	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
@@ -40,8 +46,16 @@ public:
 		return m_VertexIndexDatas.size() - 1;
 	}
 
-	void SetDatas();
+	bool LoadFile(const std::string& sceneName);
 
+public:
+	bool Init(const std::string& sceneName);
+
+	// resource
+	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
+
+	// 렌더 전 디스크립터테이블 set
+	void SetDatas();
 
 private:
 	// 메시 데이터

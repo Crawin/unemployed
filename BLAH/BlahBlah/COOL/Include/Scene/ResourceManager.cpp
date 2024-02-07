@@ -3,14 +3,17 @@
 #include "Renderer/Renderer.h"
 #include "ResourceManager.h"
 
-#include "Material/Material.h"
-#include "Mesh/Mesh.h"
+//#include "Material/Material.h"
+//#include "Mesh/Mesh.h"
 #include "Shader/Shader.h"
+
+#define SCENE_PATH		"SceneData\\Scene\\"
 
 #define MESH_PATH		"SceneData\\Mesh\\"
 #define SHADER_PATH		"SceneData\\Shader\\"
 #define TEXTURE_PATH	"SceneData\\Texture\\"
 #define MATERIAL_PATH	"SceneData\\Material\\"
+
 
 ResourceManager::ResourceManager()
 {
@@ -24,6 +27,29 @@ ResourceManager::~ResourceManager()
 		delete mes;
 	for (auto& sha : m_Shaders)
 		delete sha;
+}
+
+bool ResourceManager::Init(const std::string& sceneName)
+{
+	// 1. 씬에 배치 될 오브젝트들을 찾는다.
+	// 2. 씬에 배치 될 오브젝트를 차례로 로드한다.
+	// 
+	// 오브젝트 로드????
+	// A 오브젝트 로드한다.
+	// 사용 mesh와 material을 찾는다.
+	// 해당 mesh와 material이 없으면 새로 만든다.
+	//
+
+	std::string scenePath = SCENE_PATH + sceneName;
+
+	for (const auto& file : std::filesystem::directory_iterator(scenePath)) {
+		if (file.is_directory()) continue;
+
+		std::string fileName = scenePath + file.path().filename().string();
+		CHECK_CREATE_FAILED(LoadFile(fileName), "File Load Failed!!");
+	}
+
+	return false;
 }
 
 int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData)
