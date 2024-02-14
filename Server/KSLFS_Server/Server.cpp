@@ -302,7 +302,8 @@ void CRoomServer::GameThread(const SOCKET& arg)
 			break;
 		}
 	}
-
+	SendPosition temp;
+	memcpy(&sp, &temp, sizeof(temp));
 	// 소켓 닫기
 	closesocket(client_sock);
 	printf("[GAME_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
