@@ -62,6 +62,7 @@ void Client::Send_Str(const char* str)
 
 void Client::Recv_Data()
 {
+	SendPosition sp;
 	while (m_bRecv) {
 		char buf[BUFSIZE + 1] = { 0, };
 		int retval = recv(m_Sock, buf, BUFSIZE+1, 0);
@@ -69,8 +70,7 @@ void Client::Recv_Data()
 			err_display("recv()");
 		}
 		else {
-			SendPosition sp;
-			memcpy(&sp, buf, retval);
+			memcpy(&sp, buf, sizeof(sp));
 			if (sp.type == 0)
 			{
 				printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);

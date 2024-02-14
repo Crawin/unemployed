@@ -314,7 +314,7 @@ void CRoomServer::GameThread(const SOCKET& arg)
 		switch (buf[0])
 		{
 		case 0:				// POSITION
-			memcpy(&sp, buf, retval);
+			memcpy(&sp, buf, sizeof(sp));
 			Chat_Mutex.lock();
 			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
 			Chat_Mutex.unlock();
@@ -335,8 +335,7 @@ void CRoomServer::GameThread(const SOCKET& arg)
 			break;
 		}
 	}
-	SendPosition temp;
-	memcpy(&sp, &temp, sizeof(temp));
+
 	// ¼ÒÄÏ ´Ý±â
 	closesocket(client_sock);
 	Chat_Mutex.lock();
