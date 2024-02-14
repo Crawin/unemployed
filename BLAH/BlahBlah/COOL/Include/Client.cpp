@@ -73,7 +73,7 @@ void Client::Recv_Data()
 			memcpy(&sp, buf, sizeof(sp));
 			if (sp.type == 0)
 			{
-				printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);
+				//printf("[TCP 클라이언트] %d바이트를 받았습니다.\n", retval);
 				std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
 				m_vRecv_Queue.push_back(sp);
 			}

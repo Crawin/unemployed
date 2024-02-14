@@ -904,12 +904,17 @@ void Renderer::Render()
 		XMFLOAT3 pos = Vector3::Add(m_Camera->GetPosition(), tempMove);
 		m_Camera->SetPosition(pos);
 
-		SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
-		Client::GetInstance().Send_Pos(sp);
+		static unsigned short send_frame = 0;
+		if (send_frame >= 30) {			// 30프레임마다 send한다.
+			SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
+			Client::GetInstance().Send_Pos(sp);
+			send_frame = 0;
+		}
+		else ++send_frame;
+
 		if (Client::GetInstance().Get_Recv_Size())
 		{
 			m_Camera->SetPosition(Client::GetInstance().Get_Recv_Queue());
-			std::cout << "좌표 이동 완료" << std::endl;
 		}
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
