@@ -13,6 +13,8 @@
 #pragma comment(lib, "ws2_32") // ws2_32.lib 링크
 #include <iostream>
 #include <thread>
+#include <vector>
+#include <DirectXMath.h>
 
 // 소켓 함수 오류 출력 후 종료
 void err_quit(const char* msg)
@@ -61,9 +63,9 @@ enum SendType
 
 struct SendPosition {
 	SendType type;
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
 
 class Client
@@ -78,6 +80,7 @@ private:
 	SOCKET m_Sock;
 	std::thread m_Recv_Thread;
 	bool m_bRecv;
+	std::vector<SendPosition> m_vRecv_Queue;
 public:
 	Client();
 	~Client();
@@ -85,4 +88,6 @@ public:
 	void Send_Pos(const SendPosition&);
 	void Send_Str(const char*);
 	void Recv_Data();
+	int Get_Recv_Size();
+	DirectX::XMFLOAT3 Get_Recv_Queue();
 };

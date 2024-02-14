@@ -327,12 +327,6 @@ void CRoomServer::GameThread(const SOCKET& arg)
 			Chat_Mutex.unlock();
 			break;
 		}
-		//// 받은 데이터 출력
-		//buf[retval] = '\0';
-		//printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
-
-		
-
 
 		// 데이터 보내기
 		retval = send(client_sock, buf, retval, 0);
@@ -341,7 +335,8 @@ void CRoomServer::GameThread(const SOCKET& arg)
 			break;
 		}
 	}
-
+	SendPosition temp;
+	memcpy(&sp, &temp, sizeof(temp));
 	// 소켓 닫기
 	closesocket(client_sock);
 	Chat_Mutex.lock();
