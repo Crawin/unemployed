@@ -10,7 +10,8 @@ enum ServerType {
 
 enum SendType
 {
-	POSITION
+	POSITION,
+	TEMP
 };
 
 struct SendPosition {
@@ -47,11 +48,12 @@ public:
 	void Run();
 	void ListenThread();
 	void RecvThread(const SOCKET&);
-	void GameThread(const SOCKET&);
+	void GameThread(const SOCKET&, const unsigned int&);
 	void Join();
 	void CloseListen();
 	void PrintThreads();
 	void DeleteThread(const std::string&, const SOCKET&);
+	unsigned int Make_GameNumber();
 };
 
 class CServerManager : CServer{
