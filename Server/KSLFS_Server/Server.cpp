@@ -186,8 +186,26 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			bRoom = false;
 			//vGameThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
 			const unsigned int GameNum = Make_GameNumber();
-			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, GameNum), std::thread(&CRoomServer::GameThread, this, client_sock, GameNum)));
-			std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock);
+			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameThread, this, client_sock, GameNum)));
+			std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock, NULL);
+			t.detach();
+		}
+		if (strncmp(buf, "방입장", 6) == 0)
+		{
+			unsigned int GameNum = 0;
+			GameNum += (buf[7] - '0') * 10000;
+			GameNum += (buf[8] - '0') * 1000;
+			GameNum += (buf[9] - '0') * 100;
+			GameNum += (buf[10] - '0') * 10;
+			GameNum += (buf[11] - '0') * 1;
+			std::cout << "GameNum: " << GameNum << std::endl;
+
+			Chat_Mutex.lock();
+			std::cout << "방에 입장합니다." << std::endl;
+			Chat_Mutex.unlock();
+			bRoom = false;
+			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameThread, this, client_sock, GameNum)));
+			std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock, NULL);
 			t.detach();
 		}
 
@@ -208,7 +226,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 		printf("[ROOM_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 			addr, ntohs(clientaddr.sin_port));
 		Chat_Mutex.unlock();
-		std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock);
+		std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock, NULL);
 		t.detach();
 	}
 	delete[] buf;
@@ -241,12 +259,12 @@ void CRoomServer::PrintThreads()
 	for (auto start = vGameThreads.begin(); start != vGameThreads.end(); ++start)
 	{
 		Chat_Mutex.lock();
-		std::cout << "\t" << GetServerType(start->first.first) << ", GameNum: [" << start->first.second << "]" << std::endl;
+		std::cout << "\t" << GetServerType(start->first.first) <<", SOCKET: ["<<start->first.second.first << "], GameNum: [" << start->first.second.second << "]" << std::endl;
 		Chat_Mutex.unlock();
 	}
 }
 
-void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg)
+void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg, const unsigned int& num)
 {
 	if (vThread == "vRoomThreads")
 	{
@@ -268,7 +286,7 @@ void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg)
 	{
 		for (auto a = vGameThreads.begin(); a != vGameThreads.end(); ++a)
 		{
-			if (a->first.second == arg)
+			if (a->first.second.first == arg && a->first.second.second == num)
 			{
 				a->second.join();
 				vGameThreads.erase(a);
@@ -285,7 +303,7 @@ unsigned int CRoomServer::Make_GameNumber()
 {
 	std::random_device rd;
 	std::default_random_engine dre(rd());
-	std::uniform_int_distribution <> uid(100, 10000);			// 방번호 100~10000까지.
+	std::uniform_int_distribution <> uid(10000, 99999);			// 방번호 10000~99999까지.
 	unsigned int num;
 	bool exist = true;
 	while (exist)
@@ -294,7 +312,7 @@ unsigned int CRoomServer::Make_GameNumber()
 		num = uid(dre);
 		for (auto a = vGameThreads.begin(); a != vGameThreads.end(); ++a)	// 랜덤 돌렸을때 이미 방 번호가 있는지 확인하자
 		{
-			if (a->first.second == num)										// num 이 이미 존재하는 번호라면 다시 while문을 돌자.
+			if (a->first.second.second == num)										// num 이 이미 존재하는 번호라면 다시 while문을 돌자.
 			{
 				exist = true;
 				break;
@@ -370,7 +388,7 @@ void CRoomServer::GameThread(const SOCKET& arg, const unsigned int& gameNum)
 	printf("[GAME_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		addr, ntohs(clientaddr.sin_port));
 	Chat_Mutex.unlock();
-	std::thread t(&CRoomServer::DeleteThread, this, "vGameThreads", gameNum);
+	std::thread t(&CRoomServer::DeleteThread, this, "vGameThreads", arg, gameNum);
 	t.detach();
 	delete[] buf;
 }

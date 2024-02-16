@@ -39,7 +39,7 @@ public:
 class CRoomServer : CServer {
 private:
 	std::vector<std::pair<std::pair<ServerType, SOCKET>, std::thread>> vRoomThreads;
-	std::vector<std::pair<std::pair<ServerType, u_int>, std::thread>> vGameThreads;
+	std::vector<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> vGameThreads;
 	SOCKET listen_sock;
 public:
 	CRoomServer();
@@ -52,7 +52,7 @@ public:
 	void Join();
 	void CloseListen();
 	void PrintThreads();
-	void DeleteThread(const std::string&, const SOCKET&);
+	void DeleteThread(const std::string&, const SOCKET&, const unsigned int&);
 	unsigned int Make_GameNumber();
 };
 
