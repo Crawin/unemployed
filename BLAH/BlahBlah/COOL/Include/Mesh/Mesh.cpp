@@ -187,11 +187,11 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 
 #endif
 		// 임시
-		int tempi[16] = { 5, 0, };
+		//int tempi[16] = { 5, 0, };
 
-		if (m_Name == "Hair") tempi[0] = 3;
-		else if (m_Name == "Body") tempi[0] = 4;
-		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT, 16, tempi, 0);
+		//if (m_Name == "Hair") tempi[0] = 3;
+		//else if (m_Name == "Body") tempi[0] = 4;
+		//commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT, 16, tempi, 0);
 
 		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
 

@@ -3,7 +3,8 @@
 class Shader;
 class COOLResource;
 class Mesh;
-class Camera;
+//class Camera;
+class SceneManager;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
@@ -34,8 +35,7 @@ private:
 	bool CreateDSV();
 
 	bool CreateRootSignature();
-	bool CreateResourceDescriptorHeap();
-	bool LoadShaders();
+	bool CreateRenderTargetDescriptorHeap();
 
 public:
 	bool Init(const SIZE& wndSize, HWND hWnd);
@@ -53,6 +53,9 @@ private:
 
 public:
 	// ------------------- commandlist가 하는 일들 묶음 -------------------
+	
+	// create descriptorheap
+	bool CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources);
 
 	// create pso, shader
 	bool CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader);
@@ -176,7 +179,7 @@ private:
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 
 	// 쉐이더들. 쉐이더 또한 씬 변경시 마다 비워줄까?
-	std::vector<std::shared_ptr<Shader>> m_Shaders;
+	//std::vector<std::shared_ptr<Shader>> m_Shaders;
 	
 	// 이동
 	// 현재 들고 있는 메시 리소스. 씬 변경시 마다 이걸 비워줘야 한다.
@@ -187,9 +190,12 @@ private:
 	std::vector<COOLResourcePtr> m_Resources;
 	std::vector<ID3D12Resource*> m_UploadResources;
 
+	// 씬매니저
+	SceneManager* m_SceneManager = nullptr;
+
 	// 임시
 	std::vector<Mesh> m_Meshes;
-	Camera* m_Camera;
+	//Camera* m_Camera;
 
 public:
 	D3D12_GPU_VIRTUAL_ADDRESS GetResourceGPUAddress(int idx);
@@ -202,6 +208,8 @@ public:
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList(size_t idx) { return  m_GraphicsCommandLists[idx]; }
 	// 임시
 	//void MouseInput(int x, int y);
+
+	void SetSceneManager(SceneManager* manager) { m_SceneManager = manager; }
 
 };
 

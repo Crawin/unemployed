@@ -55,9 +55,6 @@
     <Filter Include="소스 파일\SceneData\Material">
       <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\SceneData\Camera">
-      <UniqueIdentifier>{07d3d024-2120-4caa-af20-e976485f9834}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Scene\ResourceManager">
       <UniqueIdentifier>{0e698981-94fb-407c-a552-42d16ed5fb93}</UniqueIdentifier>
     </Filter>
@@ -98,9 +95,6 @@
     </ClInclude>
     <ClInclude Include="Include\Shader\MeshShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Camera\Camera.h">
-      <Filter>소스 파일\SceneData\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Include\DXMath.h">
       <Filter>헤더 파일</Filter>
@@ -181,9 +175,6 @@
     </ClCompile>
     <ClCompile Include="Include\Shader\MeshShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\Camera\Camera.cpp">
-      <Filter>소스 파일\SceneData\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Include\Object\ObjectBase.cpp">
       <Filter>소스 파일\SceneData\Object</Filter>

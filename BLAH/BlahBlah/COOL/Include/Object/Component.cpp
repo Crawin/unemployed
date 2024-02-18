@@ -50,4 +50,91 @@ namespace component
 		m_Position.z = trans["Position"][2].asFloat();
 	}
 
+	void Camera::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value cam = v["Camera"];
+
+		m_IsMainCamera = cam["IsMainCamera"].asBool();
+
+		if (m_IsMainCamera) rm->SetMainCamera(this);
+
+		m_Right.x = cam["Right"][0].asFloat();
+		m_Right.y = cam["Right"][1].asFloat();
+		m_Right.z = cam["Right"][2].asFloat();
+
+		m_Up.x = cam["Up"][0].asFloat();
+		m_Up.y = cam["Up"][1].asFloat();
+		m_Up.z = cam["Up"][2].asFloat();
+
+		m_Look.x = cam["Look"][0].asFloat();
+		m_Look.y = cam["Look"][1].asFloat();
+		m_Look.z = cam["Look"][2].asFloat();
+
+		m_Fov = cam["Fov"].asFloat();
+		m_Aspect = cam["Aspect"].asFloat();
+		m_Near = cam["Near"].asFloat();
+		m_Far = cam["Far"].asFloat();
+
+
+		// create shader resource
+		m_MappedShaderData = rm->CreateObjectResource(
+			sizeof(CameraDataShader),
+			"Camera Shader Data",
+			(void**)(&m_ShaderData));
+
+		m_ShaderDataGPUAddr = rm->GetVertexDataGPUAddress(m_MappedShaderData);
+
+		BuildProjectionMatrix();
+
+		UpdateShaderData();
+
+		BoundingFrustum::CreateFromMatrix(m_BoundingFrustum, XMLoadFloat4x4(&m_ProjMatrix));
+	}
+
+	void Camera::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList)
+	{
+		BuildViewMatrix();
+		BuildProjectionMatrix();
+		UpdateShaderData();
+
+
+		commandList->SetGraphicsRootConstantBufferView(ROOT_SIGNATURE_IDX::CAMERA_DATA_CBV, m_ShaderDataGPUAddr);
+	}
+
+	void Camera::BuildViewMatrix()
+	{
+		// 아래 함수는 look이 아니라 at이라고 봐야함
+		//m_ViewMatrix = Matrix4x4::LookAtLH(m_Position, m_Look, m_Up);
+
+		m_Look = Vector3::Normalize(m_Look);
+		m_Right = Vector3::CrossProduct(m_Up, m_Look, true);
+		m_Up = Vector3::CrossProduct(m_Look, m_Right, true);
+
+		m_ViewMatrix._11 = m_Right.x; m_ViewMatrix._12 = m_Up.x; m_ViewMatrix._13 = m_Look.x;
+		m_ViewMatrix._21 = m_Right.y; m_ViewMatrix._22 = m_Up.y; m_ViewMatrix._23 = m_Look.y;
+		m_ViewMatrix._31 = m_Right.z; m_ViewMatrix._32 = m_Up.z; m_ViewMatrix._33 = m_Look.z;
+		m_ViewMatrix._41 = -Vector3::DotProduct(m_Position, m_Right);
+		m_ViewMatrix._42 = -Vector3::DotProduct(m_Position, m_Up);
+		m_ViewMatrix._43 = -Vector3::DotProduct(m_Position, m_Look);
+		m_ViewMatrix._44 = 1.0f;
+		XMFLOAT4X4 inverseView = Matrix4x4::Inverse(m_ViewMatrix);
+	}
+
+	void Camera::BuildProjectionMatrix()
+	{
+		m_ProjMatrix = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(m_Fov), m_Aspect, m_Near, m_Far);
+	}
+
+	void Camera::UpdateShaderData()
+	{
+		XMFLOAT4X4 view;
+		XMStoreFloat4x4(&view, XMMatrixTranspose(XMLoadFloat4x4(&m_ViewMatrix)));
+
+		XMFLOAT4X4 proj;
+		XMStoreFloat4x4(&proj, XMMatrixTranspose(XMLoadFloat4x4(&m_ProjMatrix)));
+
+		memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
+		memcpy(&m_ShaderData->m_ProjMatrix, &proj, sizeof(XMFLOAT4X4));
+		memcpy(&m_ShaderData->m_CameraPosition, &m_Position, sizeof(XMFLOAT3));
+	}
 }

@@ -84,6 +84,7 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	auto commandList = Renderer::GetInstance().GetCommandList(0);
 	m_SceneManager = new SceneManager();
 	CHECK_CREATE_FAILED(m_SceneManager->Init(commandList, "Test"), "씬매니저 생성 실패");
+	Renderer::GetInstance().SetSceneManager(m_SceneManager);
 	Renderer::GetInstance().ExecuteAndEraseUploadHeap(commandList);
 
 	return true;

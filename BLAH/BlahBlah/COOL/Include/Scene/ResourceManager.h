@@ -1,19 +1,25 @@
 ﻿#pragma once
 #include "Material/Material.h"
 #include "Mesh/Mesh.h"
-#include "Object/ObjectBase.h"
+//#include "Object/ObjectBase.h"
 
 class COOLResource;
 class Material;
 class Mesh;
 class Shader;
-class Camera;
+//class Camera;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
 class Entity;
 
-namespace component { class Renderer; }
+namespace Json { class Value; }
+
+namespace component { 
+	class Component;
+	class Renderer;
+	class Camera;
+}
 
 struct ToLoadRendererInfo {
 	std::string m_MeshName;
@@ -31,14 +37,20 @@ public:
 	~ResourceManager();
 
 private:
-	// for material, returns index
-	int GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name);
+	// 임시, todo 나중에 지울것
+	friend class SceneManager;
 
 	friend bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, ResourceManager* manager, std::string& shaderName);
 
+	friend void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
+
+private:
+
+	// for material, returns index
+	int GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name);
+
 	// for mesh
 	void AddMesh(Mesh* mesh) { m_Meshes.push_back(mesh); }
-	friend void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 	template <class T>
 	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
@@ -51,7 +63,7 @@ private:
 	}
 
 	// object 폴더의 file 불러오는 함수
-	bool LoadObjectFile(const std::string& sceneName);
+	bool LoadObjectFile(const std::string& sceneName, bool isCam = false);
 
 	// Json을 파싱해 오브젝트를 실제로 만드는 함수
 	Entity* LoadObjectJson(Json::Value& root, Entity* parent = nullptr);
@@ -62,12 +74,18 @@ private:
 
 	std::shared_ptr<Shader> LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
+	// mesh/material 에 로드 할 것들이 남아 있다면 로드
+	bool LateInit(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	// objects
+	bool LoadObjects(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	// camera
+	bool LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
+
 public:
 	// 씬 생성시 최초 초기화
 	bool Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
-
-	// mesh/material 에 로드 할 것들이 남아 있다면 로드
-	bool LateInit(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	// for object
 	int CreateObjectResource(UINT size, const std::string resName, void** toMapData);
@@ -90,6 +108,8 @@ public:
 	
 	int GetMaterialToLoad(const std::string& name);
 
+	void SetMainCamera(component::Camera* cam) { m_MainCamera = cam; }
+
 private:
 	// 메시 데이터
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
@@ -100,13 +120,15 @@ private:
 	// 업로드리소스, 초기화 완료 후 전체 삭제
 	std::vector<ID3D12Resource*> m_UploadResources;
 
-	// 리소스힙, t1번 슬롯에 set
+	// 리소스힙, t0번 슬롯에 set
 	ComPtr<ID3D12DescriptorHeap> m_ShaderResourceHeap;
 
 	// Object
-	std::vector<ObjectBase*> m_Objects;
 	std::vector<Entity*> m_Entities;
 	std::vector<Entity*> m_RootEntities;
+
+	// component
+	std::vector<component::Component*> m_Components;
 
 	// mesh
 	std::vector<Mesh*> m_Meshes;
@@ -128,6 +150,7 @@ private:
 	std::vector<ToLoadRendererInfo> m_ToLoadRenderDatas;
 	std::vector<std::string> m_ToLoadMaterials;
 
-
+	std::vector<Entity*> m_Cameras;
+	component::Camera* m_MainCamera = nullptr;
 };
 

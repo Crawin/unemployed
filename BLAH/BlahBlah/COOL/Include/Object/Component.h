@@ -3,6 +3,13 @@
 namespace Json { class Value; }
 class ResourceManager;
 
+struct CameraDataShader {
+	XMFLOAT4X4 m_ViewMatrix;
+	XMFLOAT4X4 m_ProjMatrix;
+	XMFLOAT3 m_CameraPosition;
+};
+
+
 namespace component {
 
 	/////////////////////////////////////////////////////////
@@ -100,8 +107,67 @@ namespace component {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
+		int GetMesh() const { return m_MeshID; }
+		int GetMaterial() const { return m_MaterialID; }
+
 		void SetMesh(int idx) { m_MeshID = idx; }
 		void SetMaterial(int idx) { m_MaterialID = idx; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// camera component
+	// 카메라 정보
+	//
+	class Camera : public Component
+	{
+		// Json으로 set 가능
+		XMFLOAT3 m_Right =	{ 1.0f, 0.0f, 0.0f };
+		XMFLOAT3 m_Up =		{ 0.0f, 1.0f, 0.0f };
+		XMFLOAT3 m_Look =	{ 0.0f, 0.0f, 1.0f };
+		XMFLOAT3 m_Position = { 0.0f, 30.0f, -150.0f };			// todo 이거 지우고 system에서 transform과 결합해 build view matrix 함수 수정
+
+		float m_Fov = 90.0f;
+		float m_Aspect = 1.7777f;
+		float m_Near = 0.1f;
+		float m_Far = 1000.0f;
+
+		bool m_IsMainCamera = false;
+
+		// camera matrix
+		XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
+		XMFLOAT4X4 m_ProjMatrix = Matrix4x4::Identity();
+
+		// for culling
+		BoundingFrustum m_BoundingFrustum{};
+
+		// root signature
+		CameraDataShader* m_ShaderData = nullptr;
+		int m_MappedShaderData = -1;
+		D3D12_GPU_VIRTUAL_ADDRESS m_ShaderDataGPUAddr = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		void SetLook(const XMFLOAT3& look) { m_Look = look; }
+		void SetRight(const XMFLOAT3& right) { m_Right = right; }
+		void SetUp(const XMFLOAT3& up) { m_Up = up; }
+
+		XMFLOAT3 GetLook() const { return m_Look; }
+		XMFLOAT3 GetRight() const { return m_Right; }
+		XMFLOAT3 GetUp() const { return m_Up; }
+
+		XMFLOAT4X4 GetViewMat() const { return m_ViewMatrix; }
+		XMFLOAT4X4 GetProjMat() const { return m_ProjMatrix; }
+
+		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	private:
+		// 행렬 재생성
+		// 이하 임시들임
+		void BuildViewMatrix();
+		void BuildProjectionMatrix();
+
+		void UpdateShaderData();
 	};
 
 }

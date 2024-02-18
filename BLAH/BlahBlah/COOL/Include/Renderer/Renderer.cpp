@@ -1,7 +1,8 @@
 ﻿#include "framework.h"
 #include "Renderer.h"
 #include "COOLResource.h"
-#include "Camera/Camera.h"
+
+#include "Scene/SceneManager.h"
 //#include "Shader/Shader.h"
 
 #define TEST_SHADER
@@ -343,7 +344,7 @@ bool Renderer::CreateRootSignature()
 	return true;
 }
 
-bool Renderer::CreateResourceDescriptorHeap()
+bool Renderer::CreateRenderTargetDescriptorHeap()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
 	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
@@ -417,38 +418,6 @@ bool Renderer::CreateResourceDescriptorHeap()
 	return true;
 }
 
-bool Renderer::LoadShaders()
-{
-	// 모든 쉐이더를 로드한다
-	// 쓸 것들을 파일로 저장해둔다? 
-	// 각기 다른 쉐이더 종류, 블렌드스테이트, 레스터라이저스테이트, ds 스테이트 등등 모두 다를태니
-	// 쉐이더는 미리 로드 해두고 거기에 맞는 오브젝트들이 있다면 렌더하는 방향으로 갈까?
-	// 프로그램 최초 로드시에만 쉐이더를 생성한다 나쁘지 않음
-
-
-#ifdef TEST_SHADER
-	//auto shader = std::make_shared<TestShader>(1, "TestShader");
-	//m_Shaders.push_back(shader);
-
-	////auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
-	////m_Shaders.push_back(tshader);
-
-	//auto tttShader = std::make_shared<MeshShader>(1001, "meshShader");
-	//m_Shaders.push_back(tttShader);
-
-	//for (auto& sha : m_Shaders) {
-	//	// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
-	//	CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
-	//}
-#endif
-
-	// 렌더큐 기준으로 오름차순 정렬한다
-	std::sort(m_Shaders.begin(), m_Shaders.end());
-
-	return true;
-	return false;
-}
-
 bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 {
 	// dx12의 초기화 과정
@@ -480,7 +449,6 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
-	CHECK_CREATE_FAILED(LoadShaders(), "LoadShaders Failed!!");
 
 	// scene
 	// 씬 로드 부분 이라고 가정
@@ -547,7 +515,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 	}
 #endif // _DEBUG
 
-	CHECK_CREATE_FAILED(CreateResourceDescriptorHeap(), "CreateResourceDescriptorHeap");
+	CHECK_CREATE_FAILED(CreateRenderTargetDescriptorHeap(), "CreateRenderTargetDescriptorHeap");
 
 	return true;
 }
@@ -650,6 +618,80 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 		IID_PPV_ARGS(&temp));
 
 	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
+}
+
+bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources)
+{
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
+	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
+	descriptorDesc.NumDescriptors = static_cast<UINT>(resources.size());										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
+	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descriptorDesc.NodeMask = 0;
+
+	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(heap.GetAddressOf()));
+	CHECK_CREATE_FAILED(heap, "heap 생성 실패!");
+
+	auto currentCPUPtr = heap->GetCPUDescriptorHandleForHeapStart();
+	//auto currentGPUPtr = heap->GetGPUDescriptorHandleForHeapStart();
+
+	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
+	for (int i = 0; i < resources.size(); ++i) {
+		//for (auto resource : resources) {
+		ID3D12Resource* res = resources[i].get()->GetResource();
+		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.Format = resDesc.Format;
+		srvDesc.ViewDimension = resources[i].get()->GetDimension();
+
+		switch (srvDesc.ViewDimension) {
+		case D3D12_SRV_DIMENSION_TEXTURE2D:
+			srvDesc.Texture2D.MipLevels = 1;
+			srvDesc.Texture2D.MostDetailedMip = 0;
+			srvDesc.Texture2D.PlaneSlice = 0;
+			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+			break;
+
+		case D3D12_SRV_DIMENSION_TEXTURECUBE:
+			srvDesc.TextureCube.MipLevels = 1;
+			srvDesc.TextureCube.MostDetailedMip = 0;
+			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+			break;
+
+		case D3D12_SRV_DIMENSION_BUFFER:
+			srvDesc.Buffer.FirstElement = 0;
+			srvDesc.Buffer.NumElements = 0;								// 나중에 버퍼 쓸 때 다시 확인
+			srvDesc.Buffer.StructureByteStride = 0;
+			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + resources[i].get()->GetName());
+			break;
+
+		default:
+			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + resources[i].get()->GetName());
+			return false;
+		}
+
+		ID3D12Resource* resource = resources[i]->GetResource();
+		m_Device->CreateShaderResourceView(resource, &srvDesc, currentCPUPtr);
+		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
+	}
+	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
+	// D3D12_SRV_DIMENSION_BUFFER = 1,
+	// D3D12_SRV_DIMENSION_TEXTURE1D = 2,
+	// D3D12_SRV_DIMENSION_TEXTURE1DARRAY = 3,
+	// D3D12_SRV_DIMENSION_TEXTURE2D = 4,
+	// D3D12_SRV_DIMENSION_TEXTURE2DARRAY = 5,
+	// D3D12_SRV_DIMENSION_TEXTURE2DMS = 6,
+	// D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY = 7,
+	// D3D12_SRV_DIMENSION_TEXTURE3D = 8,
+	// D3D12_SRV_DIMENSION_TEXTURECUBE = 9,
+	// D3D12_SRV_DIMENSION_TEXTURECUBEARRAY = 10,
+	// D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE = 11
+
+	return true;
 }
 
 bool Renderer::CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader)
@@ -850,6 +892,9 @@ void Renderer::Render()
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	if (m_SceneManager) m_SceneManager->Render(m_GraphicsCommandLists);
+
 	XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 	if (GetAsyncKeyState('W') & 0x8000) tempMove.z += 1.0f;
 	if (GetAsyncKeyState('S') & 0x8000) tempMove.z -= 1.0f;
@@ -862,8 +907,8 @@ void Renderer::Render()
 	if (size > 0.5f) {
 		XMFLOAT3 normal = Vector3::Normalize(tempMove);
 		tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
-		XMFLOAT3 pos = Vector3::Add(m_Camera->GeWorldPosition(), tempMove);
-		m_Camera->SetWorldPosition(pos);
+		//XMFLOAT3 pos = Vector3::Add(m_Camera->GeWorldPosition(), tempMove);
+		//m_Camera->SetWorldPosition(pos);
 
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
@@ -885,11 +930,11 @@ void Renderer::Render()
 	}
 
 
-	m_Camera->Render(m_MainCommandList);
+	//m_Camera->Render(m_MainCommandList);
 
-	for (auto shader : m_Shaders) {
-		shader->Render(m_MainCommandList);
-	}
+	//for (auto shader : m_Shaders) {
+	//	shader->Render(m_MainCommandList);
+	//}
 
 	// render end
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

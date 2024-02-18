@@ -1,13 +1,13 @@
-#pragma once
+﻿#pragma once
 #include "Scene.h"
 
 class ObjectBase;
-class Camera;
+//class Camera;
 
 class TestMainScene :
     public Scene
 {
-    Camera* m_MainCamera = nullptr;
+    //Camera* m_MainCamera = nullptr;
 
 public:
     TestMainScene() {}

@@ -24,6 +24,10 @@ public:
 
 	void SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx);
 
+	void SetShader(std::shared_ptr<Shader> shader) { m_Shader = shader; }
+
+	std::shared_ptr<Shader> GetShader() { return m_Shader; }
+
 private:
 	std::string m_Name = "이름없음";
 

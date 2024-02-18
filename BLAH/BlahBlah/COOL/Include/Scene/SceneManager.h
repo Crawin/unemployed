@@ -41,5 +41,7 @@ public:
 
 	void Update(float deltaTime);
 
+	void Render(std::vector< ComPtr<ID3D12GraphicsCommandList>>& commandLists);
+
 };
 

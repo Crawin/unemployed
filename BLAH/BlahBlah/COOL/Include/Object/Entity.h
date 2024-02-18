@@ -9,10 +9,10 @@ class Entity
 public:
 	Entity(int id) : m_Id{ id } {}
 	~Entity() {
-		for (auto& comp : m_Components)
-			delete comp;
-		for (auto& child : m_Children)
-			delete child;
+		//for (auto& comp : m_Components)
+		//	delete comp;
+		//for (auto& child : m_Children)
+		//	delete child;
 	}
 
 	void AddComponent(component::Component* component) { m_Components.push_back(component); }
@@ -21,8 +21,10 @@ public:
 private:
 	int m_Id = -1;
 
+	// 소유주는 리소스매니저
 	std::vector<component::Component*> m_Components;
 
+	// 소유주는 리소스매니저
 	std::vector<Entity*> m_Children;
 };
 

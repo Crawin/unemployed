@@ -2,14 +2,16 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Object/Component.h"
-
+#include "Scene/ResourceManager.h"
 #include "TestMainScene.h"
+#include "Shader/Shader.h"
 
 void SceneManager::RegisterComponents()
 {
 	REGISTER_COMPONENT(component::Name, "Name");
 	REGISTER_COMPONENT(component::Renderer, "Renderer");
 	REGISTER_COMPONENT(component::Transform, "Transform");
+	REGISTER_COMPONENT(component::Camera, "Camera");
 }
 
 SceneManager::SceneManager()
@@ -78,4 +80,41 @@ bool SceneManager::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
 void SceneManager::Update(float deltaTime)
 {
 	if (m_CurrentScene) m_CurrentScene->Update(deltaTime);
+}
+
+void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
+{
+	// 임시코드이다
+	// todo 렌더가 된다는 것만 확인하고 바로 고치자
+
+	// camera set
+	auto& manager = m_CurrentScene->m_ResourceManager;
+	manager->m_MainCamera->SetCameraData(commandLists[0]);
+
+	// 리소스 set
+	auto& heap = manager->m_ShaderResourceHeap;
+
+	commandLists[0]->SetDescriptorHeaps(1, heap.GetAddressOf());
+	commandLists[0]->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+
+	for (int i = 0; i < manager->m_Components.size(); ++i) {
+		component::Renderer* render = dynamic_cast<component::Renderer*>(manager->m_Components[i]);
+
+		if (render) {
+			int mat = render->GetMaterial();
+
+			manager->m_Materials[mat]->GetShader()->Render(commandLists[0]);
+
+			manager->m_Materials[mat]->SetDatas(commandLists[0], ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT);
+
+			
+			int mes = render->GetMesh();
+			XMFLOAT4X4 t = Matrix4x4::Identity();
+			manager->m_Meshes[mes]->Render(commandLists[0], t);
+		}
+
+	}
+
+
+	//m_CurrentScene->Render(commandLists);
 }

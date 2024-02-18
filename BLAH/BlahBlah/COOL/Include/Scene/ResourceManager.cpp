@@ -28,17 +28,21 @@ ResourceManager::~ResourceManager()
 		delete mat;
 	for (auto& mes : m_Meshes)
 		delete mes;
-	//for (auto& sha : m_Shaders)
-	//	delete sha;
-	// sharedptr
+	for (auto& cmp : m_Components)
+		delete cmp;
+	
+	//sharedptr
 	m_Shaders.clear();
 
 
 	for (auto& obj : m_Entities)
 		delete obj;
+
+	m_Resources.clear();
+	m_VertexIndexDatas.clear();
 }
 
-bool ResourceManager::LoadObjectFile(const std::string& fileName)
+bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 {
 	// 대충 오브젝트를 로드한다.
 	Json::Value root;
@@ -53,8 +57,9 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName)
 
 	if (entptr == nullptr) 
 		return false;
-	
-	m_RootEntities.push_back(entptr);
+
+	if (isCam) m_RootEntities.push_back(entptr);
+	else m_Cameras.push_back(entptr);
 
 	return true;
 }
@@ -77,6 +82,7 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 		component::Component* cmp = GET_COMPONENT(jsonComp);
 		cmp->Create(root, this);
 		ent->AddComponent(cmp);
+		m_Components.push_back(cmp);
 	}
 	
 	// if Children
@@ -121,6 +127,7 @@ int ResourceManager::LoadMaterial(const std::string& name, ComPtr<ID3D12Graphics
 
 	// get shader
 	auto shader = GetShader(shaderName, commandList);
+	material->SetShader(shader);
 	m_Materials.push_back(material);
 
 	return m_Materials.size() - 1;
@@ -156,24 +163,23 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	// 해당 mesh와 material이 없으면 새로 만든다.
 	//
 
+
+
 	std::string scenePath = SCENE_PATH + sceneName;
 
 	// Load Objects
-	std::string objPath = scenePath + "\\Object\\";
-	for (const auto& file : std::filesystem::directory_iterator(objPath)) {
-		if (file.is_directory()) continue;
-
-		std::string fileName = objPath + file.path().filename().string();
-		CHECK_CREATE_FAILED(LoadObjectFile(fileName), std::format("Object Load Failed!! Object Name: {}", fileName));
-	}
-	//return false;
+	CHECK_CREATE_FAILED(LoadObjects(sceneName, commandList), "Object Load Failed!!");
 
 	// Load Lights
 
 	// Load Cameras
+	CHECK_CREATE_FAILED(LoadCameras(sceneName, commandList), "Camera Load Fail!!");
 
 	// Load Mesh, Material, Texture, Shader to use
-	CHECK_CREATE_FAILED(LateInit(commandList), "LateUpdate Fail!");
+	CHECK_CREATE_FAILED(LateInit(commandList), "LateInit Fail!");
+
+	// build resource heap
+	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), "CreateResourceDescriptorHeap Fail!!");
 
 	return true;
 }
@@ -236,6 +242,33 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	return true;
 }
 
+bool ResourceManager::LoadObjects(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	std::string objPath = SCENE_PATH + sceneName + "\\Object\\";
+	for (const auto& file : std::filesystem::directory_iterator(objPath)) {
+		if (file.is_directory()) continue;
+
+		std::string fileName = objPath + file.path().filename().string();
+		CHECK_CREATE_FAILED(LoadObjectFile(fileName), std::format("Object Load Failed!! Object Name: {}", fileName));
+	}
+	return true;
+}
+
+bool ResourceManager::LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	std::string camPath = SCENE_PATH + sceneName + "\\Camera\\";
+	for (const auto& file : std::filesystem::directory_iterator(camPath)) {
+		if (file.is_directory()) continue;
+
+		std::string fileName = camPath + file.path().filename().string();
+		CHECK_CREATE_FAILED(LoadObjectFile(fileName, true), std::format("Object Load Failed!! Object Name: {}", fileName));
+	}
+
+	if (m_MainCamera == nullptr) return false;
+
+	return true;
+}
+
 int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData)
 {
 	COOLResourcePtr res = Renderer::GetInstance().CreateEmptyBuffer(
@@ -245,9 +278,9 @@ int ResourceManager::CreateObjectResource(UINT size, const std::string resName, 
 		resName,
 		toMapData);
 
-	m_Resources.push_back(res);
+	m_VertexIndexDatas.push_back(res);
 
-	return m_Resources.size() - 1;
+	return m_VertexIndexDatas.size() - 1;
 }
 
 void ResourceManager::SetDatas()
@@ -331,8 +364,8 @@ int ResourceManager::GetMaterialToLoad(const std::string& name)
 
 D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)
 {
-	if (0 <= idx && idx < m_Resources.size())
-		return m_Resources[idx]->GetResource()->GetGPUVirtualAddress();
+	if (0 <= idx && idx < m_VertexIndexDatas.size())
+		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
 
 	return -1;
 }

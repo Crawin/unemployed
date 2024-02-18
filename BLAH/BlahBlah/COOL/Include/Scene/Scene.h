@@ -36,7 +36,7 @@ class ObjectManager;
 //class ShaderManager;
 
 class ObjectBase;
-class Camera;
+//class Camera;
 
 class Scene
 {
