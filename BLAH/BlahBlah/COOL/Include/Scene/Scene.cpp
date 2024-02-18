@@ -2,7 +2,6 @@
 //#include "Renderer/Renderer.h"
 #include "framework.h"
 #include "ResourceManager.h"
-#include "Object/ObjectManager.h"
 
 //#define SCENE_PATH "SceneData\\Scene\\"
 
@@ -36,7 +35,7 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	//objPath += sceneName + "\\Object\\";				// SceneData/Scene/ scenename / Object
 	//CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
 
-	CHECK_CREATE_FAILED(m_ResourceManager->Init(sceneName), std::format("Can't Load Scene, name: {}", sceneName));
+	CHECK_CREATE_FAILED(m_ResourceManager->Init(commandList, sceneName), std::format("Can't Load Scene, name: {}", sceneName));
 
 	return true;
 }
@@ -48,7 +47,7 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 		ERROR_QUIT(std::format("ERROR!! Scene load error, {}", m_SceneName));
 	}
 
-	return false;
+	return true;
 }
 
 //bool Scene::Init()

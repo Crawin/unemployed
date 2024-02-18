@@ -2,13 +2,13 @@
 #include "Object/ObjectBase.h"
 
 class Json::Value;
-class ObjectManager;
+class ResourceManager;
 
 class Actor :
     public ObjectBase
 {
 public:
-	Actor(Json::Value& root, ObjectManager* manager);
+	Actor(Json::Value& root, ResourceManager* manager);
 	virtual ~Actor();
 
 private:

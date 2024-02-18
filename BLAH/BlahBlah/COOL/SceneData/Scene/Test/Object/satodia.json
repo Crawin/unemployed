@@ -1,0 +1,59 @@
+{
+	"Name": "Satono_Diamond_01",
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Children": 
+	[
+		{
+			"Name": "Satono_Diamond_01_Body",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "satodia.satodia_Body",
+				"Material": "SatoBody"
+			}
+		},
+		{
+			"Name": "Satono_Diamond_01_HairRoot",
+			"Transform": 
+			{
+				"Position": [0.0, 0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+
+
+			"Children":
+			[
+				{
+					"Name" : "Satono_Diamond_01_Hair",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "satodia.satodia_Hair",
+						"Material": "SatoHair"
+					}
+				}
+			]
+		}
+	]
+
+
+
+}

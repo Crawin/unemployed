@@ -1,15 +1,15 @@
-#pragma once
+ï»¿#pragma once
 
 #define SCENE_PATH "SceneData\\"
 
 class Scene;
-// »ç¿ë ¿¹½Ã
-// 1. °ÔÀÓÀ» ÇÏ´Ù°¡(ÀÎ°ÔÀÓ¾À) ´Ù¸¥ ¾ÀÀ¸·Î ÀÌµ¿ÇØ¾ßÇÑ´Ù(´ÙÀ½ ½ºÅ×ÀÌÁö, ¸ŞÀÎ¸Ş´º, °ÔÀÓ¿À¹ö¾À)
-//		ÀÎ°ÔÀÓ¾À¿¡¼­ °ÔÀÓ¿À¹ö°¡ µÇ´Â »óÈ²¿¡ ChangeScene(°ÔÀÓ¿À¹ö¾À)
-//		1. ÀÎ°ÔÀÓ¾À.Exit() È£Ãâ
-//		2. °ÔÀÓ¿À¹ö¾À Enter() È£Ãâ
-//		3. ÀÎ°ÔÀÓ¾À.Update()´Â return;
-// ±âÁ¸ ½Ì±ÛÅæ¿¡¼­ ApplicationÀÇ ¸â¹ö·Î ¹Ù²Ş.
+// ì‚¬ìš© ì˜ˆì‹œ
+// 1. ê²Œì„ì„ í•˜ë‹¤ê°€(ì¸ê²Œì„ì”¬) ë‹¤ë¥¸ ì”¬ìœ¼ë¡œ ì´ë™í•´ì•¼í•œë‹¤(ë‹¤ìŒ ìŠ¤í…Œì´ì§€, ë©”ì¸ë©”ë‰´, ê²Œì„ì˜¤ë²„ì”¬)
+//		ì¸ê²Œì„ì”¬ì—ì„œ ê²Œì„ì˜¤ë²„ê°€ ë˜ëŠ” ìƒí™©ì— ChangeScene(ê²Œì„ì˜¤ë²„ì”¬)
+//		1. ì¸ê²Œì„ì”¬.Exit() í˜¸ì¶œ
+//		2. ê²Œì„ì˜¤ë²„ì”¬ Enter() í˜¸ì¶œ
+//		3. ì¸ê²Œì„ì”¬.Update()ëŠ” return;
+// ê¸°ì¡´ ì‹±ê¸€í†¤ì—ì„œ Applicationì˜ ë©¤ë²„ë¡œ ë°”ê¿ˆ.
 
 class SceneManager
 {
@@ -18,6 +18,8 @@ class SceneManager
 	Scene* m_CurrentScene = nullptr;
 	Scene* m_PrevScene = nullptr;
 	Scene* m_NextScene = nullptr;
+
+	virtual void RegisterComponents();
 
 public:
 	SceneManager();
@@ -31,8 +33,8 @@ public:
 
 	bool Init(ComPtr<ID3D12GraphicsCommandList> commandList, const char* firstSceneName);
 
-	// ¾À ÀüÈ¯¿¡ ·ÎµùÀÌ ÀÖ´Ù¸é ¾îÂ¼Áö? ·Îµù ¾ÀÀ» °­Á¦·Î ³Ö¾îÁà¾ß ÇÏÁö ¾ÊÀ»±î?
-	// ÀÌ°Ç »ı°¢ÇØº¸ÀÚ
+	// ì”¬ ì „í™˜ì— ë¡œë”©ì´ ìˆë‹¤ë©´ ì–´ì©Œì§€? ë¡œë”© ì”¬ì„ ê°•ì œë¡œ ë„£ì–´ì¤˜ì•¼ í•˜ì§€ ì•Šì„ê¹Œ?
+	// ì´ê±´ ìƒê°í•´ë³´ì
 	void ChangeScene(Scene* newScene);
 
 	bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);

@@ -63,7 +63,7 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 		m_TextureIndex[i] = idx;
 	}
 
-	// 
+	// todo
 	// 연결 할 쉐이더 또한 필요하다
 	// 이것은 manager에서 해준다.
 	if (root["Shader"].isNull())

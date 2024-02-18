@@ -2,6 +2,9 @@
 #include "Renderer/COOLResource.h"
 #include "Renderer/Renderer.h"
 #include "ResourceManager.h"
+#include "Object/Entity.h"
+#include "Object/Component.h"
+#include <json/json.h>
 
 //#include "Material/Material.h"
 //#include "Mesh/Mesh.h"
@@ -11,7 +14,7 @@
 
 #define MESH_PATH		"SceneData\\Mesh\\"
 #define SHADER_PATH		"SceneData\\Shader\\"
-#define TEXTURE_PATH	"SceneData\\Texture\\"
+#define TEXTURE_PATH	"SceneData\\Material\\Texture\\"
 #define MATERIAL_PATH	"SceneData\\Material\\"
 
 
@@ -25,11 +28,124 @@ ResourceManager::~ResourceManager()
 		delete mat;
 	for (auto& mes : m_Meshes)
 		delete mes;
-	for (auto& sha : m_Shaders)
-		delete sha;
+	//for (auto& sha : m_Shaders)
+	//	delete sha;
+	// sharedptr
+	m_Shaders.clear();
+
+
+	for (auto& obj : m_Entities)
+		delete obj;
 }
 
-bool ResourceManager::Init(const std::string& sceneName)
+bool ResourceManager::LoadObjectFile(const std::string& fileName)
+{
+	// 대충 오브젝트를 로드한다.
+	Json::Value root;
+	Json::Reader reader;
+
+	// 일단 고전 유니티 방식으로 하자
+	// ecs는 아니지만 컴포넌트가 있는 방식이다.
+	std::ifstream file(fileName);
+	reader.parse(file, root);
+	
+	auto entptr = LoadObjectJson(root, nullptr);
+
+	if (entptr == nullptr) 
+		return false;
+	
+	m_RootEntities.push_back(entptr);
+
+	return true;
+}
+
+#define CHILDREN "Children"
+
+Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
+{
+	Entity* ent = new Entity(m_Entities.size());
+	m_Entities.push_back(ent);
+
+	if (parent) parent->AddChild(ent);
+
+	for (auto& jsonComp : root.getMemberNames()) {
+		if (CHECK_COMPONENT(jsonComp) == false) {
+			if (jsonComp != CHILDREN) DebugPrint(std::format("No Such Component Registered!! {}", jsonComp));
+			continue;
+		}
+
+		component::Component* cmp = GET_COMPONENT(jsonComp);
+		cmp->Create(root, this);
+		ent->AddComponent(cmp);
+	}
+	
+	// if Children
+	if (root[CHILDREN].isNull() == false)
+		for (auto& val : root[CHILDREN])
+			if (LoadObjectJson(val, ent) == nullptr)
+				return nullptr;
+	
+	return ent;
+}
+
+int ResourceManager::LoadMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	std::string fileName = MESH_PATH + name + ".bin";
+	std::ifstream meshFile(fileName, std::ios::binary);
+	if (meshFile.is_open() == false) {
+		DebugPrint(std::format("Failed to open mesh file!! fileName: {}", fileName));
+		return -1;
+	}
+
+	Mesh* mesh = new Mesh;
+	mesh->m_Name = ExtractFileName(fileName);
+	mesh->BuildMesh(commandList, meshFile, this);
+
+	DebugPrint(std::format("loaded file name: {}", mesh->m_Name));
+	return GetMesh(mesh->m_Name);
+
+}
+
+int ResourceManager::LoadMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// 초기화 단계일 때만 매터리얼을 생성한다.
+	std::string fileName = MATERIAL_PATH + name + ".json";
+
+	Material* material = new Material;
+	std::string shaderName;
+	if (false == material->LoadFile(commandList, fileName, this, shaderName)) {
+		DebugPrint(std::format("Failed to load material!! Name: {}", name));
+		delete material;
+		return -1;
+	}
+
+	// get shader
+	auto shader = GetShader(shaderName, commandList);
+	m_Materials.push_back(material);
+
+	return m_Materials.size() - 1;
+}
+
+std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+
+	std::string fileName = SHADER_PATH + name + ".json";
+
+	if (false == Renderer::GetInstance().CreateShader(commandList, fileName, shader)) {
+		DebugPrint(std::format("Failed to load shader file!! fileName: {}", fileName));
+		return nullptr;
+	}
+
+	m_Shaders.push_back(shader);
+
+	DebugPrint(std::format("loaded file name: {}", shader->m_Name));
+
+
+	return shader;
+}
+
+bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
 	// 1. 씬에 배치 될 오브젝트들을 찾는다.
 	// 2. 씬에 배치 될 오브젝트를 차례로 로드한다.
@@ -42,14 +158,82 @@ bool ResourceManager::Init(const std::string& sceneName)
 
 	std::string scenePath = SCENE_PATH + sceneName;
 
-	for (const auto& file : std::filesystem::directory_iterator(scenePath)) {
+	// Load Objects
+	std::string objPath = scenePath + "\\Object\\";
+	for (const auto& file : std::filesystem::directory_iterator(objPath)) {
 		if (file.is_directory()) continue;
 
-		std::string fileName = scenePath + file.path().filename().string();
-		CHECK_CREATE_FAILED(LoadFile(fileName), "File Load Failed!!");
+		std::string fileName = objPath + file.path().filename().string();
+		CHECK_CREATE_FAILED(LoadObjectFile(fileName), std::format("Object Load Failed!! Object Name: {}", fileName));
+	}
+	//return false;
+
+	// Load Lights
+
+	// Load Cameras
+
+	// Load Mesh, Material, Texture, Shader to use
+	CHECK_CREATE_FAILED(LateInit(commandList), "LateUpdate Fail!");
+
+	return true;
+}
+
+bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// load mesh
+	for (const auto& rendererLoadInfo : m_ToLoadRenderDatas) {
+		// mesh의 json에서는 mesh의 이름을
+		// satodia.satodia_body 와 같은 방식으로 이루어져있다.
+		// 뜻: satodia.bin 파일에 존재하는 satodia_body
+
+		std::string meshFileName = ExtractFileName(rendererLoadInfo.m_MeshName);
+		
+		auto it = std::find(rendererLoadInfo.m_MeshName.begin(), rendererLoadInfo.m_MeshName.end(), '.');
+		++it;
+		std::string meshName(it, rendererLoadInfo.m_MeshName.end());
+
+		// 해당 mesh가 없을 때 부모 mesh를 load
+
+		int res = GetMesh(meshName);
+		if (res == -1)
+		{
+			// check first
+			if (GetMesh(meshFileName) != -1) {
+				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
+				return false;
+			}
+			
+			// load parent
+			LoadMesh(meshFileName, commandList);
+		}
+
+		res = GetMesh(meshName);
+
+		if (res == -1) {
+			DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
+			return false;
+		}
+
+		rendererLoadInfo.m_Renderer->SetMesh(res);
+
+		// load material
+		std::string materialFileName = rendererLoadInfo.m_MaterialName;
+		res = GetMaterial(materialFileName, commandList);
+
+		if (res == -1) {
+			DebugPrint(std::format(
+				"ERROR!!, no such material, name: {}\nSet to uv_checker",
+				materialFileName));
+			res = GetMaterial(materialFileName, commandList);
+		}
+
+
+		rendererLoadInfo.m_Renderer->SetMaterial(res);
+
 	}
 
-	return false;
+	//m_ToLoadRenderDatas.clear();
+	return true;
 }
 
 int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData)
@@ -92,31 +276,57 @@ int ResourceManager::GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsC
 	for (int i = 0; i < m_Materials.size(); ++i) 
 		if (m_Materials[i]->GetName() == name)
 			return i;
-	
-	// 없다!
-	if (commandList) {
-		// 초기화 단계일 때만 매터리얼을 생성한다.
-		Material* material = new Material;
-		std::string shaderName;
-		if (false == material->LoadFile(commandList, name, this, shaderName)) {
-			DebugPrint(std::format("Failed to load material!! Name: {}", name));
-			delete material;
-			return -1;
-		}
 
-		m_Materials.push_back(material);
+	if (commandList) return LoadMaterial(name, commandList);
+	return -1;
+}
 
-		return m_Materials.size() - 1;
-	}
-	else {
-		DebugPrint(
-			std::format(
-				"ERROR!!!!, no such material {}\nmake this material on initialize",
-				name));
-	}
+std::shared_ptr<Shader> ResourceManager::GetShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	for (auto& shader : m_Shaders)
+		if (shader->GetName() == name)
+			return shader;
 
+	// 없다.
+	if (commandList) return LoadShader(name, commandList);
+	return nullptr;
+}
+
+int ResourceManager::GetMeshToLoad(const std::string& name)
+{
+	// todo 
+	// 여기서 다른 resourcemanager에게 mesh를 전달받을 수 있음
+	// 지금은 -1만 return
 
 	return -1;
+
+	for (int i = 0; i < m_ToLoadRenderDatas.size(); ++i)
+		if (m_ToLoadRenderDatas[i].m_MeshName == name)
+			return i;
+	
+	// no such mesh
+	return -1;
+}
+
+void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer)
+{
+	ToLoadRendererInfo info;
+	info.m_MeshName = mesh;
+	info.m_MaterialName = material;
+	info.m_Renderer = renderer;
+
+	m_ToLoadRenderDatas.push_back(info);
+}
+
+int ResourceManager::GetMaterialToLoad(const std::string& name)
+{
+	for (int i = 0; i < m_ToLoadMaterials.size(); ++i)
+		if (m_ToLoadMaterials[i] == name)
+			return i;
+
+	m_ToLoadMaterials.push_back(name);
+
+	return m_ToLoadMaterials.size() - 1;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)
@@ -134,31 +344,13 @@ int ResourceManager::GetMesh(const std::string& name, ComPtr<ID3D12GraphicsComma
 		if (m_Meshes[i]->GetName() == name)
 			return i;
 
+	// todo 찾지 못했다면 당장 생성하지 말고 보관해두었다가 나중에 생성하게 하자
+	// commandlist 인자도 지워야지
+	
+	// 
+	// 
 	// 못찾았다
-	if (commandList) {
-		std::string fileName = MESH_PATH + name + ".bin";
-		std::ifstream meshFile(fileName, std::ios::binary);
-		if (meshFile.fail()) {
-			DebugPrint(std::format("Failed to open mesh file!! fileName: {}", fileName));
-			return -1;
-		}
-
-		Mesh* mesh = new Mesh;
-		mesh->m_Name = ExtractFileName(fileName);
-		mesh->BuildMesh(commandList, meshFile, this);
-
-		DebugPrint(std::format("loaded file name: {}", mesh->m_Name));
-		return true;
-
-	}
-	else {
-		DebugPrint(
-			std::format(
-			"ERROR!!!!, no such mesh {}\nmake this mesh on initialize",
-			name));
-	}
-
-	// 없다
+	if (commandList) return LoadMesh(name, commandList);
 
 	return -1;
 }

@@ -8,9 +8,11 @@
 class ResourceManager;
 namespace Json { class Value; }
 
-class ObjectManager;
+//class ObjectManager;
 //class MeshManager;
 //class MaterialManager;
+
+
 
 class ObjectBase
 {
@@ -18,7 +20,7 @@ protected:
 	ObjectBase();
 
 public:
-	ObjectBase(Json::Value& root, ObjectManager* manager);
+	ObjectBase(Json::Value& root, ResourceManager* manager);
 
 	virtual ~ObjectBase();
 

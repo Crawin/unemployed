@@ -1,6 +1,6 @@
 {
 	"name": "NoMaterial",
-	"BaseColor": "uv_checker.dds",
+	"BaseColor": "uv_checker",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,

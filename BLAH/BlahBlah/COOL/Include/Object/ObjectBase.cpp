@@ -6,7 +6,7 @@ ObjectBase::ObjectBase()
 {
 }
 
-ObjectBase::ObjectBase(Json::Value& root, ObjectManager* manager)
+ObjectBase::ObjectBase(Json::Value& root, ResourceManager* manager)
 {
 	// is Root = On;
 	// 해당 생성자로 생성시엔 true임

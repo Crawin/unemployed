@@ -12,7 +12,7 @@ enum class SHADER_TYPE {
 
 class Shader
 {
-	friend class ShaderManager;
+	friend class ResourceManager;
 
 public:
 	Shader();

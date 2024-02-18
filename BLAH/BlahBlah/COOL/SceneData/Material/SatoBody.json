@@ -1,6 +1,6 @@
 {
-	"name": "SatoHair",
-	"BaseColor": "satoh.dds",
+	"name": "SatoBody",
+	"BaseColor": "satob",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,

@@ -120,9 +120,6 @@
     <ClInclude Include="Include\Object\Actor\Actor.h">
       <Filter>소스 파일\SceneData\Object\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Object\ObjectManager.h">
-      <Filter>소스 파일\SceneData\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Timer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -135,17 +132,17 @@
     <ClInclude Include="Include\Enums.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Shader\ShaderManager.h">
-      <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Vertex.h">
       <Filter>소스 파일\SceneData\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Include\Scene\ResourceManager.h">
       <Filter>소스 파일\Scene\ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Mesh\MeshManager.h">
-      <Filter>소스 파일\SceneData\Mesh</Filter>
+    <ClInclude Include="Include\Object\Entity.h">
+      <Filter>소스 파일\SceneData\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Object\Component.h">
+      <Filter>소스 파일\SceneData\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,9 +200,6 @@
     <ClCompile Include="Include\Object\Actor\Actor.cpp">
       <Filter>소스 파일\SceneData\Object\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Object\ObjectManager.cpp">
-      <Filter>소스 파일\SceneData\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Timer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -215,14 +209,14 @@
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp">
       <Filter>외부\DDS</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Shader\ShaderManager.cpp">
-      <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Scene\ResourceManager.cpp">
       <Filter>소스 파일\Scene\ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Mesh\MeshManager.cpp">
-      <Filter>소스 파일\SceneData\Mesh</Filter>
+    <ClCompile Include="Include\Object\Entity.cpp">
+      <Filter>소스 파일\SceneData\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Object\Component.cpp">
+      <Filter>소스 파일\SceneData\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
