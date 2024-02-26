@@ -208,6 +208,6 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 #endif
 	}
 
-	for (auto& mesh : m_Childs)
-		mesh->Render(commandList, m_RootTransform);
+	//for (auto& mesh : m_Childs)
+	//	mesh->Render(commandList, m_RootTransform);
 }

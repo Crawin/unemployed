@@ -58,6 +58,9 @@
     <Filter Include="소스 파일\Scene\ResourceManager">
       <UniqueIdentifier>{0e698981-94fb-407c-a552-42d16ed5fb93}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\ECS">
+      <UniqueIdentifier>{5748abe2-9de3-427d-b3e6-5ef12d4a3c2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -138,6 +141,9 @@
     <ClInclude Include="Include\Object\Component.h">
       <Filter>소스 파일\SceneData\Object</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene\ECSSystem.h">
+      <Filter>소스 파일\Scene\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -208,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="Include\Object\Component.cpp">
       <Filter>소스 파일\SceneData\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\ECSSystem.cpp">
+      <Filter>소스 파일\Scene\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

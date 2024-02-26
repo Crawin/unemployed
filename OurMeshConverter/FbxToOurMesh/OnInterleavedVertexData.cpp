@@ -91,9 +91,9 @@ int main()
 	// FBX 파일 로드
 	FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
-	const char* fileName = "satodia.fbx";
+	const char* fileName = "teapot.fbx";
 	std::string outputFileName = ChangeExtensionToBin(fileName);
-	outputFileName = "satodia.bin";
+	outputFileName = "teapot.bin";
 
 	if (!importer->Initialize(fileName, -1, fbxManager->GetIOSettings()))
 	{

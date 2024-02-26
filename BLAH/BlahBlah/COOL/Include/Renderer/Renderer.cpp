@@ -27,16 +27,20 @@ Renderer::~Renderer()
 	// Renderer 말고 Application에서 하자
 
 	// 혹시 모르니 여기서 모두 해제
-	m_Resources.clear();
-	//m_VertexIndexDatas.clear();
+	// comptr
+
+	//m_DsvHeap = nullptr;
+	//m_RtvHeap = nullptr;
+	//m_Resources.clear();
+	//m_SwapChain = nullptr;
 
 	// 죽기 전에 살아있는 애들 확인하고 간다
-#if defined(_DEBUG)
-	IDXGIDebug1* debug = NULL;
-	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
-	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
-	debug->Release();
-#endif
+//#if defined(_DEBUG)
+//	IDXGIDebug1* debug = NULL;
+//	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
+//	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+//	debug->Release();
+//#endif
 
 }
 

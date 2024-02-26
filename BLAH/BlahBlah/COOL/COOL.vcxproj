@@ -154,6 +154,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>External/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="Include\Renderer\COOLDevice.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
+    <ClInclude Include="Include\Scene\ECSSystem.h" />
     <ClInclude Include="Include\Scene\ResourceManager.h" />
     <ClInclude Include="Include\Scene\Scene.h" />
     <ClInclude Include="Include\Scene\SceneManager.h" />
@@ -207,6 +209,7 @@
     <ClCompile Include="Include\Renderer\COOLDevice.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
+    <ClCompile Include="Include\Scene\ECSSystem.cpp" />
     <ClCompile Include="Include\Scene\ResourceManager.cpp" />
     <ClCompile Include="Include\Scene\Scene.cpp" />
     <ClCompile Include="Include\Scene\SceneManager.cpp" />

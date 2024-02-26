@@ -30,7 +30,8 @@
 #include <algorithm>
 #include <fstream>
 #include <functional>
-
+#include <bitset>
+#include <any>
 
 // DirectX 12 Headers
 #include <d3d12.h>

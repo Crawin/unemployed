@@ -29,7 +29,7 @@ namespace component {
 	// 한번 생성되면 변화는 없음
 	// 
 	//
-	class ComponentFactory 
+	class ComponentFactory
 	{
 		ComponentFactory() {}
 		ComponentFactory(const ComponentFactory& other) = delete;
@@ -38,8 +38,8 @@ namespace component {
 
 		std::map<std::string, std::function<Component* ()>> m_ComponentFactoryMap;
 
-	//public:
-		// 굳이 얘를 밖으로 뺄 이유가 없는듯?
+		//public:
+			// 굳이 얘를 밖으로 뺄 이유가 없는듯?
 		static ComponentFactory& GetInstance() {
 			static ComponentFactory inst;
 			return inst;
@@ -51,6 +51,7 @@ namespace component {
 		template<class T>
 		static void RegisterComponent(const std::string& componentName)
 		{
+			static_assert(std::is_base_of<component::Component, T>::value, "T is not base of Component!!");
 			GetInstance().m_ComponentFactoryMap[componentName] = []() { return new T; };
 		}
 
@@ -73,7 +74,7 @@ namespace component {
 	// Name Component
 	// 이름
 	//
-	class Name : public Component 
+	class Name : public Component
 	{
 		std::string m_Name;
 
@@ -85,7 +86,7 @@ namespace component {
 	// transform
 	// 이동 관련
 	//
-	class Transform : public Component 
+	class Transform : public Component
 	{
 		XMFLOAT3 m_Position;
 		XMFLOAT4 m_Rotate;
@@ -99,7 +100,7 @@ namespace component {
 	// render component
 	// 렌더 관련, mesh, material
 	//
-	class Renderer : public Component 
+	class Renderer : public Component
 	{
 		int m_MeshID;
 		int m_MaterialID;
@@ -121,9 +122,9 @@ namespace component {
 	class Camera : public Component
 	{
 		// Json으로 set 가능
-		XMFLOAT3 m_Right =	{ 1.0f, 0.0f, 0.0f };
-		XMFLOAT3 m_Up =		{ 0.0f, 1.0f, 0.0f };
-		XMFLOAT3 m_Look =	{ 0.0f, 0.0f, 1.0f };
+		XMFLOAT3 m_Right = { 1.0f, 0.0f, 0.0f };
+		XMFLOAT3 m_Up = { 0.0f, 1.0f, 0.0f };
+		XMFLOAT3 m_Look = { 0.0f, 0.0f, 1.0f };
 		XMFLOAT3 m_Position = { 0.0f, 30.0f, -150.0f };			// todo 이거 지우고 system에서 transform과 결합해 build view matrix 함수 수정
 
 		float m_Fov = 90.0f;
