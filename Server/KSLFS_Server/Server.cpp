@@ -8,7 +8,7 @@ void CServer::SetSTtype(const ServerType& type)
 
 void CServer::PrintInfo(const std::string word)
 {
-	Chat_Mutex.lock();
+	Log_Mutex.lock();
 	std::cout << "Type: [ ";
 	switch (stType)
 	{
@@ -20,7 +20,7 @@ void CServer::PrintInfo(const std::string word)
 		break;
 	}
 	std::cout<< " ] " << word << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.unlock();
 }
 
 std::string CServer::GetServerType(const ServerType& s)
@@ -42,6 +42,9 @@ std::string CServer::GetServerType(const ServerType& s)
 		break;
 	case 4:
 		answer = "GAME_RECV";
+		break;
+	case 5:
+		answer = "GAME_RUN";
 		break;
 	default:
 		answer = "ERROR";
@@ -77,14 +80,14 @@ CRoomServer::~CRoomServer()
 void CRoomServer::Run()
 {
 	PrintInfo("Run");
-	vRoomThreads.push_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, vRoomThreads에 ListenThread 추가
+	lRoomThreads.push_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
 }
 
 void CRoomServer::ListenThread()
 {
-	Chat_Mutex.lock();
+	Log_Mutex.lock();
 	std::cout << "listenThread Run" << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.unlock();
 
 	int retval;
 
@@ -127,26 +130,26 @@ void CRoomServer::ListenThread()
 		// 접속한 클라이언트 정보 출력
 		char addr[INET_ADDRSTRLEN];
 		inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-		Chat_Mutex.lock();
+		Log_Mutex.lock();
 		printf("\n[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n",
 			addr, ntohs(clientaddr.sin_port));
-		Chat_Mutex.unlock();
+		Log_Mutex.unlock();
 
-		vRoomThreads.push_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
+		lRoomThreads.push_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
 	}
 
 	// 윈속 종료
 	WSACleanup();
-	Chat_Mutex.lock();
+	Log_Mutex.lock();
 	std::cout << "ListenThread STOP" << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.unlock();
 }
 
 void CRoomServer::RecvThread(const SOCKET& arg)
 {
-	Chat_Mutex.lock();
+	Log_Mutex.lock();
 	std::cout << "RecvThread Run" << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.unlock();
 
 	int retval;
 	SOCKET client_sock = (SOCKET)arg;
@@ -174,20 +177,28 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 		// 받은 데이터 출력
 		buf[retval] = '\0';
-		Chat_Mutex.lock();
+		Log_Mutex.lock();
 		printf("[ROOM_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
-		Chat_Mutex.unlock();
+		Log_Mutex.unlock();
 
 		if (strcmp(buf, "방생성") == 0)
 		{
-			Chat_Mutex.lock();
+			Log_Mutex.lock();
 			std::cout << "방을 생성합니다." << std::endl;
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 			bRoom = false;
-			//vGameThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
+			//lGameRecvThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
 			const unsigned int GameNum = Make_GameNumber();
-			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameThread, this, client_sock, GameNum)));
-			std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock, NULL);
+			//  GAME_RUN 쓰레드를 생성
+			lGameRunThreads.push_back(std::make_pair(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum)));
+			// mGameStorages에 key값으로 방번호를 넣고, value로 패킷 구조의 리스트를 만들어서, 얘 전용 저장소로 이용한다.
+			SendPosition temp;
+			mGameStorages[GameNum][0].first = client_sock;				// p1 소켓 할당
+			mGameStorages[GameNum][0].second.emplace_back(temp);		// p1에 접속했다는 의미로 임시 데이터 할당
+
+			// GAME_RECV 쓰레드 생성
+			lGameRecvThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
 		if (strncmp(buf, "방입장", 6) == 0)
@@ -200,12 +211,16 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			GameNum += (buf[11] - '0') * 1;
 			std::cout << "GameNum: " << GameNum << std::endl;
 
-			Chat_Mutex.lock();
+			SendPosition temp;
+			mGameStorages[GameNum][1].first = client_sock;				// p2 소켓 할당
+			mGameStorages[GameNum][1].second.emplace_back(temp);		// p2에 접속했다는 의미로 임시 데이터 할당
+
+			Log_Mutex.lock();
 			std::cout << "방에 입장합니다." << std::endl;
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 			bRoom = false;
-			vGameThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameThread, this, client_sock, GameNum)));
-			std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock, NULL);
+			lGameRecvThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
 
@@ -222,11 +237,11 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 	if (bRoom)
 	{
 		closesocket(client_sock);
-		Chat_Mutex.lock();
+		Log_Mutex.lock();
 		printf("[ROOM_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 			addr, ntohs(clientaddr.sin_port));
-		Chat_Mutex.unlock();
-		std::thread t(&CRoomServer::DeleteThread, this, "vRoomThreads", client_sock, NULL);
+		Log_Mutex.unlock();
+		std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 		t.detach();
 	}
 	delete[] buf;
@@ -234,13 +249,13 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 void CRoomServer::Join()
 {
-	for (auto start = vRoomThreads.begin(); start != vRoomThreads.end(); ++start)
+	for (auto start = lRoomThreads.begin(); start != lRoomThreads.end(); ++start)
 	{
 		start->second.join();
-		Chat_Mutex.lock();
-		std::cout << "vRoomThread Join Complete" << std::endl;
-		Chat_Mutex.unlock();
 	}
+	Log_Mutex.lock();
+	std::cout << "vRoomThread Join Complete" << std::endl;
+	Log_Mutex.unlock();
 }
 
 void CRoomServer::CloseListen()
@@ -250,49 +265,71 @@ void CRoomServer::CloseListen()
 
 void CRoomServer::PrintThreads()
 {
-	for (auto start = vRoomThreads.begin(); start != vRoomThreads.end(); ++start)
+	for (auto start = lRoomThreads.begin(); start != lRoomThreads.end(); ++start)
 	{
-		Chat_Mutex.lock();
+		Log_Mutex.lock();
 		std::cout << "\t" << GetServerType(start->first.first) << ", SOCKET: [" << start->first.second << "]" << std::endl;
-		Chat_Mutex.unlock();
+		Log_Mutex.unlock();
 	}
-	for (auto start = vGameThreads.begin(); start != vGameThreads.end(); ++start)
+	for (auto start = lGameRecvThreads.begin(); start != lGameRecvThreads.end(); ++start)
 	{
-		Chat_Mutex.lock();
+		Log_Mutex.lock();
 		std::cout << "\t" << GetServerType(start->first.first) <<", SOCKET: ["<<start->first.second.first << "], GameNum: [" << start->first.second.second << "]" << std::endl;
-		Chat_Mutex.unlock();
+		Log_Mutex.unlock();
+	}
+	for (auto start = lGameRunThreads.begin(); start != lGameRunThreads.end(); ++start)
+	{
+		Log_Mutex.lock();
+		std::cout << "\t" << GetServerType(start->first.first) << ", GameNum: [" << start->first.second << "]" << std::endl;
+		Log_Mutex.unlock();
 	}
 }
 
 void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg, const unsigned int& num)
 {
-	if (vThread == "vRoomThreads")
+	if (vThread == "lRoomThreads")
 	{
-		for (auto a = vRoomThreads.begin(); a != vRoomThreads.end(); ++a)
+		for (auto a = lRoomThreads.begin(); a != lRoomThreads.end(); ++a)
 		{
 			if (a->first.second == arg)
 			{
 				a->second.join();
-				vRoomThreads.erase(a);
-				Chat_Mutex.lock();
+				lRoomThreads.erase(a);
+				Log_Mutex.lock();
 				std::cout <<"Socket: [" << arg << "] RoomThread 삭제 완료" << std::endl;
-				Chat_Mutex.unlock();
+				Log_Mutex.unlock();
 				break;
 			}
 		}
 	}
 
-	if (vThread == "vGameThreads")
+	if (vThread == "lGameRecvThreads")
 	{
-		for (auto a = vGameThreads.begin(); a != vGameThreads.end(); ++a)
+		for (auto a = lGameRecvThreads.begin(); a != lGameRecvThreads.end(); ++a)
 		{
 			if (a->first.second.first == arg && a->first.second.second == num)
 			{
 				a->second.join();
-				vGameThreads.erase(a);
-				Chat_Mutex.lock();
-				std::cout << "GameNumber: [" << arg << "] GameThread 삭제 완료" << std::endl;
-				Chat_Mutex.unlock();
+				lGameRecvThreads.erase(a);
+				Log_Mutex.lock();
+				std::cout << "Socket: [" << arg <<"], GameNumber: [" << num << "] GameRecvThread 삭제 완료" << std::endl;
+				Log_Mutex.unlock();
+				break;
+			}
+		}
+	}
+
+	if (vThread == "lGameRunThreads")
+	{
+		for (auto a = lGameRunThreads.begin(); a != lGameRunThreads.end(); ++a)
+		{
+			if (a->first.second == num)
+			{
+				a->second.join();
+				lGameRunThreads.erase(a);
+				Log_Mutex.lock();
+				std::cout << "GameNumber: [" << num << "] GameRunThread 삭제 완료" << std::endl;
+				Log_Mutex.unlock();
 				break;
 			}
 		}
@@ -310,9 +347,9 @@ unsigned int CRoomServer::Make_GameNumber()
 	{
 		exist = false;
 		num = uid(dre);
-		for (auto a = vGameThreads.begin(); a != vGameThreads.end(); ++a)	// 랜덤 돌렸을때 이미 방 번호가 있는지 확인하자
+		for (auto a = lGameRunThreads.begin(); a != lGameRunThreads.end(); ++a)	// 랜덤 돌렸을때 이미 방 번호가 있는지 확인하자
 		{
-			if (a->first.second.second == num)										// num 이 이미 존재하는 번호라면 다시 while문을 돌자.
+			if (a->first.second == num)										// num 이 이미 존재하는 번호라면 다시 while문을 돌자.
 			{
 				exist = true;
 				break;
@@ -323,14 +360,13 @@ unsigned int CRoomServer::Make_GameNumber()
 	return num;
 }
 
-void CRoomServer::GameThread(const SOCKET& arg, const unsigned int& gameNum)
+void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& gameNum)
 {
-	Chat_Mutex.lock();
-	std::cout << "Socket: [" << arg << "] , RoomNumber: [" << gameNum << "] GameThread Run " << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.lock();
+	std::cout << "Socket: [" << client_sock << "] , RoomNumber: [" << gameNum << "] GameRecvThread Run " << std::endl;
+	Log_Mutex.unlock();
 
 	int retval;
-	//SOCKET client_sock = (SOCKET)arg;
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
@@ -339,14 +375,13 @@ void CRoomServer::GameThread(const SOCKET& arg, const unsigned int& gameNum)
 
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
-	getpeername(arg, (struct sockaddr*)&clientaddr, &addrlen);
+	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
 
 	bool bRoom = true;
-	SendPosition sp;
 	while (bRoom) {
 		// 데이터 받기
-		retval = recv(arg, buf, bufsize, 0);
+		retval = recv(client_sock, buf, bufsize, 0);
 		if (retval == SOCKET_ERROR) {
 			err_display("recv()");
 			break;
@@ -357,25 +392,41 @@ void CRoomServer::GameThread(const SOCKET& arg, const unsigned int& gameNum)
 		switch (buf[0])
 		{
 		case 0:				// POSITION
+		{
+			SendPosition sp;
 			memcpy(&sp, buf, sizeof(sp));
-			Chat_Mutex.lock();
-			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
-			Chat_Mutex.unlock();
-			// 충돌체크 함수
+			if (mGameStorages[gameNum][0].first == client_sock)		// p1이면
+			{
+				mGameStorages[gameNum][0].second.emplace_back(sp);	// 받은 데이터를 mGameStorages에 저장.
+			}
+			else if (mGameStorages[gameNum][1].first == client_sock)	// p2면
+			{
+				mGameStorages[gameNum][1].second.emplace_back(sp);	// 받은 데이터를 mGameStorages에 저장.
+			}
+			else
+			{
+				Log_Mutex.lock();
+				std::cout << "SOCKET [" << client_sock << "] 이 접속되지 않았습니다." << std::endl;
+				Log_Mutex.unlock();
+				break;
+			}
 
-			// send 함수
+			Log_Mutex.lock();
+			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
+			Log_Mutex.unlock();
 			break;
+		}
 		default:
 			// 받은 데이터 출력
 			buf[retval] = '\0';
-			Chat_Mutex.lock();
+			Log_Mutex.lock();
 			printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 			break;
 		}
 
 		// 데이터 보내기
-		retval = send(arg, buf, retval, 0);
+		retval = send(client_sock, buf, retval, 0);
 		if (retval == SOCKET_ERROR) {
 			err_display("send()");
 			break;
@@ -383,14 +434,75 @@ void CRoomServer::GameThread(const SOCKET& arg, const unsigned int& gameNum)
 	}
 
 	// 소켓 닫기
-	closesocket(arg);
-	Chat_Mutex.lock();
+	closesocket(client_sock);
+	Log_Mutex.lock();
 	printf("[GAME_RECV] [TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		addr, ntohs(clientaddr.sin_port));
-	Chat_Mutex.unlock();
-	std::thread t(&CRoomServer::DeleteThread, this, "vGameThreads", arg, gameNum);
+	Log_Mutex.unlock();
+	std::thread t(&CRoomServer::DeleteThread, this, "lGameRecvThreads", client_sock, gameNum);
 	t.detach();
 	delete[] buf;
+}
+
+void CRoomServer::GameRunThread(const unsigned int& gameNum)
+{
+	Log_Mutex.lock();
+	std::cout << "[" << gameNum << "] GameRunThread Run" << std::endl;
+	Log_Mutex.unlock();
+
+	Player p1, p2;
+	while (1)
+	{
+		while (1)
+		{
+			// p1 이 연결이 되었는가?
+			if (mGameStorages[gameNum][0].first)
+			{
+				Log_Mutex.lock();
+				std::cout << "P1 [" << mGameStorages[gameNum][0].first << "]이 연결되었습니다." << std::endl;
+				Log_Mutex.unlock();
+				p1.allocateSOCKET(mGameStorages[gameNum][0].first);
+				mGameStorages[gameNum][0].second.clear();
+				break;
+			}
+		}
+		while (1)
+		{
+			// p2 가 연결이 되었는가?
+			if (mGameStorages[gameNum][1].first)
+			{
+				Log_Mutex.lock();
+				std::cout << "P2 [" << mGameStorages[gameNum][1].first << "]이 연결되었습니다." << std::endl;
+				Log_Mutex.unlock();
+				p2.allocateSOCKET(mGameStorages[gameNum][1].first);
+				mGameStorages[gameNum][1].second.clear();
+				break;
+			}
+		}
+		break;
+
+		//while (1)
+		//{
+		//	// p2 가 연결이 되었는가?
+		//	auto a = std::find_if(mGameStorages[gameNum].begin(), mGameStorages[gameNum].end(), [](std::pair<SOCKET, SendPosition> t) {
+		//		return t.first != NULL;
+		//		});
+		//	if (a != mGameStorages[gameNum].end()) break;
+		//}
+		
+
+		//충돌
+		//이동
+		//이벤트 발생
+	}
+	
+
+
+	//Log_Mutex.lock();
+	//std::cout << std::endl << std::endl << std::endl << "GameRunThread 삭제 진행" << std::endl;
+	//Log_Mutex.unlock();
+	//std::thread t(&CRoomServer::DeleteThread, this, "lGameRunThreads", NULL, gameNum);
+	//t.detach();
 }
 
 CServerManager::CServerManager()
@@ -416,9 +528,9 @@ void CServerManager::Run()
 void CServerManager::Join()
 {
 	aCommandThread.second.join();
-	Chat_Mutex.lock();
+	Log_Mutex.lock();
 	std::cout<<"CommandThread join complete" << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.unlock();
 	RoomServer->Join();
 	delete RoomServer;
 }
@@ -427,9 +539,9 @@ void CServerManager::CommandThread()
 {
 	bool CommandState = true;
 
-	Chat_Mutex.lock();
+	Log_Mutex.lock();
 	std::cout << "CommandThread Run" << std::endl;
-	Chat_Mutex.unlock();
+	Log_Mutex.unlock();
 
 	std::string input;
 	std::map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
@@ -438,25 +550,25 @@ void CServerManager::CommandThread()
 			RoomServer->CloseListen();
 		}},
 		{"/THREAD",[this]() {
-			Chat_Mutex.lock();
+			Log_Mutex.lock();
 			std::cout << "-------------------------쓰레드 목록-------------------------------" << std::endl;
 			std::cout << "aCommandThread" << std::endl << "\t" << GetServerType(aCommandThread.first) << std::endl;
 			std::cout << "RoomServer Threads" << std::endl;
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 			RoomServer->PrintThreads();
-			Chat_Mutex.lock();
+			Log_Mutex.lock();
 			std::cout << "-------------------------------------------------------------------" << std::endl;
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 		}},
 		{"/HELP",[&commands]() {
-			Chat_Mutex.lock();
+			Log_Mutex.lock();
 			std::cout << "명령어 모음: ";
 			for (const auto& a : commands)
 			{
 				std::cout << a.first << ", ";
 			}
 			std::cout << std::endl;
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 		}}
 	};
 
@@ -472,9 +584,19 @@ void CServerManager::CommandThread()
 		}
 		else
 		{
-			Chat_Mutex.lock();
+			Log_Mutex.lock();
 			std::cout << "존재하지 않는 명령어 입니다." << std::endl;
-			Chat_Mutex.unlock();
+			Log_Mutex.unlock();
 		}
 	}
+}
+
+const SOCKET Player::getSocket()
+{
+	return socket;
+}
+
+void Player::allocateSOCKET(const SOCKET& s)
+{
+	socket = s;
 }

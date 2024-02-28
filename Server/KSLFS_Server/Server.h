@@ -5,20 +5,27 @@ enum ServerType {
 	ROOM,
 	LISTEN,
 	ROOM_RECV,
-	GAME_RECV
+	GAME_RECV,
+	GAME_RUN
 };
 
 enum SendType
 {
 	POSITION,
-	TEMP
+	TEMP,
+	EVENT
 };
 
 struct SendPosition {
-	SendType type;
+	SendType type;		// POSITION일때
 	float x;
 	float y;
 	float z;
+};
+
+struct dddd
+{
+	SendType type;		// EVENT일때
 };
 
 class CServer
@@ -38,9 +45,14 @@ public:
 
 class CRoomServer : CServer {
 private:
-	std::vector<std::pair<std::pair<ServerType, SOCKET>, std::thread>> vRoomThreads;
-	std::vector<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> vGameThreads;
+	std::list<std::pair<std::pair<ServerType, SOCKET>, std::thread>> lRoomThreads;
+	std::list<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> lGameRecvThreads;
 	SOCKET listen_sock;
+private:
+	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
+	//std::map<unsigned int, std::list < std::pair<SOCKET, SendPosition> >> mGameStorages;
+	std::map<unsigned int, std::array<std::pair<SOCKET, std::list<SendPosition>>, 2>> mGameStorages;
+
 public:
 	CRoomServer();
 	~CRoomServer();
@@ -48,7 +60,8 @@ public:
 	void Run();
 	void ListenThread();
 	void RecvThread(const SOCKET&);
-	void GameThread(const SOCKET&, const unsigned int&);
+	void GameRecvThread(const SOCKET&, const unsigned int&);
+	void GameRunThread(const unsigned int&);
 	void Join();
 	void CloseListen();
 	void PrintThreads();
@@ -69,4 +82,16 @@ public:
 	void CommandThread();
 };
 
-extern std::mutex Chat_Mutex;
+extern std::mutex Log_Mutex;
+
+class Player {
+private:
+	SOCKET socket = NULL;
+private:
+	float x;
+	float y;
+	float z;
+public:
+	const SOCKET getSocket();
+	void allocateSOCKET(const SOCKET&);
+};
