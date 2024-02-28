@@ -24,8 +24,9 @@ void err_display(int errcode);
 
 #include <string>
 #include <vector>
-#include <array>
 #include <map>
 #include <mutex>
+#include <list>
+#include <array>
 
 #include <random>
