@@ -19,6 +19,7 @@ namespace component {
 	{
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) = 0;
+		virtual int GetGID() = 0;
 	};
 
 
@@ -32,7 +33,7 @@ namespace component {
 		ComponentBase() = default;
 		virtual ~ComponentBase() {}
 
-
+		virtual int GetGID() override { return m_GID; }
 
 		inline static int m_GID = -1;
 	};
