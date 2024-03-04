@@ -12,11 +12,6 @@ class ComponentSet {
 
 	std::unordered_map<std::bitset<N>, std::vector<component::Component>> m_Datas;
 
-	template <class T>
-	void AddComponentBase()
-	{
-
-	}
 
 public:
 	ComponentSet(std::bitset<N> bit) {
@@ -25,7 +20,7 @@ public:
 			int t = 1 << i;
 			if (bit & t) {
 				// add
-				AddComponentBase();
+				std::bitset bitset = Components::m_BIT;
 
 			}
 		}
@@ -41,13 +36,33 @@ class ECSSystem
 	std::vector<Entity*> m_Entities;
 
 	// component를 저장
-	std::unordered_map<std::bitset<N>, std::vector<ComponentSet<N>>> m_Components;
+	std::unordered_map<std::bitset<N>, std::vector<ComponentSet<N>*>> m_Components;
 
 	// system
 	std::vector<System*> m_System;
 
-public:
-	
+//private:
+//	template <class Component, class Other ...>
+//	void BuildComponentSet(ComponentSet<N>* set)
+//	{
+//		// do something
+//
+//
+//		BuildComponentSet<Other>(set);
+//	}
+//
+//
+//public:
+//	
+//	template<class Components ...>
+//	void CreateArchetype()
+//	{
+//		ComponentSet<N>* set = new ComponentSet<N>;
+//
+//		BuildComponentSet<Components>(set);
+//
+//
+//	}
 
 
 };

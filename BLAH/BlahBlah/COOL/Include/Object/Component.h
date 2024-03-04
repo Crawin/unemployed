@@ -13,15 +13,28 @@ struct CameraDataShader {
 namespace component {
 
 	/////////////////////////////////////////////////////////
-	// base component class
+	// bass component class
 	//
-	class Component
+	class Component 
 	{
 	public:
-		Component() = default;
-		virtual ~Component() {}
-
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) = 0;
+	};
+
+
+	/////////////////////////////////////////////////////////
+	// base component class for children
+	//
+	template<class Div>
+	class ComponentBase : public Component
+	{
+	public:
+		ComponentBase() = default;
+		virtual ~ComponentBase() {}
+
+
+
+		inline static int m_GID = -1;
 	};
 
 	/////////////////////////////////////////////////////////
@@ -38,6 +51,8 @@ namespace component {
 
 		std::map<std::string, std::function<Component* ()>> m_ComponentFactoryMap;
 
+		int m_ComponentCount = 0;
+
 		//public:
 			// 굳이 얘를 밖으로 뺄 이유가 없는듯?
 		static ComponentFactory& GetInstance() {
@@ -52,6 +67,7 @@ namespace component {
 		static void RegisterComponent(const std::string& componentName)
 		{
 			static_assert(std::is_base_of<component::Component, T>::value, "T is not base of Component!!");
+			T::m_GID = GetInstance().m_ComponentCount++;
 			GetInstance().m_ComponentFactoryMap[componentName] = []() { return new T; };
 		}
 
@@ -74,7 +90,7 @@ namespace component {
 	// Name Component
 	// 이름
 	//
-	class Name : public Component
+	class Name : public ComponentBase<Name>
 	{
 		std::string m_Name;
 
@@ -86,7 +102,7 @@ namespace component {
 	// transform
 	// 이동 관련
 	//
-	class Transform : public Component
+	class Transform : public ComponentBase<Transform>
 	{
 		XMFLOAT3 m_Position;
 		XMFLOAT4 m_Rotate;
@@ -100,7 +116,7 @@ namespace component {
 	// render component
 	// 렌더 관련, mesh, material
 	//
-	class Renderer : public Component
+	class Renderer : public ComponentBase<Renderer>
 	{
 		int m_MeshID;
 		int m_MaterialID;
@@ -119,7 +135,7 @@ namespace component {
 	// camera component
 	// 카메라 정보
 	//
-	class Camera : public Component
+	class Camera : public ComponentBase<Camera>
 	{
 		// Json으로 set 가능
 		XMFLOAT3 m_Right = { 1.0f, 0.0f, 0.0f };
