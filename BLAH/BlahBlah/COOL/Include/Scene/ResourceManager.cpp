@@ -87,9 +87,11 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 	
 	// if Children
 	if (root[CHILDREN].isNull() == false)
-		for (auto& val : root[CHILDREN])
-			if (LoadObjectJson(val, ent) == nullptr)
+		for (auto& val : root[CHILDREN]) {
+			auto child = LoadObjectJson(val, ent);
+			if (child == nullptr)
 				return nullptr;
+		}
 	
 	return ent;
 }

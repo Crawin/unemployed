@@ -7,8 +7,10 @@ namespace component { class Component; }
 class System;
 
 
+class ComponentSet {};
+
 template<std::size_t N, typename... Components>
-class ComponentSet {
+class ComponentSetComponents : public ComponentSet {
 
 	std::unordered_map<std::bitset<N>, std::vector<component::Component>> m_Datas;
 
@@ -23,7 +25,7 @@ public:
 				std::bitset bitset = Components::m_BIT;
 
 			}
-		}
+		}	
 	}
 
 };
@@ -41,28 +43,25 @@ class ECSSystem
 	// system
 	std::vector<System*> m_System;
 
-//private:
-//	template <class Component, class Other ...>
-//	void BuildComponentSet(ComponentSet<N>* set)
-//	{
-//		// do something
-//
-//
-//		BuildComponentSet<Other>(set);
-//	}
-//
-//
-//public:
-//	
-//	template<class Components ...>
-//	void CreateArchetype()
-//	{
-//		ComponentSet<N>* set = new ComponentSet<N>;
-//
-//		BuildComponentSet<Components>(set);
-//
-//
-//	}
+private:
+	template <class Component, class Other ...>
+	void BuildComponentSet(ComponentSet<N>* set)
+	{
+		// do something
+
+
+		BuildComponentSet<Other>(set);
+	}
+
+
+public:
+	
+	void CreateArchetype()
+	{
+		ComponentSet<N>* set = new ComponentSet<N>;
+
+
+	}
 
 
 };

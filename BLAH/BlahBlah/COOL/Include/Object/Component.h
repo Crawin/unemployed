@@ -67,7 +67,9 @@ namespace component {
 		template<class T>
 		static void RegisterComponent(const std::string& componentName)
 		{
+#ifdef _DEBUG
 			static_assert(std::is_base_of<component::Component, T>::value, "T is not base of Component!!");
+#endif
 			T::m_GID = GetInstance().m_ComponentCount++;
 			GetInstance().m_ComponentFactoryMap[componentName] = []() { return new T; };
 		}

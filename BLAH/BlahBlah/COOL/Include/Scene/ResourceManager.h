@@ -9,6 +9,8 @@ class Mesh;
 class Shader;
 //class Camera;
 
+class ECSManager;
+
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
 class Entity;
@@ -123,12 +125,22 @@ private:
 	// 리소스힙, t0번 슬롯에 set
 	ComPtr<ID3D12DescriptorHeap> m_ShaderResourceHeap;
 
+	////////////////////////////////////////////////////////
+	// ECS SYSTEM
+	////////////////////////////////////////////////////////
 	// Object
 	std::vector<Entity*> m_Entities;
 	std::vector<Entity*> m_RootEntities;
 
 	// component
 	std::vector<component::Component*> m_Components;
+
+	// ECS System
+	//ECSManager* m_ECSManager = nullptr;
+
+	////////////////////////////////////////////////////////
+	// ECS SYSTEM END
+	////////////////////////////////////////////////////////
 
 	// mesh
 	std::vector<Mesh*> m_Meshes;
