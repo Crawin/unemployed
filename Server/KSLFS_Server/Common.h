@@ -21,6 +21,7 @@ void err_display(int errcode);
 #include <iostream>
 #include <thread>
 #include <functional>
+#include <DirectXMath.h>
 
 #include <string>
 #include <vector>

@@ -412,7 +412,7 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 			}
 
 			Log_Mutex.lock();
-			std::cout << "Type: POSITION , X: " << sp.x << " , Y: " << sp.y << " , Z: " << sp.z << std::endl;
+			std::cout << "Type: POSITION , X: " << sp.pos.x << " , Y: " << sp.pos.y << " , Z: " << sp.pos.z << std::endl;
 			Log_Mutex.unlock();
 			break;
 		}
@@ -450,59 +450,51 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 	std::cout << "[" << gameNum << "] GameRunThread Run" << std::endl;
 	Log_Mutex.unlock();
 
-	Player p1, p2;
+	std::array<Player, 2> p;
 	while (1)
 	{
-		while (1)
-		{
-			// p1 이 연결이 되었는가?
-			if (mGameStorages[gameNum][0].first)
-			{
-				Log_Mutex.lock();
-				std::cout << "P1 [" << mGameStorages[gameNum][0].first << "]이 연결되었습니다." << std::endl;
-				Log_Mutex.unlock();
-				p1.allocateSOCKET(mGameStorages[gameNum][0].first);
-				mGameStorages[gameNum][0].second.clear();
-				break;
-			}
-		}
-		while (1)
-		{
-			// p2 가 연결이 되었는가?
-			if (mGameStorages[gameNum][1].first)
-			{
-				Log_Mutex.lock();
-				std::cout << "P2 [" << mGameStorages[gameNum][1].first << "]이 연결되었습니다." << std::endl;
-				Log_Mutex.unlock();
-				p2.allocateSOCKET(mGameStorages[gameNum][1].first);
-				mGameStorages[gameNum][1].second.clear();
-				break;
-			}
-		}
-		break;
-
-		//while (1)
-		//{
-		//	// p2 가 연결이 되었는가?
-		//	auto a = std::find_if(mGameStorages[gameNum].begin(), mGameStorages[gameNum].end(), [](std::pair<SOCKET, SendPosition> t) {
-		//		return t.first != NULL;
-		//		});
-		//	if (a != mGameStorages[gameNum].end()) break;
-		//}
+		// 게임 로직
 		
+		// 접속
+		for (int i = 0; i < 1; ++i)
+		{
+			if (p[i].getSocket() == NULL)		// P[i]이 연결되어 있지 않은 상태에서
+			{
+				// p[i] 가 연결이 되었는가?
+				if (mGameStorages[gameNum][i].first)
+				{
+					Log_Mutex.lock();
+					std::cout << "P"<<i+1<<"[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
+					Log_Mutex.unlock();
+					p[i].allocateSOCKET(mGameStorages[gameNum][i].first);
+					mGameStorages[gameNum][i].second.clear();
+				}
+			}
+			else
+			{
+				p[i].printPlayerPos("p1", true);
+				p[i].syncPos();
+			}
+
+		}
+
+		// 이동
+		for (int i = 0; i < 1; ++i)
+		{
+			if (mGameStorages[gameNum][i].second.size() > 0)
+			{
+				SendPosition temp;
+				memcpy(&temp, &mGameStorages[gameNum][i].second.front(), sizeof(SendPosition));
+				p[i].setPos(temp.pos);
+				mGameStorages[gameNum][i].second.erase(mGameStorages[gameNum][i].second.begin());
+			}
+		}
+
+
 
 		//충돌
-		//이동
 		//이벤트 발생
 	}
-	
-
-
-	//Log_Mutex.lock();
-	//std::cout << std::endl << std::endl << std::endl << "GameRunThread 삭제 진행" << std::endl;
-	//Log_Mutex.unlock();
-	//std::thread t(&CRoomServer::DeleteThread, this, "lGameRunThreads", NULL, gameNum);
-	//t.detach();
 }
 
 CServerManager::CServerManager()
@@ -599,4 +591,38 @@ const SOCKET Player::getSocket()
 void Player::allocateSOCKET(const SOCKET& s)
 {
 	socket = s;
+	m_xmf3Pos = DirectX::XMFLOAT3(0, 0, 0);
+}
+
+const DirectX::XMFLOAT3 Player::getPos()
+{
+	return m_xmf3Pos;
+}
+
+// (문자열, 좌표 변경이 있을시에만 출력)
+void Player::printPlayerPos(const std::string& s,const bool& d)
+{
+	Log_Mutex.lock();		// [p1: x, y, z]
+	if (d)
+	{
+		if (m_xmf3Pos.x != m_xmf3Prev_Pos.x || m_xmf3Pos.y != m_xmf3Prev_Pos.y || m_xmf3Pos.z != m_xmf3Prev_Pos.z)		// 좌표가 바뀐게 있다면
+		{
+			std::cout << "[" << s << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+		}
+	}
+	else 
+	{
+		std::cout << "[" << s << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+	}
+	Log_Mutex.unlock();
+}
+
+void Player::syncPos()
+{
+	m_xmf3Prev_Pos = m_xmf3Pos;
+}
+
+void Player::setPos(const DirectX::XMFLOAT3& pos)
+{
+	m_xmf3Pos = pos;
 }

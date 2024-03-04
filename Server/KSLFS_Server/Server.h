@@ -18,9 +18,7 @@ enum SendType
 
 struct SendPosition {
 	SendType type;		// POSITION¿œ∂ß
-	float x;
-	float y;
-	float z;
+	DirectX::XMFLOAT3 pos;
 };
 
 struct dddd
@@ -50,9 +48,7 @@ private:
 	SOCKET listen_sock;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
-	//std::map<unsigned int, std::list < std::pair<SOCKET, SendPosition> >> mGameStorages;
 	std::map<unsigned int, std::array<std::pair<SOCKET, std::list<SendPosition>>, 2>> mGameStorages;
-
 public:
 	CRoomServer();
 	~CRoomServer();
@@ -88,10 +84,13 @@ class Player {
 private:
 	SOCKET socket = NULL;
 private:
-	float x;
-	float y;
-	float z;
+	DirectX::XMFLOAT3 m_xmf3Pos;
+	DirectX::XMFLOAT3 m_xmf3Prev_Pos;
 public:
 	const SOCKET getSocket();
 	void allocateSOCKET(const SOCKET&);
+	const DirectX::XMFLOAT3 getPos();
+	void printPlayerPos(const std::string&, const bool&);
+	void syncPos();
+	void setPos(const DirectX::XMFLOAT3&);
 };
