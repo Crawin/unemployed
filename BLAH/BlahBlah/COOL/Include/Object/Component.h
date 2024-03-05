@@ -50,9 +50,14 @@ namespace component {
 		ComponentFactory& operator=(const ComponentFactory& other) = delete;
 		~ComponentFactory() {}
 
+		// component size
+		int m_ComponentCount = 0;
+
+		// component maker map
 		std::map<std::string, std::function<Component* ()>> m_ComponentFactoryMap;
 
-		int m_ComponentCount = 0;
+		// component size
+		std::vector<size_t> m_ComponentSizeOnID;
 
 		//public:
 			// 굳이 얘를 밖으로 뺄 이유가 없는듯?
@@ -70,7 +75,13 @@ namespace component {
 #ifdef _DEBUG
 			static_assert(std::is_base_of<component::Component, T>::value, "T is not base of Component!!");
 #endif
+			// Set GID to Each Component
 			T::m_GID = GetInstance().m_ComponentCount++;
+
+			// Register Component size, 
+			GetInstance().m_ComponentSizeOnID.push_back(sizeof(T));
+
+			// Register Component to Factory Map
 			GetInstance().m_ComponentFactoryMap[componentName] = []() { return new T; };
 		}
 
@@ -86,6 +97,10 @@ namespace component {
 			auto& map = GetInstance().m_ComponentFactoryMap;
 			return map.find(componentName) != map.end();
 		}
+
+		static int GetComponentCount()  { return GetInstance().m_ComponentCount; }
+
+		static size_t GetComponentSize(const size_t bitPos) { return GetInstance().m_ComponentSizeOnID[bitPos]; }
 	};
 
 
@@ -196,3 +211,6 @@ namespace component {
 #define REGISTER_COMPONENT(TYPE, NAME) component::ComponentFactory::RegisterComponent<TYPE>(NAME)
 #define GET_COMPONENT(NAME) component::ComponentFactory::GetComponent(NAME)
 #define CHECK_COMPONENT(NAME) component::ComponentFactory::IsExist(NAME)
+#define GET_COMP_COUNT component::ComponentFactory::GetComponentCount();
+#define GET_COMP_SIZE(BITPOS) component::ComponentFactory::GetComponentSize(BITPOS);
+

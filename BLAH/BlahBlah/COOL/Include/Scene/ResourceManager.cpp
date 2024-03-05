@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "Object/Entity.h"
 #include "Object/Component.h"
+#include "Scene/ECSSystem.h"
 #include <json/json.h>
 
 //#include "Material/Material.h"
@@ -69,7 +70,6 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 {
 	Entity* ent = new Entity(m_Entities.size());
-	m_Entities.push_back(ent);
 
 	if (parent) parent->AddChild(ent);
 
@@ -93,6 +93,9 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 				return nullptr;
 		}
 	
+	// 여기서 ECS Manager에 entity를 삽입한다
+	m_Entities.push_back(ent);
+
 	return ent;
 }
 

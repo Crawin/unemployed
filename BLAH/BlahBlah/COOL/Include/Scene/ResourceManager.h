@@ -9,7 +9,7 @@ class Mesh;
 class Shader;
 //class Camera;
 
-class ECSManager;
+class ECSSystemBase;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
@@ -136,7 +136,7 @@ private:
 	std::vector<component::Component*> m_Components;
 
 	// ECS System
-	//ECSManager* m_ECSManager = nullptr;
+	ECSSystemBase* m_ECSManager = nullptr;
 
 	////////////////////////////////////////////////////////
 	// ECS SYSTEM END

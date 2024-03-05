@@ -6,63 +6,59 @@ class Entity;
 namespace component { class Component; }
 class System;
 
-
-class ComponentSet {};
-
-template<std::size_t N, typename... Components>
-class ComponentSetComponents : public ComponentSet {
-
-	std::unordered_map<std::bitset<N>, std::vector<component::Component>> m_Datas;
-
+// 컴포넌트들을 가지는 클래스
+// std::vector<char>를 랩핑 하였다.
+class ComponentContainer {
+	size_t m_Stride = 0;
+	size_t m_Elements = 0;
+	std::vector<char> m_Data;
 
 public:
-	ComponentSet(std::bitset<N> bit) {
-		// 미리 해당 bitset에 맞춰 vector를 만들어둔다.
-		for (int i = 0; i < N; ++i) {
-			int t = 1 << i;
-			if (bit & t) {
-				// add
-				std::bitset bitset = Components::m_BIT;
+	ComponentContainer(size_t stride);
 
-			}
-		}	
-	}
+	template <class T>
+	void push_back(const T* data);
+
+	template <class T>
+	T* operator[](size_t index);
 
 };
 
 
+// ComponentContainer들을 가짐
 template<std::size_t N>
-class ECSSystem
+class ComponentSet {
+
+	// Component를 각각 저장하는 container
+	std::unordered_map<std::bitset<N>, ComponentContainer> m_Set;
+
+public:
+	ComponentSet(std::bitset<N> bit);
+
+};
+
+
+class ECSSystemBase {
+
+public:
+	virtual void AddEntity(Entity* entity) = 0;
+};
+
+template<std::size_t N>
+class ECSSystem : public ECSSystemBase
 {
 	// entity
 	std::vector<Entity*> m_Entities;
 
-	// component를 저장
-	std::unordered_map<std::bitset<N>, std::vector<ComponentSet<N>*>> m_Components;
+	// ComponentSet을 저장
+	std::unordered_map<std::bitset<N>, ComponentSet<N>> m_ComponentSets;
 
 	// system
 	std::vector<System*> m_System;
 
-private:
-	template <class Component, class Other ...>
-	void BuildComponentSet(ComponentSet<N>* set)
-	{
-		// do something
-
-
-		BuildComponentSet<Other>(set);
-	}
-
-
 public:
 	
-	void CreateArchetype()
-	{
-		ComponentSet<N>* set = new ComponentSet<N>;
-
-
-	}
-
+	virtual void AddEntity(Entity* entity) override;
 
 };
 
