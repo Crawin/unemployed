@@ -45,6 +45,7 @@ namespace component {
 	//
 	class ComponentFactory
 	{
+		// 싱글톤
 		ComponentFactory() {}
 		ComponentFactory(const ComponentFactory& other) = delete;
 		ComponentFactory& operator=(const ComponentFactory& other) = delete;

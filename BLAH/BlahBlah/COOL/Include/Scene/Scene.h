@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "ManagementComponents.h"
 
 // 씬 Enum
 // 이거에 따라서 로드 할 씬의 종류가 달라짐
@@ -30,13 +31,8 @@ enum SCENE_TYPE {
 // Object를 로드 할 때 ResourceManager에 필요한 리소스를 추가해 가져오거나 재활용 함
 class ResourceManager;
 
-class ObjectManager;
-//class MeshManager;
-//class MaterialManager;
-//class ShaderManager;
-
-class ObjectBase;
-//class Camera;
+template <size_t N>
+class ECSSystem;
 
 class Scene
 {
@@ -49,13 +45,10 @@ private:
 	std::string m_SceneName = "noname";
 
 protected:
-	// 서로 교환해야 하는 데이터가 많다.
-	// SceneData 클래스로 묶고 한번에 사용할까?
 	ResourceManager* m_ResourceManager = nullptr;
-	ObjectManager* m_ObjectManager = nullptr;
-	//MeshManager* m_MeshManager = nullptr;
-	//MaterialManager* m_MaterialManager = nullptr;
-	//ShaderManager* m_ShaderManager = nullptr;
+
+	// ECS System
+	std::shared_ptr<ECSSystem<COMPONENT_COUNT>> m_ECSManager = nullptr;
 
 	//virtual bool Init();
 private:
@@ -74,6 +67,6 @@ public:
 	// 입력 처리. 해당 씬이 활성화되어 있을 때 할 입력 처리
 	virtual bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 
-	//void Render();
+	virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists);
 };
 

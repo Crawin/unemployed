@@ -39,21 +39,49 @@ inline ComponentSet<N>::ComponentSet(std::bitset<N> bit)
 {
 	// 미리 해당 bitset에 맞춰 componentcontainer를 만들어둔다.
 	for (int i = 0; i < N; ++i) {
-		std::bitset<N> tempBit(1);
-		tempBit <<= i;
-
-		if (bit & tempBit) {
+		if (bit.test(i)) {
 			// add
 			size_t componentSize = GET_COMP_SIZE(i);
+			
+			std::bitset<N> tempBit(1);
+			tempBit <<= i;
 
-
-			m_Set.emplace(m_Set[tempBit], componentSize);
+			m_Set.emplace(tempBit, componentSize);
 			
 			//std::bitset bitset = Components::m_BIT;
 
 		}
 	}
 }
+
+template<std::size_t N>
+void ComponentSet<N>::InsertComponent(component::Component* comp)
+{
+	std::bitset<N> bit(1);
+	bit <<= comp->GetGID();
+
+	// check the component is exist in the set
+	if (m_Set.contains(bit) == false) {
+		DebugPrint("ERROR!! not this component");
+		exit(1);
+	}
+
+	// insert component;
+	m_Set[bit].push_back(comp);
+
+}
+
+template<std::size_t N>
+template<class ...COMPONENTS>
+inline void ComponentSet<N>::Execute(std::function<void(COMPONENTS*...)>& func)
+{
+	DebugPrint("hi im in");
+	//for (int i = 0; i < m_Set.size(); ++i) {
+	//	func();
+	// 
+	//}
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // ECS System
@@ -72,8 +100,66 @@ inline void ECSSystem<N>::AddEntity(Entity* entity)
 	}
 
 	// 여기에 컴포넌트set 맞춰서 넣으면 된다.
+	if (m_ComponentSets.contains(bitset) == false) 
+	{
+		// 없다면 만들어둔다
+		m_ComponentSets.emplace(bitset, bitset);
+	}
+
+	for (auto& comp : entity->m_Components) 
+	{
+		m_ComponentSets[bitset].InsertComponent(comp);
+	}
 
 	DebugPrint(std::format("entity bitset: {}", bitset.to_string()));
 
 }
+
+template<std::size_t N>
+template<class ...COMPONENTS>
+inline void ECSSystem<N>::Execute(std::function<void(COMPONENTS*...)>& func)
+{
+	// find bitset first
+	std::bitset<N> bitset = GetBitset<COMPONENTS...>();
+
+	//DebugPrint(std::format("{}", bitset.to_string()));
+
+	// structured binding
+	// 배웠던건데 기억이 안났다
+	for (auto& [key, compSet] : m_ComponentSets) {
+		// not match => dont
+		if ((bitset & key) != bitset) continue;
+
+		compSet.Execute(func);
+	}
+	
+}
+
+//template<std::size_t N>
+//template<class >
+//std::bitset<N>& ECSSystem<N>::GetBitset()
+//{
+//	std::bitset<N> bit(0);
+//
+//	return bit;
+//}
+
+template<std::size_t N>
+template<class ...COMPONENTS>
+std::bitset<N> ECSSystem<N>::GetBitset()
+{
+	// fold expression, C++ 17
+	return (GetBit<COMPONENTS>() | ...);
+}
+
+template<std::size_t N>
+template<class COMP>
+std::bitset<N> ECSSystem<N>::GetBit()
+{
+	std::bitset<N> bit(1);
+	bit <<= COMP::m_GID;
+
+	return bit;
+}
+
 

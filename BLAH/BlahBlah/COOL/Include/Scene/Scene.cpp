@@ -1,8 +1,10 @@
 ﻿#include "Scene.h"
 //#include "Renderer/Renderer.h"
 #include "framework.h"
+#include "Scene/ECSSystem.h"
 #include "ResourceManager.h"
-
+#include "Object/Component.h"
+#include "Shader/Shader.h"
 //#define SCENE_PATH "SceneData\\Scene\\"
 
 Scene::Scene()
@@ -18,22 +20,9 @@ Scene::~Scene()
 
 bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
-	// todo
-	// 고친다
+	m_ECSManager = std::make_shared<ECSSystem<COMPONENT_COUNT>>();
 
-	//// load shader first
-	//std::string shaderPath = SHADER_PATH;
-	////CHECK_CREATE_FAILED(m_ShaderManager->LoadFolder(commandList, shaderPath), "failed to load shader");
-
-	//std::string meshPath = MESH_PATH;
-	//CHECK_CREATE_FAILED(m_MeshManager->LoadFolder(commandList, meshPath), "failed to load mesh");
-
-	//std::string matPath = MATERIAL_PATH;
-	//CHECK_CREATE_FAILED(m_MaterialManager->LoadFolder(commandList, matPath), "failed to load Material");
-
-	//std::string objPath(SCENE_PATH);
-	//objPath += sceneName + "\\Object\\";				// SceneData/Scene/ scenename / Object
-	//CHECK_CREATE_FAILED(m_ObjectManager->LoadFolder(objPath), "failed to load obj");
+	m_ResourceManager->SetECSManager(m_ECSManager);
 
 	CHECK_CREATE_FAILED(m_ResourceManager->Init(commandList, sceneName), std::format("Can't Load Scene, name: {}", sceneName));
 
@@ -48,6 +37,29 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 	}
 
 	return true;
+}
+
+void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
+{
+	// 기본 render, forward render이다
+
+	auto res = m_ResourceManager;
+
+	std::function<void(component::Renderer*, component::Transform*)> func = [&commandLists, &res](component::Renderer* renderComponent, component::Transform* tr) {
+		int material = renderComponent->GetMaterial();
+		int mesh = renderComponent->GetMesh();
+
+		res->m_Materials[material]->GetShader()->Render(commandLists[0]);
+
+		res->m_Materials[material]->SetDatas(commandLists[0], ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT);
+
+		XMFLOAT4X4 t = Matrix4x4::Identity();
+		res->m_Meshes[mesh]->Render(commandLists[0], t);
+		};
+
+
+	m_ECSManager->Execute<component::Renderer, component::Transform>(func);
+
 }
 
 //bool Scene::Init()

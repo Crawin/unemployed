@@ -148,7 +148,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	m_Childs.reserve(childNum);
 
 	// 9. 서브메쉬(재귀)
-	for (int i = 0; i < childNum; ++i) {
+	for (unsigned int i = 0; i < childNum; ++i) {
 		Mesh* newMesh = new Mesh;
 		newMesh->BuildMesh(commandList, file, manager);
 		m_Childs.push_back(newMesh);

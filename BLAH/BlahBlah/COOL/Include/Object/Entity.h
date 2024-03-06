@@ -22,6 +22,10 @@ public:
 	void AddChild(Entity* entity) { m_Children.push_back(entity); }
 
 private:
+	// 컴포넌트 소유 bitset
+	std::bitset<COMPONENT_COUNT> m_Bitset;
+
+	// bitset 내부 id
 	int m_Id = -1;
 
 	// 소유주는 리소스매니저

@@ -169,7 +169,9 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	// 해당 mesh와 material이 없으면 새로 만든다.
 	//
 
-	m_ECSManager = new ECSSystem<COMPONENT_COUNT>;
+	//ecs manager를 만든다
+	// ecsmanager 의 소유는 scene으로 이동함
+	//m_ECSManager = new ECSSystem<COMPONENT_COUNT>;
 
 	std::string scenePath = SCENE_PATH + sceneName;
 
@@ -188,6 +190,11 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), "CreateResourceDescriptorHeap Fail!!");
 
 	return true;
+}
+
+void ResourceManager::SetECSManager(std::shared_ptr<ECSSystem<COMPONENT_COUNT>> ptr)
+{
+	m_ECSManager = ptr;
 }
 
 bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)

@@ -14,6 +14,7 @@ class ComponentContainer {
 	std::vector<char> m_Data;
 
 public:
+	ComponentContainer() { DebugPrint("NONO"); };
 	ComponentContainer(size_t stride);
 
 	template <class T>
@@ -33,7 +34,15 @@ class ComponentSet {
 	std::unordered_map<std::bitset<N>, ComponentContainer> m_Set;
 
 public:
+	ComponentSet() {
+		DebugPrint("NO");
+	}
 	ComponentSet(std::bitset<N> bit);
+
+	void InsertComponent(component::Component* comp);
+
+	template<class ...COMPONENTS>
+	void Execute(std::function<void(COMPONENTS*...)>& func);
 
 };
 
@@ -51,8 +60,18 @@ class ECSSystem
 	std::vector<System*> m_System;
 
 public:
-	
 	void AddEntity(Entity* entity);
 
-};
+	template<class ...COMPONENTS>
+	void Execute(std::function<void(COMPONENTS*...)>& func);
 
+private:
+
+	//std::bitset<N> GetBitset() { return std::bitset<N>(0); }
+
+	template<class ...COMPONENTS>
+	std::bitset<N> GetBitset();
+
+	template<class COMP>
+	std::bitset<N> GetBit();
+};

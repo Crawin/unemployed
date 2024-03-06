@@ -87,6 +87,10 @@ void SceneManager::Update(float deltaTime)
 
 void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 {
+	m_CurrentScene->Render(commandLists);
+
+	/*
+
 	// 임시코드이다
 	// todo 렌더가 된다는 것만 확인하고 바로 고치자
 
@@ -100,6 +104,13 @@ void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& comman
 	commandLists[0]->SetDescriptorHeaps(1, heap.GetAddressOf());
 	commandLists[0]->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
 
+	// query를 사용함
+
+
+
+	*/
+
+	/*
 	for (int i = 0; i < manager->m_Components.size(); ++i) {
 		component::Renderer* render = dynamic_cast<component::Renderer*>(manager->m_Components[i]);
 
@@ -117,7 +128,7 @@ void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& comman
 		}
 
 	}
-
+	*/
 
 	//m_CurrentScene->Render(commandLists);
 }
