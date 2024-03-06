@@ -1,11 +1,14 @@
 ﻿#pragma once
-
+#include "ManagementComponents.h"
 
 namespace component { class Component; }
+
 
 // entity
 class Entity
 {
+	friend class ECSSystem<COMPONENT_COUNT>;
+
 public:
 	Entity(int id) : m_Id{ id } {}
 	~Entity() {

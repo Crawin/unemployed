@@ -95,6 +95,7 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 	
 	// 여기서 ECS Manager에 entity를 삽입한다
 	m_Entities.push_back(ent);
+	m_ECSManager->AddEntity(ent);
 
 	return ent;
 }
@@ -168,7 +169,7 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	// 해당 mesh와 material이 없으면 새로 만든다.
 	//
 
-
+	m_ECSManager = new ECSSystem<COMPONENT_COUNT>;
 
 	std::string scenePath = SCENE_PATH + sceneName;
 

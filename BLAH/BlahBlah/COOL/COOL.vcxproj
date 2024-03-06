@@ -164,6 +164,7 @@
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
+    <ClInclude Include="Include\ManagementComponents.h" />
     <ClInclude Include="Include\Material\Material.h" />
     <ClInclude Include="Include\mymath.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />

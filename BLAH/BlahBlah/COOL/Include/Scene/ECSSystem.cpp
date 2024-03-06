@@ -71,7 +71,9 @@ inline void ECSSystem<N>::AddEntity(Entity* entity)
 		bitset |= compBit;
 	}
 
-	DebugPrint(std::format("entity bitset: {}", bitset));
+	// 여기에 컴포넌트set 맞춰서 넣으면 된다.
+
+	DebugPrint(std::format("entity bitset: {}", bitset.to_string()));
 
 }
 

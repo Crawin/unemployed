@@ -38,14 +38,8 @@ public:
 };
 
 
-class ECSSystemBase {
-
-public:
-	virtual void AddEntity(Entity* entity) = 0;
-};
-
 template<std::size_t N>
-class ECSSystem : public ECSSystemBase
+class ECSSystem
 {
 	// entity
 	std::vector<Entity*> m_Entities;
@@ -58,7 +52,7 @@ class ECSSystem : public ECSSystemBase
 
 public:
 	
-	virtual void AddEntity(Entity* entity) override;
+	void AddEntity(Entity* entity);
 
 };
 

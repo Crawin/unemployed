@@ -2,6 +2,7 @@
 #include "Material/Material.h"
 #include "Mesh/Mesh.h"
 //#include "Object/ObjectBase.h"
+#include "ManagementComponents.h"
 
 class COOLResource;
 class Material;
@@ -9,7 +10,8 @@ class Mesh;
 class Shader;
 //class Camera;
 
-class ECSSystemBase;
+template <size_t N>
+class ECSSystem;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
@@ -136,7 +138,7 @@ private:
 	std::vector<component::Component*> m_Components;
 
 	// ECS System
-	ECSSystemBase* m_ECSManager = nullptr;
+	ECSSystem<COMPONENT_COUNT>* m_ECSManager = nullptr;
 
 	////////////////////////////////////////////////////////
 	// ECS SYSTEM END

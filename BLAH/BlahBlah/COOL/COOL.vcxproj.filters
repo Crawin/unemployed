@@ -144,6 +144,9 @@
     <ClInclude Include="Include\Scene\ECSSystem.h">
       <Filter>소스 파일\Scene\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ManagementComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">

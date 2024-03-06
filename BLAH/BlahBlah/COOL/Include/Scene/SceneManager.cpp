@@ -5,9 +5,12 @@
 #include "Scene/ResourceManager.h"
 #include "TestMainScene.h"
 #include "Shader/Shader.h"
+#include "ManagementComponents.h"
 
 void SceneManager::RegisterComponents()
 {
+	// 사용 할 컴포넌트가 늘어날 경우
+	// ManagementComponents로 들어가서 숫자를 바꿔라
 	REGISTER_COMPONENT(component::Name, "Name");
 	REGISTER_COMPONENT(component::Renderer, "Renderer");
 	REGISTER_COMPONENT(component::Transform, "Transform");
