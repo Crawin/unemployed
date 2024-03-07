@@ -1,9 +1,9 @@
 ﻿#include "Scene.h"
 //#include "Renderer/Renderer.h"
 #include "framework.h"
-#include "Scene/ECSSystem.h"
+#include "Scene/ECSManager.h"
 #include "ResourceManager.h"
-#include "Object/Component.h"
+#include "ECS/Component.h"
 #include "Shader/Shader.h"
 //#define SCENE_PATH "SceneData\\Scene\\"
 
@@ -20,7 +20,7 @@ Scene::~Scene()
 
 bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
-	m_ECSManager = std::make_shared<ECSSystem<COMPONENT_COUNT>>();
+	m_ECSManager = std::make_shared<ECSManager<COMPONENT_COUNT>>();
 
 	m_ResourceManager->SetECSManager(m_ECSManager);
 

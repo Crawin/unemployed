@@ -11,7 +11,7 @@ class Shader;
 //class Camera;
 
 template <size_t N>
-class ECSSystem;
+class ECSManager;
 
 using COOLResourcePtr = std::shared_ptr<COOLResource>;
 
@@ -89,7 +89,7 @@ private:
 	bool LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
 
 public:
-	void SetECSManager(std::shared_ptr<ECSSystem<COMPONENT_COUNT>> ptr);
+	void SetECSManager(std::shared_ptr<ECSManager<COMPONENT_COUNT>> ptr);
 
 	// 씬 생성시 최초 초기화
 	bool Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
@@ -141,7 +141,7 @@ private:
 	std::vector<component::Component*> m_Components;
 
 	// ECS System
-	std::shared_ptr<ECSSystem<COMPONENT_COUNT>> m_ECSManager = nullptr;
+	std::shared_ptr<ECSManager<COMPONENT_COUNT>> m_ECSManager = nullptr;
 
 	////////////////////////////////////////////////////////
 	// ECS SYSTEM END

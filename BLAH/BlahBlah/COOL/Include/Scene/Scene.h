@@ -32,7 +32,7 @@ enum SCENE_TYPE {
 class ResourceManager;
 
 template <size_t N>
-class ECSSystem;
+class ECSManager;
 
 class Scene
 {
@@ -48,7 +48,7 @@ protected:
 	ResourceManager* m_ResourceManager = nullptr;
 
 	// ECS System
-	std::shared_ptr<ECSSystem<COMPONENT_COUNT>> m_ECSManager = nullptr;
+	std::shared_ptr<ECSManager<COMPONENT_COUNT>> m_ECSManager = nullptr;
 
 	//virtual bool Init();
 private:

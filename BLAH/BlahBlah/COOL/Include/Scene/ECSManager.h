@@ -56,7 +56,7 @@ private:
 
 
 template<std::size_t N>
-class ECSSystem
+class ECSManager
 {
 	// entity
 	std::vector<Entity*> m_Entities;

@@ -2,9 +2,9 @@
 #include "Renderer/COOLResource.h"
 #include "Renderer/Renderer.h"
 #include "ResourceManager.h"
-#include "Object/Entity.h"
-#include "Object/Component.h"
-#include "Scene/ECSSystem.h"
+#include "ECS/Entity.h"
+#include "ECS/Component.h"
+#include "Scene/ECSManager.h"
 #include <json/json.h>
 
 //#include "Material/Material.h"
@@ -172,7 +172,7 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 
 	//ecs manager를 만든다
 	// ecsmanager 의 소유는 scene으로 이동함
-	//m_ECSManager = new ECSSystem<COMPONENT_COUNT>;
+	//m_ECSManager = new ECSManager<COMPONENT_COUNT>;
 
 	std::string scenePath = SCENE_PATH + sceneName;
 
@@ -193,7 +193,7 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	return true;
 }
 
-void ResourceManager::SetECSManager(std::shared_ptr<ECSSystem<COMPONENT_COUNT>> ptr)
+void ResourceManager::SetECSManager(std::shared_ptr<ECSManager<COMPONENT_COUNT>> ptr)
 {
 	m_ECSManager = ptr;
 }

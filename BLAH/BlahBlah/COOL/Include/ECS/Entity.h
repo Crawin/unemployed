@@ -7,8 +7,8 @@ namespace component { class Component; }
 // entity
 class Entity
 {
-	friend class ECSSystem<COMPONENT_COUNT>;
-	friend class ComponentSet<COMPONENT_COUNT>;
+	template<size_t N> friend class ECSManager;
+	template<size_t N> friend class ComponentSet;
 
 public:
 	Entity(int id) : m_Id{ id } {}
