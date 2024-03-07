@@ -19,7 +19,9 @@ namespace component {
 	{
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) = 0;
-		virtual int GetGID() = 0;
+		virtual std::bitset<COMPONENT_COUNT> GetBitset() = 0;
+
+		virtual void ShowYourself() const = 0;
 	};
 
 
@@ -29,13 +31,18 @@ namespace component {
 	template<class Div>
 	class ComponentBase : public Component
 	{
+		friend class ComponentFactory;
+		inline static std::bitset<COMPONENT_COUNT> m_Bitset;
+
 	public:
 		ComponentBase() = default;
 		virtual ~ComponentBase() {}
 
-		virtual int GetGID() override { return m_GID; }
+		virtual std::bitset<COMPONENT_COUNT> GetBitset() override { 
+			return m_Bitset;
+		}
 
-		inline static int m_GID = -1;
+		static std::bitset<COMPONENT_COUNT> GetBit() { return m_Bitset; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -76,8 +83,12 @@ namespace component {
 #ifdef _DEBUG
 			static_assert(std::is_base_of<component::Component, T>::value, "T is not base of Component!!");
 #endif
-			// Set GID to Each Component
-			T::m_GID = GetInstance().m_ComponentCount++;
+			// Set bitset to each component
+			std::bitset<COMPONENT_COUNT> bitset(1);
+			bitset <<= GetInstance().m_ComponentCount++;
+			T::m_Bitset = bitset;
+
+			DebugPrint(std::format("Component Register!!\t bitset: {}, name: {}", T::m_Bitset.to_string(), componentName));
 
 			// Register Component size, 
 			GetInstance().m_ComponentSizeOnID.push_back(sizeof(T));
@@ -93,15 +104,21 @@ namespace component {
 			return func ? func() : nullptr;
 		}
 
-		static bool IsExist(const std::string& componentName)
-		{
-			auto& map = GetInstance().m_ComponentFactoryMap;
-			return map.find(componentName) != map.end();
-		}
-
 		static int GetComponentCount()  { return GetInstance().m_ComponentCount; }
 
 		static size_t GetComponentSize(const size_t bitPos) { return GetInstance().m_ComponentSizeOnID[bitPos]; }
+
+		static void PrintBitsets() {
+			auto& map = GetInstance().m_ComponentFactoryMap;
+
+			for (auto& [name, val] : map) {
+				Component* data = val != nullptr ? val() : nullptr;
+				if (data == nullptr) continue;
+				DebugPrint(std::format("bitset: {}, name: {}", data->GetBitset().to_string(), name));
+				delete data;
+			}
+
+		}
 	};
 
 
@@ -116,6 +133,8 @@ namespace component {
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
 	};
 
 	/////////////////////////////////////////////////////////
@@ -130,6 +149,16 @@ namespace component {
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		const XMFLOAT3& GetPosition() const { return m_Position; }
+		const XMFLOAT4& GetRotation() const { return m_Rotate; }
+		const XMFLOAT3& GetScale() const { return m_Scale; }
+
+		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
+		void SetRotation(const XMFLOAT4& rot) { m_Rotate = rot; }
+		void SetScale(const XMFLOAT3& sca) { m_Scale = sca; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -138,17 +167,23 @@ namespace component {
 	//
 	class Renderer : public ComponentBase<Renderer>
 	{
+		XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();
+		
 		int m_MeshID;
 		int m_MaterialID;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
+		virtual void ShowYourself() const;
+
 		int GetMesh() const { return m_MeshID; }
 		int GetMaterial() const { return m_MaterialID; }
 
 		void SetMesh(int idx) { m_MeshID = idx; }
 		void SetMaterial(int idx) { m_MaterialID = idx; }
+
+		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -185,16 +220,19 @@ namespace component {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
+		virtual void ShowYourself() const;
+
 		void SetLook(const XMFLOAT3& look) { m_Look = look; }
 		void SetRight(const XMFLOAT3& right) { m_Right = right; }
 		void SetUp(const XMFLOAT3& up) { m_Up = up; }
+		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 
-		XMFLOAT3 GetLook() const { return m_Look; }
-		XMFLOAT3 GetRight() const { return m_Right; }
-		XMFLOAT3 GetUp() const { return m_Up; }
+		const XMFLOAT3& GetLook() const { return m_Look; }
+		const XMFLOAT3& GetRight() const { return m_Right; }
+		const XMFLOAT3& GetUp() const { return m_Up; }
 
-		XMFLOAT4X4 GetViewMat() const { return m_ViewMatrix; }
-		XMFLOAT4X4 GetProjMat() const { return m_ProjMatrix; }
+		const XMFLOAT4X4& GetViewMat() const { return m_ViewMatrix; }
+		const XMFLOAT4X4& GetProjMat() const { return m_ProjMatrix; }
 
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -205,6 +243,21 @@ namespace component {
 		void BuildProjectionMatrix();
 
 		void UpdateShaderData();
+
+		bool m_ProjChanged = false;
+
+	};
+
+	/////////////////////////////////////////////////////////
+	// input component
+	// 단순히 얘가 인풋을 받는 컴포넌트다 라고 알려주는 컴포넌트, 냉무, 임시, todo
+	//
+	class Input : public ComponentBase<Input> {
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
 	};
 
 }
@@ -212,7 +265,6 @@ namespace component {
 
 #define REGISTER_COMPONENT(TYPE, NAME) component::ComponentFactory::RegisterComponent<TYPE>(NAME)
 #define GET_COMPONENT(NAME) component::ComponentFactory::GetComponent(NAME)
-#define CHECK_COMPONENT(NAME) component::ComponentFactory::IsExist(NAME)
 #define GET_COMP_COUNT component::ComponentFactory::GetComponentCount();
 #define GET_COMP_SIZE(BITPOS) component::ComponentFactory::GetComponentSize(BITPOS);
-
+#define PRINT_ALL_BITSET component::ComponentFactory::PrintBitsets();

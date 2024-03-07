@@ -29,8 +29,8 @@ ResourceManager::~ResourceManager()
 		delete mat;
 	for (auto& mes : m_Meshes)
 		delete mes;
-	for (auto& cmp : m_Components)
-		delete cmp;
+	//for (auto& cmp : m_Components)
+	//	delete cmp;
 	
 	//sharedptr
 	m_Shaders.clear();
@@ -59,8 +59,8 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 	if (entptr == nullptr) 
 		return false;
 
-	if (isCam) m_RootEntities.push_back(entptr);
-	else m_Cameras.push_back(entptr);
+	if (isCam == false) m_RootEntities.push_back(entptr);
+	//else m_Cameras.push_back(entptr);
 
 	return true;
 }
@@ -74,17 +74,22 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 	if (parent) parent->AddChild(ent);
 
 	for (auto& jsonComp : root.getMemberNames()) {
-		if (CHECK_COMPONENT(jsonComp) == false) {
+		component::Component* cmp = GET_COMPONENT(jsonComp);
+
+		if (cmp == nullptr) {
 			if (jsonComp != CHILDREN) DebugPrint(std::format("No Such Component Registered!! {}", jsonComp));
 			continue;
 		}
 
-		component::Component* cmp = GET_COMPONENT(jsonComp);
 		cmp->Create(root, this);
 		ent->AddComponent(cmp);
-		m_Components.push_back(cmp);
+		ent->AddBit(cmp->GetBitset());
+
+		DebugPrint(std::format("add {}", cmp->GetBitset().to_string()));
+		//m_Components.push_back(cmp);
 	}
-	
+	DebugPrint("");
+
 	// if Children
 	if (root[CHILDREN].isNull() == false)
 		for (auto& val : root[CHILDREN]) {
@@ -254,6 +259,12 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
+
+	// 임시
+	//PRINT_ALL_BITSET;
+
+	//for (auto& cam : m_Cameras)
+	//	m_ECSManager->AddEntity(cam);
 
 	//m_ToLoadRenderDatas.clear();
 	return true;

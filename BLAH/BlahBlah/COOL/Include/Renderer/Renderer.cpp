@@ -899,18 +899,12 @@ void Renderer::Render()
 
 	if (m_SceneManager) m_SceneManager->Render(m_GraphicsCommandLists);
 
-	XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
-	if (GetAsyncKeyState('W') & 0x8000) tempMove.z += 1.0f;
-	if (GetAsyncKeyState('S') & 0x8000) tempMove.z -= 1.0f;
-	if (GetAsyncKeyState('A') & 0x8000) tempMove.x -= 1.0f;
-	if (GetAsyncKeyState('D') & 0x8000) tempMove.x += 1.0f;
-	if (GetAsyncKeyState('Q') & 0x8000) tempMove.y -= 1.0f;
-	if (GetAsyncKeyState('E') & 0x8000) tempMove.y += 1.0f;
-
-	float size = Vector3::Length(tempMove);
-	if (size > 0.5f) {
-		XMFLOAT3 normal = Vector3::Normalize(tempMove);
-		tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
+	//float size = Vector3::Length(tempMove);
+	//if (size > 0.5f)
+	//if (false)
+	//{
+		//XMFLOAT3 normal = Vector3::Normalize(tempMove);
+		//tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
 		//XMFLOAT3 pos = Vector3::Add(m_Camera->GeWorldPosition(), tempMove);
 		//m_Camera->SetWorldPosition(pos);
 
@@ -931,7 +925,7 @@ void Renderer::Render()
 		//XMStoreFloat4(&pTrans, statVector);
 
 		//DebugPrint(std::format("pTrans {}, {}, {}", pTrans.x, pTrans.y, pTrans.z));
-	}
+	//}
 
 
 	//m_Camera->Render(m_MainCommandList);

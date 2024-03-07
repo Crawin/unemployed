@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+class ECSManager;
+
 namespace ECSsystem {
 
 	/////////////////////////////////////////////////////////
@@ -9,7 +11,16 @@ namespace ECSsystem {
 	{
 	public:
 
-		virtual void Update(float deltaTime) = 0;
+		virtual void Update(ECSManager* manager, float deltaTime) = 0;
+	};
+
+	/////////////////////////////////////////////////////////
+	// transform to renderer / camera
+	//
+	class SyncWithTransform : public System {
+
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
 	/////////////////////////////////////////////////////////
@@ -18,7 +29,7 @@ namespace ECSsystem {
 	class MoveByInput : public System {
 
 	public:
-		virtual void Update(float deltaTime);
+		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
 

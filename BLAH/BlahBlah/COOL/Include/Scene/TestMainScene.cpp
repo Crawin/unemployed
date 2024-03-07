@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "TestMainScene.h"
 
 bool TestMainScene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -9,6 +9,7 @@ bool TestMainScene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 void TestMainScene::Update(float deltaTime)
 {
+    Scene::Update(deltaTime);
 }
 
 void TestMainScene::Exit()

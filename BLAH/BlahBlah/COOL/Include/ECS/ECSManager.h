@@ -63,10 +63,15 @@ class ECSManager
 	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet> m_ComponentSets;
 
 	// system
-	std::vector<ECSsystem::System*> m_System;
+	std::vector<ECSsystem::System*> m_Systems;
 
 public:
+	ECSManager();
+	~ECSManager();
+
 	void AddEntity(Entity* entity);
+
+	void InsertSystem(ECSsystem::System* system) { m_Systems.push_back(system); }
 
 	void UpdateSystem(float deltaTime);
 
@@ -78,6 +83,4 @@ private:
 	template<class ...COMPONENTS>
 	std::bitset<COMPONENT_COUNT> GetBitset();
 
-	template<class COMP>
-	std::bitset<COMPONENT_COUNT> GetBit();
 };

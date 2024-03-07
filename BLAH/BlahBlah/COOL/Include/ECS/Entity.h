@@ -21,6 +21,9 @@ public:
 
 	void AddComponent(component::Component* component) { m_Components.push_back(component); }
 	void AddChild(Entity* entity) { m_Children.push_back(entity); }
+	void AddBit(const std::bitset<COMPONENT_COUNT>& bit) { 
+		m_Bitset |= bit;
+	}
 
 private:
 	// 컴포넌트 소유 bitset

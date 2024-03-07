@@ -136,7 +136,7 @@ private:
 	std::vector<Entity*> m_RootEntities;
 
 	// component
-	std::vector<component::Component*> m_Components;
+	//std::vector<component::Component*> m_Components;
 
 	// ECS System
 	std::shared_ptr<ECSManager> m_ECSManager = nullptr;
@@ -165,7 +165,7 @@ private:
 	std::vector<ToLoadRendererInfo> m_ToLoadRenderDatas;
 	std::vector<std::string> m_ToLoadMaterials;
 
-	std::vector<Entity*> m_Cameras;
+	//std::vector<Entity*> m_Cameras;
 	component::Camera* m_MainCamera = nullptr;
 };
 

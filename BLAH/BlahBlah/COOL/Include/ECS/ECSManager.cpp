@@ -55,8 +55,7 @@ inline ComponentSet::ComponentSet(std::bitset<COMPONENT_COUNT> bit)
 
 void ComponentSet::InsertComponent(component::Component* comp)
 {
-	std::bitset<COMPONENT_COUNT> bit(1);
-	bit <<= comp->GetGID();
+	std::bitset<COMPONENT_COUNT> bit = comp->GetBitset();
 
 	// check the component is exist in the set
 	if (m_Set.contains(bit) == false) {
@@ -73,10 +72,16 @@ void ComponentSet::InsertComponentByEntity(Entity* entity)
 {
 	for (auto& comp : entity->m_Components) 
 	{
+		comp->ShowYourself();
 		InsertComponent(comp);
+
+		// release before comp here
+		delete comp;
 	}
 
-	++m_EntitySize;
+	entity->m_Components.clear();
+
+	entity->m_Id = ++m_EntitySize;
 }
 
 template<class ...COMPONENTS>
@@ -94,11 +99,8 @@ inline void ComponentSet::Execute(std::function<void(COMPONENTS*...)>& func)
 template<class COMP>
 COMP* ComponentSet::GetComponent(int idx)
 {
-	std::bitset<COMPONENT_COUNT> bit(1);
-	bit <<= COMP::m_GID;
-
 	//ComponentContainer& container = m_Set[bit];
-	return m_Set[bit].GetData<COMP>(idx);
+	return m_Set[COMP::GetBit()].GetData<COMP>(idx);
 	//container[];
 	//COMP* temp = container[idx];
 	//return temp;
@@ -111,16 +113,28 @@ COMP* ComponentSet::GetComponent(int idx)
 // ECS System
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+ECSManager::ECSManager()
+{
+}
+
+ECSManager::~ECSManager()
+{
+	// todo delete 모두 잘 하는지 얘가 확인 해보자
+	for (auto& ent : m_Entities)
+		delete ent;
+
+	for (auto& sys : m_Systems)
+		delete sys;
+
+	// component엔 동적할당 하지 않았음
+}
+
 inline void ECSManager::AddEntity(Entity* entity)
 {
 	// 1. 일단 entity가 어떤 component를 가지고 있는지 확인해야함
 	std::bitset<COMPONENT_COUNT> bitset(0);
-	for (auto& comp : entity->m_Components) {
-		std::bitset<COMPONENT_COUNT> compBit(1);
-		compBit <<= comp->GetGID();
-
-		bitset |= compBit;
-	}
+	for (auto& comp : entity->m_Components) 
+		bitset |= comp->GetBitset();
 
 	// 여기에 컴포넌트set 맞춰서 넣으면 된다.
 	if (m_ComponentSets.contains(bitset) == false) 
@@ -129,18 +143,21 @@ inline void ECSManager::AddEntity(Entity* entity)
 		m_ComponentSets.emplace(bitset, bitset);
 	}
 
+	DebugPrint(std::format("//////////////////////////entity bitset: {}", bitset.to_string()));
 	m_ComponentSets[bitset].InsertComponentByEntity(entity);
+	entity->m_Bitset = bitset;
 
 	m_Entities.push_back(entity);
 
-	DebugPrint(std::format("entity bitset: {}", bitset.to_string()));
+	//entity->m_Bitset = bitset;
+
 
 }
 
 void ECSManager::UpdateSystem(float deltaTime)
 {
-	for (auto& system : m_System) {
-		system->Update(deltaTime);
+	for (auto& system : m_Systems) {
+		system->Update(this, deltaTime);
 	}
 }
 
@@ -164,16 +181,6 @@ template<class ...COMPONENTS>
 std::bitset<COMPONENT_COUNT> ECSManager::GetBitset()
 {
 	// fold expression, C++ 17
-	return (GetBit<COMPONENTS>() | ...);
+	return (COMPONENTS::GetBit() | ...);
 }
-
-template<class COMP>
-std::bitset<COMPONENT_COUNT> ECSManager::GetBit()
-{
-	std::bitset<COMPONENT_COUNT> bit(1);
-	bit <<= COMP::m_GID;
-
-	return bit;
-}
-
 

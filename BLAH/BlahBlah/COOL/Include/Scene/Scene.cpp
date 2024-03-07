@@ -4,6 +4,7 @@
 #include "ECS/ECSManager.h"
 #include "ResourceManager.h"
 #include "ECS/Component.h"
+#include "ECS/ECS_System.h"
 #include "Shader/Shader.h"
 //#define SCENE_PATH "SceneData\\Scene\\"
 
@@ -24,6 +25,11 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 
 	m_ResourceManager->SetECSManager(m_ECSManager);
 
+	// default systems
+	// 넣는 순서에 따라 system이 돌아가는게 달라짐
+	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
+	m_ECSManager->InsertSystem(new ECSsystem::MoveByInput);
+
 	CHECK_CREATE_FAILED(m_ResourceManager->Init(commandList, sceneName), std::format("Can't Load Scene, name: {}", sceneName));
 
 	return true;
@@ -39,13 +45,25 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 	return true;
 }
 
+void Scene::Update(float deltaTime)
+{
+	m_ECSManager->UpdateSystem(deltaTime);
+}
+
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 {
 	// 기본 render, forward render이다
 
 	// camera set
 	auto& res = m_ResourceManager;
-	res->m_MainCamera->SetCameraData(commandLists[0]);
+	//res->m_MainCamera->SetCameraData(commandLists[0]);
+	
+	// get Camera
+	std::vector<component::Camera*> camVec;
+	std::function<void(component::Camera*)> getCam = [&commandLists, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
+	m_ECSManager->Execute(getCam);
+
+	camVec[0]->SetCameraData(commandLists[0]);
 
 	// heap set
 	auto& heap = res->m_ShaderResourceHeap;

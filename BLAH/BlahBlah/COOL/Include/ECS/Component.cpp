@@ -10,6 +10,11 @@ namespace component
 		m_Name = v["Name"].asString();
 	}
 
+	void Name::ShowYourself() const
+	{
+		DebugPrint(std::format("Name Comp, {}", m_Name));
+	}
+
 	void Renderer::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value rend = v["Renderer"];
@@ -32,6 +37,11 @@ namespace component
 
 	}
 
+	void Renderer::ShowYourself() const
+	{
+		DebugPrint(std::format("Renderer Comp, mesh: {}, material: {}", m_MeshID, m_MaterialID));
+	}
+
 	void Transform::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value trans = v["Transform"];
@@ -42,12 +52,20 @@ namespace component
 
 		m_Rotate.x = trans["Rotate"][0].asFloat();
 		m_Rotate.y = trans["Rotate"][1].asFloat();
-		m_Rotate.z = trans["Rotate"][3].asFloat();
-		m_Rotate.w = trans["Rotate"][4].asFloat();
+		m_Rotate.z = trans["Rotate"][2].asFloat();
+		m_Rotate.w = trans["Rotate"][3].asFloat();
 
-		m_Position.x = trans["Position"][0].asFloat();
-		m_Position.y = trans["Position"][1].asFloat();
-		m_Position.z = trans["Position"][2].asFloat();
+		m_Scale.x = trans["Scale"][0].asFloat();
+		m_Scale.y = trans["Scale"][1].asFloat();
+		m_Scale.z = trans["Scale"][2].asFloat();
+	}
+
+	void Transform::ShowYourself() const
+	{
+		DebugPrint(std::format("Transform Comp"));
+		DebugPrint(std::format("\tPosit: {}, {}, {}", m_Position.x, m_Position.y, m_Position.z));
+		DebugPrint(std::format("\tRotat: {}, {}, {}, {}", m_Rotate.x, m_Rotate.y, m_Rotate.z, m_Rotate.w));
+		DebugPrint(std::format("\tScale: {}, {}, {}", m_Scale.x, m_Scale.y, m_Scale.z));
 	}
 
 	void Camera::Create(Json::Value& v, ResourceManager* rm)
@@ -91,12 +109,17 @@ namespace component
 		BoundingFrustum::CreateFromMatrix(m_BoundingFrustum, XMLoadFloat4x4(&m_ProjMatrix));
 	}
 
+	void Camera::ShowYourself() const
+	{
+		DebugPrint(std::format("Cam\tPosit: {}, {}, {}", m_Position.x, m_Position.y, m_Position.z));
+	}
+
 	void Camera::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	{
+		// todo 여기 확인해보고 build matrix를 대신 하는 곳이 있는지 찾아봐라
 		BuildViewMatrix();
-		BuildProjectionMatrix();
+		if (m_ProjChanged) BuildProjectionMatrix();
 		UpdateShaderData();
-
 
 		commandList->SetGraphicsRootConstantBufferView(ROOT_SIGNATURE_IDX::CAMERA_DATA_CBV, m_ShaderDataGPUAddr);
 	}
@@ -136,5 +159,14 @@ namespace component
 		memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
 		memcpy(&m_ShaderData->m_ProjMatrix, &proj, sizeof(XMFLOAT4X4));
 		memcpy(&m_ShaderData->m_CameraPosition, &m_Position, sizeof(XMFLOAT3));
+	}
+
+	void Input::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Input::ShowYourself() const
+	{
+		DebugPrint("Input Comp, nothing");
 	}
 }
