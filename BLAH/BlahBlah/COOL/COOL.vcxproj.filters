@@ -49,9 +49,6 @@
     <Filter Include="소스 파일\SceneData\Object">
       <UniqueIdentifier>{4f2b83cc-a40d-4508-a05a-c230862fdf4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\SceneData\Object\Actor">
-      <UniqueIdentifier>{84939733-13ee-41d9-aeae-378d69c23650}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\SceneData\Material">
       <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
     </Filter>
@@ -87,9 +84,6 @@
     <ClInclude Include="Include\Renderer\COOLResource.h">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Renderer\COOLDevice.h">
-      <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Shader\SkyboxShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
@@ -102,9 +96,6 @@
     <ClInclude Include="Include\DXMath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Object\ObjectBase.h">
-      <Filter>소스 파일\SceneData\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Scene.h">
       <Filter>소스 파일\Scene</Filter>
     </ClInclude>
@@ -113,9 +104,6 @@
     </ClInclude>
     <ClInclude Include="Include\Scene\TestMainScene.h">
       <Filter>소스 파일\Scene\MainScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Object\Actor\Actor.h">
-      <Filter>소스 파일\SceneData\Object\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Include\Timer.h">
       <Filter>헤더 파일</Filter>
@@ -170,9 +158,6 @@
     <ClCompile Include="Include\Renderer\COOLResource.cpp">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Renderer\COOLDevice.cpp">
-      <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Shader\SkyboxShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
@@ -185,9 +170,6 @@
     <ClCompile Include="Include\Shader\MeshShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Object\ObjectBase.cpp">
-      <Filter>소스 파일\SceneData\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Scene\Scene.cpp">
       <Filter>소스 파일\Scene</Filter>
     </ClCompile>
@@ -196,9 +178,6 @@
     </ClCompile>
     <ClCompile Include="Include\Scene\TestMainScene.cpp">
       <Filter>소스 파일\Scene\MainScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\Object\Actor\Actor.cpp">
-      <Filter>소스 파일\SceneData\Object\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Include\Timer.cpp">
       <Filter>소스 파일</Filter>
