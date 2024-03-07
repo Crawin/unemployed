@@ -111,6 +111,7 @@ namespace component {
 	//
 	class Name : public ComponentBase<Name>
 	{
+		// todo 주의!!!! 이것은 컴포넌트set에 저장하지 말고 entity가 직접 가지게 할까?
 		std::string m_Name;
 
 	public:

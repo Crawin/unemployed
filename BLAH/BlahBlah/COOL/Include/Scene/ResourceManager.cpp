@@ -93,9 +93,10 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 				return nullptr;
 		}
 	
-	// 여기서 ECS Manager에 entity를 삽입한다
+	// 여기서 ECS Manager에 entity를 삽입하지 않는다.
+	// late init이 끝난 후 entity를 삽입함
 	m_Entities.push_back(ent);
-	m_ECSManager->AddEntity(ent);
+	//m_ECSManager->AddEntity(ent);
 
 	return ent;
 }
@@ -250,6 +251,9 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		rendererLoadInfo.m_Renderer->SetMaterial(res);
 
 	}
+
+	for (auto& ent : m_Entities)
+		m_ECSManager->AddEntity(ent);
 
 	//m_ToLoadRenderDatas.clear();
 	return true;

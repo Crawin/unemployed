@@ -15,19 +15,18 @@ ComponentContainer::ComponentContainer(size_t stride)
 template<class T>
 inline void ComponentContainer::push_back(const T* data)
 {
-	++m_Elements;
 	m_Data.resize(m_Data.size() + m_Stride);
 
-	memcpy(&m_Data.front(), data, m_Stride);
+	memcpy((&m_Data.front() + (m_Stride * m_Elements)), data, m_Stride);
+
+	++m_Elements;
 }
 
 template<class T>
-T* ComponentContainer::operator[](size_t index)
+T* ComponentContainer::GetData(size_t index)
 {
-	auto realIdx = index * m_Stride;
-
 	// 포인터로 넘겨줘야 할듯하다
-	return static_cast<T*>(&m_Data[realIdx]);
+	return reinterpret_cast<T*>(&m_Data[index * m_Stride]);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,15 +71,44 @@ void ComponentSet<N>::InsertComponent(component::Component* comp)
 }
 
 template<std::size_t N>
+void ComponentSet<N>::InsertComponentByEntity(Entity* entity)
+{
+	for (auto& comp : entity->m_Components) 
+	{
+		InsertComponent(comp);
+	}
+
+	++m_EntitySize;
+}
+
+template<std::size_t N>
 template<class ...COMPONENTS>
 inline void ComponentSet<N>::Execute(std::function<void(COMPONENTS*...)>& func)
 {
-	DebugPrint("hi im in");
-	//for (int i = 0; i < m_Set.size(); ++i) {
-	//	func();
-	// 
-	//}
+	for (int i = 0; i < m_EntitySize; ++i) 
+	{
+		// https://en.cppreference.com/w/cpp/language/foldx
+		// fold expression, C++ 17
+		func(GetComponent<COMPONENTS>(i)...);
+	 
+	}
 }
+
+template<std::size_t N>
+template<class COMP>
+COMP* ComponentSet<N>::GetComponent(int idx)
+{
+	std::bitset<N> bit(1);
+	bit <<= COMP::m_GID;
+
+	//ComponentContainer& container = m_Set[bit];
+	return m_Set[bit].GetData<COMP>(idx);
+	//container[];
+	//COMP* temp = container[idx];
+	//return temp;
+	//return nullptr;
+}
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,10 +134,9 @@ inline void ECSSystem<N>::AddEntity(Entity* entity)
 		m_ComponentSets.emplace(bitset, bitset);
 	}
 
-	for (auto& comp : entity->m_Components) 
-	{
-		m_ComponentSets[bitset].InsertComponent(comp);
-	}
+	m_ComponentSets[bitset].InsertComponentByEntity(entity);
+
+	m_Entities.push_back(entity);
 
 	DebugPrint(std::format("entity bitset: {}", bitset.to_string()));
 

@@ -8,6 +8,7 @@ namespace component { class Component; }
 class Entity
 {
 	friend class ECSSystem<COMPONENT_COUNT>;
+	friend class ComponentSet<COMPONENT_COUNT>;
 
 public:
 	Entity(int id) : m_Id{ id } {}

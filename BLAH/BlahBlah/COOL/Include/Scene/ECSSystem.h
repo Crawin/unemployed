@@ -21,7 +21,7 @@ public:
 	void push_back(const T* data);
 
 	template <class T>
-	T* operator[](size_t index);
+	T* GetData(size_t index);
 
 };
 
@@ -33,16 +33,24 @@ class ComponentSet {
 	// Component를 각각 저장하는 container
 	std::unordered_map<std::bitset<N>, ComponentContainer> m_Set;
 
+	int m_EntitySize = 0;
+
 public:
 	ComponentSet() {
 		DebugPrint("NO");
 	}
 	ComponentSet(std::bitset<N> bit);
 
-	void InsertComponent(component::Component* comp);
+	void InsertComponentByEntity(Entity* entity);
 
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func);
+
+	template<class COMP>
+	COMP* GetComponent(int idx);
+
+private:
+	void InsertComponent(component::Component* comp);
 
 };
 

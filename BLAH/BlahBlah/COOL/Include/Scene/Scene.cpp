@@ -31,7 +31,7 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 
 bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-	if (LoadScene(commandList, m_SceneName) == false) 
+	if (LoadScene(commandList, m_SceneName) == false)
 	{
 		ERROR_QUIT(std::format("ERROR!! Scene load error, {}", m_SceneName));
 	}
@@ -43,9 +43,17 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 {
 	// 기본 render, forward render이다
 
-	auto res = m_ResourceManager;
+	// camera set
+	auto& res = m_ResourceManager;
+	res->m_MainCamera->SetCameraData(commandLists[0]);
 
-	std::function<void(component::Renderer*, component::Transform*)> func = [&commandLists, &res](component::Renderer* renderComponent, component::Transform* tr) {
+	// heap set
+	auto& heap = res->m_ShaderResourceHeap;
+	commandLists[0]->SetDescriptorHeaps(1, heap.GetAddressOf());
+	commandLists[0]->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+
+	// make function
+	std::function<void(component::Renderer*)> func = [&commandLists, &res](component::Renderer* renderComponent) {
 		int material = renderComponent->GetMaterial();
 		int mesh = renderComponent->GetMesh();
 
@@ -57,8 +65,8 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 		res->m_Meshes[mesh]->Render(commandLists[0], t);
 		};
 
-
-	m_ECSManager->Execute<component::Renderer, component::Transform>(func);
+	// execute function
+	m_ECSManager->Execute<component::Renderer>(func);
 
 }
 
