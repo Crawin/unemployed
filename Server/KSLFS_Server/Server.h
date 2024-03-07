@@ -91,7 +91,7 @@ public:
 	const SOCKET getSocket();
 	void allocateSOCKET(const SOCKET&);
 	const DirectX::XMFLOAT3 getPos();
-	void printPlayerPos(const std::string&, const bool&);
+	void printPlayerPos(const int&, const bool&);
 	void syncPos();
 	void setPos(const DirectX::XMFLOAT3&);
 };

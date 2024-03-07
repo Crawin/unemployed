@@ -208,7 +208,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			GameNum += (buf[9] - '0') * 100;
 			GameNum += (buf[10] - '0') * 10;
 			GameNum += (buf[11] - '0') * 1;
-			std::cout << "GameNum: " << GameNum << std::endl;
+			std::cout << "GameNum: " << GameNum<<", "<<buf[7]<<buf[8]<<buf[9]<<buf[10]<<buf[11] << std::endl;
 
 			mGameStorages[GameNum][1].first = client_sock;				// p2 소켓 할당
 
@@ -408,11 +408,11 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 			break;
 		}
 
-		// 받은 데이터 출력
-		buf[retval] = '\0';
-		Log_Mutex.lock();
-		std::cout << "[GAME_RECV] [TCP " << addr << ":" << ntohs(clientaddr.sin_port) << "]: " << buf << std::endl;
-		Log_Mutex.unlock();
+		//// 받은 데이터 출력
+		//buf[retval] = '\0';
+		//Log_Mutex.lock();
+		//std::cout << "[GAME_RECV] [TCP " << addr << ":" << ntohs(clientaddr.sin_port) << "]: " << buf << std::endl;
+		//Log_Mutex.unlock();
 
 		// 데이터 보내기
 		retval = send(client_sock, &buf[0], retval, 0);
@@ -445,7 +445,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 		// 게임 로직
 		
 		// 접속
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 2; ++i)
 		{
 			if (p[i].getSocket() == NULL)		// P[i]이 연결되어 있지 않은 상태에서
 			{
@@ -460,14 +460,14 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 			}
 			else
 			{
-				p[i].printPlayerPos("p1", true);
+				p[i].printPlayerPos(i, true);
 				p[i].syncPos();
 			}
 
 		}
 
 		// 명령 처리
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 2; ++i)
 		{
 			if (mGameStorages[gameNum][i].second.first.size() > 0) {
 				mGameStorages[gameNum][i].second.second.lock();
@@ -480,7 +480,6 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 					{
 						Socket_position temp;
 						memcpy(&temp, &(*start)[0], sizeof(Socket_position));
-						std::cout << temp.pos.x << temp.pos.y << temp.pos.z << std::endl;
 						p[i].setPos(temp.pos);
 						break;
 					}
@@ -602,19 +601,19 @@ const DirectX::XMFLOAT3 Player::getPos()
 }
 
 // (문자열, 좌표 변경이 있을시에만 출력)
-void Player::printPlayerPos(const std::string& s,const bool& d)
+void Player::printPlayerPos(const int& i,const bool& d)
 {
 	Log_Mutex.lock();		// [p1: x, y, z]
 	if (d)
 	{
 		if (m_xmf3Pos.x != m_xmf3Prev_Pos.x || m_xmf3Pos.y != m_xmf3Prev_Pos.y || m_xmf3Pos.z != m_xmf3Prev_Pos.z)		// 좌표가 바뀐게 있다면
 		{
-			std::cout << "[" << s << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+			std::cout << "[P" << i+1 << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
 		}
 	}
 	else 
 	{
-		std::cout << "[" << s << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+		std::cout << "[P" << i+1 << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
 	}
 	Log_Mutex.unlock();
 }
