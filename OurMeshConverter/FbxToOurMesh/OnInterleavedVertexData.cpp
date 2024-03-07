@@ -91,9 +91,9 @@ int main()
 	// FBX 파일 로드
 	FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
-	const char* fileName = "satodia.fbx";
+	const char* fileName = "teapot.fbx";
 	std::string outputFileName = ChangeExtensionToBin(fileName);
-	outputFileName = "satodiatemptemp.bin";
+	outputFileName = "teapot.bin";
 
 	if (!importer->Initialize(fileName, -1, fbxManager->GetIOSettings()))
 	{
@@ -118,7 +118,10 @@ int main()
 		//std::vector<uint16_t> indices;
 
 		// 재귀적으로 노드 탐색
-		TraverseNode(rootNode, mesh);
+		// RootNode가 따로 있더라
+		// 따로따로인 모델이 있을수도 있어서 그런가봄
+		// 우리는 부모메쉬가 하나라고 가정
+		TraverseNode(rootNode->GetChild(0), mesh);
 
 		// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
 		// ...
@@ -169,6 +172,9 @@ void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint
 // 재귀적으로 노드를 탐색하여 정점과 인덱스를 추출하는 함수
 void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices, std::vector<uint16_t>& indices)
 {
+	// 이름
+	myMesh.name = node->GetName();
+
 	// 노드에 메시가 있는지 확인
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
 	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh)
@@ -189,8 +195,7 @@ void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices,
 			for (int j = 0; j < 4; ++j)
 				myMesh.localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
 
-		// 이름
-		myMesh.name = node->GetName();
+
 
 		// 정점 추출
 		ExtractVertices(mesh, myMesh.vertices, node->GetNodeAttribute());

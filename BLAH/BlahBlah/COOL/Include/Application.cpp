@@ -1,15 +1,25 @@
-#include "framework.h"
+ï»¿#include "framework.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
-#include "Client.h"
+#include "Network/Client.h"
+#include "Scene/SceneManager.h"
+#include "Timer.h"
+
+#ifdef _DEBUG
+#pragma warning(disable  : 4996)
+#endif
 
 Application::Application()
 {
+	m_Timer = new Timer;
 }
 
 Application::~Application()
 {
-	// Á×±â Àü¿¡ »ì¾ÆÀÖ´Â ¾Öµé È®ÀÎÇÏ°í °£´Ù
+	if (m_Timer) delete m_Timer;
+	if (m_SceneManager) delete m_SceneManager;
+
+	// ì£½ê¸° ì „ì— ì‚´ì•„ìˆëŠ” ì• ë“¤ í™•ì¸í•˜ê³  ê°„ë‹¤
 #if defined(_DEBUG)
 	IDXGIDebug1* debug = NULL;
 	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
@@ -20,7 +30,7 @@ Application::~Application()
 
 bool Application::InitWindow()
 {
-	// À©µµ¿ì »ı¼º
+	// ìœˆë„ìš° ìƒì„±
 	WNDCLASSEX WndClass;
 
 	WndClass.cbSize = sizeof(WNDCLASSEX);
@@ -54,14 +64,14 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	m_hInst = hInst;
 	m_windowSize = wndSize;
 
-	// windows »ı¼º ¹× Ã¢ ¶ç¿ì±â ÇÑ´Ù
-	CHECK_CREATE_FAILED(InitWindow(), "À©µµ¿ì »ı¼º ½ÇÆĞ");
+	// windows ìƒì„± ë° ì°½ ë„ìš°ê¸° í•œë‹¤
+	CHECK_CREATE_FAILED(InitWindow(), "ìœˆë„ìš° ìƒì„± ì‹¤íŒ¨");
 
-	// ·»´õ·¯¸¦ ¸¸µç´Ù
-	CHECK_CREATE_FAILED(Renderer::GetInstance().Init(m_windowSize, m_hWnd), "·»´õ·¯ »ı¼º ½ÇÆĞ");
+	// ë Œë”ëŸ¬ë¥¼ ë§Œë“ ë‹¤
+	CHECK_CREATE_FAILED(Renderer::GetInstance().Init(m_windowSize, m_hWnd), "ë Œë”ëŸ¬ ìƒì„± ì‹¤íŒ¨");
 
 	// high input mouse
-	// Âü°í
+	// ì°¸ê³ 
 	// https://learn.microsoft.com/ko-kr/windows/win32/dxtecharts/taking-advantage-of-high-dpi-mouse-movement
 
 	RAWINPUTDEVICE Rid[1];
@@ -69,36 +79,42 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	Rid[0].usUsage = HID_USAGE_GENERIC_MOUSE;
 	Rid[0].dwFlags = RIDEV_INPUTSINK;
 	Rid[0].hwndTarget = m_hWnd;
-	RegisterRawInputDevices(Rid, 1, sizeof(Rid[0]));
+	CHECK_CREATE_FAILED(RegisterRawInputDevices(Rid, 1, sizeof(Rid[0])), "RegisterRawInputDevices ì‹¤íŒ¨");
 
-	// ¾À¸Å´ÏÀúÀÇ »ı¼º ¹× ·Îµå?
+	// ì”¬ë§¤ë‹ˆì €ì˜ ìƒì„± ë° ë¡œë“œ?
+	auto commandList = Renderer::GetInstance().GetCommandList(0);
+	m_SceneManager = new SceneManager();
+	CHECK_CREATE_FAILED(m_SceneManager->Init(commandList, "Test"), "ì”¬ë§¤ë‹ˆì € ìƒì„± ì‹¤íŒ¨");
+	Renderer::GetInstance().SetSceneManager(m_SceneManager);
+	Renderer::GetInstance().ExecuteAndEraseUploadHeap(commandList);
 
 	return true;
 }
 
 int Application::StartProgram()
 {
-	Client::GetInstance().Connect_Server();
-	Client::GetInstance().Send_Str("¹æ»ı¼º"); // ÀÓ½Ã ¹æ»ı¼º Àü¼Û.
+	//Client::GetInstance().Connect_Server();
+	//Client::GetInstance().Send_Str("ï¿½ï¿½ï¿½ï¿½ï¿½"); // ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
 	MSG Message;
-
+	m_Timer->Start();
 	while (m_GameLoop) {
 		if (PeekMessage(&Message, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&Message);
 			DispatchMessage(&Message);
 		}
 		else {
-			// °ÔÀÓ ·çÇÁ
-
+			// ê²Œì„ ë£¨í”„
+			m_Timer->Update();
+			m_SceneManager->Update(m_Timer->GetDeltaTime());
 			Renderer::GetInstance().Render();
-			/*
+			
 #ifdef _DEBUG
 			TCHAR szTitle[30];
-			swprintf(szTitle, L"FPS : %.1f", 1 / 1);
+			swprintf(szTitle, L"FPS : %.1f", 1 / m_Timer->GetDeltaTime());
 			SetConsoleTitle(szTitle);
 #endif // DEBUG
-*/
+
 		}
 	}
 	return 0;
@@ -106,7 +122,7 @@ int Application::StartProgram()
 
 LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	// ÀÓ½Ã
+	// ì„ì‹œ
 	static bool dragging = false;
 
 	switch (msg) {
@@ -128,9 +144,9 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			int xPosRelative = raw->data.mouse.lLastX;
 			int yPosRelative = raw->data.mouse.lLastY;
 
-			// ÀÓ½Ã
-			// ¾À »ı±â¸é ¿©±â¼­ ÇÒµí?
-			if (dragging) Renderer::GetInstance().MouseInput(xPosRelative, yPosRelative);
+			// ì„ì‹œ
+			// ì”¬ ìƒê¸°ë©´ ì—¬ê¸°ì„œ í• ë“¯?
+			//if (dragging) Renderer::GetInstance().MouseInput(xPosRelative, yPosRelative);
 
 			//DebugPrint(std::format("x: {}, y: {}", xPosRelative, yPosRelative));
 		}

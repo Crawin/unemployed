@@ -28,20 +28,44 @@
     <Filter Include="소스 파일\Renderer\DX12Wrapper">
       <UniqueIdentifier>{1cef2ef1-2570-4108-95ef-13dff4c98ea7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Mesh">
-      <UniqueIdentifier>{979dc6b6-e94e-47f7-a39b-6a9e1fd2ce2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Material">
-      <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\Camera">
-      <UniqueIdentifier>{07d3d024-2120-4caa-af20-e976485f9834}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Scene">
       <UniqueIdentifier>{ec9aab73-7280-4f95-9e0f-103c579cc275}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Object">
-      <UniqueIdentifier>{4f2b83cc-a40d-4508-a05a-c230862fdf4f}</UniqueIdentifier>
+    <Filter Include="소스 파일\Scene\MainScene">
+      <UniqueIdentifier>{8e55888e-98b4-4927-9920-46ae9e16bb71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="외부">
+      <UniqueIdentifier>{17114279-4526-436c-a421-b86b3c469be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="외부\DDS">
+      <UniqueIdentifier>{e06e492f-e40b-4485-915c-9878aa6f50b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\ResourceManager">
+      <UniqueIdentifier>{0e698981-94fb-407c-a552-42d16ed5fb93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS">
+      <UniqueIdentifier>{eeba6587-7e65-46da-9c34-198b13dbb644}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\Entity">
+      <UniqueIdentifier>{2a528b67-111b-489e-a4cd-6fef75f34f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\Component">
+      <UniqueIdentifier>{d1c394c0-e1ef-4cf3-be67-f6eb8c0ca8f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\System">
+      <UniqueIdentifier>{a54aaff0-62fa-42be-aca7-eb3374f7e6ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\SceneData">
+      <UniqueIdentifier>{79e4a2b9-504a-49db-8ac5-60e54b25aef3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\SceneData\Mesh">
+      <UniqueIdentifier>{979dc6b6-e94e-47f7-a39b-6a9e1fd2ce2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\SceneData\Material">
+      <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Network">
+      <UniqueIdentifier>{8d888797-b4da-4bac-afba-cc90220bda4d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,7 +78,7 @@
     <ClInclude Include="Include\Application.h">
       <Filter>소스 파일\App</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Math.h">
+    <ClInclude Include="Include\mymath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Include\Renderer\Renderer.h">
@@ -69,35 +93,59 @@
     <ClInclude Include="Include\Renderer\COOLResource.h">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Renderer\COOLDevice.h">
-      <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Shader\SkyboxShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Material.h">
-      <Filter>소스 파일\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\DDSTextureLoader12.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Mesh\Mesh.h">
-      <Filter>소스 파일\Mesh</Filter>
+      <Filter>소스 파일\Scene\SceneData\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Include\Shader\MeshShader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Camera\Camera.h">
-      <Filter>소스 파일\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Include\DXMath.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Object\ObjectBase.h">
-      <Filter>소스 파일\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Scene\Scene.h">
       <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\SceneManager.h">
+      <Filter>소스 파일\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\TestMainScene.h">
+      <Filter>소스 파일\Scene\MainScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Timer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Material\Material.h">
+      <Filter>소스 파일\Scene\SceneData\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Include\DDSTextureLoader12.h">
+      <Filter>외부\DDS</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Enums.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Vertex.h">
+      <Filter>소스 파일\Scene\SceneData\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Scene\ResourceManager.h">
+      <Filter>소스 파일\Scene\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Entity.h">
+      <Filter>소스 파일\ECS\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component.h">
+      <Filter>소스 파일\ECS\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\ECSManager.h">
+      <Filter>소스 파일\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\ECS_System.h">
+      <Filter>소스 파일\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Network\Client.h">
+      <Filter>소스 파일\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -122,35 +170,53 @@
     <ClCompile Include="Include\Renderer\COOLResource.cpp">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Renderer\COOLDevice.cpp">
-      <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Shader\SkyboxShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\Material.cpp">
-      <Filter>소스 파일\Material</Filter>
     </ClCompile>
     <ClCompile Include="Include\framework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Include\DDSTextureLoader12.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Mesh\Mesh.cpp">
-      <Filter>소스 파일\Mesh</Filter>
+      <Filter>소스 파일\Scene\SceneData\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Include\Shader\MeshShader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Camera\Camera.cpp">
-      <Filter>소스 파일\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\Object\ObjectBase.cpp">
-      <Filter>소스 파일\Object</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Scene\Scene.cpp">
       <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\SceneManager.cpp">
+      <Filter>소스 파일\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\TestMainScene.cpp">
+      <Filter>소스 파일\Scene\MainScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Timer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Material\Material.cpp">
+      <Filter>소스 파일\Scene\SceneData\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Include\DDSTextureLoader12.cpp">
+      <Filter>외부\DDS</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\ResourceManager.cpp">
+      <Filter>소스 파일\Scene\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Entity.cpp">
+      <Filter>소스 파일\ECS\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Component.cpp">
+      <Filter>소스 파일\ECS\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\ECSManager.cpp">
+      <Filter>소스 파일\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\ECS_System.cpp">
+      <Filter>소스 파일\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Network\Client.cpp">
+      <Filter>소스 파일\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

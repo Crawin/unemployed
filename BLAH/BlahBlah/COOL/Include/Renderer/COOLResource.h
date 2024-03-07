@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 
 
-// ID3D12Resource¸¦ °¨½Î ¸®¼Ò½ºÀÇ ÇöÀç »óÅÂ¸¦ À¯ÁöÇÏ°íÀÖ°Ô ÇÑ´Ù
+// ID3D12Resourceë¥¼ ê°ì‹¸ ë¦¬ì†ŒìŠ¤ì˜ í˜„ì¬ ìƒíƒœë¥¼ ìœ ì§€í•˜ê³ ìˆê²Œ í•œë‹¤
 /*
 class COOLResource : public ID3D12Resource {
 	COOLResource();
 	virtual ~COOLResource();
 
-	// ¸â¹öº¯¼ö¸¦¸¦ Ãß°¡ÇÏ´Ï ¸Ş¸ğ¸® ¿À·ù°¡ ³­´Ù
-	// Ãß°¡µÈ ¸â¹öº¯¼ö°¡ »ı¼ºÀ» ¹æÇØÇÑ´Ù
+	// ë©¤ë²„ë³€ìˆ˜ë¥¼ë¥¼ ì¶”ê°€í•˜ë‹ˆ ë©”ëª¨ë¦¬ ì˜¤ë¥˜ê°€ ë‚œë‹¤
+	// ì¶”ê°€ëœ ë©¤ë²„ë³€ìˆ˜ê°€ ìƒì„±ì„ ë°©í•´í•œë‹¤
 	//D3D12_RESOURCE_STATES m_CurrentState = D3D12_RESOURCE_STATE_COMMON;
 
 public:
@@ -30,6 +30,7 @@ public:
 	D3D12_RESOURCE_STATES GetState() const { return m_CurStateMap; }
 	D3D12_SRV_DIMENSION GetDimension() const { return m_Dimension; }
 
+	void SetName(std::wstring wstr) { m_Name = std::string(wstr.begin(), wstr.end()); }
 	void SetName(std::string_view str) { m_Name = str; std::wstring temp(m_Name.begin(), m_Name.end());  m_Resource->SetName(temp.c_str()); }
 	void SetDimension(D3D12_SRV_DIMENSION dim) { m_Dimension = dim; }
 
@@ -46,10 +47,10 @@ private:
 	D3D12_HEAP_TYPE m_HeapType = D3D12_HEAP_TYPE_DEFAULT;
 	D3D12_SRV_DIMENSION m_Dimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 
-	// release¸¦ ¹Ì·çÁö ¾Ê°Ú½À´Ï´Ù.
+	// releaseë¥¼ ë¯¸ë£¨ì§€ ì•Šê² ìŠµë‹ˆë‹¤.
 	bool m_Release = true;
 
-	// mapµÇ¾îÀÖ´Â ¿ÀºêÁ§Æ®ÀÌ´Ù.
+	// mapë˜ì–´ìˆëŠ” ì˜¤ë¸Œì íŠ¸ì´ë‹¤.
 	bool m_Mapped = false;
 };
 

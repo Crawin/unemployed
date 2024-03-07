@@ -1,42 +1,36 @@
-#pragma once
+ï»¿#pragma once
+#include "Vertex.h"
 
-// ÁøÂ¥ ¸Ş½¬ µ¥ÀÌÅÍ¸¸ °¡Áö°í ÀÖÀ½
-// ¹¹ °èÃş±¸Á¶´Ï ¹¹´Ï ±×·±°Ç ¿ÀºêÁ§Æ®¿¡¼­ ¾Ë¾Æ¼­ ÇÏ»ï
-// ¾÷·Îµå¹öÆÛ´Â ·»´õ·¯°¡ µé°íÀÖÀ½
-// CPUµµ ¹öÅØ½º Á¤º¸¸¦ °è¼Ó °¡Áö°í ÀÖ¾î¾ß ÇÒ±î?
-// ±×·¯°Ô
-// ÀÏ´Ü °¡Áö°í ÀÖ°Ô ÇÑ ´ÙÀ½¿¡ ¾ø¾Ö¹ö¸®ÀÚ
+// ì§„ì§œ ë©”ì‰¬ ë°ì´í„°ë§Œ ê°€ì§€ê³  ìˆìŒ
+// ë­ ê³„ì¸µêµ¬ì¡°ë‹ˆ ë­ë‹ˆ ê·¸ëŸ°ê±´ ì˜¤ë¸Œì íŠ¸ì—ì„œ ì•Œì•„ì„œ í•˜ì‚¼
+// ì—…ë¡œë“œë²„í¼ëŠ” ë Œë”ëŸ¬ê°€ ë“¤ê³ ìˆìŒ
+// CPUë„ ë²„í…ìŠ¤ ì •ë³´ë¥¼ ê³„ì† ê°€ì§€ê³  ìˆì–´ì•¼ í• ê¹Œ?
+// ê·¸ëŸ¬ê²Œ
+// ì¼ë‹¨ ê°€ì§€ê³  ìˆê²Œ í•œ ë‹¤ìŒì— ì—†ì• ë²„ë¦¬ì
 
-// Mesh ·Îµå ¼ø¼­
-// ±×°Å¹¹³Ä ÀÏ´Ü ÆÄÀÏ¿¡¼­ ÀĞÀ½
-// ÀĞÀº Á¤º¸¸¦ ÀÓ½Ã ¸®¼Ò½º(¾÷·ÎµåÈü) ¸¸µéÀ½
-// ÀÓ½Ã¸®¼Ò½º¸¦ ÁøÂ¥ ¹öÆÛ·Î º¹»çÇÔ
-// ¸Ç µÚ¿¡ ÀÓ½Ã¸®¼Ò½º¸¦ ÇØÁ¦ÇÏ´Âµ¥ ±×°Ç ·»´õ·¯°¡ ÇØÁÙ°ÅÀÓ
+// Mesh ë¡œë“œ ìˆœì„œ
+// ê·¸ê±°ë­ëƒ ì¼ë‹¨ íŒŒì¼ì—ì„œ ì½ìŒ
+// ì½ì€ ì •ë³´ë¥¼ ì„ì‹œ ë¦¬ì†ŒìŠ¤(ì—…ë¡œë“œí™) ë§Œë“¤ìŒ
+// ì„ì‹œë¦¬ì†ŒìŠ¤ë¥¼ ì§„ì§œ ë²„í¼ë¡œ ë³µì‚¬í•¨
+// ë§¨ ë’¤ì— ì„ì‹œë¦¬ì†ŒìŠ¤ë¥¼ í•´ì œí•˜ëŠ”ë° ê·¸ê±´ ë Œë”ëŸ¬ê°€ í•´ì¤„ê±°ì„
 
-#define INTERLEAVED_VERTEX
 
-struct Vertex
-{
-	XMFLOAT3 position;
-	XMFLOAT3 normal;
-	XMFLOAT3 tangent;
-	XMFLOAT2 uv;
-};
 
 class Mesh
 {
 private:
+	friend class ResourceManager;
 
 #ifdef INTERLEAVED_VERTEX
-	int m_VertexBuffer = -1;								// ÀÎÅÍ¸®ºê ¹æ½Ä
+	int m_VertexBuffer = -1;								// ì¸í„°ë¦¬ë¸Œ ë°©ì‹
 	D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView = {};
 #else
 	int m_PositionBuffer = -1;
 	int m_NormalBuffer = -1;
-	int m_TangentBuffer = -1;							// È¤½Ã ¸ğ¸¦ ³ë¸»¸ÊÇÎÀ» À§ÇØ
+	int m_TangentBuffer = -1;							// í˜¹ì‹œ ëª¨ë¥¼ ë…¸ë§ë§µí•‘ì„ ìœ„í•´
 	int m_TexCoord0Buffer = -1;
-	//int m_TexCoord1Buffer = -1;						// È¤½Ã ¸ğ¸¦
-	int m_IndexBuffer = -1;						// ÀÎµ¦½º ¹öÆÛ
+	//int m_TexCoord1Buffer = -1;						// í˜¹ì‹œ ëª¨ë¥¼
+	int m_IndexBuffer = -1;						// ì¸ë±ìŠ¤ ë²„í¼
 
 	D3D12_VERTEX_BUFFER_VIEW m_PositionBufferView = {};
 	D3D12_VERTEX_BUFFER_VIEW m_NormalBufferView = {};
@@ -55,15 +49,23 @@ private:
 	// bounding box
 	XMFLOAT3 m_AABBCenter = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	XMFLOAT3 m_AABBExtents = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	
+
+
 	BoundingOrientedBox m_ModelBoundingBox;
 
-	// ºÎ¸ğ¿Í »ó´ëÀûÀÎ º¯È¯Çà·Ä
+	// todo mesh loaderì— ì•„ë˜ ë°ì´í„° ì¶”ê°€ 
+	XMFLOAT3 m_Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT4 m_Rotation = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	XMFLOAT3 m_Scale = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	// ë¶€ëª¨ì™€ ìƒëŒ€ì ì¸ ë³€í™˜í–‰ë ¬
 	XMFLOAT4X4 m_LocalTransform = Matrix4x4::Identity();
 	XMFLOAT4X4 m_RootTransform = Matrix4x4::Identity();
 
-	std::vector<Mesh> m_Childs;
+	std::vector<Mesh*> m_Childs;
 
-	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file);
+	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 	int m_VertexNum = 0;
 
@@ -71,7 +73,8 @@ public:
 	Mesh() {}
 	~Mesh() {}
 
-	bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
+	const std::string& GetName() const { return m_Name; }
+	//bool LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName);
 
 #ifdef INTERLEAVED_VERTEX
 	void SetVertexBuffer(int idx)		{ m_VertexBuffer = idx; }

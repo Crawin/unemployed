@@ -1,0 +1,9 @@
+{
+	"name": "SatoHair",
+	"BaseColor": "satoh",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMesh"
+}

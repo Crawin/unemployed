@@ -1,4 +1,4 @@
-#include "../framework.h"
+#include "framework.h"
 #include "COOLResource.h"
 
 COOLResource::COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType, std::string_view name) :

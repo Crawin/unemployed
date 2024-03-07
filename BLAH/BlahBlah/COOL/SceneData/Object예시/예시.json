@@ -1,0 +1,33 @@
+{
+	"Name": "Satono_Diamond",
+	"Type": 0,
+	"Transform": {
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0, 0.0],
+		"Scale": [0.0, 0.0, 0.0]
+	},
+	"Mesh":"satodia",
+	"Materials": {
+		"satodia_Body": "SatoBody",
+		"satodia_Hair": "SatoHair"
+	},
+
+	"Children" :[
+		{
+			"parent": "",
+			"Name": "Flashlight",
+			"Type": 99,
+			"Transform": {
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [0.0, 0.0, 0.0]
+			},
+			"Mesh":"flashlight",
+			"Materials": {
+				"flashlightbody": "flashlaight"
+			}
+		}
+
+	]
+
+}

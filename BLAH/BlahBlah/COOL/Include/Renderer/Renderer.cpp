@@ -1,18 +1,19 @@
-﻿#include "../framework.h"
+﻿#include "framework.h"
 #include "Renderer.h"
 #include "COOLResource.h"
-#include "../Camera/Camera.h"
+
+#include "Scene/SceneManager.h"
 //#include "Shader/Shader.h"
-#include "../Client.h"
+//#include "../Client.h"
 
 #define TEST_SHADER
 
 #ifdef TEST_SHADER
-#include "../Shader/TestShader.h"
-#include "../Shader/SkyboxShader.h"
-#include "../Shader/MeshShader.h"
-#include "../Material.h"
-#include "../Mesh/Mesh.h"
+#include "Shader/TestShader.h"
+#include "Shader/SkyboxShader.h"
+#include "Shader/MeshShader.h"
+#include "Material/Material.h"
+#include "Mesh/Mesh.h"
 #endif
 
 Renderer::Renderer()
@@ -27,16 +28,20 @@ Renderer::~Renderer()
 	// Renderer 말고 Application에서 하자
 
 	// 혹시 모르니 여기서 모두 해제
-	m_Resources.clear();
-	m_VertexIndexDatas.clear();
+	// comptr
+
+	//m_DsvHeap = nullptr;
+	//m_RtvHeap = nullptr;
+	//m_Resources.clear();
+	//m_SwapChain = nullptr;
 
 	// 죽기 전에 살아있는 애들 확인하고 간다
-#if defined(_DEBUG)
-	IDXGIDebug1* debug = NULL;
-	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
-	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
-	debug->Release();
-#endif
+//#if defined(_DEBUG)
+//	IDXGIDebug1* debug = NULL;
+//	DXGIGetDebugInterface1(0, __uuidof(IDXGIDebug1), (void**)&debug);
+//	HRESULT hResult = debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+//	debug->Release();
+//#endif
 
 }
 
@@ -190,7 +195,8 @@ bool Renderer::CreateRTV()
 		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i]->GetResource(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
 
-		RegisterShaderResource(m_RenderTargetBuffer[i]);
+		m_Resources.push_back(m_RenderTargetBuffer[i]);
+		//RegisterShaderResource(m_RenderTargetBuffer[i]);
 
 	}
 
@@ -237,7 +243,7 @@ bool Renderer::CreateRootSignature()
 	// 디스크립터힙 내부: (Texture2D, TextureCube, Texture2D, ...) 
 	// 쉐이더 에서 TexCubeList[1]로 사용 해야 함
 
-	const int numParams = ROOT_SIGNATURE_IDX_MAX;
+	const int numParams = ROOT_SIGNATURE_IDX::ROOT_SIGNATURE_IDX_MAX;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
 
 	//  ...ROOT_SIGNATURE_IDX enum 참고
@@ -343,39 +349,11 @@ bool Renderer::CreateRootSignature()
 	return true;
 }
 
-bool Renderer::CreateTestRootSignature()
-{
-	D3D12_ROOT_PARAMETER rootParam = {};
-
-	D3D12_DESCRIPTOR_RANGE descriptorRanges[1];
-
-
-	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.NumParameters = 0;
-	rootSignatureDesc.NumStaticSamplers = 0;
-	rootSignatureDesc.pParameters = nullptr;
-	rootSignatureDesc.pStaticSamplers = nullptr;
-	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-	// 루트시그니처 생성
-	ComPtr<ID3DBlob> signatureBlob = nullptr;;
-	ComPtr<ID3DBlob> errorBlob = nullptr;
-	D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, signatureBlob.GetAddressOf(), errorBlob.GetAddressOf());
-	m_Device->CreateRootSignature(
-		0,
-		signatureBlob->GetBufferPointer(),
-		signatureBlob->GetBufferSize(),
-		IID_PPV_ARGS(m_RootSignature.GetAddressOf()));
-
-	CHECK_CREATE_FAILED(m_RootSignature, "CreateRootSignature Failed!!");
-	return true;
-}
-
-bool Renderer::CreateResourceDescriptorHeap()
+bool Renderer::CreateRenderTargetDescriptorHeap()
 {
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
 	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
-	descriptorDesc.NumDescriptors = m_Resources.size();										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
+	descriptorDesc.NumDescriptors = static_cast<UINT>(m_Resources.size());										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
 	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	descriptorDesc.NodeMask = 0;
@@ -445,38 +423,6 @@ bool Renderer::CreateResourceDescriptorHeap()
 	return true;
 }
 
-bool Renderer::LoadShaders()
-{
-	// 모든 쉐이더를 로드한다
-	// 쓸 것들을 파일로 저장해둔다? 
-	// 각기 다른 쉐이더 종류, 블렌드스테이트, 레스터라이저스테이트, ds 스테이트 등등 모두 다를태니
-	// 쉐이더는 미리 로드 해두고 거기에 맞는 오브젝트들이 있다면 렌더하는 방향으로 갈까?
-	// 프로그램 최초 로드시에만 쉐이더를 생성한다 나쁘지 않음
-
-
-#ifdef TEST_SHADER
-	auto shader = std::make_shared<TestShader>(1, "TestShader");
-	m_Shaders.push_back(shader);
-
-	//auto tshader = std::make_shared<SkyboxShader>(1000, "SkyboxShader");
-	//m_Shaders.push_back(tshader);
-
-	auto tttShader = std::make_shared<MeshShader>(1001, "meshShader");
-	m_Shaders.push_back(tttShader);
-
-	for (auto& sha : m_Shaders) {
-		// todo Shader가 필요한 리소스를 불러와 m_ResourceHeap에다가 넣음
-		CHECK_CREATE_FAILED(sha->InitShader(m_Device, m_MainCommandList, m_RootSignature), sha->GetName());
-	}
-#endif
-
-	// 렌더큐 기준으로 오름차순 정렬한다
-	std::sort(m_Shaders.begin(), m_Shaders.end());
-
-	return true;
-	return false;
-}
-
 bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 {
 	// dx12의 초기화 과정
@@ -508,7 +454,6 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
-	CHECK_CREATE_FAILED(LoadShaders(), "LoadShaders Failed!!");
 
 	// scene
 	// 씬 로드 부분 이라고 가정
@@ -546,7 +491,7 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 		// 2번이긴 하지?
 		const char* materialLoadList[] = { "SkyBox.json", };
-
+		/*
 		for (int i = 0; i < _countof(materialLoadList); ++i) {
 			Material* temp = new Material("임시");
 			temp->LoadTexture(commandList, materialLoadList[i]);
@@ -560,38 +505,22 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 			m_Shaders.back()->AddMaterial(temp);
 		}
+		*/
 
 		// 3번이긴 하지?
 		//Mesh tempMesh;
 		//tempMesh.LoadFile(commandList, "satodia.bin");
 		//m_Meshes.push_back(tempMesh);
-		m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
-		m_Camera->SetPosition({ 0.0f, 30.0f, -150.0f });
-		m_Camera->Init();
+		//m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
+		//m_Camera->SetWorldPosition({ 0.0f, 30.0f, -150.0f });
+		//m_Camera->Init();
 
 		// 업로드버퍼같은거 실행
-		commandList->Close();
-		ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
-		m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
-
-		UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
-		HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
-		if (m_Fence->GetCompletedValue() < fenceValue) {
-			hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
-			WaitForSingleObject(m_FenceEvent, INFINITE);
-		}
-
-		for (int i = 0; i < m_UploadResources.size(); ++i) {
-			if (m_UploadResources[i]) {
-				m_UploadResources[i]->Release();
-				m_UploadResources[i] = nullptr;
-			}
-		}
-		m_UploadResources.clear();
+		//ExecuteAndEraseUploadHeap(commandList);
 	}
 #endif // _DEBUG
 
-	CHECK_CREATE_FAILED(CreateResourceDescriptorHeap(), "CreateResourceDescriptorHeap");
+	CHECK_CREATE_FAILED(CreateRenderTargetDescriptorHeap(), "CreateRenderTargetDescriptorHeap");
 
 	return true;
 }
@@ -696,7 +625,86 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
 }
 
-int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)
+bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources)
+{
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
+	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
+	descriptorDesc.NumDescriptors = static_cast<UINT>(resources.size());										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
+	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	descriptorDesc.NodeMask = 0;
+
+	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(heap.GetAddressOf()));
+	CHECK_CREATE_FAILED(heap, "heap 생성 실패!");
+
+	auto currentCPUPtr = heap->GetCPUDescriptorHandleForHeapStart();
+	//auto currentGPUPtr = heap->GetGPUDescriptorHandleForHeapStart();
+
+	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
+	for (int i = 0; i < resources.size(); ++i) {
+		//for (auto resource : resources) {
+		ID3D12Resource* res = resources[i].get()->GetResource();
+		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		srvDesc.Format = resDesc.Format;
+		srvDesc.ViewDimension = resources[i].get()->GetDimension();
+
+		switch (srvDesc.ViewDimension) {
+		case D3D12_SRV_DIMENSION_TEXTURE2D:
+			srvDesc.Texture2D.MipLevels = 1;
+			srvDesc.Texture2D.MostDetailedMip = 0;
+			srvDesc.Texture2D.PlaneSlice = 0;
+			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+			break;
+
+		case D3D12_SRV_DIMENSION_TEXTURECUBE:
+			srvDesc.TextureCube.MipLevels = 1;
+			srvDesc.TextureCube.MostDetailedMip = 0;
+			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+			break;
+
+		case D3D12_SRV_DIMENSION_BUFFER:
+			srvDesc.Buffer.FirstElement = 0;
+			srvDesc.Buffer.NumElements = 0;								// 나중에 버퍼 쓸 때 다시 확인
+			srvDesc.Buffer.StructureByteStride = 0;
+			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+
+			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + resources[i].get()->GetName());
+			break;
+
+		default:
+			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + resources[i].get()->GetName());
+			return false;
+		}
+
+		ID3D12Resource* resource = resources[i]->GetResource();
+		m_Device->CreateShaderResourceView(resource, &srvDesc, currentCPUPtr);
+		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
+	}
+	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
+	// D3D12_SRV_DIMENSION_BUFFER = 1,
+	// D3D12_SRV_DIMENSION_TEXTURE1D = 2,
+	// D3D12_SRV_DIMENSION_TEXTURE1DARRAY = 3,
+	// D3D12_SRV_DIMENSION_TEXTURE2D = 4,
+	// D3D12_SRV_DIMENSION_TEXTURE2DARRAY = 5,
+	// D3D12_SRV_DIMENSION_TEXTURE2DMS = 6,
+	// D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY = 7,
+	// D3D12_SRV_DIMENSION_TEXTURE3D = 8,
+	// D3D12_SRV_DIMENSION_TEXTURECUBE = 9,
+	// D3D12_SRV_DIMENSION_TEXTURECUBEARRAY = 10,
+	// D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE = 11
+
+	return true;
+}
+
+bool Renderer::CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader)
+{
+	return shader->CreateShader(m_Device, commandList, m_RootSignature, fileName);
+}
+
+COOLResourcePtr Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> commandList, const wchar_t* fileName, D3D12_RESOURCE_STATES resourceState)
 {
 	ID3D12Resource* texture = nullptr;
 	std::unique_ptr<uint8_t[]> ddsData;
@@ -705,7 +713,6 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	bool isCubeMap = false;
 
 	std::wstring temp(fileName);
-	std::string strTemp(temp.begin(), temp.end());
 
 	// dds를 로드한다
 	HRESULT res = DirectX::LoadDDSTextureFromFileEx(m_Device.Get(), fileName, 0, D3D12_RESOURCE_FLAG_NONE, DDS_LOADER_DEFAULT, &texture, ddsData, subResources, &ddsAlphaMode, &isCubeMap);
@@ -720,7 +727,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 		str.assign(wstring.begin(), wstring.end());
 
 		DebugPrint(str);
-		return -1;
+		return nullptr;
 	}
 
 	if (ddsAlphaMode != DDS_ALPHA_MODE_UNKNOWN) {
@@ -728,7 +735,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	}
 
 	// 리소스 디스크립터
-	UINT64 numObSUbresource = GetRequiredIntermediateSize(texture, 0, subResources.size());
+	UINT64 numObSUbresource = GetRequiredIntermediateSize(texture, 0, static_cast<UINT>(subResources.size()));
 
 	D3D12_RESOURCE_DESC resDesc = {};
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -759,7 +766,7 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	uploadResource->SetName((temp + L" - upload buffer").c_str());
 
 	// 복사 및 상태 전이
-	UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
+	UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, static_cast<UINT>(subResources.size()), &subResources[0]);
 
 	D3D12_RESOURCE_BARRIER resourceBarrier = {};
 	resourceBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -773,22 +780,12 @@ int Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandList> command
 	COOLResourcePtr newResource(new COOLResource(texture, resourceState, D3D12_HEAP_TYPE_DEFAULT));
 	newResource->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 
-	newResource->SetName(strTemp);
+	newResource->SetName(fileName);
 
-	return RegisterShaderResource(newResource);
+	return newResource;
 }
 
-int Renderer::LoadMeshFromFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
-{
-	std::vector<int> data;
-
-	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, data.size());
-
-
-	return 0;
-}
-
-int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
+COOLResourcePtr Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
 {
 	UINT createBytes = ((bytes + 255) & ~255);
 	auto resource = CreateEmptyBufferResource(heapType, resourceState, createBytes, name);
@@ -798,18 +795,7 @@ int Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES 
 		resource->GetResource()->Map(0, nullptr, toMapData);
 	}
 
-	if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
-		resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER ||
-		toMapData != nullptr) {
-		m_VertexIndexDatas.push_back(resource);
-		return m_VertexIndexDatas.size() - 1;
-	}
-	else {
-		m_Resources.push_back(resource);
-		return m_Resources.size() - 1;
-	}
-
-	return -1;
+	return resource;
 }
 
 void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLResourcePtr src, COOLResourcePtr dest)
@@ -826,7 +812,7 @@ void Renderer::CopyResource(ComPtr<ID3D12GraphicsCommandList> commandList, COOLR
 	dest->TransToState(commandList, curDestState);
 }
 
-void Renderer::SetViewportScissorRect()
+void Renderer::SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	D3D12_VIEWPORT vp;
 	vp.TopLeftX = 0.0f;
@@ -838,19 +824,41 @@ void Renderer::SetViewportScissorRect()
 
 	RECT scRect = { 0, 0, m_ScreenSize.cx, m_ScreenSize.cy };
 
-	SetViewportScissorRect(1, vp, scRect);
+	SetViewportScissorRect(commandList, 1, vp, scRect);
 }
 
-void Renderer::SetViewportScissorRect(UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect)
+void Renderer::SetViewportScissorRect(ComPtr<ID3D12GraphicsCommandList> commandList, UINT numOfViewPort, const D3D12_VIEWPORT& viewport, const RECT& scissorRect)
 {
-	m_MainCommandList->RSSetViewports(numOfViewPort, &viewport);
-	m_MainCommandList->RSSetScissorRects(numOfViewPort, &scissorRect);
+	commandList->RSSetViewports(numOfViewPort, &viewport);
+	commandList->RSSetScissorRects(numOfViewPort, &scissorRect);
 }
 
-UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
+//UINT Renderer::RegisterShaderResource(COOLResourcePtr resource)
+//{
+//	m_Resources.push_back(resource);
+//	return static_cast<UINT>(m_Resources.size()) - 1;
+//}
+
+void Renderer::ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-	m_Resources.push_back(resource);
-	return m_Resources.size() - 1;
+	commandList->Close();
+	ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
+	m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
+
+	UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
+	HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
+	if (m_Fence->GetCompletedValue() < fenceValue) {
+		hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
+		WaitForSingleObject(m_FenceEvent, INFINITE);
+	}
+
+	for (int i = 0; i < m_UploadResources.size(); ++i) {
+		if (m_UploadResources[i]) {
+			m_UploadResources[i]->Release();
+			m_UploadResources[i] = nullptr;
+		}
+	}
+	m_UploadResources.clear();
 }
 
 void Renderer::Render()
@@ -869,7 +877,7 @@ void Renderer::Render()
 	m_MainCommandList->SetDescriptorHeaps(1, m_ResourceHeap.GetAddressOf());
 	m_MainCommandList->SetGraphicsRootDescriptorTable(0, m_ResourceHeap->GetGPUDescriptorHandleForHeapStart());
 
-	SetViewportScissorRect();
+	SetViewportScissorRect(m_MainCommandList);
 
 	// present를 기다려야 하지 않을까
 
@@ -889,23 +897,20 @@ void Renderer::Render()
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
-	if (GetAsyncKeyState('W') & 0x8000) tempMove.z += 1.0f;
-	if (GetAsyncKeyState('S') & 0x8000) tempMove.z -= 1.0f;
-	if (GetAsyncKeyState('A') & 0x8000) tempMove.x -= 1.0f;
-	if (GetAsyncKeyState('D') & 0x8000) tempMove.x += 1.0f;
-	if (GetAsyncKeyState('Q') & 0x8000) tempMove.y -= 1.0f;
-	if (GetAsyncKeyState('E') & 0x8000) tempMove.y += 1.0f;
 
-	float size = Vector3::Length(tempMove);
-	if (size > 0.5f) {
-		XMFLOAT3 normal = Vector3::Normalize(tempMove);
-		tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
-		XMFLOAT3 pos = Vector3::Add(m_Camera->GetPosition(), tempMove);
-		m_Camera->SetPosition(pos);
+	if (m_SceneManager) m_SceneManager->Render(m_GraphicsCommandLists);
 
-		SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
-		Client::GetInstance().Send_Pos(sp);
+	//float size = Vector3::Length(tempMove);
+	//if (size > 0.5f)
+	//if (false)
+	//{
+		//XMFLOAT3 normal = Vector3::Normalize(tempMove);
+		//tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
+		//XMFLOAT3 pos = Vector3::Add(m_Camera->GeWorldPosition(), tempMove);
+		//m_Camera->SetWorldPosition(pos);
+
+		//SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
+		//Client::GetInstance().Send_Pos(sp);
 
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
@@ -924,14 +929,14 @@ void Renderer::Render()
 		//XMStoreFloat4(&pTrans, statVector);
 
 		//DebugPrint(std::format("pTrans {}, {}, {}", pTrans.x, pTrans.y, pTrans.z));
-	}
+	//}
 
 
-	m_Camera->Render(m_MainCommandList);
+	//m_Camera->Render(m_MainCommandList);
 
-	for (auto shader : m_Shaders) {
-		shader->Render(m_MainCommandList);
-	}
+	//for (auto shader : m_Shaders) {
+	//	shader->Render(m_MainCommandList);
+	//}
 
 	// render end
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -974,13 +979,13 @@ D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetResourceGPUAddress(int idx)
 	return 0;
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetVertexDataGPUAddress(int idx)
-{
-	if (0 <= idx && idx < m_VertexIndexDatas.size())
-		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
-
-	return 0;
-}
+//D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetVertexDataGPUAddress(int idx)
+//{
+//	if (0 <= idx && idx < m_VertexIndexDatas.size())
+//		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+//
+//	return 0;
+//}
 
 COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
 {
@@ -990,14 +995,15 @@ COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
 	return nullptr;
 }
 
-COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
-{
-	if (0 <= idx && idx < m_VertexIndexDatas.size())
-		return m_VertexIndexDatas[idx];
+//COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
+//{
+//	if (0 <= idx && idx < m_VertexIndexDatas.size())
+//		return m_VertexIndexDatas[idx];
+//
+//	return nullptr;
+//}
 
-	return nullptr;
-}
-
+/*
 void Renderer::MouseInput(int xin, int yin)
 {
 	float x = yin * 0.10f;
@@ -1031,7 +1037,7 @@ void Renderer::MouseInput(int xin, int yin)
 	//look = Vector3::TransformNormal(look, xmmtxRotate);
 	DebugPrint(std::format("look: {}, {}, {}", look.x, look.y, look.z));
 }
-
+*/
 Renderer* Renderer::GetRendererPtr()
 {
 	std::cout << "ptr: " << &Renderer::GetInstance() << std::endl;
