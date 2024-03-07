@@ -163,6 +163,7 @@
     <ClInclude Include="Include\Application.h" />
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\ECS\Component.h" />
+    <ClInclude Include="Include\ECS\ECSManager.h" />
     <ClInclude Include="Include\ECS\Entity.h" />
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
@@ -173,7 +174,6 @@
     <ClInclude Include="Include\OnDebug.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
-    <ClInclude Include="Include\Scene\ECSManager.h" />
     <ClInclude Include="Include\Scene\ResourceManager.h" />
     <ClInclude Include="Include\Scene\Scene.h" />
     <ClInclude Include="Include\Scene\SceneManager.h" />
@@ -189,6 +189,7 @@
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp" />
     <ClCompile Include="Include\Application.cpp" />
     <ClCompile Include="Include\ECS\Component.cpp" />
+    <ClCompile Include="Include\ECS\ECSManager.cpp" />
     <ClCompile Include="Include\ECS\Entity.cpp" />
     <ClCompile Include="Include\framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -201,7 +202,6 @@
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
-    <ClCompile Include="Include\Scene\ECSManager.cpp" />
     <ClCompile Include="Include\Scene\ResourceManager.cpp" />
     <ClCompile Include="Include\Scene\Scene.cpp" />
     <ClCompile Include="Include\Scene\SceneManager.cpp" />

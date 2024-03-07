@@ -4,7 +4,7 @@
 #include "ResourceManager.h"
 #include "ECS/Entity.h"
 #include "ECS/Component.h"
-#include "Scene/ECSManager.h"
+#include "ECS/ECSManager.h"
 #include <json/json.h>
 
 //#include "Material/Material.h"

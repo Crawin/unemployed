@@ -46,9 +46,6 @@
     <Filter Include="소스 파일\SceneData\Mesh">
       <UniqueIdentifier>{979dc6b6-e94e-47f7-a39b-6a9e1fd2ce2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\SceneData\Object">
-      <UniqueIdentifier>{4f2b83cc-a40d-4508-a05a-c230862fdf4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\SceneData\Material">
       <UniqueIdentifier>{71be48e2-54b1-40a5-87f7-673304bcdb45}</UniqueIdentifier>
     </Filter>
@@ -135,9 +132,6 @@
     <ClInclude Include="Include\Scene\ResourceManager.h">
       <Filter>소스 파일\Scene\ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Scene\ECSManager.h">
-      <Filter>소스 파일\Scene\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="Include\ManagementComponents.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -146,6 +140,9 @@
     </ClInclude>
     <ClInclude Include="Include\ECS\Component.h">
       <Filter>소스 파일\ECS\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\ECSManager.h">
+      <Filter>소스 파일\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,14 +200,14 @@
     <ClCompile Include="Include\Scene\ResourceManager.cpp">
       <Filter>소스 파일\Scene\ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Scene\ECSManager.cpp">
-      <Filter>소스 파일\Scene\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="Include\ECS\Entity.cpp">
       <Filter>소스 파일\ECS\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Include\ECS\Component.cpp">
       <Filter>소스 파일\ECS\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\ECSManager.cpp">
+      <Filter>소스 파일\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

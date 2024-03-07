@@ -1,7 +1,7 @@
 ﻿#include "Scene.h"
 //#include "Renderer/Renderer.h"
 #include "framework.h"
-#include "Scene/ECSManager.h"
+#include "ECS/ECSManager.h"
 #include "ResourceManager.h"
 #include "ECS/Component.h"
 #include "Shader/Shader.h"
