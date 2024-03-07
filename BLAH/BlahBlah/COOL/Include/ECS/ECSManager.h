@@ -4,7 +4,7 @@
 
 class Entity;
 namespace component { class Component; }
-class System;
+namespace ECSsystem { class System; }
 
 // 컴포넌트들을 가지는 클래스
 // std::vector<char>를 랩핑 하였다.
@@ -27,11 +27,10 @@ public:
 
 
 // ComponentContainer들을 가짐
-template<std::size_t N>
 class ComponentSet {
 
 	// Component를 각각 저장하는 container
-	std::unordered_map<std::bitset<N>, ComponentContainer> m_Set;
+	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentContainer> m_Set;
 
 	int m_EntitySize = 0;
 
@@ -39,7 +38,7 @@ public:
 	ComponentSet() {
 		DebugPrint("NO");
 	}
-	ComponentSet(std::bitset<N> bit);
+	ComponentSet(std::bitset<COMPONENT_COUNT> bit);
 
 	void InsertComponentByEntity(Entity* entity);
 
@@ -55,31 +54,30 @@ private:
 };
 
 
-template<std::size_t N>
 class ECSManager
 {
 	// entity
 	std::vector<Entity*> m_Entities;
 
 	// ComponentSet을 저장
-	std::unordered_map<std::bitset<N>, ComponentSet<N>> m_ComponentSets;
+	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet> m_ComponentSets;
 
 	// system
-	std::vector<System*> m_System;
+	std::vector<ECSsystem::System*> m_System;
 
 public:
 	void AddEntity(Entity* entity);
+
+	void UpdateSystem(float deltaTime);
 
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func);
 
 private:
 
-	//std::bitset<N> GetBitset() { return std::bitset<N>(0); }
-
 	template<class ...COMPONENTS>
-	std::bitset<N> GetBitset();
+	std::bitset<COMPONENT_COUNT> GetBitset();
 
 	template<class COMP>
-	std::bitset<N> GetBit();
+	std::bitset<COMPONENT_COUNT> GetBit();
 };

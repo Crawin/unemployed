@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "ManagementComponents.h"
+//#include "ManagementComponents.h"
 
 namespace component { class Component; }
 
@@ -7,8 +7,8 @@ namespace component { class Component; }
 // entity
 class Entity
 {
-	template<size_t N> friend class ECSManager;
-	template<size_t N> friend class ComponentSet;
+	friend class ECSManager;
+	friend class ComponentSet;
 
 public:
 	Entity(int id) : m_Id{ id } {}

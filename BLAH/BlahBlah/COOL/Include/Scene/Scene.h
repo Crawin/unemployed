@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "ManagementComponents.h"
 
 // 씬 Enum
 // 이거에 따라서 로드 할 씬의 종류가 달라짐
@@ -31,7 +30,6 @@ enum SCENE_TYPE {
 // Object를 로드 할 때 ResourceManager에 필요한 리소스를 추가해 가져오거나 재활용 함
 class ResourceManager;
 
-template <size_t N>
 class ECSManager;
 
 class Scene
@@ -48,7 +46,7 @@ protected:
 	ResourceManager* m_ResourceManager = nullptr;
 
 	// ECS System
-	std::shared_ptr<ECSManager<COMPONENT_COUNT>> m_ECSManager = nullptr;
+	std::shared_ptr<ECSManager> m_ECSManager = nullptr;
 
 	//virtual bool Init();
 private:

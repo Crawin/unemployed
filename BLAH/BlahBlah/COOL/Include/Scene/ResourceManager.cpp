@@ -193,7 +193,7 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	return true;
 }
 
-void ResourceManager::SetECSManager(std::shared_ptr<ECSManager<COMPONENT_COUNT>> ptr)
+void ResourceManager::SetECSManager(std::shared_ptr<ECSManager> ptr)
 {
 	m_ECSManager = ptr;
 }

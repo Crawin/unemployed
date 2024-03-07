@@ -20,7 +20,7 @@ Scene::~Scene()
 
 bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
-	m_ECSManager = std::make_shared<ECSManager<COMPONENT_COUNT>>();
+	m_ECSManager = std::make_shared<ECSManager>();
 
 	m_ResourceManager->SetECSManager(m_ECSManager);
 

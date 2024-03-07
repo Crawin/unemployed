@@ -1,7 +1,8 @@
 ﻿#include "framework.h"
 #include "ECSManager.h"
-#include "ECS/Entity.h"
-#include "ECS/Component.h"
+#include "Entity.h"
+#include "Component.h"
+#include "ECS_System.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Component Container
@@ -33,16 +34,15 @@ T* ComponentContainer::GetData(size_t index)
 // Component Set
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template<std::size_t N>
-inline ComponentSet<N>::ComponentSet(std::bitset<N> bit)
+inline ComponentSet::ComponentSet(std::bitset<COMPONENT_COUNT> bit)
 {
 	// 미리 해당 bitset에 맞춰 componentcontainer를 만들어둔다.
-	for (int i = 0; i < N; ++i) {
+	for (int i = 0; i < COMPONENT_COUNT; ++i) {
 		if (bit.test(i)) {
 			// add
 			size_t componentSize = GET_COMP_SIZE(i);
 			
-			std::bitset<N> tempBit(1);
+			std::bitset<COMPONENT_COUNT> tempBit(1);
 			tempBit <<= i;
 
 			m_Set.emplace(tempBit, componentSize);
@@ -53,10 +53,9 @@ inline ComponentSet<N>::ComponentSet(std::bitset<N> bit)
 	}
 }
 
-template<std::size_t N>
-void ComponentSet<N>::InsertComponent(component::Component* comp)
+void ComponentSet::InsertComponent(component::Component* comp)
 {
-	std::bitset<N> bit(1);
+	std::bitset<COMPONENT_COUNT> bit(1);
 	bit <<= comp->GetGID();
 
 	// check the component is exist in the set
@@ -70,8 +69,7 @@ void ComponentSet<N>::InsertComponent(component::Component* comp)
 
 }
 
-template<std::size_t N>
-void ComponentSet<N>::InsertComponentByEntity(Entity* entity)
+void ComponentSet::InsertComponentByEntity(Entity* entity)
 {
 	for (auto& comp : entity->m_Components) 
 	{
@@ -81,9 +79,8 @@ void ComponentSet<N>::InsertComponentByEntity(Entity* entity)
 	++m_EntitySize;
 }
 
-template<std::size_t N>
 template<class ...COMPONENTS>
-inline void ComponentSet<N>::Execute(std::function<void(COMPONENTS*...)>& func)
+inline void ComponentSet::Execute(std::function<void(COMPONENTS*...)>& func)
 {
 	for (int i = 0; i < m_EntitySize; ++i) 
 	{
@@ -94,11 +91,10 @@ inline void ComponentSet<N>::Execute(std::function<void(COMPONENTS*...)>& func)
 	}
 }
 
-template<std::size_t N>
 template<class COMP>
-COMP* ComponentSet<N>::GetComponent(int idx)
+COMP* ComponentSet::GetComponent(int idx)
 {
-	std::bitset<N> bit(1);
+	std::bitset<COMPONENT_COUNT> bit(1);
 	bit <<= COMP::m_GID;
 
 	//ComponentContainer& container = m_Set[bit];
@@ -115,13 +111,12 @@ COMP* ComponentSet<N>::GetComponent(int idx)
 // ECS System
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-template<std::size_t N>
-inline void ECSManager<N>::AddEntity(Entity* entity)
+inline void ECSManager::AddEntity(Entity* entity)
 {
 	// 1. 일단 entity가 어떤 component를 가지고 있는지 확인해야함
-	std::bitset<N> bitset(0);
+	std::bitset<COMPONENT_COUNT> bitset(0);
 	for (auto& comp : entity->m_Components) {
-		std::bitset<N> compBit(1);
+		std::bitset<COMPONENT_COUNT> compBit(1);
 		compBit <<= comp->GetGID();
 
 		bitset |= compBit;
@@ -142,17 +137,20 @@ inline void ECSManager<N>::AddEntity(Entity* entity)
 
 }
 
-template<std::size_t N>
+void ECSManager::UpdateSystem(float deltaTime)
+{
+	for (auto& system : m_System) {
+		system->Update(deltaTime);
+	}
+}
+
 template<class ...COMPONENTS>
-inline void ECSManager<N>::Execute(std::function<void(COMPONENTS*...)>& func)
+inline void ECSManager::Execute(std::function<void(COMPONENTS*...)>& func)
 {
 	// find bitset first
-	std::bitset<N> bitset = GetBitset<COMPONENTS...>();
-
-	//DebugPrint(std::format("{}", bitset.to_string()));
+	std::bitset<COMPONENT_COUNT> bitset = GetBitset<COMPONENTS...>();
 
 	// structured binding
-	// 배웠던건데 기억이 안났다
 	for (auto& [key, compSet] : m_ComponentSets) {
 		// not match => dont
 		if ((bitset & key) != bitset) continue;
@@ -162,28 +160,17 @@ inline void ECSManager<N>::Execute(std::function<void(COMPONENTS*...)>& func)
 	
 }
 
-//template<std::size_t N>
-//template<class >
-//std::bitset<N>& ECSManager<N>::GetBitset()
-//{
-//	std::bitset<N> bit(0);
-//
-//	return bit;
-//}
-
-template<std::size_t N>
 template<class ...COMPONENTS>
-std::bitset<N> ECSManager<N>::GetBitset()
+std::bitset<COMPONENT_COUNT> ECSManager::GetBitset()
 {
 	// fold expression, C++ 17
 	return (GetBit<COMPONENTS>() | ...);
 }
 
-template<std::size_t N>
 template<class COMP>
-std::bitset<N> ECSManager<N>::GetBit()
+std::bitset<COMPONENT_COUNT> ECSManager::GetBit()
 {
-	std::bitset<N> bit(1);
+	std::bitset<COMPONENT_COUNT> bit(1);
 	bit <<= COMP::m_GID;
 
 	return bit;
