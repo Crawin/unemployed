@@ -192,9 +192,8 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			//  GAME_RUN 쓰레드를 생성
 			lGameRunThreads.push_back(std::make_pair(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum)));
 			// mGameStorages에 key값으로 방번호를 넣고, value로 패킷 구조의 리스트를 만들어서, 얘 전용 저장소로 이용한다.
-			SendPosition temp;
+
 			mGameStorages[GameNum][0].first = client_sock;				// p1 소켓 할당
-			mGameStorages[GameNum][0].second.emplace_back(temp);		// p1에 접속했다는 의미로 임시 데이터 할당
 
 			// GAME_RECV 쓰레드 생성
 			lGameRecvThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
@@ -211,9 +210,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			GameNum += (buf[11] - '0') * 1;
 			std::cout << "GameNum: " << GameNum << std::endl;
 
-			SendPosition temp;
 			mGameStorages[GameNum][1].first = client_sock;				// p2 소켓 할당
-			mGameStorages[GameNum][1].second.emplace_back(temp);		// p2에 접속했다는 의미로 임시 데이터 할당
 
 			Log_Mutex.lock();
 			std::cout << "방에 입장합니다." << std::endl;
@@ -377,7 +374,7 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-
+	//std::string temp(bufsi)
 	bool bRoom = true;
 	while (bRoom) {
 		// 데이터 받기
@@ -389,44 +386,36 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 		else if (retval == 0)
 			break;
 
-		switch (buf[0])
-		{
-		case 0:				// POSITION
-		{
-			SendPosition sp;
-			memcpy(&sp, buf, sizeof(sp));
-			if (mGameStorages[gameNum][0].first == client_sock)		// p1이면
-			{
-				mGameStorages[gameNum][0].second.emplace_back(sp);	// 받은 데이터를 mGameStorages에 저장.
-			}
-			else if (mGameStorages[gameNum][1].first == client_sock)	// p2면
-			{
-				mGameStorages[gameNum][1].second.emplace_back(sp);	// 받은 데이터를 mGameStorages에 저장.
-			}
-			else
-			{
-				Log_Mutex.lock();
-				std::cout << "SOCKET [" << client_sock << "] 이 접속되지 않았습니다." << std::endl;
-				Log_Mutex.unlock();
-				break;
-			}
+		std::string save_buf(buf, retval);
 
+		if (mGameStorages[gameNum][0].first == client_sock)		// p1이면
+		{
+			mGameStorages[gameNum][0].second.second.lock();
+			mGameStorages[gameNum][0].second.first.emplace_back(save_buf);	// 받은 데이터를 mGameStorages에 저장.
+			mGameStorages[gameNum][0].second.second.unlock();
+		}
+		else if (mGameStorages[gameNum][1].first == client_sock)	// p2면
+		{
+			mGameStorages[gameNum][1].second.second.lock();
+			mGameStorages[gameNum][1].second.first.emplace_back(save_buf);	// 받은 데이터를 mGameStorages에 저장.
+			mGameStorages[gameNum][1].second.second.unlock();
+		}
+		else
+		{
 			Log_Mutex.lock();
-			std::cout << "Type: POSITION , X: " << sp.pos.x << " , Y: " << sp.pos.y << " , Z: " << sp.pos.z << std::endl;
+			std::cout << "SOCKET [" << client_sock << "] 이 접속되지 않았습니다." << std::endl;
 			Log_Mutex.unlock();
 			break;
 		}
-		default:
-			// 받은 데이터 출력
-			buf[retval] = '\0';
-			Log_Mutex.lock();
-			printf("[GAME_RECV] [TCP/%s:%d]: %s\n", addr, ntohs(clientaddr.sin_port), buf);
-			Log_Mutex.unlock();
-			break;
-		}
+
+		// 받은 데이터 출력
+		buf[retval] = '\0';
+		Log_Mutex.lock();
+		std::cout << "[GAME_RECV] [TCP " << addr << ":" << ntohs(clientaddr.sin_port) << "]: " << buf << std::endl;
+		Log_Mutex.unlock();
 
 		// 데이터 보내기
-		retval = send(client_sock, buf, retval, 0);
+		retval = send(client_sock, &buf[0], retval, 0);
 		if (retval == SOCKET_ERROR) {
 			err_display("send()");
 			break;
@@ -467,7 +456,6 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 					std::cout << "P"<<i+1<<"[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
 					Log_Mutex.unlock();
 					p[i].allocateSOCKET(mGameStorages[gameNum][i].first);
-					mGameStorages[gameNum][i].second.clear();
 				}
 			}
 			else
@@ -478,15 +466,29 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 
 		}
 
-		// 이동
+		// 명령 처리
 		for (int i = 0; i < 1; ++i)
 		{
-			if (mGameStorages[gameNum][i].second.size() > 0)
-			{
-				SendPosition temp;
-				memcpy(&temp, &mGameStorages[gameNum][i].second.front(), sizeof(SendPosition));
-				p[i].setPos(temp.pos);
-				mGameStorages[gameNum][i].second.erase(mGameStorages[gameNum][i].second.begin());
+			if (mGameStorages[gameNum][i].second.first.size() > 0) {
+				mGameStorages[gameNum][i].second.second.lock();
+
+				for (auto start = mGameStorages[gameNum][i].second.first.begin(); start != mGameStorages[gameNum][i].second.first.end(); ++start)
+				{
+					switch ((*start)[0])
+					{
+					case 0:		// position
+					{
+						Socket_position temp;
+						memcpy(&temp, &(*start)[0], sizeof(Socket_position));
+						std::cout << temp.pos.x << temp.pos.y << temp.pos.z << std::endl;
+						p[i].setPos(temp.pos);
+						break;
+					}
+					}
+				}
+				mGameStorages[gameNum][i].second.first.clear();			// 명령 처리 끝났으니 명령 저장소 비우기
+
+				mGameStorages[gameNum][i].second.second.unlock();
 			}
 		}
 

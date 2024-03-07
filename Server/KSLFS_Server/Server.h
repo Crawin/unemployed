@@ -16,12 +16,12 @@ enum SendType
 	EVENT
 };
 
-struct SendPosition {
+struct Socket_position {
 	SendType type;		// POSITION일때
 	DirectX::XMFLOAT3 pos;
 };
 
-struct dddd
+struct Socket_event
 {
 	SendType type;		// EVENT일때
 };
@@ -48,7 +48,8 @@ private:
 	SOCKET listen_sock;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
-	std::map<unsigned int, std::array<std::pair<SOCKET, std::list<SendPosition>>, 2>> mGameStorages;
+	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
+
 public:
 	CRoomServer();
 	~CRoomServer();
