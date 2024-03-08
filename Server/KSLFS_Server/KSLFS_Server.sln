@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.34221.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KSLFS_Server", "KSLFS_Server.vcxproj", "{54B6C9E5-8DB2-49C3-8D5B-879341C89DC8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KSLFS_SERVER_WIN", "..\KSLFS_SERVER_WIN\KSLFS_SERVER_WIN.vcxproj", "{619A139E-FC21-40A8-B9E2-7E8D5A620207}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{54B6C9E5-8DB2-49C3-8D5B-879341C89DC8}.Release|x64.Build.0 = Release|x64
 		{54B6C9E5-8DB2-49C3-8D5B-879341C89DC8}.Release|x86.ActiveCfg = Release|Win32
 		{54B6C9E5-8DB2-49C3-8D5B-879341C89DC8}.Release|x86.Build.0 = Release|Win32
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Debug|x64.ActiveCfg = Debug|x64
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Debug|x64.Build.0 = Debug|x64
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Debug|x86.ActiveCfg = Debug|Win32
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Debug|x86.Build.0 = Debug|Win32
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Release|x64.ActiveCfg = Release|x64
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Release|x64.Build.0 = Release|x64
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Release|x86.ActiveCfg = Release|Win32
+		{619A139E-FC21-40A8-B9E2-7E8D5A620207}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

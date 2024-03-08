@@ -900,18 +900,18 @@ void Renderer::Render()
 
 	if (m_SceneManager) m_SceneManager->Render(m_GraphicsCommandLists);
 
-	//float size = Vector3::Length(tempMove);
-	//if (size > 0.5f)
-	//if (false)
-	//{
-		//XMFLOAT3 normal = Vector3::Normalize(tempMove);
-		//tempMove = Vector3::ScalarProduct(normal, 1.0f / 60.0f);
-		//XMFLOAT3 pos = Vector3::Add(m_Camera->GeWorldPosition(), tempMove);
-		//m_Camera->SetWorldPosition(pos);
+		static unsigned short send_frame = 0;
+		if (send_frame >= 30) {			// 30프레임마다 send한다.
+			SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
+			Client::GetInstance().Send_Pos(sp);
+			send_frame = 0;
+		}
+		else ++send_frame;
 
-		//SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
-		//Client::GetInstance().Send_Pos(sp);
-
+		if (Client::GetInstance().Get_Recv_Size())
+		{
+			m_Camera->SetPosition(Client::GetInstance().Get_Recv_Queue());
+		}
 		// debug print;
 		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
 		//XMFLOAT4X4 view = m_Camera->GetViewMat();

@@ -16,12 +16,14 @@ enum SendType
 	EVENT
 };
 
-struct Socket_position {
+struct SendPosition {
 	SendType type;		// POSITION일때
-	DirectX::XMFLOAT3 pos;
+	float x;
+	float y;
+	float z;
 };
 
-struct Socket_event
+struct dddd
 {
 	SendType type;		// EVENT일때
 };
@@ -48,7 +50,8 @@ private:
 	SOCKET listen_sock;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
-	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
+	//std::map<unsigned int, std::list < std::pair<SOCKET, SendPosition> >> mGameStorages;
+	std::map<unsigned int, std::array<std::pair<SOCKET, std::list<SendPosition>>, 2>> mGameStorages;
 
 public:
 	CRoomServer();
@@ -85,13 +88,10 @@ class Player {
 private:
 	SOCKET socket = NULL;
 private:
-	DirectX::XMFLOAT3 m_xmf3Pos;
-	DirectX::XMFLOAT3 m_xmf3Prev_Pos;
+	float x;
+	float y;
+	float z;
 public:
 	const SOCKET getSocket();
 	void allocateSOCKET(const SOCKET&);
-	const DirectX::XMFLOAT3 getPos();
-	void printPlayerPos(const int&, const bool&);
-	void syncPos();
-	void setPos(const DirectX::XMFLOAT3&);
 };
