@@ -35,9 +35,9 @@ ResourceManager::~ResourceManager()
 	//sharedptr
 	m_Shaders.clear();
 
-
-	for (auto& obj : m_Entities)
-		delete obj;
+	// ecs manager가 가지고 있다.
+	//for (auto& obj : m_Entities)
+	//	delete obj;
 
 	m_Resources.clear();
 	m_VertexIndexDatas.clear();
