@@ -179,10 +179,10 @@ namespace component {
 
 		int GetMesh() const { return m_MeshID; }
 		int GetMaterial() const { return m_MaterialID; }
+		XMFLOAT4X4& GetWorldMatrix() { return m_WorldMatrix; }
 
 		void SetMesh(int idx) { m_MeshID = idx; }
 		void SetMaterial(int idx) { m_MaterialID = idx; }
-
 		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
 	};
 

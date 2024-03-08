@@ -1,0 +1,17 @@
+{
+	"Name": "floor_01",
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0, 1.0],
+		"Scale": [0.01, 0.01, 0.01]
+	},
+	"Renderer":
+	{
+		"Mesh": "map_01.Line001",
+		"Material": "NoMaterial"
+	}
+
+
+}

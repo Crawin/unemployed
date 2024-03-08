@@ -53,7 +53,7 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('E') & 0x8000) tempMove.y += 1.0f;
 
 			// 임시
-			tempMove = Vector3::ScalarProduct(tempMove, deltaTime * 15.0f);
+			tempMove = Vector3::ScalarProduct(tempMove, deltaTime * 150.0f);
 
 			tr->SetPosition(Vector3::Add(tempMove, tr->GetPosition()));
 			

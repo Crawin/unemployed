@@ -81,65 +81,69 @@ void WriteToFile(const Vertex& vtx, std::fstream& out);
 //}
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	// FBX SDK 초기화
-	FbxManager* fbxManager = FbxManager::Create();
-	FbxIOSettings* ios = FbxIOSettings::Create(fbxManager, IOSROOT);
-	fbxManager->SetIOSettings(ios);
-
-	// FBX 파일 로드
-	FbxImporter* importer = FbxImporter::Create(fbxManager, "");
-
-	const char* fileName = "teapot.fbx";
-	std::string outputFileName = ChangeExtensionToBin(fileName);
-	outputFileName = "teapot.bin";
-
-	if (!importer->Initialize(fileName, -1, fbxManager->GetIOSettings()))
+	for (int i = 1; i < argc; ++i)
 	{
-		// 로딩 실패 처리
-		std::cout << "failed to load fbx!!" << std::endl;
-		return -1;
-	}
+		// FBX SDK 초기화
+		FbxManager* fbxManager = FbxManager::Create();
+		FbxIOSettings* ios = FbxIOSettings::Create(fbxManager, IOSROOT);
+		fbxManager->SetIOSettings(ios);
 
-	// 씬 생성
-	FbxScene* scene = FbxScene::Create(fbxManager, "MyScene");
-	importer->Import(scene);
-	importer->Destroy();
+		// FBX 파일 로드
+		FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
-	// 노드 탐색 및 정점 및 인덱스 추출
-	FbxNode* rootNode = scene->GetRootNode();
-	if (rootNode)
-	{
-		Mesh mesh;
+		const char* fileName = argv[i];
+		std::string outputFileName = ChangeExtensionToBin(fileName);
+		//outputFileName = "teapot.bin";
 
-		//// 정점과 인덱스를 담을 벡터
-		//std::vector<Vertex> vertices;
-		//std::vector<uint16_t> indices;
+		if (!importer->Initialize(fileName, -1, fbxManager->GetIOSettings()))
+		{
+			// 로딩 실패 처리
+			std::cout << "failed to load fbx!!" << std::endl;
+			std::cout << "file name: " << fileName << std::endl;
+			return -1;
+		}
 
-		// 재귀적으로 노드 탐색
-		// RootNode가 따로 있더라
-		// 따로따로인 모델이 있을수도 있어서 그런가봄
-		// 우리는 부모메쉬가 하나라고 가정
-		TraverseNode(rootNode->GetChild(0), mesh);
+		// 씬 생성
+		FbxScene* scene = FbxScene::Create(fbxManager, "MyScene");
+		importer->Import(scene);
+		importer->Destroy();
 
-		// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
-		// ...
+		// 노드 탐색 및 정점 및 인덱스 추출
+		FbxNode* rootNode = scene->GetRootNode();
+		if (rootNode)
+		{
+			Mesh mesh;
 
-		PrintMeshHierachy(mesh);
+			//// 정점과 인덱스를 담을 벡터
+			//std::vector<Vertex> vertices;
+			//std::vector<uint16_t> indices;
 
-		std::fstream outputFile(outputFileName,
+			// 재귀적으로 노드 탐색
+			// RootNode가 따로 있더라
+			// 따로따로인 모델이 있을수도 있어서 그런가봄
+			// 우리는 부모메쉬가 하나라고 가정
+			TraverseNode(rootNode->GetChild(0), mesh);
+
+			// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
+			// ...
+
+			PrintMeshHierachy(mesh);
+
+			std::fstream outputFile(outputFileName,
 #ifdef BINARY
-			std::ios::binary |
+				std::ios::binary |
 #endif
-			std::ios::out);
+				std::ios::out);
 
-		ExtractToFIle(mesh, outputFile);
+			ExtractToFIle(mesh, outputFile);
 
-		// 정리 작업
-		fbxManager->Destroy();
+			// 정리 작업
+			fbxManager->Destroy();
+		}
+
 	}
-
 	return 0;
 }
 
@@ -340,7 +344,7 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 
 						if (tangentMappingMode == FbxLayerElement::eByControlPoint) {
 							//tangent = tangentElement->GetDirectArray().GetAt(i * polygonSize + j);
-							printf("asdf");
+							//printf("asdf");
 						}
 						else if (tangentMappingMode == FbxLayerElement::eByPolygonVertex) {
 							int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);// mesh->GetTextureUVIndex(i, j);

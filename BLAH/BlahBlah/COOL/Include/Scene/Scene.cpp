@@ -79,8 +79,8 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 
 		res->m_Materials[material]->SetDatas(commandLists[0], ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT);
 
-		XMFLOAT4X4 t = Matrix4x4::Identity();
-		res->m_Meshes[mesh]->Render(commandLists[0], t);
+		//XMFLOAT4X4 t = Matrix4x4::Identity();
+		res->m_Meshes[mesh]->Render(commandLists[0], renderComponent->GetWorldMatrix());
 		};
 
 	// execute function
