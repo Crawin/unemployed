@@ -53,7 +53,6 @@ namespace component
 		m_Rotate.x = trans["Rotate"][0].asFloat();
 		m_Rotate.y = trans["Rotate"][1].asFloat();
 		m_Rotate.z = trans["Rotate"][2].asFloat();
-		m_Rotate.w = trans["Rotate"][3].asFloat();
 
 		m_Scale.x = trans["Scale"][0].asFloat();
 		m_Scale.y = trans["Scale"][1].asFloat();
@@ -64,7 +63,7 @@ namespace component
 	{
 		DebugPrint(std::format("Transform Comp"));
 		DebugPrint(std::format("\tPosit: {}, {}, {}", m_Position.x, m_Position.y, m_Position.z));
-		DebugPrint(std::format("\tRotat: {}, {}, {}, {}", m_Rotate.x, m_Rotate.y, m_Rotate.z, m_Rotate.w));
+		DebugPrint(std::format("\tRotat: {}, {}, {}", m_Rotate.x, m_Rotate.y, m_Rotate.z));
 		DebugPrint(std::format("\tScale: {}, {}, {}", m_Scale.x, m_Scale.y, m_Scale.z));
 	}
 
@@ -117,7 +116,7 @@ namespace component
 	void Camera::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	{
 		// todo 여기 확인해보고 build matrix를 대신 하는 곳이 있는지 찾아봐라
-		BuildViewMatrix();
+		//BuildViewMatrix();
 		if (m_ProjChanged) BuildProjectionMatrix();
 		UpdateShaderData();
 
@@ -133,13 +132,13 @@ namespace component
 		m_Right = Vector3::CrossProduct(m_Up, m_Look, true);
 		m_Up = Vector3::CrossProduct(m_Look, m_Right, true);
 
-		m_ViewMatrix._11 = m_Right.x; m_ViewMatrix._12 = m_Up.x; m_ViewMatrix._13 = m_Look.x;
-		m_ViewMatrix._21 = m_Right.y; m_ViewMatrix._22 = m_Up.y; m_ViewMatrix._23 = m_Look.y;
-		m_ViewMatrix._31 = m_Right.z; m_ViewMatrix._32 = m_Up.z; m_ViewMatrix._33 = m_Look.z;
-		m_ViewMatrix._41 = -Vector3::DotProduct(m_Position, m_Right);
-		m_ViewMatrix._42 = -Vector3::DotProduct(m_Position, m_Up);
-		m_ViewMatrix._43 = -Vector3::DotProduct(m_Position, m_Look);
-		m_ViewMatrix._44 = 1.0f;
+		//m_ViewMatrix._11 = m_Right.x; m_ViewMatrix._12 = m_Up.x; m_ViewMatrix._13 = m_Look.x;
+		//m_ViewMatrix._21 = m_Right.y; m_ViewMatrix._22 = m_Up.y; m_ViewMatrix._23 = m_Look.y;
+		//m_ViewMatrix._31 = m_Right.z; m_ViewMatrix._32 = m_Up.z; m_ViewMatrix._33 = m_Look.z;
+		//m_ViewMatrix._41 = -Vector3::DotProduct(m_Position, m_Right);
+		//m_ViewMatrix._42 = -Vector3::DotProduct(m_Position, m_Up);
+		//m_ViewMatrix._43 = -Vector3::DotProduct(m_Position, m_Look);
+		//m_ViewMatrix._44 = 1.0f;
 		XMFLOAT4X4 inverseView = Matrix4x4::Inverse(m_ViewMatrix);
 	}
 

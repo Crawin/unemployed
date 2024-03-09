@@ -144,7 +144,7 @@ namespace component {
 	class Transform : public ComponentBase<Transform>
 	{
 		XMFLOAT3 m_Position;
-		XMFLOAT4 m_Rotate;
+		XMFLOAT3 m_Rotate;
 		XMFLOAT3 m_Scale;
 
 	public:
@@ -153,11 +153,11 @@ namespace component {
 		virtual void ShowYourself() const;
 
 		const XMFLOAT3& GetPosition() const { return m_Position; }
-		const XMFLOAT4& GetRotation() const { return m_Rotate; }
+		const XMFLOAT3& GetRotation() const { return m_Rotate; }
 		const XMFLOAT3& GetScale() const { return m_Scale; }
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
-		void SetRotation(const XMFLOAT4& rot) { m_Rotate = rot; }
+		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
 		void SetScale(const XMFLOAT3& sca) { m_Scale = sca; }
 	};
 
@@ -192,6 +192,7 @@ namespace component {
 	//
 	class Camera : public ComponentBase<Camera>
 	{
+	public:
 		// Json으로 set 가능
 		XMFLOAT3 m_Right = { 1.0f, 0.0f, 0.0f };
 		XMFLOAT3 m_Up = { 0.0f, 1.0f, 0.0f };

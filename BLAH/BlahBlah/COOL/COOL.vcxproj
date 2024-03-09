@@ -168,6 +168,7 @@
     <ClInclude Include="Include\ECS\ECS_System.h" />
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
+    <ClInclude Include="Include\InputManager.h" />
     <ClInclude Include="Include\Material\Material.h" />
     <ClInclude Include="Include\mymath.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
@@ -199,6 +200,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Include\InputManager.cpp" />
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material\Material.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />

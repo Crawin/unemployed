@@ -2,18 +2,20 @@
 #include "ECS_System.h"
 #include "Component.h"
 #include "ECSManager.h"
+#include "InputManager.h"
 
 namespace ECSsystem {
 
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync with camera
+		// first person cam
 		std::function<void(component::Transform*, component::Camera*)> func1 = [](component::Transform* tr, component::Camera* cam) {
-			// build view matrix here
 
-			// todo 지금은 position만 바꿔주지만, 회전 관련 정보들 또한 바꿔줘야 한다.
-			cam->SetPosition(tr->GetPosition());
-			//cam->ShowYourself();
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(tr->GetRotation())));
+			XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
+
+			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
 			};
 
 		manager->Execute(func1);
@@ -27,7 +29,7 @@ namespace ECSsystem {
 			
 			XMMATRIX mat = XMMatrixMultiply(
 				XMMatrixTranslation(t.x, t.y, t.z), XMMatrixMultiply(
-					XMMatrixRotationQuaternion(XMLoadFloat4(&r)), 
+					XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&r)),
 					XMMatrixScaling(s.x, s.y, s.z)));
 
 			XMFLOAT4X4 world;
@@ -44,6 +46,8 @@ namespace ECSsystem {
 	{
 		using namespace component;
 		std::function<void(Transform*, Input*)> func = [deltaTime](Transform* tr, Input* in) {
+			// keyboard input
+
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			if (GetAsyncKeyState('W') & 0x8000) tempMove.z += 1.0f;
 			if (GetAsyncKeyState('S') & 0x8000) tempMove.z -= 1.0f;
@@ -53,13 +57,35 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('E') & 0x8000) tempMove.y += 1.0f;
 
 			// 임시
-			tempMove = Vector3::ScalarProduct(tempMove, deltaTime * 150.0f);
+			// move to look at;
+			XMVECTOR vec = XMLoadFloat3(&tempMove) * deltaTime * 150.0f;
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(tr->GetRotation())));
+
+			vec = XMVector3Transform(vec, rot);
+			XMStoreFloat3(&tempMove, vec);
 
 			tr->SetPosition(Vector3::Add(tempMove, tr->GetPosition()));
 			
 			tempMove = tr->GetPosition();
 			//DebugPrint(std::format("x: {}, y: {}, z: {}", tempMove.x, tempMove.y, tempMove.z));
+
+			// mouse
+
+			if (InputManager::GetInstance().GetDrag()) {
+				const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
+				XMFLOAT3 rot = tr->GetRotation();
+				const float rootSpeed = 500.0f;
+				rot.y += mouseMove.x / rootSpeed;
+				rot.x += mouseMove.y / rootSpeed;
+				tr->SetRotation(rot);
+
+				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
+			}
+
 			};
+
+		// mouse
+
 
 		manager->Execute(func);
 	}

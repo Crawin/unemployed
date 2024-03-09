@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Renderer/Renderer.h"
 #include "Network/Client.h"
+#include "InputManager.h"
 #include "Scene/SceneManager.h"
 #include "Timer.h"
 
@@ -123,42 +124,29 @@ int Application::StartProgram()
 LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	// 임시
-	static bool dragging = false;
 
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		Application::GetInstance().m_GameLoop = false;
 		break;
-	case WM_INPUT:
-	{
-		UINT dwSize = sizeof(RAWINPUT);
-		static BYTE lpb[sizeof(RAWINPUT)];
-
-		GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER));
-
-		RAWINPUT* raw = (RAWINPUT*)lpb;
-
-		if (raw->header.dwType == RIM_TYPEMOUSE)
-		{
-			int xPosRelative = raw->data.mouse.lLastX;
-			int yPosRelative = raw->data.mouse.lLastY;
-
-			// 임시
-			// 씬 생기면 여기서 할듯?
-			//if (dragging) Renderer::GetInstance().MouseInput(xPosRelative, yPosRelative);
-
-			//DebugPrint(std::format("x: {}, y: {}", xPosRelative, yPosRelative));
-		}
-		break;
-	}
+	//case WM_INPUT:
+	//{
+	//	InputManager::GetInstance().MouseInputUpdate((HRAWINPUT)lParam);
+	//	break;
+	//}
+	//case WM_LBUTTONDOWN:
+	//	InputManager::GetInstance().SetDragging(true);
+	//	break;
+	//case WM_LBUTTONUP:
+	//	InputManager::GetInstance().SetDragging(false);
+	//	break;
 	case WM_LBUTTONDOWN:
-		dragging = true;
-		break;
+	case WM_RBUTTONDOWN:
 	case WM_LBUTTONUP:
-		dragging = false;
-		break;
-
+	case WM_RBUTTONUP:
+	case WM_MOUSEMOVE:
+		InputManager::GetInstance().HandleMouseInput(hWnd, msg, wParam, lParam);
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
