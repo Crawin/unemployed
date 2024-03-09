@@ -71,7 +71,8 @@ namespace ECSsystem {
 
 			// mouse
 
-			if (InputManager::GetInstance().GetDrag()) {
+			//if (InputManager::GetInstance().GetDrag()) 
+			{
 				const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 				XMFLOAT3 rot = tr->GetRotation();
 				const float rootSpeed = 500.0f;

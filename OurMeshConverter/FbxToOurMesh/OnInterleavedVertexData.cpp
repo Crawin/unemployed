@@ -23,6 +23,13 @@
 #define ALL_IN_ONE
 using namespace DirectX;
 
+
+void ConvertToLH(XMFLOAT3& vtx)
+{
+	vtx.x *= -1;
+
+}
+
 // DirectX 12에서 사용할 정점 구조체
 // mesh type 4
 struct Vertex
@@ -32,6 +39,12 @@ struct Vertex
 	XMFLOAT3 tangent = { 0,0,0 };
 	XMFLOAT2 uv = { 0,0 };
 };
+
+void swap(Vertex& a, Vertex& b) {
+	Vertex t = a;
+	a = b;
+	b = t;
+}
 
 struct Mesh {
 	std::string name = "";
@@ -48,7 +61,27 @@ struct Mesh {
 	std::vector<uint16_t> indices;
 #endif
 	std::vector<Mesh> subMeshes;
+
+	void ConvertToLeftHanded()
+	{
+		// swap x
+		for (auto& vtx : vertices) {
+			ConvertToLH(vtx.position);
+			ConvertToLH(vtx.normal);
+			ConvertToLH(vtx.tangent);
+		}
+
+		// for winding order
+		for (int i = 0; i < vertices.size(); i += 3) {
+			swap(vertices[i + 1], vertices[i + 2]);
+		}
+
+		for (auto& subMesh : subMeshes) subMesh.ConvertToLeftHanded();
+	}
+
 };
+
+
 
 void TraverseNode(FbxNode* node, Mesh& myMeshData);//std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
 //void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
@@ -120,6 +153,7 @@ int main(int argc, char* argv[])
 			//std::vector<Vertex> vertices;
 			//std::vector<uint16_t> indices;
 
+
 			// 재귀적으로 노드 탐색
 			// RootNode가 따로 있더라
 			// 따로따로인 모델이 있을수도 있어서 그런가봄
@@ -127,7 +161,11 @@ int main(int argc, char* argv[])
 			TraverseNode(rootNode->GetChild(0), mesh);
 
 			// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
-			// ...
+			// 
+			if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() != FbxAxisSystem::eLeftHanded) {
+				std::cout << "Convert to Lefthanded!" << std::endl;
+				mesh.ConvertToLeftHanded();
+			}
 
 			PrintMeshHierachy(mesh);
 
