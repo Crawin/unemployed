@@ -160,7 +160,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="External\Include\DDSTextureLoader12.h" />
-    <ClInclude Include="Include\Application.h" />
+    <ClInclude Include="Include\App\Application.h" />
+    <ClInclude Include="Include\App\InputManager.h" />
+    <ClInclude Include="Include\App\Timer.h" />
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\ECS\Component.h" />
     <ClInclude Include="Include\ECS\ECSManager.h" />
@@ -168,7 +170,6 @@
     <ClInclude Include="Include\ECS\ECS_System.h" />
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
-    <ClInclude Include="Include\InputManager.h" />
     <ClInclude Include="Include\Material\Material.h" />
     <ClInclude Include="Include\mymath.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
@@ -184,12 +185,13 @@
     <ClInclude Include="Include\Shader\Shader.h" />
     <ClInclude Include="Include\Shader\SkyboxShader.h" />
     <ClInclude Include="Include\Shader\TestShader.h" />
-    <ClInclude Include="Include\Timer.h" />
     <ClInclude Include="Include\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp" />
-    <ClCompile Include="Include\Application.cpp" />
+    <ClCompile Include="Include\App\Application.cpp" />
+    <ClCompile Include="Include\App\InputManager.cpp" />
+    <ClCompile Include="Include\App\Timer.cpp" />
     <ClCompile Include="Include\ECS\Component.cpp" />
     <ClCompile Include="Include\ECS\ECSManager.cpp" />
     <ClCompile Include="Include\ECS\Entity.cpp" />
@@ -200,7 +202,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Include\InputManager.cpp" />
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material\Material.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
@@ -219,7 +220,6 @@
     <ClCompile Include="Include\Shader\Shader.cpp" />
     <ClCompile Include="Include\Shader\SkyboxShader.cpp" />
     <ClCompile Include="Include\Shader\TestShader.cpp" />
-    <ClCompile Include="Include\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt" />

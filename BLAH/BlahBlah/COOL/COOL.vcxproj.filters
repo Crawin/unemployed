@@ -70,6 +70,9 @@
     <Filter Include="소스 파일\App\Input">
       <UniqueIdentifier>{8449eccb-33e6-41d5-8087-5a3df0847c29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\App\Timer">
+      <UniqueIdentifier>{291f99da-0d1f-4a1e-953c-ee268ee8509b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -77,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="Include\OnDebug.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Application.h">
-      <Filter>소스 파일\App</Filter>
     </ClInclude>
     <ClInclude Include="Include\mymath.h">
       <Filter>헤더 파일</Filter>
@@ -117,9 +117,6 @@
     <ClInclude Include="Include\Scene\TestMainScene.h">
       <Filter>소스 파일\Scene\MainScene</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Timer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Material\Material.h">
       <Filter>소스 파일\Scene\SceneData\Material</Filter>
     </ClInclude>
@@ -150,16 +147,19 @@
     <ClInclude Include="Include\Network\Client.h">
       <Filter>소스 파일\Network</Filter>
     </ClInclude>
-    <ClInclude Include="Include\InputManager.h">
+    <ClInclude Include="Include\App\Application.h">
+      <Filter>소스 파일\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\App\InputManager.h">
       <Filter>소스 파일\App\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\App\Timer.h">
+      <Filter>소스 파일\App\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\Application.cpp">
-      <Filter>소스 파일\App</Filter>
     </ClCompile>
     <ClCompile Include="Include\Renderer\Renderer.cpp">
       <Filter>소스 파일\Renderer</Filter>
@@ -197,9 +197,6 @@
     <ClCompile Include="Include\Scene\TestMainScene.cpp">
       <Filter>소스 파일\Scene\MainScene</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Timer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Material\Material.cpp">
       <Filter>소스 파일\Scene\SceneData\Material</Filter>
     </ClCompile>
@@ -224,8 +221,14 @@
     <ClCompile Include="Include\Network\Client.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
-    <ClCompile Include="Include\InputManager.cpp">
+    <ClCompile Include="Include\App\Application.cpp">
+      <Filter>소스 파일\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\App\InputManager.cpp">
       <Filter>소스 파일\App\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\App\Timer.cpp">
+      <Filter>소스 파일\App\Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

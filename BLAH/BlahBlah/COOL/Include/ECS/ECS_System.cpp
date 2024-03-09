@@ -2,7 +2,7 @@
 #include "ECS_System.h"
 #include "Component.h"
 #include "ECSManager.h"
-#include "InputManager.h"
+#include "App/InputManager.h"
 
 namespace ECSsystem {
 
