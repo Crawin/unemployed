@@ -15,6 +15,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Input, "Input");
+	REGISTER_COMPONENT(component::Speed, "Speed");
 
 	//PRINT_ALL_BITSET;
 }

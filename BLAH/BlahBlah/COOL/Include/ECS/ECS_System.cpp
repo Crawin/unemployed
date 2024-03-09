@@ -42,10 +42,33 @@ namespace ECSsystem {
 
 	}
 
+	void Friction::Update(ECSManager* manager, float deltaTime)
+	{
+		using namespace component;
+		std::function<void(Speed*)> func = [deltaTime](Speed* sp) {
+			const float friction = 100.0f;
+			// if moving
+			if (abs(sp->GetCurrentVelocity()) > 0) {
+				float slowdown = friction * deltaTime;
+
+				if (sp->GetCurrentVelocity() > 0) {
+					sp->SetCurrentSpeed(sp->GetCurrentVelocity() - slowdown);
+					if (sp->GetCurrentVelocity() < 0) sp->SetCurrentSpeed(0);
+				}
+				else {
+					sp->SetCurrentSpeed(sp->GetCurrentVelocity() - slowdown);
+					if (sp->GetCurrentVelocity() > 0) sp->SetCurrentSpeed(0);
+				}
+			}
+			};
+
+		manager->Execute(func);
+	}
+
 	void MoveByInput::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
-		std::function<void(Transform*, Input*)> func = [deltaTime](Transform* tr, Input* in) {
+		std::function<void(Transform*, Input*, Speed*)> func = [deltaTime](Transform* tr, Input* in, Speed* sp) {
 			// keyboard input
 
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
@@ -56,9 +79,8 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('Q') & 0x8000) tempMove.y -= 1.0f;
 			if (GetAsyncKeyState('E') & 0x8000) tempMove.y += 1.0f;
 
-			// 임시
 			// move to look at;
-			XMVECTOR vec = XMLoadFloat3(&tempMove) * deltaTime * 150.0f;
+			XMVECTOR vec = XMLoadFloat3(&tempMove) * sp->GetMaxVelocity() * deltaTime;
 			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(tr->GetRotation())));
 
 			vec = XMVector3Transform(vec, rot);

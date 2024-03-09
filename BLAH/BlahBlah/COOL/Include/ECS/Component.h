@@ -202,7 +202,7 @@ namespace component {
 		float m_Fov = 90.0f;
 		float m_Aspect = 1.7777f;
 		float m_Near = 0.1f;
-		float m_Far = 1000.0f;
+		float m_Far = 50000.0f;
 
 		bool m_IsMainCamera = false;
 
@@ -261,6 +261,46 @@ namespace component {
 		virtual void ShowYourself() const;
 	};
 
+	/////////////////////////////////////////////////////////
+	// speed component
+	// 최고속도, 가속도, 등등
+	//
+	class Speed : public ComponentBase<Speed> {
+		float m_MaxVelocity = 300.0f;
+		float m_Acceleration = 10.0f;
+		float m_CurrentVelocity = 0.0f;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float GetMaxVelocity() const { return m_MaxVelocity; }
+		float GetAcceleration() const { return m_Acceleration; }
+		float GetCurrentVelocity() const { return m_CurrentVelocity; }
+
+		void SetMaxSpeed(float maxSpeed) { m_MaxVelocity = maxSpeed; }
+		void SetAcceleration(float acc) { m_Acceleration = acc; }
+		void SetCurrentSpeed(float speed) { m_CurrentVelocity = speed; if (m_CurrentVelocity > m_MaxVelocity) m_CurrentVelocity = m_MaxVelocity; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// light component
+	// 조명 정보
+	//
+	class Light : public ComponentBase<Light> {
+		XMFLOAT4 m_LightColor;
+		// 
+		XMFLOAT3 m_Direction;
+		float m_Falloff;
+
+		// for shadow map
+		int m_CastShadow = true;
+		int m_ShadowMapResult = -1;
+
+		// for shadow map making material
+		int m_ShadowMapMaterial = -1;
+	};
 }
 
 

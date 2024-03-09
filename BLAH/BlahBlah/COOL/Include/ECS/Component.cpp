@@ -168,4 +168,19 @@ namespace component
 	{
 		DebugPrint("Input Comp, nothing");
 	}
+
+	void Speed::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value s = v["Speed"];
+
+		m_MaxVelocity = s["MaxVelocity"].asFloat();
+		m_Acceleration = s["Acceleration"].asFloat();
+		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
+	}
+
+	void Speed::ShowYourself() const
+	{
+		DebugPrint(std::format("cur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
+
+	}
 }

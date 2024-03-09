@@ -49,6 +49,47 @@
 						"Mesh": "satodia.satodia_Hair",
 						"Material": "SatoHair"
 					}
+				},
+				{
+					"Name" : "Satono_Diamond_01_FaceRoot",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0, 1.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+
+					"Children":
+					[
+						{
+							"Name" : "Satono_Diamond_01_Eyes",
+							"Transform": 
+							{
+								"Position": [0.0, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0, 1.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Renderer" : 
+							{
+								"Mesh": "satodia.satodia_Eyes",
+								"Material": "NoMaterial"
+							}
+						},
+						{
+							"Name" : "Satono_Diamond_01_Face",
+							"Transform": 
+							{
+								"Position": [0.0, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0, 1.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Renderer" : 
+							{
+								"Mesh": "satodia.satodia_Face",
+								"Material": "NoMaterial"
+							}
+						}
+					]
 				}
 			]
 		}

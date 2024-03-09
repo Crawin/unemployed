@@ -24,6 +24,14 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
+	// simple physics (friction)
+	//
+	class Friction : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
+	/////////////////////////////////////////////////////////
 	// move by input
 	//
 	class MoveByInput : public System {
