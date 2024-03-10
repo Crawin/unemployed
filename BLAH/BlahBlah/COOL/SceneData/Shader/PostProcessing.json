@@ -1,0 +1,16 @@
+{
+	"name": "PostProcessing",
+	"NumRenderTargets": 1,
+	"PrimitiveTopologyType": 3,
+	"PrimitiveTopology": 4,
+	"VS": "MRTPostProcessing.hlsl",
+	"HS": null,
+	"DS": null,
+	"GS": null,
+	"PS": "MRTPostProcessing.hlsl",
+	"StreamOutput": 0,
+	"BlendState": 0,
+	"RasterizerState": 0,
+	"DepthStencilState": 0,
+	"InputLayout": 0
+}

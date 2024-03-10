@@ -50,14 +50,39 @@ void Scene::Update(float deltaTime)
 	m_ECSManager->UpdateSystem(deltaTime);
 }
 
-void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
+void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
-	// 기본 render, forward render이다
+	// default deffered renderer
+	m_ResourceManager->SetMRTStates(commandLists[0], D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// clear mrt
+	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	m_ResourceManager->ClearMRTS(commandLists[0], clearColor);
+
+	// OM set
+	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart();
+	commandLists[0]->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &resultDsv);
+	//commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
 
 	// camera set
 	auto& res = m_ResourceManager;
 	//res->m_MainCamera->SetCameraData(commandLists[0]);
 	
+	// get light to make shadow map
+	// todo 이걸 하자
+	std::vector<component::Light*> lightVec;
+	std::function<void(component::Light*)> getLight = [&commandLists, &lightVec](component::Light* light) { lightVec.push_back(light); };
+
+	// light map
+	// 1. light map을 만드는 모든 light들에 대해 프러스텀 컬링을 실시함 (renderer를 찾아 모아옴)
+	// 2. lightmap 상태 변경(tex -> present)
+	// 3. OM SET
+	// 4. render
+	// 4 - 1. shader에 light 데이터가 가야하는데 어케하지? light data를 
+	// 4 - 2.
+	// 5. present -> tex;
+
+
 	// get Camera
 	std::vector<component::Camera*> camVec;
 	std::function<void(component::Camera*)> getCam = [&commandLists, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
@@ -77,7 +102,7 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 
 		res->m_Materials[material]->GetShader()->Render(commandLists[0]);
 
-		res->m_Materials[material]->SetDatas(commandLists[0], ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT);
+		res->m_Materials[material]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 		//XMFLOAT4X4 t = Matrix4x4::Identity();
 		res->m_Meshes[mesh]->Render(commandLists[0], renderComponent->GetWorldMatrix());
@@ -86,6 +111,23 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists)
 	// execute function
 	m_ECSManager->Execute<component::Renderer>(func);
 
+	// mrt render end
+	///////////////////////////////////////////////////////////////////////////////////////////
+
+	// post processing
+	commandLists[0]->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
+	m_ResourceManager->SetMRTStates(commandLists[0], D3D12_RESOURCE_STATE_COMMON);
+
+	int postMat = m_ResourceManager->GetPostProcessingMaterial();
+
+	m_ResourceManager->m_Materials[postMat]->GetShader()->Render(commandLists[0]);
+	m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+
+
+	commandLists[0]->DrawInstanced(6, 1, 0, 0);
 }
 
 //bool Scene::Init()

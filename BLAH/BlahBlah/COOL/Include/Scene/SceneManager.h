@@ -41,7 +41,7 @@ public:
 
 	void Update(float deltaTime);
 
-	void Render(std::vector< ComPtr<ID3D12GraphicsCommandList>>& commandLists);
+	void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
 };
 

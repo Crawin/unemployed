@@ -17,6 +17,7 @@ public:
 
 	void SetName(std::string_view name) { m_Name = name; }
 
+	void SetTexture(int idx, int tex) { m_TextureIndex[idx] = tex; }
 	void SetAlbedoTextureIndex(int idx) { m_TextureIndex[0] = idx; }
 	//void SetAlbedoTextureIndex(int idx) { m_TextureIndex._11 = idx; }
 
@@ -29,10 +30,10 @@ public:
 	std::shared_ptr<Shader> GetShader() { return m_Shader; }
 
 private:
+	UINT m_TextureIndex[16] = {};
+
 	std::string m_Name = "이름없음";
-
-	int m_TextureIndex[16] = {};
-
+	
 	std::shared_ptr<Shader> m_Shader = nullptr;
 
 };

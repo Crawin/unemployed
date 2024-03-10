@@ -11,7 +11,7 @@ class Entity
 	friend class ComponentSet;
 
 public:
-	Entity(int id) : m_Id{ id } {}
+	Entity() {}
 	~Entity() {
 		//for (auto& comp : m_Components)
 		//	delete comp;

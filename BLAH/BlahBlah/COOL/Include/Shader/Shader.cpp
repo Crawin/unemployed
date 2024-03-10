@@ -237,7 +237,7 @@ D3D12_SHADER_BYTECODE Shader::CompileShaderCode(std::string_view fileName, SHADE
 		//OutputDebugString(pstrDebug);
 
 		// 임시로 지운다.
-		//DebugPrint(pErrorString);
+		DebugPrint(pErrorString);
 	}
 
 	D3D12_SHADER_BYTECODE result;
@@ -361,13 +361,5 @@ void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// set pso
 	commandList->IASetPrimitiveTopology(m_PrimitiveTopology);
 	commandList->SetPipelineState(m_PipelineState.Get());
-
-	for (const auto& mat : m_Materials) {
-		mat->SetDatas(commandList, ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT);
-		// mat->SetDatas(commandList);
-		// auto objects = Mapper->Get(mat);
-		// for (auto obj : objects) 
-		//		obj->Render(commandList);
-	}
 
 }

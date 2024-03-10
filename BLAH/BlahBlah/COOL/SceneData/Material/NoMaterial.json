@@ -5,5 +5,5 @@
 	"Metalic": null,
 	"Specular": null,
 	"Normal": null,
-	"Shader": "TestMesh"
+	"Shader": "TestMeshDiffered"
 }

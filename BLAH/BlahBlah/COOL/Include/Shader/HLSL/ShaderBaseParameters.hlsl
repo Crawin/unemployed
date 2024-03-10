@@ -3,16 +3,16 @@
 
 /*
 enum ROOT_SIGNATURE_IDX {
-	DESCRIPTOR_HEAP = 0,			// µğ½ºÅ©¸³ÅÍÈü
-	DESCRIPTOR_IDX_CONSTANT,		// µğ½ºÅ©¸³ÅÍ¸¦ »ç¿ëÇÒ ÀÎµ¦½º 16°³ÀÇ int
-	CAMERA_DATA_CBV,				// Ä«¸Ş¶óÇà·Ä 4x4 x2
+	DESCRIPTOR_HEAP = 0,			// ë””ìŠ¤í¬ë¦½í„°í™
+	DESCRIPTOR_IDX_CONSTANT,		// ë””ìŠ¤í¬ë¦½í„°ë¥¼ ì‚¬ìš©í•  ì¸ë±ìŠ¤ 16ê°œì˜ int
+	CAMERA_DATA_CBV,				// ì¹´ë©”ë¼í–‰ë ¬ 4x4 x2
 	WORLD_MATRIX,
-	SHADER_DATAS_CBV,				// ¹¹ ´ëÃæ ³ª¸ÓÁöµé (delta time, µîµî)
+	SHADER_DATAS_CBV,				// ë­ ëŒ€ì¶© ë‚˜ë¨¸ì§€ë“¤ (delta time, ë“±ë“±)
 	ROOT_SIGNATURE_IDX_MAX
 };
 */
 
-//  ...ROOT_SIGNATURE_IDX enum Âü°í
+//  ...ROOT_SIGNATURE_IDX enum ì°¸ê³ 
 // idx 0: descriptor table, descriptor table
 // idx 1: index of descriptor table, root constants
 // idx 2: camera matrix (view, projection(ortho)),
@@ -24,13 +24,21 @@ Buffer<uint> BufferUintList[] : register(t0, space3);
 Buffer<float> BufferFloatList[] : register(t0, space4);
 
 
+
+// check Enums.h
+
+// for post processing
 #define ALBEDO 0
-#define BLABLA 1
+#define ROUGHNESS 1
+#define METALIC	2
+#define SPECULAR 3
+#define NORMALW 4
+#define POSITIONW 5
 // ...
 
 cbuffer Material : register(b0)
 {
-	int materialIndex[16];
+	uint materialIndex[16];
 };
 
 cbuffer CameraInfo : register(b1)

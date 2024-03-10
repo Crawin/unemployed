@@ -69,7 +69,7 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 
 Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 {
-	Entity* ent = new Entity(m_Entities.size());
+	Entity* ent = new Entity;
 
 	if (parent) parent->AddChild(ent);
 
@@ -142,7 +142,7 @@ int ResourceManager::LoadMaterial(const std::string& name, ComPtr<ID3D12Graphics
 	material->SetShader(shader);
 	m_Materials.push_back(material);
 
-	return m_Materials.size() - 1;
+	return static_cast<int>(m_Materials.size() - 1);
 }
 
 std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -181,6 +181,9 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 
 	std::string scenePath = SCENE_PATH + sceneName;
 
+	// make deferred renderer texture
+	CHECK_CREATE_FAILED(MakeExtraRenderTarget(), "RenderTargets for deffered rendering make Failed!!");
+
 	// Load Objects
 	CHECK_CREATE_FAILED(LoadObjects(sceneName, commandList), "Object Load Failed!!");
 
@@ -191,6 +194,9 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 
 	// Load Mesh, Material, Texture, Shader to use
 	CHECK_CREATE_FAILED(LateInit(commandList), "LateInit Fail!");
+
+	// build mrt rtv heap
+	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateRenderTargetView(m_MRTHeap, m_Resources, m_DefferedRTVStartIdx, m_DefferedRenderTargets), "Create MRT RTV Failed!!");
 
 	// build resource heap
 	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), "CreateResourceDescriptorHeap Fail!!");
@@ -205,6 +211,14 @@ void ResourceManager::SetECSManager(std::shared_ptr<ECSManager> ptr)
 
 bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
+	// load Postprocessing material
+	m_PostProcessingMaterial = GetMaterial(m_PostProcessing, commandList);
+	if (m_PostProcessingMaterial == -1) return false;
+
+	for (int i = 0; i < m_DefferedRenderTargets; ++i)
+		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+	
+	
 	// load mesh
 	for (const auto& rendererLoadInfo : m_ToLoadRenderDatas) {
 		// mesh의 json에서는 mesh의 이름을
@@ -297,6 +311,24 @@ bool ResourceManager::LoadCameras(const std::string& sceneName, ComPtr<ID3D12Gra
 	return true;
 }
 
+bool ResourceManager::MakeExtraRenderTarget()
+{
+	m_DefferedRTVStartIdx = static_cast<int>(m_Resources.size());
+
+	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i) {
+		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
+			D3D12_HEAP_TYPE_DEFAULT, 
+			D3D12_RESOURCE_STATE_COMMON, 
+			Renderer::GetInstance().GetScreenSize(),
+			std::format("DifferedTarget_{}", i), 
+			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+		);
+	}
+
+	
+	return true;
+}
+
 int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData)
 {
 	COOLResourcePtr res = Renderer::GetInstance().CreateEmptyBuffer(
@@ -308,7 +340,7 @@ int ResourceManager::CreateObjectResource(UINT size, const std::string resName, 
 
 	m_VertexIndexDatas.push_back(res);
 
-	return m_VertexIndexDatas.size() - 1;
+	return static_cast<int>(m_VertexIndexDatas.size() - 1);
 }
 
 void ResourceManager::SetDatas()
@@ -326,7 +358,7 @@ int ResourceManager::GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, c
 		auto res = Renderer::GetInstance().CreateTextureFromDDSFile(commandList, fileNamewstr.c_str());
 		m_Resources.push_back(res);
 
-		m_TextureIndexMap[name] = m_Resources.size()- 1;
+		m_TextureIndexMap[name] = static_cast<int>(m_Resources.size())- 1;
 	}
 
 	return m_TextureIndexMap[name];
@@ -379,15 +411,31 @@ void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& ma
 	m_ToLoadRenderDatas.push_back(info);
 }
 
-int ResourceManager::GetMaterialToLoad(const std::string& name)
+void ResourceManager::SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)
 {
-	for (int i = 0; i < m_ToLoadMaterials.size(); ++i)
-		if (m_ToLoadMaterials[i] == name)
-			return i;
+	for (int i = m_DefferedRTVStartIdx; i < m_DefferedRTVStartIdx + m_DefferedRenderTargets; ++i) {
+		m_Resources[i]->TransToState(cmdList, toState);
+	}
+}
 
-	m_ToLoadMaterials.push_back(name);
+void ResourceManager::ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4])
+{
+	auto inc = Renderer::GetInstance().GetRTVHeapIncSize();
+	auto decs = m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+	for (int i = 0; i < m_DefferedRenderTargets; ++i) {
+		cmdList->ClearRenderTargetView(decs, color, 0, nullptr);
+		decs.ptr += inc;
+	}
+}
 
-	return m_ToLoadMaterials.size() - 1;
+D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart() const
+{
+	return m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+int ResourceManager::GetPostProcessingMaterial() const
+{
+	return m_PostProcessingMaterial;
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)

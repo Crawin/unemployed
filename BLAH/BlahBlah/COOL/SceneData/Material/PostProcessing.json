@@ -1,9 +1,9 @@
 {
-	"name": "SatoBody",
-	"BaseColor": "satob",
+	"name": "PostProcessing",
+	"BaseColor": null,
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,
 	"Normal": null,
-	"Shader": "TestMeshDiffered"
+	"Shader": "PostProcessing"
 }

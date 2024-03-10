@@ -120,7 +120,7 @@ namespace component
 		if (m_ProjChanged) BuildProjectionMatrix();
 		UpdateShaderData();
 
-		commandList->SetGraphicsRootConstantBufferView(ROOT_SIGNATURE_IDX::CAMERA_DATA_CBV, m_ShaderDataGPUAddr);
+		commandList->SetGraphicsRootConstantBufferView(static_cast<int>(ROOT_SIGNATURE_IDX::CAMERA_DATA_CBV), m_ShaderDataGPUAddr);
 	}
 
 	void Camera::BuildViewMatrix()
@@ -154,6 +154,8 @@ namespace component
 
 		XMFLOAT4X4 proj;
 		XMStoreFloat4x4(&proj, XMMatrixTranspose(XMLoadFloat4x4(&m_ProjMatrix)));
+
+		m_Position = { -m_ViewMatrix._41, -m_ViewMatrix._42,-m_ViewMatrix._43 };
 
 		memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
 		memcpy(&m_ShaderData->m_ProjMatrix, &proj, sizeof(XMFLOAT4X4));
