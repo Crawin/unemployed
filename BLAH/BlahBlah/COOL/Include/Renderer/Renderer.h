@@ -35,7 +35,7 @@ private:
 	bool CreateDSV();
 
 	bool CreateRootSignature();
-	bool CreateRenderTargetDescriptorHeap();
+	//bool CreateRenderTargetDescriptorHeap();
 
 public:
 	bool Init(const SIZE& wndSize, HWND hWnd);
@@ -43,19 +43,23 @@ public:
 	// 생성된 할당자,리스트의 인덱스를 outIndex로 돌려줌
 	bool CreateCommandAllocatorAndList(size_t& outIndex);
 
-private:
+	// 비어있는 리소스는 밖에서도 만들 수 있게 해야 할듯
+//private:
 	// -------------------  Device가 하는 일들 단순 묶음 -------------------
 
-	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D");
+	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D", D3D12_RESOURCE_FLAGS resFlag = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	COOLResourcePtr CreateEmpty2DResourceDSV(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D");
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty");
 	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 일단 없앰
-
 
 public:
 	// ------------------- commandlist가 하는 일들 묶음 -------------------
 	
 	// create descriptorheap
 	bool CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources);
+
+	// create rtv
+	bool CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources, int startIdx, int numOfIdx);
 
 	// create pso, shader
 	bool CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader);
@@ -68,9 +72,11 @@ public:
 	COOLResourcePtr CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
 		UINT bytes = static_cast<UINT>(data.size()) * sizeof(T);
-		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COPY_DEST, bytes, name);
+		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON, bytes, name);
 		auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes, std::format("{} upload resource", name));
 		uploadResource->DontReleaseOnDesctruct();
+
+		resource->TransToState(commandList, D3D12_RESOURCE_STATE_COPY_DEST);
 
 		D3D12_SUBRESOURCE_DATA subresourceData = {};
 		subresourceData.pData = &(data[0]);
@@ -82,22 +88,6 @@ public:
 		m_UploadResources.push_back(uploadResource->GetResource());
 
 		return resource;
-		//if (resourceState == D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER ||
-		//	resourceState == D3D12_RESOURCE_STATE_INDEX_BUFFER) {
-		//	m_VertexIndexDatas.push_back(resource);
-		//	return static_cast<int>(m_VertexIndexDatas.size()) - 1;
-		//}
-		//else {
-		//	m_Resources.push_back(resource);
-		//	return static_cast<int>(m_Resources.size()) - 1;
-		//}
-
-		//::ZeroMemory(&d3dSubResourceData, sizeof(D3D12_SUBRESOURCE_DATA));
-		//d3dSubResourceData.pData = pData;
-		//d3dSubResourceData.SlicePitch = d3dSubResourceData.RowPitch = nBytes;
-		//::UpdateSubresources<1>(pd3dCommandList, pd3dBuffer, *ppd3dUploadBuffer, 0, 0, 1, &d3dSubResourceData);
-
-		//UpdateSubresources(commandList.Get(), texture, uploadResource, 0, 0, subResources.size(), &subResources[0]);
 	}
 
 	// 그냥 진짜 비어있는 리소스 생성, toMapData를 넣으면 자동으로 데이터 맵핑까지
@@ -197,19 +187,22 @@ private:
 	std::vector<Mesh> m_Meshes;
 	//Camera* m_Camera;
 
+	float m_ClearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };;
+
 public:
-	D3D12_GPU_VIRTUAL_ADDRESS GetResourceGPUAddress(int idx);
-	//D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
-
-	COOLResourcePtr GetResourceFromIndex(int idx);
-	//COOLResourcePtr GetVertexDataFromIndex(int idx);
-
 	ComPtr<ID3D12CommandAllocator> GetCommandAllocator(size_t idx) { return  m_CommandAllocators[idx]; }
 	ComPtr<ID3D12GraphicsCommandList> GetCommandList(size_t idx) { return  m_GraphicsCommandLists[idx]; }
 	// 임시
 	//void MouseInput(int x, int y);
 
+	UINT GetResourceHeapIncSize() const { return m_CbvSrvDescIncrSize; }
+	UINT GetRTVHeapIncSize() const { return m_RtvDescIncrSize; }
+
 	void SetSceneManager(SceneManager* manager) { m_SceneManager = manager; }
+
+	const SIZE& GetScreenSize() const { return m_ScreenSize; }
+
+	const float* GetClearColor() const { return m_ClearColor; }
 
 };
 

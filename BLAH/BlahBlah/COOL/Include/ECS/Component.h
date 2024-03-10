@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Light.h"
 namespace Json { class Value; }
 class ResourceManager;
 
@@ -289,14 +290,9 @@ namespace component {
 	// 조명 정보
 	//
 	class Light : public ComponentBase<Light> {
-		XMFLOAT4 m_LightColor;
-		// 
-		XMFLOAT3 m_Direction;
-		float m_Falloff;
-
-		// for shadow map
-		int m_CastShadow = true;
-		int m_ShadowMapResult = -1;
+		// 주의할 점
+		// 카메라와 달리 얘는 배열로 관리 해야함
+		LightData* m_LightData;
 
 		// for shadow map making material
 		int m_ShadowMapMaterial = -1;

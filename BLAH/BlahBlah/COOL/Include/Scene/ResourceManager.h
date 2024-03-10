@@ -62,7 +62,7 @@ private:
 
 		m_VertexIndexDatas.push_back(ptr);
 		
-		return m_VertexIndexDatas.size() - 1;
+		return static_cast<int>(m_VertexIndexDatas.size() - 1);
 	}
 
 	// object 폴더의 file 불러오는 함수
@@ -85,6 +85,9 @@ private:
 
 	// camera
 	bool LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	// for deferred renderer
+	bool MakeExtraRenderTarget();
 
 public:
 	void SetECSManager(std::shared_ptr<ECSManager> ptr);
@@ -111,9 +114,15 @@ public:
 
 	void AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer);
 	
-	int GetMaterialToLoad(const std::string& name);
-
 	void SetMainCamera(component::Camera* cam) { m_MainCamera = cam; }
+
+	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
+
+	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
+
+	int GetPostProcessingMaterial() const;
 
 private:
 	// 메시 데이터
@@ -127,6 +136,7 @@ private:
 
 	// 리소스힙, t0번 슬롯에 set
 	ComPtr<ID3D12DescriptorHeap> m_ShaderResourceHeap;
+	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
 
 	////////////////////////////////////////////////////////
 	// ECS SYSTEM
@@ -155,7 +165,16 @@ private:
 	// shader
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
 
-	
+	// Deffered render targets
+	// 해당갯수 만큼 m_Resources에 넣음
+	int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
+	int m_DefferedRTVStartIdx = -1;
+	//D3D12_CPU_DESCRIPTOR_HANDLE m_DefferedRTVStart = D3D12_CPU_DESCRIPTOR_HANDLE();
+
+	// postProcessingMaterial;
+	const char* m_PostProcessing = "PostProcessing";
+	int m_PostProcessingMaterial = -1;
+
 	// 로드 해야 할 mesh, material들을 저장만 해둔 후 나중에 로드 한다.
 	// 추가 설명
 	// mesh idx / material idx 는 오브젝트 로드시 부여되기에

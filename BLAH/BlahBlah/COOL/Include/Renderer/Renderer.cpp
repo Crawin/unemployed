@@ -190,7 +190,7 @@ bool Renderer::CreateRTV()
 		CHECK_CREATE_FAILED(tempResource, "m_SwapChain->GetBuffer Failed!!");
 
 		m_RenderTargetBuffer[i] = COOLResourcePtr(new COOLResource(tempResource, D3D12_RESOURCE_STATE_PRESENT));
-		m_RenderTargetBuffer[i].get()->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+		m_RenderTargetBuffer[i]->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 		m_RenderTargetBuffer[i]->SetName(std::format("RenderTarget[{}]", i));
 		m_Device->CreateRenderTargetView(m_RenderTargetBuffer[i]->GetResource(), nullptr, rtvDescriptorHandle);
 		rtvDescriptorHandle.ptr += m_RtvDescIncrSize;
@@ -209,9 +209,9 @@ bool Renderer::CreateDSV()
 	// 보통 리소스를 디폴트힙에다 만들면
 	// 값을 넣어 복사해주기 위한 업로드힙이 별도로 필요
 	// 근데 얘는 필요없음 비어있는애
-	m_DepthStencilBuffer = CreateEmpty2DResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize, "depthstencil buffer");
-	m_DepthStencilBuffer.get()->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
-	m_DepthStencilBuffer.get()->SetName("depthstencil buffer");
+	m_DepthStencilBuffer = CreateEmpty2DResourceDSV(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_DEPTH_WRITE, m_ScreenSize, "depthstencil buffer");
+	m_DepthStencilBuffer->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	m_DepthStencilBuffer->SetName("depthstencil buffer");
 
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -243,7 +243,7 @@ bool Renderer::CreateRootSignature()
 	// 디스크립터힙 내부: (Texture2D, TextureCube, Texture2D, ...) 
 	// 쉐이더 에서 TexCubeList[1]로 사용 해야 함
 
-	const int numParams = ROOT_SIGNATURE_IDX::ROOT_SIGNATURE_IDX_MAX;
+	const int numParams = static_cast<int>(ROOT_SIGNATURE_IDX::ROOT_SIGNATURE_IDX_MAX);
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
 
 	//  ...ROOT_SIGNATURE_IDX enum 참고
@@ -266,7 +266,7 @@ bool Renderer::CreateRootSignature()
 	rootParams[2].Descriptor.RegisterSpace = 0;
 	rootParams[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 3: index of descriptor table, root constants
+	// idx 3: world Matrix, root constants
 	rootParams[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	rootParams[3].Constants.Num32BitValues = 16;
 	rootParams[3].Constants.ShaderRegister = 2;
@@ -349,79 +349,79 @@ bool Renderer::CreateRootSignature()
 	return true;
 }
 
-bool Renderer::CreateRenderTargetDescriptorHeap()
-{
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
-	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
-	descriptorDesc.NumDescriptors = static_cast<UINT>(m_Resources.size());										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
-	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	descriptorDesc.NodeMask = 0;
-
-	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
-	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap 생성 실패!");
-
-	auto currentCPUPtr = m_ResourceHeap->GetCPUDescriptorHandleForHeapStart();
-	//auto currentGPUPtr = m_ResourceHeap->GetGPUDescriptorHandleForHeapStart();
-
-	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
-	for (int i = 0; i < m_Resources.size(); ++i) {
-		//for (auto resource : m_Resources) {
-		ID3D12Resource* res = m_Resources[i].get()->GetResource();
-		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
-
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.Format = resDesc.Format;
-		srvDesc.ViewDimension = m_Resources[i].get()->GetDimension();
-
-		switch (srvDesc.ViewDimension) {
-		case D3D12_SRV_DIMENSION_TEXTURE2D:
-			srvDesc.Texture2D.MipLevels = 1;
-			srvDesc.Texture2D.MostDetailedMip = 0;
-			srvDesc.Texture2D.PlaneSlice = 0;
-			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-			break;
-
-		case D3D12_SRV_DIMENSION_TEXTURECUBE:
-			srvDesc.TextureCube.MipLevels = 1;
-			srvDesc.TextureCube.MostDetailedMip = 0;
-			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-			break;
-
-		case D3D12_SRV_DIMENSION_BUFFER:
-			srvDesc.Buffer.FirstElement = 0;
-			srvDesc.Buffer.NumElements = 0;								// 나중에 버퍼 쓸 때 다시 확인
-			srvDesc.Buffer.StructureByteStride = 0;
-			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
-
-			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + m_Resources[i].get()->GetName());
-			break;
-
-		default:
-			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + m_Resources[i].get()->GetName());
-			return false;
-		}
-
-		ID3D12Resource* resource = m_Resources[i]->GetResource();
-		m_Device->CreateShaderResourceView(resource, &srvDesc, currentCPUPtr);
-		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
-	}
-	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
-	// D3D12_SRV_DIMENSION_BUFFER = 1,
-	// D3D12_SRV_DIMENSION_TEXTURE1D = 2,
-	// D3D12_SRV_DIMENSION_TEXTURE1DARRAY = 3,
-	// D3D12_SRV_DIMENSION_TEXTURE2D = 4,
-	// D3D12_SRV_DIMENSION_TEXTURE2DARRAY = 5,
-	// D3D12_SRV_DIMENSION_TEXTURE2DMS = 6,
-	// D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY = 7,
-	// D3D12_SRV_DIMENSION_TEXTURE3D = 8,
-	// D3D12_SRV_DIMENSION_TEXTURECUBE = 9,
-	// D3D12_SRV_DIMENSION_TEXTURECUBEARRAY = 10,
-	// D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE = 11
-
-	return true;
-}
+//bool Renderer::CreateRenderTargetDescriptorHeap()
+//{
+//	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
+//	//descriptorDesc.NumDescriptors = UINT_MAX;												// 힙의 크기를 모른채로 시작하고싶은데 방법이 없을까
+//	descriptorDesc.NumDescriptors = static_cast<UINT>(m_Resources.size());										// 렌더타겟과 ds도 넣고싶음 -> 들어가긴 하네
+//	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+//	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+//	descriptorDesc.NodeMask = 0;
+//
+//	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(m_ResourceHeap.GetAddressOf()));
+//	CHECK_CREATE_FAILED(m_ResourceHeap, "m_ResourceHeap 생성 실패!");
+//
+//	auto currentCPUPtr = m_ResourceHeap->GetCPUDescriptorHandleForHeapStart();
+//	//auto currentGPUPtr = m_ResourceHeap->GetGPUDescriptorHandleForHeapStart();
+//
+//	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
+//	for (int i = 0; i < m_Resources.size(); ++i) {
+//		//for (auto resource : m_Resources) {
+//		ID3D12Resource* res = m_Resources[i].get()->GetResource();
+//		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
+//
+//		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+//		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+//		srvDesc.Format = resDesc.Format;
+//		srvDesc.ViewDimension = m_Resources[i].get()->GetDimension();
+//
+//		switch (srvDesc.ViewDimension) {
+//		case D3D12_SRV_DIMENSION_TEXTURE2D:
+//			srvDesc.Texture2D.MipLevels = 1;
+//			srvDesc.Texture2D.MostDetailedMip = 0;
+//			srvDesc.Texture2D.PlaneSlice = 0;
+//			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+//			break;
+//
+//		case D3D12_SRV_DIMENSION_TEXTURECUBE:
+//			srvDesc.TextureCube.MipLevels = 1;
+//			srvDesc.TextureCube.MostDetailedMip = 0;
+//			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+//			break;
+//
+//		case D3D12_SRV_DIMENSION_BUFFER:
+//			srvDesc.Buffer.FirstElement = 0;
+//			srvDesc.Buffer.NumElements = 0;								// 나중에 버퍼 쓸 때 다시 확인
+//			srvDesc.Buffer.StructureByteStride = 0;
+//			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+//
+//			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + m_Resources[i].get()->GetName());
+//			break;
+//
+//		default:
+//			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + m_Resources[i].get()->GetName());
+//			return false;
+//		}
+//
+//		ID3D12Resource* resource = m_Resources[i]->GetResource();
+//		m_Device->CreateShaderResourceView(resource, &srvDesc, currentCPUPtr);
+//		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
+//	}
+//	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
+//	// D3D12_SRV_DIMENSION_BUFFER = 1,
+//	// D3D12_SRV_DIMENSION_TEXTURE1D = 2,
+//	// D3D12_SRV_DIMENSION_TEXTURE1DARRAY = 3,
+//	// D3D12_SRV_DIMENSION_TEXTURE2D = 4,
+//	// D3D12_SRV_DIMENSION_TEXTURE2DARRAY = 5,
+//	// D3D12_SRV_DIMENSION_TEXTURE2DMS = 6,
+//	// D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY = 7,
+//	// D3D12_SRV_DIMENSION_TEXTURE3D = 8,
+//	// D3D12_SRV_DIMENSION_TEXTURECUBE = 9,
+//	// D3D12_SRV_DIMENSION_TEXTURECUBEARRAY = 10,
+//	// D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE = 11
+//
+//	return true;
+//}
 
 bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 {
@@ -452,75 +452,11 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 	m_MainCommandAllocator->Reset();
 	m_MainCommandList->Reset(m_MainCommandAllocator.Get(), nullptr);
 
-	//CHECK_CREATE_FAILED(CreateTestRootSignature(), "CreateRootSignature Failed!!");
 	CHECK_CREATE_FAILED(CreateRootSignature(), "CreateRootSignature Failed!!");
 
-	// scene
-	// 씬 로드 부분 이라고 가정
-#ifdef TEST_SHADER
-	{
-		auto commandAllocator = m_MainCommandAllocator;
-		auto commandList = m_MainCommandList;
-
-		// 씬 로드 플로우????? 임시임
-		//	0. 루트시그니쳐가 있어야함
-		//	1. 씬에서 사용할 쉐이더를 로드한다 <- 지금은 위에서 함
-		//	2. 씬에서 사용할 매터리얼 로드
-		//		a. 얘가 필요한 텍스쳐들 로드, 로드하면 인덱스를 리턴함
-		//		b. 매터리엘 멤버에 보면 배열 있음(m_TextureIndex). 거기에 텍스쳐 인덱스 넣기
-		//		c. 완료 후 쉐이더에 연결
-		//	3. 오브젝트들 로드 및 매터리얼과 짝지어서 맵퍼같은거에 등록 <- 
-		//  사실 2번 3번 순서는 큰 상관 없을거같음
-
-		//m_MainCommandAllocator->Reset();
-		//commandList->Reset(commandAllocator.Get(), nullptr);
-
-
-		// 아래가 1번
-		// 하드코딩하긴 귀찮으니까 텍스트파일로 빼서 하자
-		// ex) material_load_list.json
-		//		여기 안에 메터리얼 이름부터 해서 로드할 텍스쳐 이름이 쫙 있는거임, 이거 좀 쩌는듯
-		//		
-		//		{name: 임시, shader: 무슨무슨쉐이더,albedo: bbb.dds, ...}, {name: asdf, ...} ...
-
-		// 뭐 대충 메터리얼 로드하는 부분이라고 가정함
-		// 로드 해야 할 메터리얼 파일들이 txt로 리스트로 줄마다 나열되어있음
-		// SkyBox.json
-		// asdf.json
-		// ...
-
-		// 2번이긴 하지?
-		const char* materialLoadList[] = { "SkyBox.json", };
-		/*
-		for (int i = 0; i < _countof(materialLoadList); ++i) {
-			Material* temp = new Material("임시");
-			temp->LoadTexture(commandList, materialLoadList[i]);
-
-			int skyBox = CreateTextureFromDDSFile(commandList, L"bg.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);//D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-			int temphair = CreateTextureFromDDSFile(commandList, L"satoh.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-			int tempbody = CreateTextureFromDDSFile(commandList, L"satob.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-			int uvchecker = CreateTextureFromDDSFile(commandList, L"uvchecker2.dds", D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
-			temp->SetAlbedoTextureIndex(skyBox);
-
-			m_Shaders.back()->AddMaterial(temp);
-		}
-		*/
-
-		// 3번이긴 하지?
-		//Mesh tempMesh;
-		//tempMesh.LoadFile(commandList, "satodia.bin");
-		//m_Meshes.push_back(tempMesh);
-		//m_Camera = new Camera(90.0f, ((float)(m_ScreenSize.cx) / (float)(m_ScreenSize.cy)), 0.1f, 1000.0f);
-		//m_Camera->SetWorldPosition({ 0.0f, 30.0f, -150.0f });
-		//m_Camera->Init();
-
-		// 업로드버퍼같은거 실행
-		//ExecuteAndEraseUploadHeap(commandList);
-	}
-#endif // _DEBUG
-
-	CHECK_CREATE_FAILED(CreateRenderTargetDescriptorHeap(), "CreateRenderTargetDescriptorHeap");
+	// 이건 왜 하고 있었던거?? todo 확인해보자
+	// CreateRTVAndDSVDescrHeap가 있는데?
+	//CHECK_CREATE_FAILED(CreateRenderTargetDescriptorHeap(), "CreateRenderTargetDescriptorHeap");
 
 	return true;
 }
@@ -550,7 +486,7 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 	return true;
 }
 
-COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name)
+COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name, D3D12_RESOURCE_FLAGS resFlag)
 {
 	ID3D12Resource* temp;
 
@@ -560,6 +496,48 @@ COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_
 	resDesc.Width = size.cx;
 	resDesc.Height = size.cy;
 	resDesc.DepthOrArraySize = 1;										// 텍스쳐어레이같은건 안쓸 예정 아마도
+	resDesc.MipLevels = 1;
+	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
+	resDesc.SampleDesc.Quality = (m_MsaaEnable) ? (m_MsaaQualityLevels - 1) : 0;
+	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	resDesc.Flags = resFlag;
+
+	D3D12_HEAP_PROPERTIES heapProperty = {};
+	heapProperty.Type = heapType;
+	heapProperty.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	heapProperty.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	heapProperty.CreationNodeMask = 1;
+	heapProperty.VisibleNodeMask = 1;
+
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	clearValue.Color[0] = m_ClearColor[0];
+	clearValue.Color[1] = m_ClearColor[1];
+	clearValue.Color[2] = m_ClearColor[2];
+	clearValue.Color[3] = m_ClearColor[3];
+
+	m_Device->CreateCommittedResource(
+		&heapProperty,
+		D3D12_HEAP_FLAG_NONE,				// heapFlags
+		&resDesc,
+		resourceState,						// initialResState
+		&clearValue,
+		IID_PPV_ARGS(&temp));
+
+	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
+}
+
+COOLResourcePtr Renderer::CreateEmpty2DResourceDSV(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name)
+{
+	ID3D12Resource* temp;
+
+	D3D12_RESOURCE_DESC resDesc = {};
+	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resDesc.Alignment = 0;
+	resDesc.Width = size.cx;
+	resDesc.Height = size.cy;
+	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;
 	resDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
@@ -679,8 +657,7 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 			return false;
 		}
 
-		ID3D12Resource* resource = resources[i]->GetResource();
-		m_Device->CreateShaderResourceView(resource, &srvDesc, currentCPUPtr);
+		m_Device->CreateShaderResourceView(res, &srvDesc, currentCPUPtr);
 		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
 	}
 	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
@@ -697,6 +674,32 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 	// D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE = 11
 
 	return true;
+}
+
+bool Renderer::CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources, int startIdx, int numOfIdx)
+{
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
+	descriptorDesc.NumDescriptors = static_cast<UINT>(numOfIdx);
+	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	descriptorDesc.NodeMask = 0;
+
+	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(heap.GetAddressOf()));
+	CHECK_CREATE_FAILED(heap, "rtv heap 생성 실패!");
+
+	auto currentCPUPtr = heap->GetCPUDescriptorHandleForHeapStart();
+
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	rtvDesc.Texture2D.MipSlice = 0;
+	rtvDesc.Texture2D.PlaneSlice = 0;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+	// resources에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
+	for (int i = startIdx; i < startIdx + numOfIdx; ++i) {
+		ID3D12Resource* resource = resources[i]->GetResource();
+		m_Device->CreateRenderTargetView(resource, &rtvDesc, currentCPUPtr);
+		currentCPUPtr.ptr += m_RtvDescIncrSize;
+	}
 }
 
 bool Renderer::CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader)
@@ -874,8 +877,9 @@ void Renderer::Render()
 	m_MainCommandList->SetGraphicsRootSignature(m_RootSignature.Get());
 
 	// 리소스 set
-	m_MainCommandList->SetDescriptorHeaps(1, m_ResourceHeap.GetAddressOf());
-	m_MainCommandList->SetGraphicsRootDescriptorTable(0, m_ResourceHeap->GetGPUDescriptorHandleForHeapStart());
+	// 이건 왜 하고 있었던거?? todo 확인해보자
+	//m_MainCommandList->SetDescriptorHeaps(1, m_ResourceHeap.GetAddressOf());
+	//m_MainCommandList->SetGraphicsRootDescriptorTable(0, m_ResourceHeap->GetGPUDescriptorHandleForHeapStart());
 
 	SetViewportScissorRect(m_MainCommandList);
 
@@ -887,60 +891,23 @@ void Renderer::Render()
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvCpuDesHandle = m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	rtvCpuDesHandle.ptr += m_CurSwapChainIndex * m_RtvDescIncrSize;
 
-	float clearColor[4] = { 0.1f, 0.1f, 0.35f, 1.0f };
-	//float clearColor[4] = { 0, };// { 1.0f, 1.0f, 1.0f, 1.0f };
+	//float clearColor[4] = { 0.1f, 0.1f, 0.35f, 1.0f };
+	////float clearColor[4] = { 0, };// { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	m_MainCommandList->ClearRenderTargetView(rtvCpuDesHandle, clearColor, 0, nullptr);
+	// clear rt first
+	m_MainCommandList->ClearRenderTargetView(rtvCpuDesHandle, m_ClearColor, 0, nullptr);
 	m_MainCommandList->ClearDepthStencilView(dsvCpuDesHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-	m_MainCommandList->OMSetRenderTargets(1, &rtvCpuDesHandle, true, &dsvCpuDesHandle);
 
 	// real render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	if (m_SceneManager) m_SceneManager->Render(m_GraphicsCommandLists);
-
-		static unsigned short send_frame = 0;
-		//if (send_frame >= 30) {			// 30프레임마다 send한다.
-		//	SendPosition sp = { POSITION, pos.x,pos.y,pos.z };
-		//	Client::GetInstance().Send_Pos(sp);
-		//	send_frame = 0;
-		//}
-		//else ++send_frame;
-
-		//if (Client::GetInstance().Get_Recv_Size())
-		//{
-		//	m_Camera->SetPosition(Client::GetInstance().Get_Recv_Queue());
-		//}
-		// debug print;
-		//XMFLOAT4 stat = { -74.0509, 132.178, -0.982319, 1.0f };
-		//XMFLOAT4X4 view = m_Camera->GetViewMat();
-		//XMFLOAT4X4 proj = m_Camera->GetProjMat();
-
-		//XMVECTOR statVector = XMLoadFloat4(&stat);
-
-		//XMMATRIX viewMatrix = XMLoadFloat4x4(&view);
-		//XMMATRIX projMatrix = XMLoadFloat4x4(&proj);
-
-		//statVector = XMVector4Transform(statVector, viewMatrix);
-		//statVector = XMVector4Transform(statVector, projMatrix);
-
-		//XMFLOAT4 pTrans;
-		//XMStoreFloat4(&pTrans, statVector);
-
-		//DebugPrint(std::format("pTrans {}, {}, {}", pTrans.x, pTrans.y, pTrans.z));
-	//}
-
-
-	//m_Camera->Render(m_MainCommandList);
-
-	//for (auto shader : m_Shaders) {
-	//	shader->Render(m_MainCommandList);
-	//}
+	if (m_SceneManager) m_SceneManager->Render(m_GraphicsCommandLists, rtvCpuDesHandle, dsvCpuDesHandle);
 
 	// render end
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	// 최종 렌더 타겟
 	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_PRESENT);
 
 	for (auto& command : m_GraphicsCommandLists)
@@ -971,13 +938,13 @@ void Renderer::Render()
 
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetResourceGPUAddress(int idx)
-{
-	if (0 <= idx && idx < m_Resources.size())
-		return m_Resources[idx]->GetResource()->GetGPUVirtualAddress();
-
-	return 0;
-}
+//D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetResourceGPUAddress(int idx)
+//{
+//	if (0 <= idx && idx < m_Resources.size())
+//		return m_Resources[idx]->GetResource()->GetGPUVirtualAddress();
+//
+//	return 0;
+//}
 
 //D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetVertexDataGPUAddress(int idx)
 //{
@@ -987,13 +954,13 @@ D3D12_GPU_VIRTUAL_ADDRESS Renderer::GetResourceGPUAddress(int idx)
 //	return 0;
 //}
 
-COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
-{
-	if (0 <= idx && idx < m_Resources.size())
-		return m_Resources[idx];
-
-	return nullptr;
-}
+//COOLResourcePtr Renderer::GetResourceFromIndex(int idx)
+//{
+//	if (0 <= idx && idx < m_Resources.size())
+//		return m_Resources[idx];
+//
+//	return nullptr;
+//}
 
 //COOLResourcePtr Renderer::GetVertexDataFromIndex(int idx)
 //{

@@ -52,7 +52,7 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 	// MATERIAL_TYPES
 	const char* materialTypes[] = { "BaseColor", "Roughness", "Metalic", "Specular", "Normal" };
 
-	for (int i = 0; i < MATERIAL_TYPES::MATERIAL_END; ++i) {
+	for (int i = 0; i < static_cast<int>(MATERIAL_TYPES::MATERIAL_END); ++i) {
 		if (root[materialTypes[i]].isNull()) continue;
 
 		// texture의 이름
@@ -63,9 +63,6 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 		m_TextureIndex[i] = idx;
 	}
 
-	// todo
-	// 연결 할 쉐이더 또한 필요하다
-	// 이것은 manager에서 해준다.
 	if (root["Shader"].isNull())
 	{
 		DebugPrint("ERROR!! has no shader");
@@ -82,7 +79,7 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 
 void Material::SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx)
 {
-	cmdList->SetGraphicsRoot32BitConstants(paramIdx, _countof(m_TextureIndex), m_TextureIndex, 0);
+	cmdList->SetGraphicsRoot32BitConstants(paramIdx, 16, m_TextureIndex, 0);
 }
 
 

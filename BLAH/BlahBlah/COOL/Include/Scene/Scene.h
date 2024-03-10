@@ -65,6 +65,7 @@ public:
 	// 입력 처리. 해당 씬이 활성화되어 있을 때 할 입력 처리
 	virtual bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam) = 0;
 
-	virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists);
+	// 최종 결과를 resultRtv, resultDsv에 넘긴다
+	virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 };
 

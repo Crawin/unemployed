@@ -197,7 +197,7 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 
 		XMFLOAT4X4 temp = Matrix4x4::Transpose(m_RootTransform);
 
-		commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::WORLD_MATRIX, 16, &temp, 0);
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 
 		commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
 
