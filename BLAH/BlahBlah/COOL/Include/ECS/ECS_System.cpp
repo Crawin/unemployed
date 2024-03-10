@@ -6,6 +6,12 @@
 
 namespace ECSsystem {
 
+	void ChildrenTransform::Update(ECSManager* managerm, float deltaTime)
+	{
+		// 부모인 것에 대해서만 실행한다
+		// todo 작성해야함
+	}
+
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync with camera

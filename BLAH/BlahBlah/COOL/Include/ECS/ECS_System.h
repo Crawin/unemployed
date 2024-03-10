@@ -15,6 +15,14 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
+	// Transform to its children
+	//
+	class ChildrenTransform : public System {
+	public:
+		virtual void Update(ECSManager* managerm, float deltaTime);
+	};
+
+	/////////////////////////////////////////////////////////
 	// transform to renderer / camera
 	//
 	class SyncWithTransform : public System {
