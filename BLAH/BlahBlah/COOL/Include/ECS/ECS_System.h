@@ -14,16 +14,10 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime) = 0;
 	};
 
-	template<class Div>
-	class SystemFriend : public System {
-	public:
-		virtual void Update(ECSManager* manager, float deltaTime) = 0;
-	};
-
 	/////////////////////////////////////////////////////////
 	// Transform to its children
 	//
-	class LocalToWorldTransform : public SystemFriend<LocalToWorldTransform>/*System */{
+	class LocalToWorldTransform : public System{
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};

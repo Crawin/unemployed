@@ -34,8 +34,6 @@ namespace component {
 	class ComponentBase : public Component
 	{
 		friend class ComponentFactory;
-		friend class SystemFriend;
-	
 
 		inline static std::bitset<COMPONENT_COUNT> m_Bitset;
 
