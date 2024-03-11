@@ -48,7 +48,13 @@ namespace ECSsystem {
 		// first person cam
 		std::function<void(component::Transform*, component::Camera*)> func1 = [](component::Transform* tr, component::Camera* cam) {
 
-			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(tr->GetRotation())));
+			XMFLOAT3 rotate = tr->GetRotation();
+			XMFLOAT3 rad;
+			rad.x = XMConvertToRadians(rotate.x);
+			rad.y = XMConvertToRadians(rotate.y);
+			rad.z = XMConvertToRadians(rotate.z);
+
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
 			XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
 
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
@@ -104,9 +110,14 @@ namespace ECSsystem {
 
 			// move to look at;
 			XMVECTOR vec = XMLoadFloat3(&tempMove) * sp->GetMaxVelocity() * deltaTime;
-			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(tr->GetRotation())));
+			//XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(tr->GetRotation())));
+			
+			XMFLOAT4X4 tpRot = tr->GetWorldTransform();
+			tpRot._41 = 0.0f;
+			tpRot._42 = 0.0f;
+			tpRot._43 = 0.0f;
 
-			vec = XMVector3Transform(vec, rot);
+			vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
 			XMStoreFloat3(&tempMove, vec);
 
 			tr->SetPosition(Vector3::Add(tempMove, tr->GetPosition()));
@@ -120,9 +131,9 @@ namespace ECSsystem {
 			{
 				const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 				XMFLOAT3 rot = tr->GetRotation();
-				const float rootSpeed = 500.0f;
-				rot.y += mouseMove.x / rootSpeed;
-				rot.x += mouseMove.y / rootSpeed;
+				const float rootSpeed = 10.0f;
+				rot.y += (mouseMove.x / rootSpeed);
+				rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
 
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));

@@ -3,7 +3,7 @@
 #include "Scene/ResourceManager.h"
 #include <json/json.h>
 
-namespace component 
+namespace component
 {
 	void Name::Create(Json::Value& v, ResourceManager* rm)
 	{
@@ -89,10 +89,20 @@ namespace component
 	const XMFLOAT4X4& Transform::GetWorldTransform() const
 	{
 		// TODO: 여기에 return 문을 삽입합니다.
+		//XMMATRIX mat = XMMatrixMultiply(
+		//	XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z), XMMatrixMultiply(
+		//		XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_Rotate)),
+		//		XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)));
+
+		XMFLOAT3 rotRad;
+		rotRad.x = XMConvertToRadians(m_Rotate.x);
+		rotRad.y = XMConvertToRadians(m_Rotate.y);
+		rotRad.z = XMConvertToRadians(m_Rotate.z);
 		XMMATRIX mat = XMMatrixMultiply(
-			XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z), XMMatrixMultiply(
-				XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_Rotate)),
-				XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)));
+			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
+			XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
+				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
+
 
 		XMFLOAT4X4 worldMat;
 		XMStoreFloat4x4(&worldMat, XMMatrixMultiply(mat, XMLoadFloat4x4(&m_ParentTransform)));
