@@ -481,7 +481,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 			else
 			{
 				p[i].printPlayerPos(i, true);
-				p[i].syncPos();
+				p[i].syncTransform();
 			}
 
 		}
@@ -500,7 +500,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 					{
 						Socket_position temp;
 						memcpy(&temp, &(*start)[0], sizeof(Socket_position));
-						p[i].setPos(temp.pos);
+						p[i].setTransform(temp);
 						break;
 					}
 					}
@@ -613,12 +613,13 @@ const SOCKET Player::getSocket()
 void Player::allocateSOCKET(const SOCKET& s)
 {
 	socket = s;
-	m_xmf3Pos = DirectX::XMFLOAT3(0, 0, 0);
+	m_aTransform[1].pos = DirectX::XMFLOAT3(0, 0, 0);
+	m_aTransform[1].rot = DirectX::XMFLOAT3(0, 0, 0);
 }
 
 const DirectX::XMFLOAT3 Player::getPos()
 {
-	return m_xmf3Pos;
+	return m_aTransform[1].pos;
 }
 
 // (문자열, 좌표 변경이 있을시에만 출력)
@@ -627,24 +628,26 @@ void Player::printPlayerPos(const int& i,const bool& d)
 	Log_Mutex.lock();		// [p1: x, y, z]
 	if (d)
 	{
-		if (m_xmf3Pos.x != m_xmf3Prev_Pos.x || m_xmf3Pos.y != m_xmf3Prev_Pos.y || m_xmf3Pos.z != m_xmf3Prev_Pos.z)		// 좌표가 바뀐게 있다면
+		if (m_aTransform[0].pos.x != m_aTransform[1].pos.x || m_aTransform[0].pos.y != m_aTransform[1].pos.y || m_aTransform[0].pos.z != m_aTransform[1].pos.z ||
+			m_aTransform[0].rot.x!= m_aTransform[1].rot.x || m_aTransform[0].rot.y != m_aTransform[0].rot.y|| m_aTransform[0].rot.z!= m_aTransform[0].rot.z)		// 좌표나 회전이 바뀐게 있으면
 		{
-			std::cout << "[P" << i+1 << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+			std::cout << "[P" << i + 1 << ": " << m_aTransform[1].pos.x << ", " << m_aTransform[1].pos.y << ", " << m_aTransform[1].pos.z << " ||| " << m_aTransform[1].rot.x << ", " << m_aTransform[1].rot.y << ", " << m_aTransform[1].rot.z << "]" << std::endl;
 		}
 	}
 	else 
 	{
-		std::cout << "[P" << i+1 << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+		std::cout << "[P" << i+1 << ": " << m_aTransform[1].pos.x << ", " << m_aTransform[1].pos.y << ", " << m_aTransform[1].pos.z << "]" << std::endl;
 	}
 	Log_Mutex.unlock();
 }
 
-void Player::syncPos()
+void Player::syncTransform()
 {
-	m_xmf3Prev_Pos = m_xmf3Pos;
+	m_aTransform[0] = m_aTransform[1];
 }
 
-void Player::setPos(const DirectX::XMFLOAT3& pos)
+void Player::setTransform(const Socket_position& sp)
 {
-	m_xmf3Pos = pos;
+	m_aTransform[1].pos = sp.pos;
+	m_aTransform[1].rot = sp.rot;
 }

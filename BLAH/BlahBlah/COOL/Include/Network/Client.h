@@ -66,6 +66,7 @@ enum SendType
 struct SendPosition {
 	SendType type;
 	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 rot;
 };
 
 class Client
@@ -85,7 +86,7 @@ public:
 	Client();
 	~Client();
 	int Connect_Server();
-	void Send_Pos(const DirectX::XMFLOAT3&);
+	void Send_Pos(const SendPosition&);
 	void Send_Str(const std::string&);
 	void Recv_Data();
 	int Get_Recv_Size();

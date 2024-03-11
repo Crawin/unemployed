@@ -102,16 +102,16 @@ namespace ECSsystem {
 				rot.y += mouseMove.x / rootSpeed;
 				rot.x += mouseMove.y / rootSpeed;
 				tr->SetRotation(rot);
-
+				
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
 			}
-
+			
 
 			// Send To Server
 			if (Client::GetInstance().Get_RecvState())
 			{	
-				tempMove = tr->GetPosition();
-				Client::GetInstance().Send_Pos(tempMove);
+				SendPosition sp = { POSITION,tr->GetPosition(),tr->GetRotation() };
+				Client::GetInstance().Send_Pos(sp);
 			}
 
 			};

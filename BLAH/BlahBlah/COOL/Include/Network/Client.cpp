@@ -4,8 +4,8 @@
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
-	//m_cpServerIP = (char*)"127.0.0.1";
+	//m_cpServerIP = (char*)"freerain.mooo.com";
+	m_cpServerIP = (char*)"127.0.0.1";
 	m_Sock = NULL;
 }
 
@@ -54,9 +54,8 @@ int Client::Connect_Server()
 	}
 }
 
-void Client::Send_Pos(const DirectX::XMFLOAT3& pos)
+void Client::Send_Pos(const SendPosition& sp)
 {
-	SendPosition sp = { POSITION, pos };
 	int retval = send(m_Sock, (char*)&sp, (int)sizeof(sp), 0);
 	if (retval == SOCKET_ERROR) {
 		err_display("send()");
