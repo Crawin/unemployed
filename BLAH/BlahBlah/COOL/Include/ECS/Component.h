@@ -3,6 +3,7 @@
 #include "Light.h"
 namespace Json { class Value; }
 class ResourceManager;
+class Entity;
 
 struct CameraDataShader {
 	XMFLOAT4X4 m_ViewMatrix;
@@ -33,6 +34,9 @@ namespace component {
 	class ComponentBase : public Component
 	{
 		friend class ComponentFactory;
+		friend class SystemFriend;
+	
+
 		inline static std::bitset<COMPONENT_COUNT> m_Bitset;
 
 	public:
@@ -148,6 +152,8 @@ namespace component {
 		XMFLOAT3 m_Rotate;
 		XMFLOAT3 m_Scale;
 
+		XMFLOAT4X4 m_ParentTransform = Matrix4x4::Identity();
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -156,10 +162,17 @@ namespace component {
 		const XMFLOAT3& GetPosition() const { return m_Position; }
 		const XMFLOAT3& GetRotation() const { return m_Rotate; }
 		const XMFLOAT3& GetScale() const { return m_Scale; }
+		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
+		
+		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
+		const XMFLOAT4X4& GetWorldTransform() const;
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
 		void SetScale(const XMFLOAT3& sca) { m_Scale = sca; }
+		void SetParentTransform(const XMFLOAT4X4& mat) { m_ParentTransform = mat; }
+
+
 	};
 
 	/////////////////////////////////////////////////////////
@@ -185,6 +198,38 @@ namespace component {
 		void SetMesh(int idx) { m_MeshID = idx; }
 		void SetMaterial(int idx) { m_MaterialID = idx; }
 		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// root
+	// 루트 엔티티라면 가지고 있음
+	//
+	class Root : public ComponentBase<Root>
+	{
+		Entity* m_SelfEntity = nullptr;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
+		Entity* GetEntity() const { return m_SelfEntity; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// root
+	// 루트 엔티티라면 가지고 있음
+	//
+	class Children : public ComponentBase<Children>
+	{
+		Entity* m_SelfEntity = nullptr;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
+		Entity* GetEntity() const { return m_SelfEntity; }
 	};
 
 	/////////////////////////////////////////////////////////

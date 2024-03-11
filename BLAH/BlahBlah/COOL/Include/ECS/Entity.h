@@ -25,6 +25,12 @@ public:
 		m_Bitset |= bit;
 	}
 
+	const std::vector<Entity*>& GetChildren() const { return m_Children; }
+
+	std::bitset<COMPONENT_COUNT> GetBitset() const { return m_Bitset; }
+
+	int GetInnerID() const { return m_Id; }
+
 private:
 	// 컴포넌트 소유 bitset
 	std::bitset<COMPONENT_COUNT> m_Bitset;

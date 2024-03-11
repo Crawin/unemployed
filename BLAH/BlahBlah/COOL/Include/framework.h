@@ -67,7 +67,7 @@ using Microsoft::WRL::ComPtr;
 #include "Enums.h"
 
 // component count
-#define COMPONENT_COUNT 6
+#define COMPONENT_COUNT 8
 
 
 std::string ExtractFileName(const std::string& fullPath);

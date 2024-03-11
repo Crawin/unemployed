@@ -14,7 +14,9 @@ class ComponentContainer {
 	std::vector<char> m_Data;
 
 public:
-	ComponentContainer() { DebugPrint("NONO"); };
+	ComponentContainer() {
+		DebugPrint("NONO");
+	}
 	ComponentContainer(size_t stride);
 
 	template <class T>
@@ -45,6 +47,9 @@ public:
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func);
 
+	template<class ...COMPONENTS>
+	void Execute(int innerIdx, std::function<void(COMPONENTS*...)>& func);
+
 	template<class COMP>
 	COMP* GetComponent(int idx);
 
@@ -58,6 +63,7 @@ class ECSManager
 {
 	// entity
 	std::vector<Entity*> m_Entities;
+	std::vector<Entity*> m_RootEntities;
 
 	// ComponentSet을 저장
 	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet> m_ComponentSets;
@@ -70,6 +76,7 @@ public:
 	~ECSManager();
 
 	void AddEntity(Entity* entity);
+	void AddToRoot(Entity* entity);
 
 	void InsertSystem(ECSsystem::System* system) { m_Systems.push_back(system); }
 
@@ -78,6 +85,15 @@ public:
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func);
 
+	template<class ...COMPONENTS>
+	void ExecuteRoot(std::function<void(COMPONENTS*...)>& func);//, Entity* ent);
+
+	template<class ...COMPONENTS>
+	void ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func);
+
+	// 사용을 자제하자
+	template<class T>
+	T* GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId);
 private:
 
 	template<class ...COMPONENTS>

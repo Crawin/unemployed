@@ -143,7 +143,7 @@ private:
 	////////////////////////////////////////////////////////
 	// Object
 	std::vector<Entity*> m_Entities;
-	std::vector<Entity*> m_RootEntities;
+	//std::vector<Entity*> m_RootEntities;
 
 	// component
 	//std::vector<component::Component*> m_Components;

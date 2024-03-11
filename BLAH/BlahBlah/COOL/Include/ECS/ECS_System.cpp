@@ -1,15 +1,45 @@
 ﻿#include "framework.h"
 #include "ECS_System.h"
+#include "Entity.h"
 #include "Component.h"
 #include "ECSManager.h"
 #include "App/InputManager.h"
 
 namespace ECSsystem {
 
-	void ChildrenTransform::Update(ECSManager* managerm, float deltaTime)
+	void LocalToWorldTransform::Update(ECSManager* manager, float deltaTime)
 	{
-		// 부모인 것에 대해서만 실행한다
-		// todo 작성해야함
+		using namespace component;
+		
+		std::function<void(Transform*, Children*)> func = [&func, &manager](Transform* trans, Children* childComp) {
+			Entity* ent = childComp->GetEntity();
+
+			const std::vector<Entity*>& children = ent->GetChildren();
+
+			// build world matrix for child
+			XMFLOAT4X4 temp = trans->GetWorldTransform();
+
+			for (Entity* child : children) {
+				auto bit = child->GetBitset();
+				int innerId = child->GetInnerID();
+
+				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
+				if (childTrans != nullptr) {
+					// do st trans to child
+					// make world transform from this trans
+					childTrans->SetParentTransform(temp);
+
+					// execute this func to child
+					manager->ExecuteFromEntity(bit, innerId, func);
+				}
+				else DebugPrint("ERROR!! no transform ");
+			}
+			};
+
+		manager->ExecuteRoot(func);
+
+		//DebugPrint(std::format("entities: {}", temp));
+
 	}
 
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
@@ -27,20 +57,7 @@ namespace ECSsystem {
 		manager->Execute(func1);
 
 		std::function<void(component::Transform*, component::Renderer*)> func2 = [](component::Transform* tr, component::Renderer* ren) {
-			// build world matrix here
-
-			auto& s = tr->GetScale();
-			auto& r = tr->GetRotation();
-			auto& t = tr->GetPosition();
-			
-			XMMATRIX mat = XMMatrixMultiply(
-				XMMatrixTranslation(t.x, t.y, t.z), XMMatrixMultiply(
-					XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&r)),
-					XMMatrixScaling(s.x, s.y, s.z)));
-
-			XMFLOAT4X4 world;
-			XMStoreFloat4x4(&world, mat);
-			ren->SetWorldMatrix(world);
+			ren->SetWorldMatrix(tr->GetWorldTransform());
 
 			};
 

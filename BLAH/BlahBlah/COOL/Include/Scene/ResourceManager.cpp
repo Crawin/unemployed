@@ -45,12 +45,10 @@ ResourceManager::~ResourceManager()
 
 bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 {
-	// 대충 오브젝트를 로드한다.
+	// 오브젝트를 로드한다.
 	Json::Value root;
 	Json::Reader reader;
 
-	// 일단 고전 유니티 방식으로 하자
-	// ecs는 아니지만 컴포넌트가 있는 방식이다.
 	std::ifstream file(fileName);
 	reader.parse(file, root);
 	
@@ -59,8 +57,10 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 	if (entptr == nullptr) 
 		return false;
 
-	if (isCam == false) m_RootEntities.push_back(entptr);
-	//else m_Cameras.push_back(entptr);
+	// add root component
+	component::Root* cmp = new component::Root;
+	cmp->SetEntity(entptr);
+	entptr->AddComponent(cmp);
 
 	return true;
 }
@@ -91,12 +91,18 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 	DebugPrint("");
 
 	// if Children
-	if (root[CHILDREN].isNull() == false)
-		for (auto& val : root[CHILDREN]) {
+	if (root[CHILDREN].isNull() == false) {
+		for (auto& val : root[CHILDREN]) 
+		{
 			auto child = LoadObjectJson(val, ent);
 			if (child == nullptr)
 				return nullptr;
 		}
+		component::Children* cmp = new component::Children;
+		cmp->SetEntity(ent);
+		ent->AddComponent(cmp);
+		ent->AddBit(cmp->GetBitset());
+	}
 	
 	// 여기서 ECS Manager에 entity를 삽입하지 않는다.
 	// late init이 끝난 후 entity를 삽입함

@@ -81,7 +81,7 @@ void ComponentSet::InsertComponentByEntity(Entity* entity)
 
 	entity->m_Components.clear();
 
-	entity->m_Id = ++m_EntitySize;
+	entity->m_Id = m_EntitySize++;
 }
 
 template<class ...COMPONENTS>
@@ -96,11 +96,20 @@ inline void ComponentSet::Execute(std::function<void(COMPONENTS*...)>& func)
 	}
 }
 
+template<class ...COMPONENTS>
+void ComponentSet::Execute(int innerIdx, std::function<void(COMPONENTS*...)>& func)
+{
+	func(GetComponent<COMPONENTS>(innerIdx)...);
+}
+
 template<class COMP>
 COMP* ComponentSet::GetComponent(int idx)
 {
 	//ComponentContainer& container = m_Set[bit];
-	return m_Set[COMP::GetBit()].GetData<COMP>(idx);
+	if (m_Set.contains(COMP::GetBit())) 
+		return m_Set[COMP::GetBit()].GetData<COMP>(idx);
+
+	return nullptr;
 	//container[];
 	//COMP* temp = container[idx];
 	//return temp;
@@ -154,6 +163,11 @@ inline void ECSManager::AddEntity(Entity* entity)
 
 }
 
+void ECSManager::AddToRoot(Entity* entity)
+{
+	m_RootEntities.push_back(entity);
+}
+
 void ECSManager::UpdateSystem(float deltaTime)
 {
 	for (auto& system : m_Systems) {
@@ -175,6 +189,46 @@ inline void ECSManager::Execute(std::function<void(COMPONENTS*...)>& func)
 		compSet.Execute(func);
 	}
 	
+}
+
+template<class ...COMPONENTS>
+void ECSManager::ExecuteRoot(std::function<void(COMPONENTS*...)>& func)//, Entity* ent)
+{
+	auto& compSet = m_ComponentSets;
+	std::bitset<COMPONENT_COUNT> funcBitset = GetBitset<COMPONENTS...>();
+	// for every root and Template Entities
+
+	std::function<void(component::Root*)> forRoot = [&compSet, &func, funcBitset](component::Root* root) {
+		// find bitset first
+		Entity* ent = root->GetEntity();
+		std::bitset<COMPONENT_COUNT> entityBitset = ent->GetBitset();
+		int entityID = ent->GetInnerID();
+
+		// do sth with Root & component
+		if ((funcBitset & entityBitset) == funcBitset)
+			compSet[entityBitset].Execute(entityID, func);
+		};
+	
+	Execute(forRoot);
+}
+
+template<class ...COMPONENTS>
+void ECSManager::ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func)
+{
+	std::bitset<COMPONENT_COUNT> funcBitset = GetBitset<COMPONENTS...>();
+
+	if ((funcBitset & bit) == funcBitset)
+		m_ComponentSets[bit].Execute(innerID, func);
+}
+
+template<class T>
+T* ECSManager::GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId)
+{
+	if (m_ComponentSets.contains(entBit)) {
+		return m_ComponentSets[entBit].GetComponent<T>(innerId);
+	}
+
+	return nullptr;
 }
 
 template<class ...COMPONENTS>

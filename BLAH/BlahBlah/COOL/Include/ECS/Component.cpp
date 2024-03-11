@@ -42,6 +42,24 @@ namespace component
 		DebugPrint(std::format("Renderer Comp, mesh: {}, material: {}", m_MeshID, m_MaterialID));
 	}
 
+	void Root::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Root::ShowYourself() const
+	{
+		DebugPrint("Root Comp");
+	}
+
+	void Children::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Children::ShowYourself() const
+	{
+		DebugPrint("Children Comp");
+	}
+
 	void Transform::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value trans = v["Transform"];
@@ -65,6 +83,21 @@ namespace component
 		DebugPrint(std::format("\tPosit: {}, {}, {}", m_Position.x, m_Position.y, m_Position.z));
 		DebugPrint(std::format("\tRotat: {}, {}, {}", m_Rotate.x, m_Rotate.y, m_Rotate.z));
 		DebugPrint(std::format("\tScale: {}, {}, {}", m_Scale.x, m_Scale.y, m_Scale.z));
+
+	}
+
+	const XMFLOAT4X4& Transform::GetWorldTransform() const
+	{
+		// TODO: 여기에 return 문을 삽입합니다.
+		XMMATRIX mat = XMMatrixMultiply(
+			XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z), XMMatrixMultiply(
+				XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_Rotate)),
+				XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)));
+
+		XMFLOAT4X4 worldMat;
+		XMStoreFloat4x4(&worldMat, XMMatrixMultiply(mat, XMLoadFloat4x4(&m_ParentTransform)));
+
+		return worldMat;
 	}
 
 	void Camera::Create(Json::Value& v, ResourceManager* rm)
@@ -185,4 +218,6 @@ namespace component
 		DebugPrint(std::format("cur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
 
 	}
+
+
 }

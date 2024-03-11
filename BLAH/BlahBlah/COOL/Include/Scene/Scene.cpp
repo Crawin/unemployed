@@ -27,6 +27,7 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 
 	// default systems
 	// 넣는 순서에 따라 system이 돌아가는게 달라짐
+	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
 	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByInput);
 
