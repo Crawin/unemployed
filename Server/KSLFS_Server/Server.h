@@ -46,6 +46,7 @@ private:
 	std::list<std::pair<std::pair<ServerType, SOCKET>, std::thread>> lRoomThreads;
 	std::list<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> lGameRecvThreads;
 	SOCKET listen_sock;
+	short m_sServerState = 0;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
 	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
