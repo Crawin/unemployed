@@ -223,6 +223,15 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	for (int i = 0; i < m_DefferedRenderTargets; ++i)
 		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+
+#ifdef _DEBUG
+	m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
+	if (m_DebuggingMaterial == -1) return false;
+
+	// debug deffered default
+	for (int i = 0; i < m_DefferedRenderTargets; ++i)
+		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+#endif
 	
 	
 	// load mesh

@@ -147,6 +147,8 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONUP:
 	case WM_MOUSEMOVE:
 		InputManager::GetInstance().HandleMouseInput(hWnd, msg, wParam, lParam);
+	case WM_KEYDOWN:
+		InputManager::GetInstance().HandleKeyboardInput(hWnd, msg, wParam, lParam);
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);

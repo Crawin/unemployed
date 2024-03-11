@@ -16,10 +16,13 @@ public:
 	}
 
 	void HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	
+	void HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	const POINT& GetMouseMove() const { return m_MouseDif; }
 	bool GetDrag() const { return m_Dragging; }
 
+	bool GetDebugMode() const { return m_DebugMode; }
 private:
 	// mosue input
 	BYTE lpb[sizeof(RAWINPUT)] = { 0, };
@@ -27,6 +30,8 @@ private:
 	POINT m_BefMouse = { 0,0 };
 	POINT m_MouseDif = { 0,0 };
 	bool m_Dragging = false;
+
+	bool m_DebugMode = false;
 
 };
 

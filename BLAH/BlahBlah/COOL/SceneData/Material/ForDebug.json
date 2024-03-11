@@ -1,0 +1,9 @@
+{
+	"name": "ForDebug",
+	"BaseColor": null,
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "ForDebug"
+}

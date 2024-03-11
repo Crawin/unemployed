@@ -38,3 +38,12 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 	}
 	}
 }
+
+void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (wParam) {
+	case VK_F8:
+		m_DebugMode = !m_DebugMode;
+		break;
+	}
+}

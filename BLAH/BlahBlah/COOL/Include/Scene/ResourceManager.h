@@ -124,6 +124,10 @@ public:
 
 	int GetPostProcessingMaterial() const;
 
+#ifdef _DEBUG
+	int GetDebuggingMaterial() const { return m_DebuggingMaterial; };
+#endif
+
 private:
 	// 메시 데이터
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
@@ -174,6 +178,11 @@ private:
 	// postProcessingMaterial;
 	const char* m_PostProcessing = "PostProcessing";
 	int m_PostProcessingMaterial = -1;
+
+#ifdef _DEBUG
+	const char* m_Debuggging = "ForDebug";
+	int m_DebuggingMaterial = -1;
+#endif
 
 	// 로드 해야 할 mesh, material들을 저장만 해둔 후 나중에 로드 한다.
 	// 추가 설명

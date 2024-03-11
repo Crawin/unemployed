@@ -34,6 +34,7 @@ Buffer<float> BufferFloatList[] : register(t0, space4);
 #define SPECULAR 3
 #define NORMALW 4
 #define POSITIONW 5
+#define MRT_END 6
 // ...
 
 cbuffer Material : register(b0)

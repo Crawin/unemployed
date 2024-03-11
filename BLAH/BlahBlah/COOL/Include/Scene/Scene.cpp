@@ -6,6 +6,10 @@
 #include "ECS/Component.h"
 #include "ECS/ECS_System.h"
 #include "Shader/Shader.h"
+
+#ifdef _DEBUG
+#include "App/InputManager.h"
+#endif
 //#define SCENE_PATH "SceneData\\Scene\\"
 
 Scene::Scene()
@@ -126,9 +130,24 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	m_ResourceManager->m_Materials[postMat]->GetShader()->Render(commandLists[0]);
 	m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
-
-
 	commandLists[0]->DrawInstanced(6, 1, 0, 0);
+
+
+#ifdef _DEBUG
+	// test code
+	// todo 적절한 위치로 옮기도록 하자
+	if (InputManager::GetInstance().GetDebugMode()) {
+		commandLists[0]->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+		int debugMat = m_ResourceManager->GetDebuggingMaterial();
+
+		m_ResourceManager->m_Materials[debugMat]->GetShader()->Render(commandLists[0]);
+		int a[2] = { 0, 0 };
+		commandLists[0]->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
+		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+		commandLists[0]->DrawInstanced(6, 1, 0, 0);
+	}
+#endif
 }
 
 //bool Scene::Init()
