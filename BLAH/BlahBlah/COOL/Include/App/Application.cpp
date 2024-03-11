@@ -94,9 +94,6 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 
 int Application::StartProgram()
 {
-	//Client::GetInstance().Connect_Server();
-	//Client::GetInstance().Send_Str("�����"); // �ӽ� ����� ����.
-
 	MSG Message;
 	m_Timer->Start();
 	while (m_GameLoop) {
@@ -147,6 +144,15 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_RBUTTONUP:
 	case WM_MOUSEMOVE:
 		InputManager::GetInstance().HandleMouseInput(hWnd, msg, wParam, lParam);
+		break;
+		// 임시 방 생성
+	case WM_KEYDOWN:
+		if (wParam == 'P')
+		{
+			Client::GetInstance().Connect_Server();
+			Client::GetInstance().Send_Str("방생성");
+		}
+		break;
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);

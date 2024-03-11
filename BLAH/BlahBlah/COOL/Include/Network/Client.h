@@ -1,22 +1,23 @@
-#pragma once
-#define _CRT_SECURE_NO_WARNINGS // ±¸Çü C ÇÔ¼ö »ç¿ë ½Ã °æ°í ²ô±â
-#define _WINSOCK_DEPRECATED_NO_WARNINGS // ±¸Çü ¼ÒÄÏ API »ç¿ë ½Ã °æ°í ²ô±â
+ï»¿#pragma once
+#define _CRT_SECURE_NO_WARNINGS // êµ¬í˜• C í•¨ìˆ˜ ì‚¬ìš© ì‹œ ê²½ê³  ë„ê¸°
+#define _WINSOCK_DEPRECATED_NO_WARNINGS // êµ¬í˜• ì†Œì¼“ API ì‚¬ìš© ì‹œ ê²½ê³  ë„ê¸°
 
-#include <winsock2.h> // À©¼Ó2 ¸ŞÀÎ Çì´õ
-#include <ws2tcpip.h> // À©¼Ó2 È®Àå Çì´õ
+#include <winsock2.h> // ìœˆì†2 ë©”ì¸ í—¤ë”
+#include <ws2tcpip.h> // ìœˆì†2 í™•ì¥ í—¤ë”
 
 #include <tchar.h> // _T(), ...
 #include <stdio.h> // printf(), ...
 #include <stdlib.h> // exit(), ...
 #include <string.h> // strncpy(), ...
 
-#pragma comment(lib, "ws2_32") // ws2_32.lib ¸µÅ©
+#pragma comment(lib, "ws2_32") // ws2_32.lib ë§í¬
 #include <iostream>
 #include <thread>
 #include <vector>
 #include <DirectXMath.h>
+#include <string.h>
 
-// ¼ÒÄÏ ÇÔ¼ö ¿À·ù Ãâ·Â ÈÄ Á¾·á
+// ì†Œì¼“ í•¨ìˆ˜ ì˜¤ë¥˜ ì¶œë ¥ í›„ ì¢…ë£Œ
 void err_quit(const char* msg)
 {
 	LPVOID lpMsgBuf;
@@ -30,7 +31,7 @@ void err_quit(const char* msg)
 	//exit(1);
 }
 
-// ¼ÒÄÏ ÇÔ¼ö ¿À·ù Ãâ·Â
+// ì†Œì¼“ í•¨ìˆ˜ ì˜¤ë¥˜ ì¶œë ¥
 void err_display(const char* msg)
 {
 	LPVOID lpMsgBuf;
@@ -43,7 +44,7 @@ void err_display(const char* msg)
 	LocalFree(lpMsgBuf);
 }
 
-// ¼ÒÄÏ ÇÔ¼ö ¿À·ù Ãâ·Â
+// ì†Œì¼“ í•¨ìˆ˜ ì˜¤ë¥˜ ì¶œë ¥
 void err_display(int errcode)
 {
 	LPVOID lpMsgBuf;
@@ -52,7 +53,7 @@ void err_display(int errcode)
 		NULL, errcode,
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		(char*)&lpMsgBuf, 0, NULL);
-	printf("[¿À·ù] %s\n", (char*)lpMsgBuf);
+	printf("[ì˜¤ë¥˜] %s\n", (char*)lpMsgBuf);
 	LocalFree(lpMsgBuf);
 }
 
@@ -61,11 +62,10 @@ enum SendType
 	POSITION
 };
 
+// SendType, XMFLOAT3
 struct SendPosition {
 	SendType type;
-	float x;
-	float y;
-	float z;
+	DirectX::XMFLOAT3 pos;
 };
 
 class Client
@@ -79,15 +79,16 @@ private:
 	char* m_cpServerIP;
 	SOCKET m_Sock;
 	std::thread m_Recv_Thread;
-	bool m_bRecv;
+	short m_sRecv;		// 0 êº¼ì§, 1 ì¼œì§
 	std::vector<SendPosition> m_vRecv_Queue;
 public:
 	Client();
 	~Client();
 	int Connect_Server();
-	void Send_Pos(const SendPosition&);
-	void Send_Str(const char*);
+	void Send_Pos(const DirectX::XMFLOAT3&);
+	void Send_Str(const std::string&);
 	void Recv_Data();
 	int Get_Recv_Size();
+	short Get_RecvState();
 	DirectX::XMFLOAT3 Get_Recv_Queue();
 };

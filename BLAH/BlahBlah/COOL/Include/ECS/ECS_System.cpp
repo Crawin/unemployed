@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "ECSManager.h"
 #include "App/InputManager.h"
+#include "Network/Client.h"
 
 namespace ECSsystem {
 
@@ -88,7 +89,7 @@ namespace ECSsystem {
 
 			tr->SetPosition(Vector3::Add(tempMove, tr->GetPosition()));
 			
-			tempMove = tr->GetPosition();
+			//tempMove = tr->GetPosition();
 			//DebugPrint(std::format("x: {}, y: {}, z: {}", tempMove.x, tempMove.y, tempMove.z));
 
 			// mouse
@@ -103,6 +104,14 @@ namespace ECSsystem {
 				tr->SetRotation(rot);
 
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
+			}
+
+
+			// Send To Server
+			if (Client::GetInstance().Get_RecvState())
+			{	
+				tempMove = tr->GetPosition();
+				Client::GetInstance().Send_Pos(tempMove);
 			}
 
 			};
