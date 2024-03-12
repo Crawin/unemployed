@@ -1,0 +1,16 @@
+{
+	"name": "TestMeshDiffered",
+	"NumRenderTargets": 6,
+	"PrimitiveTopologyType": 3,
+	"PrimitiveTopology": 4,
+	"VS": "TestMeshShaderMRTSKIN.hlsl",
+	"HS": null,
+	"DS": null,
+	"GS": null,
+	"PS": "TestMeshShaderMRTSKIN.hlsl",
+	"StreamOutput": 0,
+	"BlendState": 0,
+	"RasterizerState": 0,
+	"DepthStencilState": 0,
+	"InputLayout": 2
+}

@@ -21,6 +21,7 @@
 //
 
 #define ALL_IN_ONE
+#define MAX_CONTROL_POINT 4
 using namespace DirectX;
 
 
@@ -34,36 +35,104 @@ void ConvertToLH(XMFLOAT3& vtx)
 // mesh type 4
 struct Vertex
 {
-	XMFLOAT3 position = {0,0,0};
+	XMFLOAT3 position = { 0,0,0 };
 	XMFLOAT3 normal = { 0,0,0 };
 	XMFLOAT3 tangent = { 0,0,0 };
 	XMFLOAT2 uv = { 0,0 };
 };
 
-void swap(Vertex& a, Vertex& b) {
-	Vertex t = a;
+void WriteToFile(unsigned int i, std::fstream& out);
+void WriteToFile(const std::string& str, std::fstream& out);
+void WriteToFile(const XMFLOAT3& float3, std::fstream& out);
+void WriteToFile(const XMFLOAT2& float3, std::fstream& out);
+void WriteToFile(const XMFLOAT4X4& matrix, std::fstream& out);
+void WriteToFile(const Vertex& vtx, std::fstream& out);
+
+
+
+// 스킨메쉬에 사용할 정점 구조체, 스키닝 정보가 있다.
+// mesh type 6
+struct SkinnedVertex
+{
+	XMFLOAT3 position = { 0,0,0 };
+	XMFLOAT3 normal = { 0,0,0 };
+	XMFLOAT3 tangent = { 0,0,0 };
+	XMFLOAT2 uv = { 0,0 };
+	XMUINT4 blendingIndex = { 0,0,0,0 };
+	XMFLOAT4 blendingFactor = { 0,0,0,0 };
+};
+
+template <typename T>
+void swap(T& a, T& b) {
+	T t = a;
 	a = b;
 	b = t;
 }
 
-struct Mesh {
+struct MeshBase {
 	std::string name = "";
 
 	XMFLOAT3 min = { 0,0,0 };
 	XMFLOAT3 max = { 0,0,0 };
 	XMFLOAT3 center = { 0,0,0 };
 
-	XMFLOAT4X4 localTransform = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
+	XMFLOAT4X4 localTransform = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
 
+	std::vector<MeshBase*> subMeshes;
+
+	virtual void ConvertToLeftHanded() = 0;
+
+	virtual int GetVtxSize() const = 0;
+
+	virtual void WriteVtxInfoAndData(std::fstream& out) const = 0;
+};
+
+struct NormalMesh : public MeshBase {
 	std::vector<Vertex> vertices;
 
 #ifndef ALL_IN_ONE
 	std::vector<uint16_t> indices;
 #endif
-	std::vector<Mesh> subMeshes;
 
-	void ConvertToLeftHanded()
+	virtual void ConvertToLeftHanded()
 	{
+		// swap x
+		for (int i = 0; i < vertices.size(); ++i) {
+			ConvertToLH(vertices[i].position);
+			ConvertToLH(vertices[i].normal);
+			ConvertToLH(vertices[i].tangent);
+		}
+
+		// for winding order
+		for (int i = 0; i < vertices.size(); i += 3) {
+			swap(vertices[i + 1], vertices[i + 2]);
+		}
+
+		for (auto& subMesh : subMeshes) subMesh->ConvertToLeftHanded();
+	}
+
+	virtual int GetVtxSize() const { return vertices.size(); }
+
+	virtual void WriteVtxInfoAndData(std::fstream& out) const
+	{
+		WriteToFile(1, out);
+		WriteToFile(vertices.size(), out);
+		if (vertices.size() > 0)
+			out.write((const char*)(&vertices[0]), sizeof(Vertex) * vertices.size());
+	}
+
+};
+
+struct SkinnedMesh : public MeshBase {
+	std::vector<SkinnedVertex> vertices;
+
+#ifndef ALL_IN_ONE
+	std::vector<uint16_t> indices;
+#endif
+	virtual void ConvertToLeftHanded()
+	{
+		// todo 더 해야함
+
 		// swap x
 		for (auto& vtx : vertices) {
 			ConvertToLH(vtx.position);
@@ -76,42 +145,35 @@ struct Mesh {
 			swap(vertices[i + 1], vertices[i + 2]);
 		}
 
-		for (auto& subMesh : subMeshes) subMesh.ConvertToLeftHanded();
+		for (auto& subMesh : subMeshes) subMesh->ConvertToLeftHanded();
 	}
 
+	virtual int GetVtxSize() const { return vertices.size(); }
+
+	virtual void WriteVtxInfoAndData(std::fstream& out) const
+	{
+		WriteToFile(2, out);
+		WriteToFile(vertices.size(), out);
+		if (vertices.size() > 0)
+			out.write((const char*)(&vertices[0]), sizeof(SkinnedVertex) * vertices.size());
+	}
 };
 
 
-
-void TraverseNode(FbxNode* node, Mesh& myMeshData);//std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
+MeshBase* TraverseNode(FbxNode* node);//std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
 //void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
 void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttribute* attribute);
+void ExtractVertices(FbxMesh* mesh, std::vector<SkinnedVertex>& vertices, FbxNodeAttribute* attribute);
+
+void ExtractSkinningData(FbxMesh* mesh, int vertexIndex, SkinnedVertex& vertex);
+
 void ExtractIndices(FbxMesh* mesh, std::vector<uint16_t>& indices);
 
-void PrintMeshHierachy(const Mesh& mesh);
-void ExtractToFIle(const Mesh& mesh, std::fstream& out);
+void PrintMeshHierachy(const MeshBase* mesh);
+void ExtractToFIle(const MeshBase* mesh, std::fstream& out);
 
 std::string ChangeExtensionToBin(const std::string& originalFileName);
 
-void WriteToFile(unsigned int i, std::fstream& out);
-void WriteToFile(const std::string& str, std::fstream& out);
-void WriteToFile(const XMFLOAT3& float3, std::fstream& out);
-void WriteToFile(const XMFLOAT2& float3, std::fstream& out);
-void WriteToFile(const XMFLOAT4X4& matrix, std::fstream& out);
-void WriteToFile(const Vertex& vtx, std::fstream& out);
-
-//template<class T>
-//void WriteToFile(const std::vector<T>& vtxData, std::fstream& out)
-//{
-//	// int
-//	WriteToFile(vtxData.size(), out);
-//
-//	// data
-//	for (const T& data : vtxData) {
-//		WriteToFile(data, out);
-//	}
-//
-//}
 
 
 int main(int argc, char* argv[])
@@ -126,8 +188,9 @@ int main(int argc, char* argv[])
 		// FBX 파일 로드
 		FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
+		//const char* fileName = "sato_skinned.fbx";
 		const char* fileName = argv[i];
-		std::string outputFileName = ChangeExtensionToBin(fileName);
+
 		//outputFileName = "teapot.bin";
 
 		if (!importer->Initialize(fileName, -1, fbxManager->GetIOSettings()))
@@ -147,38 +210,45 @@ int main(int argc, char* argv[])
 		FbxNode* rootNode = scene->GetRootNode();
 		if (rootNode)
 		{
-			Mesh mesh;
 
-			//// 정점과 인덱스를 담을 벡터
-			//std::vector<Vertex> vertices;
-			//std::vector<uint16_t> indices;
+			//for (int i = 0; i < rootNode->GetChildCount(); ++i) 
+			{
+				MeshBase* mesh;
+
+				//// 정점과 인덱스를 담을 벡터
+				//std::vector<Vertex> vertices;
+				//std::vector<uint16_t> indices;
 
 
-			// 재귀적으로 노드 탐색
-			// RootNode가 따로 있더라
-			// 따로따로인 모델이 있을수도 있어서 그런가봄
-			// 우리는 부모메쉬가 하나라고 가정
-			TraverseNode(rootNode->GetChild(0), mesh);
+				// 재귀적으로 노드 탐색
+				// RootNode가 따로 있더라
+				// 따로따로인 모델이 있을수도 있어서 그런가봄
+				// 우리는 부모메쉬가 하나라고 가정
 
-			// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
-			// 
-			if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() != FbxAxisSystem::eLeftHanded) {
-				std::cout << "Convert to Lefthanded!" << std::endl;
-				mesh.ConvertToLeftHanded();
-			}
+				mesh = TraverseNode(rootNode->GetChild(0));
 
-			PrintMeshHierachy(mesh);
+				// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
+				// 
+				if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() != FbxAxisSystem::eLeftHanded) {
+					std::cout << "Convert to Lefthanded!" << std::endl;
+					mesh->ConvertToLeftHanded();
+				}
 
-			std::fstream outputFile(outputFileName,
+				
+				//std::string outputFileName = ChangeExtensionToBin(mesh->name);
+				std::string outputFileName = ChangeExtensionToBin(fileName);
+
+				std::fstream outputFile(outputFileName,
 #ifdef BINARY
-				std::ios::binary |
+					std::ios::binary |
 #endif
-				std::ios::out);
+					std::ios::out);
 
-			ExtractToFIle(mesh, outputFile);
+				ExtractToFIle(mesh, outputFile);
 
-			// 정리 작업
-			fbxManager->Destroy();
+				// 정리 작업
+				fbxManager->Destroy();
+			}
 		}
 
 	}
@@ -212,10 +282,11 @@ void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint
 */
 
 // 재귀적으로 노드를 탐색하여 정점과 인덱스를 추출하는 함수
-void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices, std::vector<uint16_t>& indices)
+MeshBase* TraverseNode(FbxNode* node)//  std::vector<Vertex>& vertices, std::vector<uint16_t>& indices)
 {
-	// 이름
-	myMesh.name = node->GetName();
+
+	MeshBase* myMesh = nullptr;
+
 
 	// 노드에 메시가 있는지 확인
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();
@@ -223,40 +294,57 @@ void TraverseNode(FbxNode* node, Mesh& myMesh)//  std::vector<Vertex>& vertices,
 	{
 		FbxMesh* mesh = node->GetMesh();
 
+		bool IsSkined = false;
+		if (mesh->GetDeformerCount(FbxDeformer::eSkin) > 0) {
+			IsSkined = true;
+			myMesh = new SkinnedMesh;
+		}
+		else myMesh = new NormalMesh;
+
+
+		// 이름
+		myMesh->name = node->GetName();
+
 		FbxVector4 min, max, center;
 		node->EvaluateGlobalBoundingBoxMinMaxCenter(min, max, center);
 
 		// bounding box
-		myMesh.min = XMFLOAT3(static_cast<float>(min[0]), static_cast<float>(min[1]), static_cast<float>(min[2]));
-		myMesh.max = XMFLOAT3(static_cast<float>(max[0]), static_cast<float>(max[1]), static_cast<float>(max[2]));
-		myMesh.center = XMFLOAT3(static_cast<float>(center[0]), static_cast<float>(center[1]), static_cast<float>(center[2]));
+		myMesh->min = XMFLOAT3(static_cast<float>(min[0]), static_cast<float>(min[1]), static_cast<float>(min[2]));
+		myMesh->max = XMFLOAT3(static_cast<float>(max[0]), static_cast<float>(max[1]), static_cast<float>(max[2]));
+		myMesh->center = XMFLOAT3(static_cast<float>(center[0]), static_cast<float>(center[1]), static_cast<float>(center[2]));
 
 		// local matrix
 		FbxMatrix mat = node->EvaluateGlobalTransform();
 		for (int i = 0; i < 4; ++i)
 			for (int j = 0; j < 4; ++j)
-				myMesh.localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
+				myMesh->localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
 
 
 
 		// 정점 추출
-		ExtractVertices(mesh, myMesh.vertices, node->GetNodeAttribute());
-
+		if (IsSkined) ExtractVertices(mesh, ((SkinnedMesh*)myMesh)->vertices, node->GetNodeAttribute());
+		else  ExtractVertices(mesh, ((NormalMesh*)myMesh)->vertices, node->GetNodeAttribute());
 #ifndef ALL_IN_ONE
 		// 인덱스 추출
 		ExtractIndices(mesh, myMesh.indices);
 #endif
+
+	}
+	else {
+		// empty node
+		myMesh = new NormalMesh;
 	}
 
 	// 자식 노드로 재귀 호출
 	int childCount = node->GetChildCount();
 	for (int i = 0; i < childCount; ++i)
 	{
-		Mesh newMesh;
-		TraverseNode(node->GetChild(i), newMesh);
+		MeshBase* newMesh = TraverseNode(node->GetChild(i));
 
-		myMesh.subMeshes.push_back(newMesh);
+		myMesh->subMeshes.push_back(newMesh);
 	}
+
+	return myMesh;
 }
 
 // FBX 메시에서 정점을 추출하는 함수
@@ -264,9 +352,6 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 {
 	// 정점의 수 가져오기
 	int vertexCount = mesh->GetControlPointsCount();
-
-
-
 
 #ifndef ALL_IN_ONE
 	// 정점을 Vertex 구조체로 변환하여 벡터에 추가
@@ -367,8 +452,6 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 					vertex.position = { static_cast<float>(controlPoints[vertexIndex][0]), static_cast<float>(controlPoints[vertexIndex][1]), static_cast<float>(controlPoints[vertexIndex][2]) };
 
 					if (normalElement) {
-						//int normalIndex = vertexIndex;// mesh->GetTextureUVIndex(i, j);
-						//int normalIndex = normalElement->GetIndexArray().GetAt(vertexIndex);
 						FbxVector4 normal;// = normalElement->GetDirectArray().GetAt(normalIndex);
 						mesh->GetPolygonVertexNormal(i, j, normal);
 						vertex.normal = { static_cast<float>(normal[0]), static_cast<float>(normal[1]), static_cast<float>(normal[2]) };
@@ -376,9 +459,7 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 
 					if (tangentElement) {
 						FbxLayerElement::EMappingMode tangentMappingMode = tangentElement->GetMappingMode();
-						//FbxLayerElement::EReferenceMode tangentReferenceMode = tangentElement->GetReferenceMode();
 						FbxVector4 tangent;
-
 
 						if (tangentMappingMode == FbxLayerElement::eByControlPoint) {
 							//tangent = tangentElement->GetDirectArray().GetAt(i * polygonSize + j);
@@ -390,7 +471,6 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 							tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
 						}
 						vertex.tangent = { static_cast<float>(tangent[0]), static_cast<float>(tangent[1]), static_cast<float>(tangent[2]) };
-
 
 					}
 
@@ -408,6 +488,148 @@ void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttrib
 
 #endif
 }
+
+void ExtractVertices(FbxMesh* mesh, std::vector<SkinnedVertex>& vertices, FbxNodeAttribute* attribute) {
+	// 정점의 수 가져오기
+	int vertexCount = mesh->GetControlPointsCount();
+	if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eMesh) {
+
+		FbxMesh* mesh = static_cast<FbxMesh*>(attribute);
+
+		int polygonCount = mesh->GetPolygonCount();
+		int vertexCount = mesh->GetControlPointsCount();
+		FbxVector4* controlPoints = mesh->GetControlPoints();
+		FbxGeometryElementNormal* normalElement = mesh->GetElementNormal();
+		FbxGeometryElementTangent* tangentElement = mesh->GetElementTangent();
+		FbxGeometryElementUV* uvElement = mesh->GetElementUV();
+
+		for (int i = 0; i < polygonCount; ++i) {
+			int polygonSize = mesh->GetPolygonSize(i);
+
+			for (int j = 0; j < polygonSize; ++j) {
+				int vertexIndex = mesh->GetPolygonVertex(i, j);
+
+				if (vertexIndex < vertexCount) {
+					SkinnedVertex vertex;
+					vertex.position = { static_cast<float>(controlPoints[vertexIndex][0]), static_cast<float>(controlPoints[vertexIndex][1]), static_cast<float>(controlPoints[vertexIndex][2]) };
+
+					if (normalElement) {
+						FbxVector4 normal;
+						mesh->GetPolygonVertexNormal(i, j, normal);
+						vertex.normal = { static_cast<float>(normal[0]), static_cast<float>(normal[1]), static_cast<float>(normal[2]) };
+					}
+
+					if (tangentElement) {
+						FbxLayerElement::EMappingMode tangentMappingMode = tangentElement->GetMappingMode();
+						FbxVector4 tangent;
+
+						if (tangentMappingMode == FbxLayerElement::eByControlPoint) {
+						}
+						else if (tangentMappingMode == FbxLayerElement::eByPolygonVertex) {
+							int tangentIndex = tangentElement->GetIndexArray().GetAt(vertexIndex);// mesh->GetTextureUVIndex(i, j);
+							tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
+						}
+						vertex.tangent = { static_cast<float>(tangent[0]), static_cast<float>(tangent[1]), static_cast<float>(tangent[2]) };
+
+					}
+
+					if (uvElement) {
+						int uvIndex = mesh->GetTextureUVIndex(i, j);
+						FbxVector2 uv = uvElement->GetDirectArray().GetAt(uvIndex);
+						vertex.uv = { static_cast<float>(uv[0]), static_cast<float>(uv[1]) };
+					}
+
+					// 스키닝 정보를 추가
+					ExtractSkinningData(mesh, vertexIndex, vertex);
+
+					vertices.push_back(vertex);
+				}
+			}
+		}
+	}
+}
+
+// 스키닝 정보를 추출하여 SkinnedVertex에 추가하는 함수
+void ExtractSkinningData(FbxMesh* mesh, int vertexIndex, SkinnedVertex& vertex) 
+{
+	int clusterCount = mesh->GetDeformerCount(FbxDeformer::eSkin);
+
+	for (int clusterIndex = 0; clusterIndex < clusterCount; ++clusterIndex) {
+		FbxSkin* skin = static_cast<FbxSkin*>(mesh->GetDeformer(clusterIndex, FbxDeformer::eSkin));
+
+		int clusterCount = skin->GetClusterCount();
+		for (int j = 0; j < clusterCount; ++j) {
+			FbxCluster* cluster = skin->GetCluster(j);
+			FbxNode* boneNode = cluster->GetLink();
+
+			if (!boneNode)
+				continue;
+
+			FbxAMatrix transformMatrix;
+			cluster->GetTransformMatrix(transformMatrix);
+
+			int* indices = cluster->GetControlPointIndices();
+			double* weights = cluster->GetControlPointWeights();
+			int indexCount = cluster->GetControlPointIndicesCount();
+
+			int weightCnt = 0;
+			for (int m = 0; m < indexCount; ++m) {
+				if (indices[m] == vertexIndex) 
+				{
+					// first
+					if (vertex.blendingFactor.x == 0 && vertex.blendingIndex.x == 0) {
+						vertex.blendingIndex.x = j;
+						vertex.blendingFactor.x = weights[m];
+					}
+					else if (vertex.blendingFactor.y == 0 && vertex.blendingIndex.y == 0) {
+						vertex.blendingIndex.y = j;
+						vertex.blendingFactor.y = weights[m];
+					}
+					else if (vertex.blendingFactor.z == 0 && vertex.blendingIndex.z == 0) {
+						vertex.blendingIndex.z = j;
+						vertex.blendingFactor.z = weights[m];
+					}
+					else if (vertex.blendingFactor.w == 0 && vertex.blendingIndex.w == 0) {
+						vertex.blendingIndex.w = j;
+						vertex.blendingFactor.w = weights[m];
+					}
+					else
+						std::cout << "Exeeded max Blending Count!!" << std::endl;
+
+					//std::cout << "Index: " << vertexIndex << ", Bone ID: " << j << ",  Influenced by Bone: " << boneNode->GetName() << ", Weight: " << weights[m] << "\n";
+				}
+			}
+
+
+			//for (int k = 0; k < indexCount; ++k) 
+			//{
+			//	if (indices[k] == vertexIndex) {
+			//		if (cluster->GetLinkMode() == FbxCluster::eAdditive)
+			//			continue;
+
+			//		// 클러스터에 속한 뼈의 인덱스와 가중치를 저장합니다.
+			//		if (vertex.blendingIndex.x == -1) {
+			//			vertex.blendingIndex.x = clusterIndex;
+			//			vertex.blendingFactor.x = static_cast<float>(weights[k]);
+			//		}
+			//		else if (vertex.blendingIndex.y == -1) {
+			//			vertex.blendingIndex.y = clusterIndex;
+			//			vertex.blendingFactor.y = static_cast<float>(weights[k]);
+			//		}
+			//		else if (vertex.blendingIndex.z == -1) {
+			//			vertex.blendingIndex.z = clusterIndex;
+			//			vertex.blendingFactor.z = static_cast<float>(weights[k]);
+			//		}
+			//		else if (vertex.blendingIndex.w == -1) {
+			//			vertex.blendingIndex.w = clusterIndex;
+			//			vertex.blendingFactor.w = static_cast<float>(weights[k]);
+			//		}
+			//	}
+			//}
+		}
+	}
+}
+
 
 // FBX 메시에서 인덱스를 추출하는 함수
 void ExtractIndices(FbxMesh* mesh, std::vector<uint16_t>& indices)
@@ -433,10 +655,10 @@ void ExtractIndices(FbxMesh* mesh, std::vector<uint16_t>& indices)
 }
 
 // 그냥 출력하는 함수
-void PrintMeshHierachy(const Mesh& mesh)
+void PrintMeshHierachy(const MeshBase* mesh)
 {
-	std::cout << std::format("name: {}\n", mesh.name);
-	std::cout << std::format("vertex: {}\n", mesh.vertices.size());
+	std::cout << std::format("name: {}\n", mesh->name);
+	std::cout << std::format("vertex: {}\n", mesh->GetVtxSize());
 #ifndef ALL_IN_ONE
 	std::cout << "index: " << mesh.indices.size() << std::endl << std::endl;
 #endif
@@ -452,37 +674,32 @@ void PrintMeshHierachy(const Mesh& mesh)
 	//	mesh.localTransform._41, mesh.localTransform._42, mesh.localTransform._43, mesh.localTransform._44		
 	//	);
 
-	for (const auto& m : mesh.subMeshes) {
+	for (const auto& m : mesh->subMeshes) {
 		PrintMeshHierachy(m);
 	}
 }
 
 // 파일로 출력하는 함수
-void ExtractToFIle(const Mesh& mesh, std::fstream& out)
+void ExtractToFIle(const MeshBase* mesh, std::fstream& out)
 {
-	std::cout << std::format("name: {}\n", mesh.name);
-	std::cout << std::format("vertex: {}\n\n", mesh.vertices.size());
+	std::cout << std::format("name: {}\n", mesh->name);
+	std::cout << std::format("vertex: {}\n\n", mesh->GetVtxSize());
 
 	// 1 2 name
-	WriteToFile(mesh.name, out);
+	WriteToFile(mesh->name, out);
 
 	// 3 바운딩박스				// float3 x 3
-	WriteToFile(mesh.min, out);
-	WriteToFile(mesh.max, out);
-	WriteToFile(mesh.center, out);
+	WriteToFile(mesh->min, out);
+	WriteToFile(mesh->max, out);
+	WriteToFile(mesh->center, out);
 
 	// 4 matrix
-	WriteToFile(mesh.localTransform, out);
+	WriteToFile(mesh->localTransform, out);
 
 	// 버텍스 정보				// int, position, normal, tangent, uv, int, index
 #ifdef ALL_IN_ONE
-	// vertex type 5
-	WriteToFile(1, out);
-
-	// 6
-	WriteToFile(mesh.vertices.size(), out);
-	if (mesh.vertices.size() > 0)
-		out.write((const char*)(&mesh.vertices[0]), sizeof(Vertex) * mesh.vertices.size());
+	// 5, 6
+	mesh->WriteVtxInfoAndData(out);
 
 #else
 	WriteToFile(0, out);
@@ -515,8 +732,8 @@ void ExtractToFIle(const Mesh& mesh, std::fstream& out)
 #endif
 
 	// 서브메쉬 개수				// int
-	WriteToFile(mesh.subMeshes.size(), out);
-	for (const auto& m : mesh.subMeshes) {
+	WriteToFile(mesh->subMeshes.size(), out);
+	for (const auto& m : mesh->subMeshes) {
 		ExtractToFIle(m, out);
 	}
 }

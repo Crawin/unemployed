@@ -47,6 +47,9 @@ private:
 
 	friend void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
+	template<typename VERTEX>
+	friend void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize);
+
 private:
 
 	// for material, returns index

@@ -154,13 +154,13 @@ D3D12_INPUT_LAYOUT_DESC Shader::GetInputLayout(int presetID)
 	D3D12_INPUT_LAYOUT_DESC temp = {};
 	temp.pInputElementDescs = nullptr;
 
-	switch (presetID) {
-	case 0:
+	switch (static_cast<VERTEX_TYPES>(presetID)) {
+	case VERTEX_TYPES::NO_VERTEX:
 	default:
 		// no Input Layout
 		return temp;
 
-	case 1:
+	case VERTEX_TYPES::NORMAL:
 	{
 		// Vertex, default type
 		const UINT elements = 4;
@@ -173,8 +173,21 @@ D3D12_INPUT_LAYOUT_DESC Shader::GetInputLayout(int presetID)
 		temp.pInputElementDescs = inputElements;
 		temp.NumElements = elements;
 		return temp;
+	}
+	case VERTEX_TYPES::SKINNED:
+	{
+		const UINT elements = 6;
+		D3D12_INPUT_ELEMENT_DESC* inputElements = new D3D12_INPUT_ELEMENT_DESC[elements];
+		inputElements[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+		inputElements[1] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+		inputElements[2] = { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+		inputElements[3] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+		inputElements[4] = { "BONEINDEX", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+		inputElements[5] = { "BONEWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
 
-		// case 2: SkinedMeshVertex
+		temp.pInputElementDescs = inputElements;
+		temp.NumElements = elements;
+		return temp;
 	}
 	}
 	return temp;

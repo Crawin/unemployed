@@ -42,3 +42,9 @@ enum class MULTIPLE_RENDER_TARGETS {
 	PositionW,
 	MRT_END
 };
+
+enum class VERTEX_TYPES {
+	NO_VERTEX = 0,
+	NORMAL,
+	SKINNED
+};

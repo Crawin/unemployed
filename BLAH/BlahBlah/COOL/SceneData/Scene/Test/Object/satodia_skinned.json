@@ -1,0 +1,100 @@
+{
+	"Name": "Satono_Diamond_01",
+
+	"Transform": 
+	{
+		"Position": [200.0, 200.0, 0.0],
+		"Rotate": [0.0, 45.0, 10.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Children": 
+	[
+		{
+			"Name": "Satono_Diamond_01_Body",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "satodia_skinned.satodia_Body_Skinned",
+				"Material": "SatoBody_Skinned"
+			}
+		},
+		{
+			"Name": "Satono_Diamond_01_HairRoot",
+			"Transform": 
+			{
+				"Position": [0.0, 0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+
+
+			"Children":
+			[
+				{
+					"Name" : "Satono_Diamond_01_Hair",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "satodia_skinned.satodia_Hair_Skinned",
+						"Material": "SatoHair_Skinned"
+					}
+				},
+				{
+					"Name" : "Satono_Diamond_01_FaceRoot",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+
+					"Children":
+					[
+						{
+							"Name" : "Satono_Diamond_01_Eyes",
+							"Transform": 
+							{
+								"Position": [0.0, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Renderer" : 
+							{
+								"Mesh": "satodia_skinned.satodia_Eyes_Skinned",
+								"Material": "NoMaterial"
+							}
+						},
+						{
+							"Name" : "Satono_Diamond_01_Face",
+							"Transform": 
+							{
+								"Position": [0.0, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Renderer" : 
+							{
+								"Mesh": "satodia_skinned.satodia_Face_Skinned",
+								"Material": "NoMaterial"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+
+
+
+}

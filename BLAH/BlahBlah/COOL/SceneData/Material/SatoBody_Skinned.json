@@ -1,0 +1,9 @@
+{
+	"name": "SatoBody",
+	"BaseColor": "satob",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered_Skinned"
+}

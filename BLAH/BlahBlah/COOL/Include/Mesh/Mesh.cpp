@@ -2,6 +2,23 @@
 #include "Mesh.h"
 #include "Scene/ResourceManager.h"
 
+template<typename VERTEX>
+inline void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize)
+{
+	std::vector<VERTEX> vertex(vtxSize);
+	file.read((char*)(&vertex[0]), sizeof(VERTEX) * vtxSize);
+
+	m_VertexBuffer = manager->CreateBufferFromVector(
+		commandList,
+		vertex,
+		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
+		std::format("{}_vertex data", m_Name));
+
+	m_VertexBufferView.BufferLocation = manager->GetVertexDataGPUAddress(m_VertexBuffer);
+	m_VertexBufferView.StrideInBytes = sizeof(VERTEX);
+	m_VertexBufferView.SizeInBytes = sizeof(VERTEX) * vtxSize;
+};
+
 void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager)
 {
 	// 메쉬 파일 구조
@@ -40,8 +57,8 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
 	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
-	unsigned int t;
-	file.read((char*)&t, sizeof(unsigned int));
+	unsigned int vtxType;
+	file.read((char*)&vtxType, sizeof(unsigned int));
 
 	// 6. 버텍스 정보
 	unsigned int vertexLen = 0;
@@ -49,18 +66,20 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 #ifdef INTERLEAVED_VERTEX
 	file.read((char*)&vertexLen, sizeof(unsigned int));
 	if (vertexLen > 0) {
-		std::vector<Vertex> vertex(vertexLen);
-		file.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
 
-		m_VertexBuffer = manager->CreateBufferFromVector(
-			commandList, 
-			vertex, 
-			D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, 
-			std::format("{}_vertex data", m_Name));
+		switch (static_cast<VERTEX_TYPES>(vtxType)) {
+		case VERTEX_TYPES::NO_VERTEX:
+			break;
 
-		m_VertexBufferView.BufferLocation = manager->GetVertexDataGPUAddress(m_VertexBuffer);
-		m_VertexBufferView.StrideInBytes = sizeof(Vertex);
-		m_VertexBufferView.SizeInBytes = sizeof(Vertex) * vertexLen;
+		case VERTEX_TYPES::NORMAL:
+			LoadVertices<Vertex>(commandList, file, manager, vertexLen);
+			break;
+
+		case VERTEX_TYPES::SKINNED:
+			LoadVertices<SkinnedVertex>(commandList, file, manager, vertexLen);
+			break;
+		}
+
 
 		m_VertexNum = vertexLen;
 	}
@@ -186,12 +205,6 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 		commandList->IASetIndexBuffer(&m_IndexBufferView);
 
 #endif
-		// 임시
-		//int tempi[16] = { 5, 0, };
-
-		//if (m_Name == "Hair") tempi[0] = 3;
-		//else if (m_Name == "Body") tempi[0] = 4;
-		//commandList->SetGraphicsRoot32BitConstants(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT, 16, tempi, 0);
 
 		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
 

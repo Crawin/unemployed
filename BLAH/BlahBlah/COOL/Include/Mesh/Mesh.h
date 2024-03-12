@@ -15,7 +15,6 @@
 // 맨 뒤에 임시리소스를 해제하는데 그건 렌더러가 해줄거임
 
 
-
 class Mesh
 {
 private:
@@ -65,6 +64,9 @@ private:
 
 	std::vector<Mesh*> m_Childs;
 
+	template<typename VERTEX>
+	void LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize);
+
 	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 	int m_VertexNum = 0;
@@ -89,4 +91,3 @@ public:
 
 	void Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent);
 };
-
