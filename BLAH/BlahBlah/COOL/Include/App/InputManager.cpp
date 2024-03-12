@@ -1,5 +1,6 @@
 ﻿#include "framework.h"
 #include "InputManager.h"
+#include "Network/Client.h"
 
 void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -44,6 +45,10 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 	switch (wParam) {
 	case VK_F8:
 		m_DebugMode = !m_DebugMode;
+		break;
+	case 'P':
+		Client::GetInstance().Connect_Server();
+		Client::GetInstance().Send_Str("방생성");
 		break;
 	}
 }

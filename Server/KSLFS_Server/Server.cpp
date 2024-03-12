@@ -80,7 +80,8 @@ CRoomServer::~CRoomServer()
 void CRoomServer::Run()
 {
 	PrintInfo("Run");
-	lRoomThreads.push_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
+	m_sServerState = 1;
+	lRoomThreads.emplace_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
 }
 
 void CRoomServer::ListenThread()
@@ -135,7 +136,7 @@ void CRoomServer::ListenThread()
 			addr, ntohs(clientaddr.sin_port));
 		Log_Mutex.unlock();
 
-		lRoomThreads.push_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
+		lRoomThreads.emplace_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
 	}
 
 	// 윈속 종료
@@ -190,13 +191,13 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			//lGameRecvThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
 			const unsigned int GameNum = Make_GameNumber();
 			//  GAME_RUN 쓰레드를 생성
-			lGameRunThreads.push_back(std::make_pair(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum)));
+			lGameRunThreads.emplace_back(std::make_pair(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum)));
 			// mGameStorages에 key값으로 방번호를 넣고, value로 패킷 구조의 리스트를 만들어서, 얘 전용 저장소로 이용한다.
 
 			mGameStorages[GameNum][0].first = client_sock;				// p1 소켓 할당
 
 			// GAME_RECV 쓰레드 생성
-			lGameRecvThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			lGameRecvThreads.emplace_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
 			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
@@ -216,7 +217,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			std::cout << "방에 입장합니다." << std::endl;
 			Log_Mutex.unlock();
 			bRoom = false;
-			lGameRecvThreads.push_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			lGameRecvThreads.emplace_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
 			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
@@ -246,12 +247,29 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 void CRoomServer::Join()
 {
+	m_sServerState = 0;
 	for (auto start = lRoomThreads.begin(); start != lRoomThreads.end(); ++start)
 	{
 		start->second.join();
 	}
 	Log_Mutex.lock();
-	std::cout << "vRoomThread Join Complete" << std::endl;
+	std::cout << "lRoomThread Join Complete" << std::endl;
+	Log_Mutex.unlock();
+
+	//for (auto start = lGameRecvThreads.begin(); start != lGameRecvThreads.end(); ++start)
+	//{
+	//	start->second.join();
+	//}
+	//Log_Mutex.lock();
+	//std::cout << "lGameRecvThreads Join Complete" << std::endl;
+	//Log_Mutex.unlock();
+
+	for (auto start = lGameRunThreads.begin(); start != lGameRunThreads.end(); ++start)
+	{
+		start->second.join();
+	}
+	Log_Mutex.lock();
+	std::cout << "lGameRunThreads Join Complete" << std::endl;
 	Log_Mutex.unlock();
 }
 
@@ -440,8 +458,10 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 	Log_Mutex.unlock();
 
 	std::array<Player, 2> p;
-	while (1)
+	short GameOver = 1;
+	while (GameOver)
 	{
+		if (!m_sServerState)	break;		// 서버가 꺼졌으면 while문 탈출
 		// 게임 로직
 		
 		// 접속
@@ -461,7 +481,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 			else
 			{
 				p[i].printPlayerPos(i, true);
-				p[i].syncPos();
+				p[i].syncTransform();
 			}
 
 		}
@@ -480,7 +500,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 					{
 						Socket_position temp;
 						memcpy(&temp, &(*start)[0], sizeof(Socket_position));
-						p[i].setPos(temp.pos);
+						p[i].setTransform(temp);
 						break;
 					}
 					}
@@ -526,6 +546,7 @@ void CServerManager::Join()
 	Log_Mutex.unlock();
 	RoomServer->Join();
 	delete RoomServer;
+
 }
 
 void CServerManager::CommandThread()
@@ -592,12 +613,13 @@ const SOCKET Player::getSocket()
 void Player::allocateSOCKET(const SOCKET& s)
 {
 	socket = s;
-	m_xmf3Pos = DirectX::XMFLOAT3(0, 0, 0);
+	m_aTransform[1].pos = DirectX::XMFLOAT3(0, 0, 0);
+	m_aTransform[1].rot = DirectX::XMFLOAT3(0, 0, 0);
 }
 
 const DirectX::XMFLOAT3 Player::getPos()
 {
-	return m_xmf3Pos;
+	return m_aTransform[1].pos;
 }
 
 // (문자열, 좌표 변경이 있을시에만 출력)
@@ -606,24 +628,26 @@ void Player::printPlayerPos(const int& i,const bool& d)
 	Log_Mutex.lock();		// [p1: x, y, z]
 	if (d)
 	{
-		if (m_xmf3Pos.x != m_xmf3Prev_Pos.x || m_xmf3Pos.y != m_xmf3Prev_Pos.y || m_xmf3Pos.z != m_xmf3Prev_Pos.z)		// 좌표가 바뀐게 있다면
+		if (m_aTransform[0].pos.x != m_aTransform[1].pos.x || m_aTransform[0].pos.y != m_aTransform[1].pos.y || m_aTransform[0].pos.z != m_aTransform[1].pos.z ||
+			m_aTransform[0].rot.x!= m_aTransform[1].rot.x || m_aTransform[0].rot.y != m_aTransform[0].rot.y|| m_aTransform[0].rot.z!= m_aTransform[0].rot.z)		// 좌표나 회전이 바뀐게 있으면
 		{
-			std::cout << "[P" << i+1 << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+			std::cout << "[P" << i + 1 << ": " << m_aTransform[1].pos.x << ", " << m_aTransform[1].pos.y << ", " << m_aTransform[1].pos.z << " ||| " << m_aTransform[1].rot.x << ", " << m_aTransform[1].rot.y << ", " << m_aTransform[1].rot.z << "]" << std::endl;
 		}
 	}
 	else 
 	{
-		std::cout << "[P" << i+1 << ": " << m_xmf3Pos.x << ", " << m_xmf3Pos.y << ", " << m_xmf3Pos.z << "]" << std::endl;
+		std::cout << "[P" << i+1 << ": " << m_aTransform[1].pos.x << ", " << m_aTransform[1].pos.y << ", " << m_aTransform[1].pos.z << "]" << std::endl;
 	}
 	Log_Mutex.unlock();
 }
 
-void Player::syncPos()
+void Player::syncTransform()
 {
-	m_xmf3Prev_Pos = m_xmf3Pos;
+	m_aTransform[0] = m_aTransform[1];
 }
 
-void Player::setPos(const DirectX::XMFLOAT3& pos)
+void Player::setTransform(const Socket_position& sp)
 {
-	m_xmf3Pos = pos;
+	m_aTransform[1].pos = sp.pos;
+	m_aTransform[1].rot = sp.rot;
 }

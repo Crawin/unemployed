@@ -19,6 +19,7 @@ enum SendType
 struct Socket_position {
 	SendType type;		// POSITION일때
 	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 rot;
 };
 
 struct Socket_event
@@ -46,6 +47,7 @@ private:
 	std::list<std::pair<std::pair<ServerType, SOCKET>, std::thread>> lRoomThreads;
 	std::list<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> lGameRecvThreads;
 	SOCKET listen_sock;
+	short m_sServerState = 0;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
 	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
@@ -85,13 +87,16 @@ class Player {
 private:
 	SOCKET socket = NULL;
 private:
-	DirectX::XMFLOAT3 m_xmf3Pos;
-	DirectX::XMFLOAT3 m_xmf3Prev_Pos;
+	struct PlayerTransform {
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 rot;
+	};
+	std::array< PlayerTransform, 2> m_aTransform;			// [0]: 이전, [1]: 현재
 public:
 	const SOCKET getSocket();
 	void allocateSOCKET(const SOCKET&);
 	const DirectX::XMFLOAT3 getPos();
 	void printPlayerPos(const int&, const bool&);
-	void syncPos();
-	void setPos(const DirectX::XMFLOAT3&);
+	void syncTransform();
+	void setTransform(const Socket_position&);
 };

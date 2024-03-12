@@ -1,7 +1,6 @@
 ﻿#include "framework.h"
 #include "Application.h"
 #include "Renderer/Renderer.h"
-#include "Network/Client.h"
 #include "InputManager.h"
 #include "Scene/SceneManager.h"
 #include "Timer.h"
@@ -94,9 +93,6 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 
 int Application::StartProgram()
 {
-	//Client::GetInstance().Connect_Server();
-	//Client::GetInstance().Send_Str("�����"); // �ӽ� ����� ����.
-
 	MSG Message;
 	m_Timer->Start();
 	while (m_GameLoop) {
