@@ -98,7 +98,8 @@ void CRoomServer::ListenThread()
 		return;
 
 	// 소켓 생성
-	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	//listen_sock = socket(AF_INET, SOCK_STREAM, 0);		//표준 Socket API
+	listen_sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
 	// bind()
@@ -122,7 +123,8 @@ void CRoomServer::ListenThread()
 	while (1) {
 		// accept()
 		addrlen = sizeof(clientaddr);
-		client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
+		//client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);		//표준 Socket API
+		client_sock = WSAAccept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen, NULL, 0);
 		if (client_sock == INVALID_SOCKET) {
 			err_display("accept()");
 			break;
@@ -152,13 +154,16 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 	std::cout << "RecvThread Run" << std::endl;
 	Log_Mutex.unlock();
 
-	int retval;
+	DWORD retval;
 	SOCKET client_sock = (SOCKET)arg;
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	u_short bufsize = getBufsize();
 	char* buf = new char[bufsize + 1];
+	WSABUF recv_buf;
+	recv_buf.buf = buf;
+	DWORD recv_flag = 0;
 
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
@@ -168,13 +173,18 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 	bool bRoom = true;
 	while (bRoom) {
 		// 데이터 받기
-		retval = recv(client_sock, buf, bufsize, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = recv(client_sock, buf, bufsize, 0);		//표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("recv()");
+		//	break;
+		//}
+		//else if (retval == 0)
+		//	break;
+		recv_buf.len = bufsize + 1;
+		if (WSARecv(client_sock, &recv_buf, 1, &retval, &recv_flag, 0, 0) == SOCKET_ERROR) {
 			err_display("recv()");
 			break;
 		}
-		else if (retval == 0)
-			break;
 
 		// 받은 데이터 출력
 		buf[retval] = '\0';
@@ -224,8 +234,13 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 
 		// 데이터 보내기
-		retval = send(client_sock, buf, retval, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = send(client_sock, buf, retval, 0);		//표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("send()");
+		//	break;
+		//}
+		recv_buf.len = retval;
+		if (WSASend(client_sock, &recv_buf, 1, &retval, 0, 0, 0) == SOCKET_ERROR) {
 			err_display("send()");
 			break;
 		}
@@ -381,28 +396,33 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 	std::cout << "Socket: [" << client_sock << "] , RoomNumber: [" << gameNum << "] GameRecvThread Run " << std::endl;
 	Log_Mutex.unlock();
 
-	int retval;
+	DWORD retval;
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	u_short bufsize = getBufsize();
 	char* buf = new char[bufsize + 1];
-
+	WSABUF recv_buf;
+	recv_buf.buf = buf;
+	DWORD recv_flag = 0;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-	//std::string temp(bufsi)
+
 	bool bRoom = true;
 	while (bRoom) {
 		// 데이터 받기
-		retval = recv(client_sock, buf, bufsize, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = recv(client_sock, buf, bufsize, 0);		// 표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("recv()");
+		//	break;
+		//}
+		recv_buf.len = bufsize + 1;
+		if (WSARecv(client_sock, &recv_buf, 1, &retval, &recv_flag, 0, 0) == SOCKET_ERROR) {
 			err_display("recv()");
 			break;
-		}
-		else if (retval == 0)
-			break;
+		};
 
 		std::string save_buf(buf, retval);
 
@@ -426,15 +446,20 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 			break;
 		}
 
-		//// 받은 데이터 출력
+		// 받은 데이터 출력
 		//buf[retval] = '\0';
 		//Log_Mutex.lock();
 		//std::cout << "[GAME_RECV] [TCP " << addr << ":" << ntohs(clientaddr.sin_port) << "]: " << buf << std::endl;
 		//Log_Mutex.unlock();
 
 		// 데이터 보내기
-		retval = send(client_sock, &buf[0], retval, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = send(client_sock, &buf[0], retval, 0);		// 표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("send()");
+		//	break;
+		//}
+		recv_buf.len = retval;
+		if (WSASend(client_sock, &recv_buf, 1, &retval, 0, 0, 0) == SOCKET_ERROR) {
 			err_display("send()");
 			break;
 		}
