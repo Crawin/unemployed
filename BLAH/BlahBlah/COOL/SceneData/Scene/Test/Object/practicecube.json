@@ -1,0 +1,33 @@
+{
+	"Name": "Cube",
+
+	"Transform": 
+	{
+		"Position": [0.0, 600.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0, 1.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+	"Renderer":
+	{
+		"Mesh": "practicecube.Cube",
+		"Material": "NoMaterial"
+	},
+
+
+	"Children" :
+	[
+		{
+			"Name": "HighCube",
+			"Transform": {
+				"Position": [ 0.0, 0.0, 0.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Renderer": {
+				"Mesh": "practicecube.Cube__1_",
+				"Material": "NoMaterial"
+			}
+		}
+	]
+
+}
