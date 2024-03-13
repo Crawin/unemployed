@@ -50,8 +50,13 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 	Json::Reader reader;
 
 	std::ifstream file(fileName);
-	reader.parse(file, root);
+	bool parseResult = reader.parse(file, root);
 	
+	if (parseResult == false) {
+		DebugPrint(std::format("Object file Parse Failed!, fileName: {}\n{}", fileName, reader.getFormattedErrorMessages()));
+		return false;
+	}
+
 	auto entptr = LoadObjectJson(root, nullptr);
 
 	if (entptr == nullptr) 

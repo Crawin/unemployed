@@ -1,0 +1,45 @@
+{
+    "Name": "Cube",
+
+    "Transform": 
+    {
+        "Position": [0.0, 0.0, 0.0],
+        "Rotate": [0.0, 0.0, 0.0, 1.0],
+        "Scale": [1.0, 1.0, 1.0]
+    },
+    "Renderer":
+    {
+        "Mesh": "CubeCube.Cube",
+        "Material": "NoMaterial"
+    },
+
+
+    "Children" :
+    [
+        {
+            "Name": "HighCube",
+            "Transform": {
+                "Position": [ 0.0, 0.0, 0.0 ],
+                "Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+                "Scale": [ 1.0, 1.0, 1.0 ]
+            },
+            "Renderer": {
+                "Mesh": "CubeCube.HighCube",
+                "Material": "NoMaterial"
+            }
+        },
+        {
+            "Name": "LongCube",
+            "Transform": {
+                "Position": [ 0.0, 0.0, 0.0 ],
+                "Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+                "Scale": [ 1.0, 1.0, 1.0 ]
+            },
+            "Renderer": {
+                "Mesh": "CubeCube.LongCube",
+                "Material": "NoMaterial"
+            }
+        }
+    ]
+
+}
