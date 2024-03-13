@@ -225,7 +225,7 @@ void FindBone(FbxNode* Node)
 
 int main(int argc, char* argv[])
 {
-	//for (int i = 1; i < argc; ++i)
+	for (int i = 1; i < argc; ++i)
 	{
 		// FBX SDK ÃÊ±âÈ­
 		FbxManager* fbxManager = FbxManager::Create();
@@ -236,8 +236,8 @@ int main(int argc, char* argv[])
 		FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
 		//const char* fileName = "test_rigging.fbx";
-		const char* fileName = "x-35_fbx.fbx";
-		//const char* fileName = argv[i];
+		//const char* fileName = "x-35_fbx.fbx";
+		const char* fileName = argv[i];
 
 		//outputFileName = "teapot.bin";
 
