@@ -2,10 +2,10 @@
 #include <string>
 #include <format>
 #include <vector>
+#include <algorithm>
 #include <fstream>
 #include <fbxsdk.h>
 #include <DirectXMath.h>
-
 #define BINARY
 
 // 우리의 메쉬 순서
@@ -24,6 +24,31 @@
 #define MAX_CONTROL_POINT 4
 using namespace DirectX;
 
+std::vector<std::string> g_Vector;
+std::vector<XMFLOAT4X4> g_BoneMatrixVector;
+
+void SetBoneIndexSet(FbxNode* node) {
+
+	// no bone
+	if (g_Vector.end() == std::find(g_Vector.begin(), g_Vector.end(), node->GetName())) {
+		std::cout << "IDX: " << g_Vector.size() << "Skeleton node name: " << node->GetName() << std::endl;
+		XMFLOAT4X4 trans;
+		FbxMatrix fbxTransform = node->EvaluateGlobalTransform();
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				trans.m[i][j] = fbxTransform[i][j];
+			}
+		}
+		// insert data to vector
+		g_Vector.push_back(node->GetName());
+		g_BoneMatrixVector.push_back(trans);
+	}
+
+	// DFS로 탐색한다.
+	for (int i = 0; i < node->GetChildCount(); ++i) {
+		SetBoneIndexSet(node->GetChild(i));
+	}
+}
 
 void ConvertToLH(XMFLOAT3& vtx)
 {
@@ -160,6 +185,14 @@ struct SkinnedMesh : public MeshBase {
 };
 
 
+std::string removeExtension(const std::string& filename) {
+	size_t lastDotPos = filename.find_last_of('.');
+	if (lastDotPos != std::string::npos) { // '.'이 발견되면
+		return filename.substr(0, lastDotPos); // '.' 이전의 부분을 반환
+	}
+	return filename; // '.'이 발견되지 않으면 원래 문자열을 그대로 반환
+}
+
 MeshBase* TraverseNode(FbxNode* node);//std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
 //void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint16_t>& indices);
 void ExtractVertices(FbxMesh* mesh, std::vector<Vertex>& vertices, FbxNodeAttribute* attribute);
@@ -174,11 +207,25 @@ void ExtractToFIle(const MeshBase* mesh, std::fstream& out);
 
 std::string ChangeExtensionToBin(const std::string& originalFileName);
 
+void FindBone(FbxNode* Node)
+{
+	FbxNodeAttribute* attrib = Node->GetNodeAttribute();
+	if (attrib && attrib->GetAttributeType() == FbxNodeAttribute::eSkeleton) {
+		// find bone!
+		SetBoneIndexSet(Node);
+	}
+
+	// n
+	for (int i = 0; i < Node->GetChildCount(); ++i) {
+		FindBone(Node->GetChild(i));
+	}
+
+}
 
 
 int main(int argc, char* argv[])
 {
-	for (int i = 1; i < argc; ++i)
+	//for (int i = 1; i < argc; ++i)
 	{
 		// FBX SDK 초기화
 		FbxManager* fbxManager = FbxManager::Create();
@@ -188,8 +235,9 @@ int main(int argc, char* argv[])
 		// FBX 파일 로드
 		FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
-		//const char* fileName = "sato_skinned.fbx";
-		const char* fileName = argv[i];
+		//const char* fileName = "test_rigging.fbx";
+		const char* fileName = "x-35_fbx.fbx";
+		//const char* fileName = argv[i];
 
 		//outputFileName = "teapot.bin";
 
@@ -210,45 +258,58 @@ int main(int argc, char* argv[])
 		FbxNode* rootNode = scene->GetRootNode();
 		if (rootNode)
 		{
+			
+			//FbxNode* mainRoot = rootNode;// = rootNode->GetChild(0);
 
-			//for (int i = 0; i < rootNode->GetChildCount(); ++i) 
+			// find skeleton first
+			FindBone(rootNode);
+
+			// if bone, export
+			if (g_BoneMatrixVector.size() > 0) {
+				// export bone file
+				std::string boneFileName = "bone_";
+				boneFileName += fileName;
+				boneFileName += ".bin";
+
+				std::fstream output(boneFileName, std::ios::binary | std::ios::out);
+
+				WriteToFile((int)(g_BoneMatrixVector.size()), output);
+				output.write((const char*)(&g_BoneMatrixVector[0]), sizeof(XMFLOAT4X4) * g_BoneMatrixVector.size());
+			}
+
+
+			MeshBase* mesh = new NormalMesh;
+			mesh->name = removeExtension(fileName);
+
+			for (int i = 0; i < rootNode->GetChildCount(); ++i)
 			{
-				MeshBase* mesh;
-
-				//// 정점과 인덱스를 담을 벡터
-				//std::vector<Vertex> vertices;
-				//std::vector<uint16_t> indices;
-
+				FbxNode* child = rootNode->GetChild(i);
+				FbxNodeAttribute* attrib = child->GetNodeAttribute();
+				if (attrib && attrib->GetAttributeType() == FbxNodeAttribute::eSkeleton) 
+					continue;
 
 				// 재귀적으로 노드 탐색
 				// RootNode가 따로 있더라
 				// 따로따로인 모델이 있을수도 있어서 그런가봄
 				// 우리는 부모메쉬가 하나라고 가정
 
-				mesh = TraverseNode(rootNode->GetChild(0));
-
+				MeshBase* t = TraverseNode(child);
+				if (t != nullptr) mesh->subMeshes.push_back(t);
+				
 				// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
 				// 
 				if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() != FbxAxisSystem::eLeftHanded) {
 					std::cout << "Convert to Lefthanded!" << std::endl;
 					mesh->ConvertToLeftHanded();
 				}
-
-				
-				//std::string outputFileName = ChangeExtensionToBin(mesh->name);
-				std::string outputFileName = ChangeExtensionToBin(fileName);
-
-				std::fstream outputFile(outputFileName,
-#ifdef BINARY
-					std::ios::binary |
-#endif
-					std::ios::out);
-
-				ExtractToFIle(mesh, outputFile);
-
-				// 정리 작업
-				fbxManager->Destroy();
 			}
+			
+			std::string outputFileName = ChangeExtensionToBin(fileName);
+			std::fstream outputFile(outputFileName, std::ios::binary | std::ios::out);
+			ExtractToFIle(mesh, outputFile);
+
+			// 정리 작업
+			fbxManager->Destroy();
 		}
 
 	}
@@ -330,6 +391,8 @@ MeshBase* TraverseNode(FbxNode* node)//  std::vector<Vertex>& vertices, std::vec
 #endif
 
 	}
+	else if (attribute && attribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+		return nullptr;
 	else {
 		// empty node
 		myMesh = new NormalMesh;
@@ -341,7 +404,8 @@ MeshBase* TraverseNode(FbxNode* node)//  std::vector<Vertex>& vertices, std::vec
 	{
 		MeshBase* newMesh = TraverseNode(node->GetChild(i));
 
-		myMesh->subMeshes.push_back(newMesh);
+		if (newMesh != nullptr)
+			myMesh->subMeshes.push_back(newMesh);
 	}
 
 	return myMesh;
@@ -565,6 +629,21 @@ void ExtractSkinningData(FbxMesh* mesh, int vertexIndex, SkinnedVertex& vertex)
 			if (!boneNode)
 				continue;
 
+			//std::find(g_Vector.begin(), g_Vector.end(), boneNode->GetName());
+			
+			int realIdx = -1;
+			for (int i = 0; i < g_Vector.size(); ++i) {
+				if (g_Vector[i] == boneNode->GetName()) {
+					realIdx = i;
+					break;
+				}
+			}
+
+			if (realIdx < 0) {
+				std::cout << "BOne ERROR!!!!" << std::endl;
+				exit(1);
+			}
+
 			FbxAMatrix transformMatrix;
 			cluster->GetTransformMatrix(transformMatrix);
 
@@ -578,23 +657,25 @@ void ExtractSkinningData(FbxMesh* mesh, int vertexIndex, SkinnedVertex& vertex)
 				{
 					// first
 					if (vertex.blendingFactor.x == 0 && vertex.blendingIndex.x == 0) {
-						vertex.blendingIndex.x = j;
+						vertex.blendingIndex.x = realIdx;
 						vertex.blendingFactor.x = weights[m];
 					}
 					else if (vertex.blendingFactor.y == 0 && vertex.blendingIndex.y == 0) {
-						vertex.blendingIndex.y = j;
+						vertex.blendingIndex.y = realIdx;
 						vertex.blendingFactor.y = weights[m];
 					}
 					else if (vertex.blendingFactor.z == 0 && vertex.blendingIndex.z == 0) {
-						vertex.blendingIndex.z = j;
+						vertex.blendingIndex.z = realIdx;
 						vertex.blendingFactor.z = weights[m];
 					}
 					else if (vertex.blendingFactor.w == 0 && vertex.blendingIndex.w == 0) {
-						vertex.blendingIndex.w = j;
+						vertex.blendingIndex.w = realIdx;
 						vertex.blendingFactor.w = weights[m];
 					}
-					else
-						std::cout << "Exeeded max Blending Count!!" << std::endl;
+					else {
+						vertex.blendingFactor.w += weights[m];
+						std::cout << "Exeeded max Blending Count!!, factors: " << vertex.blendingFactor.x + vertex.blendingFactor.y + vertex.blendingFactor.z + vertex.blendingFactor.w << std::endl;
+					}
 
 					//std::cout << "Index: " << vertexIndex << ", Bone ID: " << j << ",  Influenced by Bone: " << boneNode->GetName() << ", Weight: " << weights[m] << "\n";
 				}

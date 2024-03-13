@@ -259,6 +259,10 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 			// check first
 			if (GetMesh(meshFileName) != -1) {
 				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
+				DebugPrint("Get All Mesh Name");
+				for (const auto& meshs : m_Meshes) {
+					DebugPrint(std::format("name: {}", meshs->GetName()));
+				}
 				return false;
 			}
 			
@@ -270,6 +274,10 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 		if (res == -1) {
 			DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
+			DebugPrint("Get All Mesh Name");
+			for (const auto& meshs : m_Meshes) {
+				DebugPrint(std::format("name: {}", meshs->GetName()));
+			}
 			return false;
 		}
 

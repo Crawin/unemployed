@@ -20,7 +20,7 @@
 			},
 			"Renderer":
 			{
-				"Mesh": "satodia_skinned.satodia_Body_Skinned",
+				"Mesh": "test_rigging.satodia_Body_testrig",
 				"Material": "SatoBody_Skinned"
 			}
 		},
@@ -46,7 +46,7 @@
 					},
 					"Renderer":
 					{
-						"Mesh": "satodia_skinned.satodia_Hair_Skinned",
+						"Mesh": "test_rigging.satodia_Hair_testrig",
 						"Material": "SatoHair_Skinned"
 					}
 				},
@@ -71,7 +71,7 @@
 							},
 							"Renderer" : 
 							{
-								"Mesh": "satodia_skinned.satodia_Eyes_Skinned",
+								"Mesh": "test_rigging.satodia_Eyes_testrig",
 								"Material": "NoMaterial"
 							}
 						},
@@ -85,7 +85,7 @@
 							},
 							"Renderer" : 
 							{
-								"Mesh": "satodia_skinned.satodia_Face_Skinned",
+								"Mesh": "test_rigging.satodia_Face_testrig",
 								"Material": "NoMaterial"
 							}
 						}
