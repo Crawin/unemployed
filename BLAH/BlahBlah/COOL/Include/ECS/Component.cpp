@@ -142,7 +142,7 @@ namespace component
 			"Camera Shader Data",
 			(void**)(&m_ShaderData));
 
-		m_ShaderDataGPUAddr = rm->GetVertexDataGPUAddress(m_MappedShaderData);
+		m_ShaderDataGPUAddr = rm->GetObjectDataGPUAddress(m_MappedShaderData);
 
 		BuildProjectionMatrix();
 

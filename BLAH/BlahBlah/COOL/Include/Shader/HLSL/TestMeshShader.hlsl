@@ -35,7 +35,7 @@ VS_OUTPUT vs(VS_INPUT i)
 
 float4 ps(VS_OUTPUT i) : SV_Target
 {
-	// fbxÆÄÀÏÀ» À¯´ÏÆ¼¿¡¼­ »Ì¾Æ¿Í¼­ ÇØµĞ ÀÓ½Ã ÄÚµå
+	// fbxíŒŒì¼ì„ ìœ ë‹ˆí‹°ì—ì„œ ë½‘ì•„ì™€ì„œ í•´ë‘” ì„ì‹œ ì½”ë“œ
 	i.uv.y = 1 - i.uv.y;
 	
 	//float3 lightPosition = float3(1000.0f, 1000.0f, 0.0f);
@@ -44,7 +44,7 @@ float4 ps(VS_OUTPUT i) : SV_Target
 	
 	
 	
-	int albedoIdx = materialIndex[ALBEDO];
+	int albedoIdx = matIdx0.x;
 	float3 smpl = float4(Tex2DList[albedoIdx].Sample(samplerWarp, i.uv));
 	
 	// ambient

@@ -624,40 +624,65 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 		ID3D12Resource* res = resources[i]->GetResource();
 		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
 
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc.Format = resDesc.Format;
-		srvDesc.ViewDimension = resources[i]->GetDimension();
+		if (resources[i]->IsConstant()) {
+			D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+			cbvDesc.BufferLocation = resources[i]->GetResource()->GetGPUVirtualAddress();
+			cbvDesc.SizeInBytes = resources[i]->GetSize();
 
-		switch (srvDesc.ViewDimension) {
-		case D3D12_SRV_DIMENSION_TEXTURE2D:
-			srvDesc.Texture2D.MipLevels = 1;
-			srvDesc.Texture2D.MostDetailedMip = 0;
-			srvDesc.Texture2D.PlaneSlice = 0;
-			srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-			break;
+			m_Device->CreateConstantBufferView(&cbvDesc, currentCPUPtr);
+		}
+		else if (resources[i]->IsShaderResource()) {
+			D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+			srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+			srvDesc.Format = resDesc.Format;
+			srvDesc.ViewDimension = resources[i]->GetDimension();
 
-		case D3D12_SRV_DIMENSION_TEXTURECUBE:
-			srvDesc.TextureCube.MipLevels = 1;
-			srvDesc.TextureCube.MostDetailedMip = 0;
-			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-			break;
+			switch (srvDesc.ViewDimension) {
+			case D3D12_SRV_DIMENSION_TEXTURE2D:
+				srvDesc.Texture2D.MipLevels = 1;
+				srvDesc.Texture2D.MostDetailedMip = 0;
+				srvDesc.Texture2D.PlaneSlice = 0;
+				srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+				break;
 
-		case D3D12_SRV_DIMENSION_BUFFER:
-			srvDesc.Buffer.FirstElement = 0;
-			srvDesc.Buffer.NumElements = resources[i]->GetNumOfElement();
-			srvDesc.Buffer.StructureByteStride = resources[i]->GetStride();
-			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+			case D3D12_SRV_DIMENSION_TEXTURECUBE:
+				srvDesc.TextureCube.MipLevels = 1;
+				srvDesc.TextureCube.MostDetailedMip = 0;
+				srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+				break;
 
-			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_BUFFER, 버퍼로 되어있다\n리소스 이름: " + resources[i].get()->GetName());
-			break;
+			case D3D12_SRV_DIMENSION_BUFFER:
+				srvDesc.Buffer.FirstElement = 0;
+				srvDesc.Buffer.NumElements = resources[i]->GetNumOfElement();
+				srvDesc.Buffer.StructureByteStride = resources[i]->GetStride();
+				srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-		default:
-			DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + resources[i].get()->GetName());
+				DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_BUFFER, 버퍼로 되어있다\n리소스 이름: " + resources[i]->GetName());
+				break;
+
+			default:
+				DebugPrint("ViewDimension이 알맞지 않음 \n리소스 이름: " + resources[i]->GetName());
+				return false;
+			}
+
+			m_Device->CreateShaderResourceView(res, &srvDesc, currentCPUPtr);
+		}
+		else if (resources[i]->IsUnorderedAccess()) {
+			D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+			uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+			uavDesc.Buffer.FirstElement = 0;
+			uavDesc.Buffer.NumElements = resources[i]->GetNumOfElement();
+			uavDesc.Buffer.StructureByteStride = resources[i]->GetStride();
+			uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_RAW;
+			uavDesc.Buffer.CounterOffsetInBytes;
+
+			m_Device->CreateUnorderedAccessView(res, nullptr, &uavDesc, currentCPUPtr);
+		}
+		else {
+			DebugPrint(std::format("ERROR!!!, view not set!, name: {}", resources[i]->GetName()));
 			return false;
 		}
 
-		m_Device->CreateShaderResourceView(res, &srvDesc, currentCPUPtr);
 		currentCPUPtr.ptr += m_CbvSrvDescIncrSize;
 	}
 	// D3D12_SRV_DIMENSION_UNKNOWN = 0,
@@ -784,7 +809,7 @@ COOLResourcePtr Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandL
 
 	COOLResourcePtr newResource(new COOLResource(texture, resourceState, D3D12_HEAP_TYPE_DEFAULT));
 	newResource->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
-
+	newResource->SetShaderResource();
 	newResource->SetName(fileName);
 
 	return newResource;
@@ -794,6 +819,10 @@ COOLResourcePtr Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESO
 {
 	UINT createBytes = ((bytes + 255) & ~255);
 	auto resource = CreateEmptyBufferResource(heapType, resourceState, createBytes, name);
+
+	if (D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER == resourceState) {
+		resource->SetUnorderedAccess();
+	}
 
 	if (toMapData) {
 		resource->SetMapOn();

@@ -33,6 +33,10 @@ public:
 	D3D12_SRV_DIMENSION GetDimension() const { return m_Dimension; }
 	unsigned int GetNumOfElement() const { return m_ElementSize; }
 	unsigned int GetStride() const { return m_Stride; }
+	bool IsConstant() const { return m_IsConstantBuffer; }
+	bool IsShaderResource() const { return m_IsShaderResource; }
+	bool IsUnorderedAccess() const { return m_IsUnorderedAccess; }
+	UINT GetSize() const { return m_Size; }
 
 	void SetName(std::wstring wstr) { m_Name = std::string(wstr.begin(), wstr.end()); }
 	void SetName(std::string_view str) { m_Name = str; std::wstring temp(m_Name.begin(), m_Name.end());  m_Resource->SetName(temp.c_str()); }
@@ -41,6 +45,10 @@ public:
 	void SetMapOn() { m_Mapped = true; }
 	void SetNumOfElement(unsigned int numof) { m_ElementSize = numof; }
 	void SetStride(unsigned int stride) { m_Stride = stride; }
+	void SetConstant()			{ m_IsConstantBuffer = true; m_IsShaderResource = false; m_IsUnorderedAccess = false; }
+	void SetShaderResource()	{ m_IsConstantBuffer = false; m_IsShaderResource = true; m_IsUnorderedAccess = false; }
+	void SetUnorderedAccess()	{ m_IsConstantBuffer = false; m_IsShaderResource = false; m_IsUnorderedAccess = true; }
+	void SetSize(UINT size) { m_Size = size; }
 
 private:
 	std::string m_Name;
@@ -52,6 +60,13 @@ private:
 	// if buffer, use this
 	unsigned int m_ElementSize = 0;
 	unsigned int m_Stride = 0;
+
+	// default view, not allways fit
+	bool m_IsConstantBuffer = false;
+	bool m_IsShaderResource = false;
+	bool m_IsUnorderedAccess = false;
+
+	UINT m_Size = 0;
 
 	// release를 미루지 않겠습니다.
 	bool m_Release = true;

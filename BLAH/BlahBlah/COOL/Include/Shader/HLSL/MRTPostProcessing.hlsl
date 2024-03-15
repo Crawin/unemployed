@@ -30,14 +30,14 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	
 
 	// sample all
-	float4 albedoColor = float4(Tex2DList[ALBEDO].Sample(samplerWarp, input.uv));
-	float4 roughness = float4(Tex2DList[ROUGHNESS].Sample(samplerWarp, input.uv));
-	float4 metalic = float4(Tex2DList[METALIC].Sample(samplerWarp, input.uv));
-	float4 specular = float4(Tex2DList[SPECULAR].Sample(samplerWarp, input.uv));
-	float4 normalW = float4(Tex2DList[NORMALW].Sample(samplerWarp, input.uv));
+	float4 albedoColor = float4(Tex2DList[matIdx0.x].Sample(samplerWarp, input.uv));
+	float4 roughness = float4(Tex2DList[matIdx0.y].Sample(samplerWarp, input.uv));
+	float4 metalic = float4(Tex2DList[matIdx0.z].Sample(samplerWarp, input.uv));
+	float4 specular = float4(Tex2DList[matIdx0.w].Sample(samplerWarp, input.uv));
+	float4 normalW = float4(Tex2DList[matIdx1.x].Sample(samplerWarp, input.uv));
 	//normalW *= 2;
 	//normalW -= 1;
-	float4 positionW = float4(Tex2DList[materialIndex[POSITIONW]].Sample(samplerWarp, input.uv));
+	float4 positionW = float4(Tex2DList[matIdx0.y].Sample(samplerWarp, input.uv));
 	
 	// do something for post processing
 	

@@ -57,7 +57,7 @@ VSOUT vs(uint instancID : SV_VertexID)
 
 float4 ps(VSOUT input) : SV_TARGET
 {
-	int albedoIdx = materialIndex[ALBEDO];
+	int albedoIdx = matIdx0.x;
 
 	// 임시라서 텍스쳐큐브는 안쓰고 그냥 투디 이미지만 그림
 	

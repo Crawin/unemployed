@@ -72,6 +72,7 @@ private:
 			return static_cast<int>(m_Resources.size() - 1);
 		}
 		else {
+			ptr->SetUnorderedAccess();
 			m_VertexIndexDatas.push_back(ptr);
 			return static_cast<int>(m_VertexIndexDatas.size() - 1);
 		}
@@ -114,32 +115,28 @@ public:
 
 	// resource
 	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
+	D3D12_GPU_VIRTUAL_ADDRESS GetObjectDataGPUAddress(int idx);
 
 	// 렌더 전 디스크립터테이블 set
 	void SetDatas();
 	
+	// get datas
 	int GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
-	
 	int GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
-
 	int GetBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
-
 	std::shared_ptr<Shader> GetShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 
-	int GetMeshToLoad(const std::string& name);
-
+	// for late init
 	void AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer);
 	
-	void SetMainCamera(component::Camera* cam) { m_MainCamera = cam; }
-
+	// for multiple render target / post processing
 	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
-
 	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
-
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
-
 	int GetPostProcessingMaterial() const;
 
+	void SetMainCamera(component::Camera* cam) { m_MainCamera = cam; }
+	
 #ifdef _DEBUG
 	int GetDebuggingMaterial() const { return m_DebuggingMaterial; };
 #endif
@@ -147,6 +144,9 @@ public:
 private:
 	// 메시 데이터
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
+
+	// object 데이터
+	std::vector<COOLResourcePtr> m_ObjectDatas;
 
 	// 텍스쳐 데이터
 	std::vector<COOLResourcePtr> m_Resources;

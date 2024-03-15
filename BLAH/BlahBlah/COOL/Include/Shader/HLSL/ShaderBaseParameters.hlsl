@@ -62,7 +62,10 @@ StructuredBuffer<AnimData> AnimDataList[] : register(t0, space6);
 
 cbuffer Material : register(b0)
 {
-	uint materialIndex[16];
+	uint4 matIdx0;
+	uint4 matIdx1;
+	uint4 matIdx2;
+	uint4 matIdx3;
 };
 
 cbuffer CameraInfo : register(b1)

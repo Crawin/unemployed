@@ -52,7 +52,7 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	
 	PS_MRT_OUTPUT output;
 	
-	output.Albedo = float4(Tex2DList[materialIndex[ALBEDO]].Sample(samplerWarp, i.uv));
+	output.Albedo = float4(Tex2DList[matIdx0.x].Sample(samplerWarp, i.uv));
 	output.Roughness = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.Specular = float4(0.0f, 0.0f, 0.0f, 1.0f);

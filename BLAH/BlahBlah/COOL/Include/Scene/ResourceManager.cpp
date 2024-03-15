@@ -43,6 +43,7 @@ ResourceManager::~ResourceManager()
 
 	m_Resources.clear();
 	m_VertexIndexDatas.clear();
+	m_ObjectDatas.clear();
 }
 
 bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
@@ -370,6 +371,8 @@ bool ResourceManager::MakeExtraRenderTarget()
 			std::format("DifferedTarget_{}", i), 
 			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
 		);
+
+		m_Resources[m_DefferedRTVStartIdx + i]->SetShaderResource();
 	}
 
 	
@@ -385,9 +388,11 @@ int ResourceManager::CreateObjectResource(UINT size, const std::string resName, 
 		resName,
 		toMapData);
 
-	m_VertexIndexDatas.push_back(res);
+	res->SetConstant();
 
-	return static_cast<int>(m_VertexIndexDatas.size() - 1);
+	m_ObjectDatas.push_back(res);
+
+	return static_cast<int>(m_ObjectDatas.size() - 1);
 }
 
 void ResourceManager::SetDatas()
@@ -442,22 +447,6 @@ std::shared_ptr<Shader> ResourceManager::GetShader(const std::string& name, ComP
 	return nullptr;
 }
 
-int ResourceManager::GetMeshToLoad(const std::string& name)
-{
-	// todo 
-	// 여기서 다른 resourcemanager에게 mesh를 전달받을 수 있음
-	// 지금은 -1만 return
-
-	return -1;
-
-	for (int i = 0; i < m_ToLoadRenderDatas.size(); ++i)
-		if (m_ToLoadRenderDatas[i].m_MeshName == name)
-			return i;
-	
-	// no such mesh
-	return -1;
-}
-
 void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer)
 {
 	ToLoadRendererInfo info;
@@ -499,6 +488,14 @@ D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)
 {
 	if (0 <= idx && idx < m_VertexIndexDatas.size())
 		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+
+	return -1;
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetObjectDataGPUAddress(int idx)
+{
+	if (0 <= idx && idx < m_ObjectDatas.size())
+		return m_ObjectDatas[idx]->GetResource()->GetGPUVirtualAddress();
 
 	return -1;
 }
