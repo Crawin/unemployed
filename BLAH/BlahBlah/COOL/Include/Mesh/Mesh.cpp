@@ -19,7 +19,7 @@ inline void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, st
 	m_VertexBufferView.SizeInBytes = sizeof(VERTEX) * vtxSize;
 };
 
-void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager)
+void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, const std::string& fileName, ResourceManager* manager)
 {
 	// 메쉬 파일 구조
 	// 1. 이름 길이					// int
@@ -27,7 +27,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// 3. 바운딩박스					// float3 x 3
 	// 4. 부모 상대 변환 행렬			// float4x4
 	// 5. 버텍스 타입				// int
-	// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
+	// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv, + uint4(bleidng bone) + float4 (blending weight)
 	// 7. 인덱스 정보				// int int*int
 	// 8. 서브메쉬 개수				// int
 	// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
@@ -77,6 +77,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 
 		case VERTEX_TYPES::SKINNED:
 			LoadVertices<SkinnedVertex>(commandList, file, manager, vertexLen);
+			GetBone(commandList, fileName, manager);
 			break;
 		}
 
@@ -169,9 +170,20 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// 9. 서브메쉬(재귀)
 	for (unsigned int i = 0; i < childNum; ++i) {
 		Mesh* newMesh = new Mesh;
-		newMesh->BuildMesh(commandList, file, manager);
+		newMesh->BuildMesh(commandList, file, fileName, manager);
 		m_Childs.push_back(newMesh);
 	}
+}
+
+int Mesh::GetBone(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, ResourceManager* manager)
+{
+	int idx = manager->GetBone(fileName, commandList);
+	if (idx != -1) {
+		return idx;
+	}
+
+	ERROR_QUIT(std::format("No Such Bone File!!, fileName: {}", fileName));
+	//exit(1);
 }
 
 //bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)

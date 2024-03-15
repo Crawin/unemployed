@@ -172,6 +172,7 @@
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Light.h" />
     <ClInclude Include="Include\Material\Material.h" />
+    <ClInclude Include="Include\Mesh\Bone.h" />
     <ClInclude Include="Include\mymath.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
     <ClInclude Include="Include\Network\Client.h" />
@@ -182,10 +183,7 @@
     <ClInclude Include="Include\Scene\Scene.h" />
     <ClInclude Include="Include\Scene\SceneManager.h" />
     <ClInclude Include="Include\Scene\TestMainScene.h" />
-    <ClInclude Include="Include\Shader\MeshShader.h" />
     <ClInclude Include="Include\Shader\Shader.h" />
-    <ClInclude Include="Include\Shader\SkyboxShader.h" />
-    <ClInclude Include="Include\Shader\TestShader.h" />
     <ClInclude Include="Include\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +203,7 @@
     </ClCompile>
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material\Material.cpp" />
+    <ClCompile Include="Include\Mesh\Bone.cpp" />
     <ClCompile Include="Include\Mesh\Mesh.cpp" />
     <ClCompile Include="Include\Network\Client.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
@@ -217,10 +216,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Include\Shader\MeshShader.cpp" />
     <ClCompile Include="Include\Shader\Shader.cpp" />
-    <ClCompile Include="Include\Shader\SkyboxShader.cpp" />
-    <ClCompile Include="Include\Shader\TestShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt" />

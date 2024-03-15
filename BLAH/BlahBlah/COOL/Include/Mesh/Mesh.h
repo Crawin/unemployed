@@ -67,7 +67,11 @@ private:
 	template<typename VERTEX>
 	void LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize);
 
-	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
+	void BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, const std::string& fileName, ResourceManager* manager);
+
+	int GetBone(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, ResourceManager* manager);
+
+	int m_BoneIndex = -1;
 
 	int m_VertexNum = 0;
 

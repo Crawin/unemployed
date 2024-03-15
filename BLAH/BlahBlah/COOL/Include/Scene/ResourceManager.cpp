@@ -17,7 +17,7 @@
 #define SHADER_PATH		"SceneData\\Shader\\"
 #define TEXTURE_PATH	"SceneData\\Material\\Texture\\"
 #define MATERIAL_PATH	"SceneData\\Material\\"
-
+#define BONE_PATH		"SceneData\\Mesh\\bone_"
 
 ResourceManager::ResourceManager()
 {
@@ -29,6 +29,8 @@ ResourceManager::~ResourceManager()
 		delete mat;
 	for (auto& mes : m_Meshes)
 		delete mes;
+	for (auto& bon : m_Bones)
+		delete bon;
 	//for (auto& cmp : m_Components)
 	//	delete cmp;
 	
@@ -128,9 +130,9 @@ int ResourceManager::LoadMesh(const std::string& name, ComPtr<ID3D12GraphicsComm
 
 	Mesh* mesh = new Mesh;
 	mesh->m_Name = ExtractFileName(fileName);
-	mesh->BuildMesh(commandList, meshFile, this);
+	mesh->BuildMesh(commandList, meshFile, name, this);
 
-	DebugPrint(std::format("loaded file name: {}", mesh->m_Name));
+	DebugPrint(std::format("loaded mesh file name: {}", mesh->m_Name));
 	return GetMesh(mesh->m_Name);
 
 }
@@ -153,7 +155,26 @@ int ResourceManager::LoadMaterial(const std::string& name, ComPtr<ID3D12Graphics
 	material->SetShader(shader);
 	m_Materials.push_back(material);
 
+	DebugPrint(std::format("loaded material file name: {}", material->m_Name));
 	return static_cast<int>(m_Materials.size() - 1);
+}
+
+int ResourceManager::LoadBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	std::string fileName = BONE_PATH + name + ".bin";
+	std::ifstream boneFile(fileName, std::ios::binary);
+	if (boneFile.is_open() == false) {
+		DebugPrint(std::format("Failed to open bone file!! fileName: {}", fileName));
+		return -1;
+	}
+
+	Bone* bone = new Bone;
+	bone->m_Name = name;
+	bone->LoadBone(commandList, boneFile, this);
+	m_Bones.push_back(bone);
+
+	DebugPrint(std::format("loaded bone file name: {}", bone->m_Name));
+	return 0;
 }
 
 std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -169,9 +190,7 @@ std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, Com
 
 	m_Shaders.push_back(shader);
 
-	DebugPrint(std::format("loaded file name: {}", shader->m_Name));
-
-
+	DebugPrint(std::format("loaded shader file name: {}", shader->m_Name));
 	return shader;
 }
 
@@ -399,6 +418,16 @@ int ResourceManager::GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsC
 			return i;
 
 	if (commandList) return LoadMaterial(name, commandList);
+	return -1;
+}
+
+int ResourceManager::GetBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	for (int i = 0; i < m_Bones.size(); ++i)
+		if (m_Bones[i]->GetName() == name)
+			return i;
+
+	if (commandList) return LoadBone(name, commandList);
 	return -1;
 }
 

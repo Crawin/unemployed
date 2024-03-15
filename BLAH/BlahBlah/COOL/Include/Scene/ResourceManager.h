@@ -1,12 +1,14 @@
 ﻿#pragma once
 #include "Material/Material.h"
 #include "Mesh/Mesh.h"
+#include "Mesh/Bone.h"
 //#include "Object/ObjectBase.h"
 
 class COOLResource;
 class Material;
 class Mesh;
 class Shader;
+class Bone;
 //class Camera;
 
 class ECSManager;
@@ -45,10 +47,12 @@ private:
 
 	friend bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, ResourceManager* manager, std::string& shaderName);
 
-	friend void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
+	friend void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, const std::string& fileName, ResourceManager* manager);
 
 	template<typename VERTEX>
 	friend void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize);
+
+	friend void Bone::LoadBone(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 private:
 
@@ -59,13 +63,18 @@ private:
 	void AddMesh(Mesh* mesh) { m_Meshes.push_back(mesh); }
 
 	template <class T>
-	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
+	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", bool useToShader = false)
 	{
 		COOLResourcePtr ptr = Renderer::GetInstance().CreateBufferFromVector(commandList, data, resourceState, name);
 
-		m_VertexIndexDatas.push_back(ptr);
-		
-		return static_cast<int>(m_VertexIndexDatas.size() - 1);
+		if (useToShader) {
+			m_Resources.push_back(ptr);
+			return static_cast<int>(m_Resources.size() - 1);
+		}
+		else {
+			m_VertexIndexDatas.push_back(ptr);
+			return static_cast<int>(m_VertexIndexDatas.size() - 1);
+		}
 	}
 
 	// object 폴더의 file 불러오는 함수
@@ -77,6 +86,8 @@ private:
 	int LoadMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	int LoadMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	int LoadBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	std::shared_ptr<Shader> LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -110,6 +121,8 @@ public:
 	int GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 	
 	int GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
+
+	int GetBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	std::shared_ptr<Shader> GetShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 
@@ -164,6 +177,7 @@ private:
 
 	// mesh
 	std::vector<Mesh*> m_Meshes;
+	std::vector<Bone*> m_Bones;
 
 	// material, texture
 	std::vector<Material*> m_Materials;

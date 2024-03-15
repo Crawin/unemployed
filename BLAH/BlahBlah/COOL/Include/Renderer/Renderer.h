@@ -87,6 +87,10 @@ public:
 
 		m_UploadResources.push_back(uploadResource->GetResource());
 
+		resource->SetDimension(D3D12_SRV_DIMENSION_BUFFER);
+		resource->SetStride(sizeof(T));
+		resource->SetNumOfElement(data.size());
+
 		return resource;
 	}
 

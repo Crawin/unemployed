@@ -76,6 +76,9 @@
     <Filter Include="소스 파일\Scene\SceneData\Light">
       <UniqueIdentifier>{c3d45ae8-73d7-4e8f-b8ce-ba2407ecf4e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\SceneData\Mesh\Bone">
+      <UniqueIdentifier>{72ee0038-828b-4189-9558-a5191469be31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -93,20 +96,11 @@
     <ClInclude Include="Include\Shader\Shader.h">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Shader\TestShader.h">
-      <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Renderer\COOLResource.h">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Shader\SkyboxShader.h">
-      <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Mesh\Mesh.h">
       <Filter>소스 파일\Scene\SceneData\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Shader\MeshShader.h">
-      <Filter>소스 파일\Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Include\DXMath.h">
       <Filter>헤더 파일</Filter>
@@ -162,6 +156,9 @@
     <ClInclude Include="Include\Light.h">
       <Filter>소스 파일\Scene\SceneData\Light</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Mesh\Bone.h">
+      <Filter>소스 파일\Scene\SceneData\Mesh\Bone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -173,26 +170,17 @@
     <ClCompile Include="Include\Shader\Shader.cpp">
       <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Shader\TestShader.cpp">
-      <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Include\Shader\HLSL\TestShader.hlsl">
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </ClCompile>
     <ClCompile Include="Include\Renderer\COOLResource.cpp">
       <Filter>소스 파일\Renderer\DX12Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="Include\Shader\SkyboxShader.cpp">
-      <Filter>소스 파일\Renderer\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Include\framework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Include\Mesh\Mesh.cpp">
       <Filter>소스 파일\Scene\SceneData\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\Shader\MeshShader.cpp">
-      <Filter>소스 파일\Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Include\Scene\Scene.cpp">
       <Filter>소스 파일\Scene</Filter>
@@ -235,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="Include\App\Timer.cpp">
       <Filter>소스 파일\App\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Mesh\Bone.cpp">
+      <Filter>소스 파일\Scene\SceneData\Mesh\Bone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

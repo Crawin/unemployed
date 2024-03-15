@@ -1,5 +1,26 @@
+#define MAX_BONE_LEN 64
+
+struct LIGHT
+{
+	float4 m_LightColor;
+	float3 m_Direction;
+	float m_Falloff;
+	bool m_CastShadow;
+	bool m_Active;
+	int m_ShadowMapResult;
+	int m_LightType;
+};
 
 
+struct BONE
+{
+	float4x4 boneMat[MAX_BONE_LEN];
+};
+
+struct AnimData
+{
+	float4x4 anim[MAX_BONE_LEN];
+};
 
 /*
 enum ROOT_SIGNATURE_IDX {
@@ -22,7 +43,9 @@ TextureCube TexCubeList[] : register(t0, space1);
 ByteAddressBuffer RawDataList[] : register(t0, space2);
 Buffer<uint> BufferUintList[] : register(t0, space3);
 Buffer<float> BufferFloatList[] : register(t0, space4);
-
+StructuredBuffer<LIGHT> LightDataList[] : register(t0, space5);
+StructuredBuffer<BONE> BoneDataList[] : register(t0, space6);
+StructuredBuffer<AnimData> AnimDataList[] : register(t0, space6);
 
 
 // check Enums.h

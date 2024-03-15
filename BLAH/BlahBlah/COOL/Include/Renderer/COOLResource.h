@@ -25,20 +25,22 @@ public:
 	COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT, std::string_view name = "Resource");
 	~COOLResource();
 
+	void TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState);
+
 	const std::string GetName() const { return m_Name; }
 	ID3D12Resource* GetResource() { return m_Resource; }
 	D3D12_RESOURCE_STATES GetState() const { return m_CurStateMap; }
 	D3D12_SRV_DIMENSION GetDimension() const { return m_Dimension; }
+	unsigned int GetNumOfElement() const { return m_ElementSize; }
+	unsigned int GetStride() const { return m_Stride; }
 
 	void SetName(std::wstring wstr) { m_Name = std::string(wstr.begin(), wstr.end()); }
 	void SetName(std::string_view str) { m_Name = str; std::wstring temp(m_Name.begin(), m_Name.end());  m_Resource->SetName(temp.c_str()); }
 	void SetDimension(D3D12_SRV_DIMENSION dim) { m_Dimension = dim; }
-
-	void TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState);
-
 	void DontReleaseOnDesctruct() { m_Release = false; }
-
 	void SetMapOn() { m_Mapped = true; }
+	void SetNumOfElement(unsigned int numof) { m_ElementSize = numof; }
+	void SetStride(unsigned int stride) { m_Stride = stride; }
 
 private:
 	std::string m_Name;
@@ -46,6 +48,10 @@ private:
 	D3D12_RESOURCE_STATES m_CurStateMap = D3D12_RESOURCE_STATE_COMMON;
 	D3D12_HEAP_TYPE m_HeapType = D3D12_HEAP_TYPE_DEFAULT;
 	D3D12_SRV_DIMENSION m_Dimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+
+	// if buffer, use this
+	unsigned int m_ElementSize = 0;
+	unsigned int m_Stride = 0;
 
 	// release를 미루지 않겠습니다.
 	bool m_Release = true;

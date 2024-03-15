@@ -3,15 +3,15 @@
 #include "COOLResource.h"
 
 #include "Scene/SceneManager.h"
-//#include "Shader/Shader.h"
+#include "Shader/Shader.h"
 //#include "../Client.h"
 
 #define TEST_SHADER
 
 #ifdef TEST_SHADER
-#include "Shader/TestShader.h"
-#include "Shader/SkyboxShader.h"
-#include "Shader/MeshShader.h"
+//#include "Shader/TestShader.h"
+//#include "Shader/SkyboxShader.h"
+//#include "Shader/MeshShader.h"
 #include "Material/Material.h"
 #include "Mesh/Mesh.h"
 #endif
@@ -229,7 +229,7 @@ bool Renderer::CreateRootSignature()
 {
 	// t0 
 	// 
-	const int resourceType = 5;
+	const int resourceType = 8;
 	D3D12_DESCRIPTOR_RANGE descRange[resourceType] = {};
 	for (int i = 0; i < resourceType; ++i) {
 		descRange[i].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -621,13 +621,13 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 	// m_Resource에 있는 리소스들 디스크립터를 만들고 힙에다가 등록
 	for (int i = 0; i < resources.size(); ++i) {
 		//for (auto resource : resources) {
-		ID3D12Resource* res = resources[i].get()->GetResource();
+		ID3D12Resource* res = resources[i]->GetResource();
 		D3D12_RESOURCE_DESC resDesc = res->GetDesc();
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.Format = resDesc.Format;
-		srvDesc.ViewDimension = resources[i].get()->GetDimension();
+		srvDesc.ViewDimension = resources[i]->GetDimension();
 
 		switch (srvDesc.ViewDimension) {
 		case D3D12_SRV_DIMENSION_TEXTURE2D:
@@ -645,11 +645,11 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 
 		case D3D12_SRV_DIMENSION_BUFFER:
 			srvDesc.Buffer.FirstElement = 0;
-			srvDesc.Buffer.NumElements = 0;								// 나중에 버퍼 쓸 때 다시 확인
-			srvDesc.Buffer.StructureByteStride = 0;
+			srvDesc.Buffer.NumElements = resources[i]->GetNumOfElement();
+			srvDesc.Buffer.StructureByteStride = resources[i]->GetStride();
 			srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_TEXTURECUBE, 버퍼로 되어있다\n리소스 이름: " + resources[i].get()->GetName());
+			DebugPrint("ViewDimension: D3D12_SRV_DIMENSION_BUFFER, 버퍼로 되어있다\n리소스 이름: " + resources[i].get()->GetName());
 			break;
 
 		default:
@@ -700,6 +700,8 @@ bool Renderer::CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::v
 		m_Device->CreateRenderTargetView(resource, &rtvDesc, currentCPUPtr);
 		currentCPUPtr.ptr += m_RtvDescIncrSize;
 	}
+
+	return true;
 }
 
 bool Renderer::CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader)

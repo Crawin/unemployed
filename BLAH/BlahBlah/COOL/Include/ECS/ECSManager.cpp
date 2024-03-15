@@ -59,8 +59,8 @@ void ComponentSet::InsertComponent(component::Component* comp)
 
 	// check the component is exist in the set
 	if (m_Set.contains(bit) == false) {
-		DebugPrint("ERROR!! not this component");
-		exit(1);
+		ERROR_QUIT("ERROR!! not this component");
+		//exit(1);
 	}
 
 	// insert component;

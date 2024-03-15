@@ -122,24 +122,25 @@ int main(int argc, char* argv[])
 		FbxNode* rootNode = scene->GetRootNode();
 		if (rootNode)
 		{
-			rootNode = rootNode->GetChild(0);
-			PrintName(rootNode);
+			for(int i = 0; i < rootNode->GetChildCount(); ++i)
+				PrintName(rootNode->GetChild(i));
+			//rootNode = rootNode->GetChild(0);
 
-			bool isSkined = false;
-			// find skeleton first
-			for (int i = 0; i < rootNode->GetChildCount(); ++i) {
-				FbxNode* child = rootNode->GetChild(i);
-				FbxNodeAttribute* attrib = child->GetNodeAttribute();
-				if (attrib && attrib->GetAttributeType() == FbxNodeAttribute::eSkeleton) {
-					isSkined = true;
-					SetBoneIndexSet(child);
-				}
-			}
+			//bool isSkined = false;
+			//// find skeleton first
+			//for (int i = 0; i < rootNode->GetChildCount(); ++i) {
+			//	FbxNode* child = rootNode->GetChild(i);
+			//	FbxNodeAttribute* attrib = child->GetNodeAttribute();
+			//	if (attrib && attrib->GetAttributeType() == FbxNodeAttribute::eSkeleton) {
+			//		isSkined = true;
+			//		SetBoneIndexSet(child);
+			//	}
+			//}
 			 
 			
 			//for (int i = 0; i < rootNode->GetChildCount(); ++i) 
 			{
-				TraverseNode(rootNode->GetChild(0));
+				//TraverseNode(rootNode->GetChild(0));
 
 //				std::string outputFileName = "asedf";
 //
