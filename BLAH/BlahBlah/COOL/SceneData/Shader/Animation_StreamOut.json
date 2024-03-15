@@ -1,0 +1,16 @@
+{
+	"name": "Animation_StreamOut",
+	"NumRenderTargets": 1,
+	"PrimitiveTopologyType": 3,
+	"PrimitiveTopology": 4,
+	"VS": "Animation.hlsl",
+	"HS": null,
+	"DS": null,
+	"GS": "Animation.hlsl",
+	"PS": null,
+	"StreamOutput": 1,
+	"BlendState": 0,
+	"RasterizerState": 1,
+	"DepthStencilState": 1,
+	"InputLayout": 2
+}

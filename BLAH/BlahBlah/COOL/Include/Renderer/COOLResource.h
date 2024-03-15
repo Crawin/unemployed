@@ -31,7 +31,7 @@ public:
 	ID3D12Resource* GetResource() { return m_Resource; }
 	D3D12_RESOURCE_STATES GetState() const { return m_CurStateMap; }
 	D3D12_SRV_DIMENSION GetDimension() const { return m_Dimension; }
-	unsigned int GetNumOfElement() const { return m_ElementSize; }
+	size_t GetNumOfElement() const { return m_ElementSize; }
 	unsigned int GetStride() const { return m_Stride; }
 	bool IsConstant() const { return m_IsConstantBuffer; }
 	bool IsShaderResource() const { return m_IsShaderResource; }
@@ -43,7 +43,7 @@ public:
 	void SetDimension(D3D12_SRV_DIMENSION dim) { m_Dimension = dim; }
 	void DontReleaseOnDesctruct() { m_Release = false; }
 	void SetMapOn() { m_Mapped = true; }
-	void SetNumOfElement(unsigned int numof) { m_ElementSize = numof; }
+	void SetNumOfElement(size_t numof) { m_ElementSize = numof; }
 	void SetStride(unsigned int stride) { m_Stride = stride; }
 	void SetConstant()			{ m_IsConstantBuffer = true; m_IsShaderResource = false; m_IsUnorderedAccess = false; }
 	void SetShaderResource()	{ m_IsConstantBuffer = false; m_IsShaderResource = true; m_IsUnorderedAccess = false; }
@@ -58,7 +58,7 @@ private:
 	D3D12_SRV_DIMENSION m_Dimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 
 	// if buffer, use this
-	unsigned int m_ElementSize = 0;
+	size_t m_ElementSize = 0;
 	unsigned int m_Stride = 0;
 
 	// default view, not allways fit

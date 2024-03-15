@@ -1,4 +1,4 @@
-#include "framework.h"
+﻿#include "framework.h"
 #include "COOLResource.h"
 
 COOLResource::COOLResource(ID3D12Resource* resource, D3D12_RESOURCE_STATES initState, D3D12_HEAP_TYPE heapType, std::string_view name) :
@@ -21,7 +21,7 @@ COOLResource::~COOLResource()
 void COOLResource::TransToState(ComPtr<ID3D12GraphicsCommandList> cmdLst, D3D12_RESOURCE_STATES newState)
 {
 	if (newState == m_CurStateMap) {
-		DebugPrint(std::format("ERROR! Same resource state: {}", static_cast<int>(newState)));
+		DebugPrint(std::format("TransToState() Warnning!! Same resource state: {}", static_cast<int>(newState)));
 		return;
 	}
 

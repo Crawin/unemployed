@@ -25,21 +25,20 @@ namespace component
 		// 일단 전부 late load로 해두긴 했는데
 		// 추후에 이걸 놔두어도 될지 확인
 		rm->AddLateLoad(rend["Mesh"].asString(), rend["Material"].asString(), this);
-
-		// get failed
-		//if (m_MeshID == -1) 
-		//{
-		//	// add to late load
-		//	
-		//}
-
-		//m_MaterialID = rm->GetMaterialToLoad(rend["Material"].asString());
-
 	}
 
 	void Renderer::ShowYourself() const
 	{
 		DebugPrint(std::format("Renderer Comp, mesh: {}, material: {}", m_MeshID, m_MaterialID));
+	}
+
+	void Animation::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Animation::ShowYourself() const
+	{
+		DebugPrint(std::format("Animation Comp"));
 	}
 
 	void Root::Create(Json::Value& v, ResourceManager* rm)
@@ -86,7 +85,7 @@ namespace component
 
 	}
 
-	const XMFLOAT4X4& Transform::GetWorldTransform() const
+	XMFLOAT4X4 Transform::GetWorldTransform()
 	{
 		// TODO: 여기에 return 문을 삽입합니다.
 		//XMMATRIX mat = XMMatrixMultiply(
@@ -104,7 +103,7 @@ namespace component
 				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
 
 
-		XMFLOAT4X4 worldMat;
+		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
 		XMStoreFloat4x4(&worldMat, XMMatrixMultiply(mat, XMLoadFloat4x4(&m_ParentTransform)));
 
 		return worldMat;
@@ -142,7 +141,7 @@ namespace component
 			"Camera Shader Data",
 			(void**)(&m_ShaderData));
 
-		m_ShaderDataGPUAddr = rm->GetObjectDataGPUAddress(m_MappedShaderData);
+		m_ShaderDataGPUAddr = rm->GetResourceDataGPUAddress(RESOURCE_TYPES::OBJECT, m_MappedShaderData);
 
 		BuildProjectionMatrix();
 
@@ -168,6 +167,7 @@ namespace component
 
 	void Camera::BuildViewMatrix()
 	{
+		// 현재 사용하지 않음
 		// 아래 함수는 look이 아니라 at이라고 봐야함
 		//m_ViewMatrix = Matrix4x4::LookAtLH(m_Position, m_Look, m_Up);
 

@@ -258,5 +258,8 @@
     <FxCompile Include="Include\Shader\HLSL\TestMeshShaderMRTSKIN.hlsl">
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </FxCompile>
+    <FxCompile Include="Include\Shader\HLSL\Animation.hlsl">
+      <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

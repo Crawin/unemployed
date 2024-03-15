@@ -12,9 +12,11 @@ inline void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, st
 		commandList,
 		vertex,
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
-		std::format("{}_vertex data", m_Name));
+		std::format("{}_vertex data", m_Name),
+		RESOURCE_TYPES::VERTEX
+	);
 
-	m_VertexBufferView.BufferLocation = manager->GetVertexDataGPUAddress(m_VertexBuffer);
+	m_VertexBufferView.BufferLocation = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, m_VertexBuffer);
 	m_VertexBufferView.StrideInBytes = sizeof(VERTEX);
 	m_VertexBufferView.SizeInBytes = sizeof(VERTEX) * vtxSize;
 };
@@ -78,6 +80,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 		case VERTEX_TYPES::SKINNED:
 			LoadVertices<SkinnedVertex>(commandList, file, manager, vertexLen);
 			GetBone(commandList, fileName, manager);
+			m_IsSkinned = true;
 			break;
 		}
 
@@ -199,24 +202,31 @@ int Mesh::GetBone(ComPtr<ID3D12GraphicsCommandList> commandList, const std::stri
 //	return true;
 //}
 
+void Mesh::SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+#ifdef INTERLEAVED_VERTEX
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[1] = {
+		m_VertexBufferView
+	};
+#else
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[4] = {
+		m_PositionBufferView,
+		m_NormalBufferView,
+		m_TangentBufferView,
+		m_TexCoord0BufferView
+	};
+
+	commandList->IASetIndexBuffer(&m_IndexBufferView);
+
+#endif
+
+	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
+}
+
 void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent)
 {
 	if (m_VertexNum > 0) {
-#ifdef INTERLEAVED_VERTEX
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[1] = {
-			m_VertexBufferView
-		};
-#else
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferViews[4] = {
-			m_PositionBufferView,
-			m_NormalBufferView,
-			m_TangentBufferView,
-			m_TexCoord0BufferView
-		};
 
-		commandList->IASetIndexBuffer(&m_IndexBufferView);
-
-#endif
 
 		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
 
@@ -224,15 +234,18 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& par
 
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 
-		commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
-
 #ifdef INTERLEAVED_VERTEX
 		commandList->DrawInstanced(m_VertexNum, 1, 0, 0);
 #else
 		commandList->DrawIndexedInstanced(m_IndexNum, 1, 0, 0, 0);
 #endif
 	}
+}
 
-	//for (auto& mesh : m_Childs)
-	//	mesh->Render(commandList, m_RootTransform);
+void Mesh::Animate(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	if (m_VertexNum > 0)
+	{
+		commandList->DrawInstanced(m_VertexNum, 1, 0, 0);
+	}
 }

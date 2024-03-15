@@ -311,7 +311,8 @@ bool Renderer::CreateRootSignature()
 	//
 	// create root signature
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlag =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT; /* |
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | 
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_STREAM_OUTPUT; /* |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS;     */
 
@@ -653,7 +654,7 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 
 			case D3D12_SRV_DIMENSION_BUFFER:
 				srvDesc.Buffer.FirstElement = 0;
-				srvDesc.Buffer.NumElements = resources[i]->GetNumOfElement();
+				srvDesc.Buffer.NumElements = static_cast<UINT>(resources[i]->GetNumOfElement());
 				srvDesc.Buffer.StructureByteStride = resources[i]->GetStride();
 				srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
@@ -671,7 +672,7 @@ bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, 
 			D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
 			uavDesc.Format = DXGI_FORMAT_UNKNOWN;
 			uavDesc.Buffer.FirstElement = 0;
-			uavDesc.Buffer.NumElements = resources[i]->GetNumOfElement();
+			uavDesc.Buffer.NumElements = static_cast<UINT>(resources[i]->GetNumOfElement());
 			uavDesc.Buffer.StructureByteStride = resources[i]->GetStride();
 			uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_RAW;
 			uavDesc.Buffer.CounterOffsetInBytes;
@@ -819,10 +820,6 @@ COOLResourcePtr Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESO
 {
 	UINT createBytes = ((bytes + 255) & ~255);
 	auto resource = CreateEmptyBufferResource(heapType, resourceState, createBytes, name);
-
-	if (D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER == resourceState) {
-		resource->SetUnorderedAccess();
-	}
 
 	if (toMapData) {
 		resource->SetMapOn();

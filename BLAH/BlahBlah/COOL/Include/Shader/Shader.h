@@ -79,7 +79,7 @@ public:
 	bool CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsCommandList> commandList, ComPtr<ID3D12RootSignature> rootSignature, const std::string& fileName);
 
 public:
-	virtual void Render(ComPtr<ID3D12GraphicsCommandList> commandList);
+	virtual void SetPipelineState(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 protected:
 	std::vector<Material*> m_Materials;

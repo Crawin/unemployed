@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "Shader.h"
 #include "Material/Material.h"
+#include "Vertex.h"
 #include <json/json.h>
 
 #define FILE_PATH "Include/Shader/HLSL/"
@@ -60,6 +61,35 @@ D3D12_STREAM_OUTPUT_DESC Shader::GetStreamOutputDesc(int presetID)
 	default:
 		// no use
 		return desc;
+	case 1:
+	{
+		// for gpu animation
+		//struct VS_OUTPUT
+		//{
+		//	float4 position : SV_Position;
+		//	float3 positionW : POSITION;
+		//	float3 normalW : NORMAL;
+		//	float3 tangentW : TANGENT;
+		//	float2 uv : TEXCOORD;
+		//};
+		UINT entry = 4;
+		D3D12_SO_DECLARATION_ENTRY* outputDecl = new D3D12_SO_DECLARATION_ENTRY[entry];
+		outputDecl[0] = { 0, "POSITION", 0, 0, 3, 0 };
+		outputDecl[1] = { 0, "NORMAL", 0, 0, 3, 0 };
+		outputDecl[2] = { 0, "TANGENT", 0, 0, 3, 0 };
+		outputDecl[3] = { 0, "TEXCOORD", 0, 0, 2, 0 };
+
+		UINT* bufferStride = new UINT[1];
+		bufferStride[0] = sizeof(SkinnedVertex);
+
+		desc.NumEntries = entry;
+		desc.pSODeclaration = outputDecl;
+		desc.NumStrides = 1;
+		desc.pBufferStrides = bufferStride;
+		desc.RasterizedStream = D3D12_SO_NO_RASTERIZED_STREAM;
+
+		return desc;
+	}
 	}
 
 	return desc;
@@ -142,8 +172,11 @@ D3D12_DEPTH_STENCIL_DESC Shader::GetDepthStencilState(int presetID)
 		// depth stencil = on
 		return desc;
 
-	//case 1:
-		// depth stencil off;
+	case 1:
+		 //depth stencil off;
+		desc.DepthEnable = FALSE;
+
+		return desc;
 	}
 
 	return desc;
@@ -366,7 +399,7 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 	return true;
 }
 
-void Shader::Render(ComPtr<ID3D12GraphicsCommandList> commandList)
+void Shader::SetPipelineState(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	if (false == m_Enable)
 		return;

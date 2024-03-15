@@ -52,6 +52,7 @@ private:
 	template<typename VERTEX>
 	friend void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize);
 
+
 	friend void Bone::LoadBone(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 private:
@@ -63,20 +64,29 @@ private:
 	void AddMesh(Mesh* mesh) { m_Meshes.push_back(mesh); }
 
 	template <class T>
-	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", bool useToShader = false)
+	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::VERTEX)
 	{
 		COOLResourcePtr ptr = Renderer::GetInstance().CreateBufferFromVector(commandList, data, resourceState, name);
 
-		if (useToShader) {
+		switch (toInsert) {
+		case RESOURCE_TYPES::SHADER:
 			m_Resources.push_back(ptr);
 			return static_cast<int>(m_Resources.size() - 1);
-		}
-		else {
-			ptr->SetUnorderedAccess();
+			break;
+		case RESOURCE_TYPES::VERTEX:
 			m_VertexIndexDatas.push_back(ptr);
 			return static_cast<int>(m_VertexIndexDatas.size() - 1);
+			break;
+		case RESOURCE_TYPES::OBJECT:
+			m_ObjectDatas.push_back(ptr);
+			return static_cast<int>(m_ObjectDatas.size() - 1);
+			break;
 		}
+
+		return -1;
 	}
+
+	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER);
 
 	// object 폴더의 file 불러오는 함수
 	bool LoadObjectFile(const std::string& sceneName, bool isCam = false);
@@ -114,8 +124,7 @@ public:
 	int CreateObjectResource(UINT size, const std::string resName, void** toMapData);
 
 	// resource
-	D3D12_GPU_VIRTUAL_ADDRESS GetVertexDataGPUAddress(int idx);
-	D3D12_GPU_VIRTUAL_ADDRESS GetObjectDataGPUAddress(int idx);
+	D3D12_GPU_VIRTUAL_ADDRESS GetResourceDataGPUAddress(RESOURCE_TYPES resType, int idx);
 
 	// 렌더 전 디스크립터테이블 set
 	void SetDatas();
@@ -134,6 +143,9 @@ public:
 	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
 	int GetPostProcessingMaterial() const;
+
+	// manual 
+	void SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState);
 
 	void SetMainCamera(component::Camera* cam) { m_MainCamera = cam; }
 	
@@ -185,6 +197,9 @@ private:
 
 	// shader
 	std::vector<std::shared_ptr<Shader>> m_Shaders;
+
+	// animation stream out shader
+	std::shared_ptr<Shader> m_AnimationShader;
 
 	// Deffered render targets
 	// 해당갯수 만큼 m_Resources에 넣음

@@ -21,8 +21,9 @@
 			"Renderer":
 			{
 				"Mesh": "test_rigging.satodia_Body_testrig",
-				"Material": "SatoBody_Skinned"
-			}
+				"Material": "SatoBody"
+			},
+			"Animation": {}
 		},
 
 		{
@@ -48,8 +49,9 @@
 					"Renderer":
 					{
 						"Mesh": "test_rigging.satodia_Hair_testrig",
-						"Material": "SatoHair_Skinned"
-					}
+						"Material": "SatoHair"
+					},
+					"Animation": {}
 				},
 				{
 					"Name" : "Satono_Diamond_01_FaceRoot",
@@ -74,7 +76,9 @@
 							{
 								"Mesh": "test_rigging.satodia_Eyes_testrig",
 								"Material": "NoMaterial"
-							}
+							},
+							"Animation": {}
+
 						},
 						{
 							"Name" : "Satono_Diamond_01_Face",
@@ -88,7 +92,8 @@
 							{
 								"Mesh": "test_rigging.satodia_Face_testrig",
 								"Material": "NoMaterial"
-							}
+							},
+							"Animation": {}
 						}
 					]
 				}

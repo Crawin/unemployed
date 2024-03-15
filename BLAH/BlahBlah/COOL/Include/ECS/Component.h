@@ -163,7 +163,7 @@ namespace component {
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 		
 		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
-		const XMFLOAT4X4& GetWorldTransform() const;
+		XMFLOAT4X4 GetWorldTransform();
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
@@ -180,7 +180,9 @@ namespace component {
 	class Renderer : public ComponentBase<Renderer>
 	{
 		XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();
-		
+
+		D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView = {};
+
 		int m_MeshID;
 		int m_MaterialID;
 
@@ -192,10 +194,36 @@ namespace component {
 		int GetMesh() const { return m_MeshID; }
 		int GetMaterial() const { return m_MaterialID; }
 		XMFLOAT4X4& GetWorldMatrix() { return m_WorldMatrix; }
+		const D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() const { return m_VertexBufferView; }
 
 		void SetMesh(int idx) { m_MeshID = idx; }
 		void SetMaterial(int idx) { m_MaterialID = idx; }
 		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
+		void SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view) { m_VertexBufferView = view; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// render component
+	// 렌더 관련, mesh, material
+	//
+	class Animation : public ComponentBase<Animation> {
+		// blahblah 
+		// animation data
+		// blahblah
+		int m_StreamOutBuffer = -1;
+		D3D12_STREAM_OUTPUT_BUFFER_VIEW m_ToAnimateBufferView = {};
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		int GetStreamOutBuffer() const { return m_StreamOutBuffer; }
+		const D3D12_STREAM_OUTPUT_BUFFER_VIEW& GetStreamOutBufferView() const { return m_ToAnimateBufferView; }
+
+		void SetStreamOutBuffer(int idx) { m_StreamOutBuffer = idx; }
+		void SetStreamOutBufferView(const D3D12_STREAM_OUTPUT_BUFFER_VIEW& view) { m_ToAnimateBufferView = view; }
+
 	};
 
 	/////////////////////////////////////////////////////////

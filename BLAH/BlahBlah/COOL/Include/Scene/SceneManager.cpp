@@ -12,8 +12,9 @@ void SceneManager::RegisterComponents()
 	// framework.h COMPONENT_COUNT로 들어가서 숫자를 바꿔라
 	REGISTER_COMPONENT(component::Name, "Name");
 	REGISTER_COMPONENT(component::Renderer, "Renderer");
+	REGISTER_COMPONENT(component::Animation, "Animation");
 	REGISTER_COMPONENT(component::Root, "Root");
-	REGISTER_COMPONENT(component::Children, "_MANUAL_00");			// 자동으로 되어선 안된다
+	REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Input, "Input");

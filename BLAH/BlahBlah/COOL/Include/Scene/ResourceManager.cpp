@@ -46,6 +46,34 @@ ResourceManager::~ResourceManager()
 	m_ObjectDatas.clear();
 }
 
+int ResourceManager::CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert)
+{
+	COOLResourcePtr ptr = Renderer::GetInstance().CreateEmptyBuffer(
+		D3D12_HEAP_TYPE_DEFAULT,
+		D3D12_RESOURCE_STATE_COMMON,
+		size * stride,
+		name);
+
+	ptr->TransToState(commandList, resourceState);
+
+	switch (toInsert) {
+	case RESOURCE_TYPES::SHADER:
+		m_Resources.push_back(ptr);
+		return static_cast<int>(m_Resources.size() - 1);
+		break;
+	case RESOURCE_TYPES::VERTEX:
+		m_VertexIndexDatas.push_back(ptr);
+		return static_cast<int>(m_VertexIndexDatas.size() - 1);
+		break;
+	case RESOURCE_TYPES::OBJECT:
+		m_ObjectDatas.push_back(ptr);
+		return static_cast<int>(m_ObjectDatas.size() - 1);
+		break;
+	}
+
+	return -1;
+}
+
 bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 {
 	// 오브젝트를 로드한다.
@@ -226,11 +254,16 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	// Load Mesh, Material, Texture, Shader to use
 	CHECK_CREATE_FAILED(LateInit(commandList), "LateInit Fail!");
 
+	// Make shader for animation stream out
+	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
+	CHECK_CREATE_FAILED(m_AnimationShader, "Shader Making Failed!!");
+
 	// build mrt rtv heap
 	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateRenderTargetView(m_MRTHeap, m_Resources, m_DefferedRTVStartIdx, m_DefferedRenderTargets), "Create MRT RTV Failed!!");
 
 	// build resource heap
 	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), "CreateResourceDescriptorHeap Fail!!");
+
 
 	return true;
 }
@@ -302,6 +335,7 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		}
 
 		rendererLoadInfo.m_Renderer->SetMesh(res);
+		rendererLoadInfo.m_Renderer->SetVertexBufferView(m_Meshes[res]->m_VertexBufferView);
 
 		// load material
 		std::string materialFileName = rendererLoadInfo.m_MaterialName;
@@ -322,6 +356,51 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
 
+
+	// sync with animation , renderer
+
+	// 람다에 this는 조금 그렇지만
+	// 초기화 부분이라 봐준다
+	// todo 한번 생각해보자
+	std::function<void(component::Renderer*, component::Animation*)> func = [&commandList, this](component::Renderer* render, component::Animation* anim) {
+		Mesh* mesh = m_Meshes[render->GetMesh()];
+
+		if (mesh->GetVertexNum() <= 0) return;
+
+		// make stream buff
+		// result is Vertex
+		int streamOutBuffer = CreateEmptyBuffer(
+			commandList,
+			mesh->m_VertexNum, sizeof(Vertex),
+			D3D12_RESOURCE_STATE_STREAM_OUT,
+			std::format("animated_{}", mesh->m_Name),
+			RESOURCE_TYPES::VERTEX);
+
+		int filledSizeBuff = CreateEmptyBuffer(
+			commandList,
+			sizeof(UINT64), sizeof(UINT64),
+			D3D12_RESOURCE_STATE_STREAM_OUT,
+			std::format("StreamCount_animated_{}", mesh->m_Name),
+			RESOURCE_TYPES::VERTEX);
+
+		// update renderer vertex buffer use to this
+		D3D12_VERTEX_BUFFER_VIEW animatedBufferView = {};
+		animatedBufferView.BufferLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, streamOutBuffer);
+		animatedBufferView.StrideInBytes = sizeof(Vertex);
+		animatedBufferView.SizeInBytes = sizeof(Vertex) * mesh->m_VertexNum;
+		render->SetVertexBufferView(animatedBufferView);
+
+		D3D12_STREAM_OUTPUT_BUFFER_VIEW toAnimateBufferView = {};
+		toAnimateBufferView.BufferLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, streamOutBuffer);
+		toAnimateBufferView.BufferFilledSizeLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, filledSizeBuff);
+		toAnimateBufferView.SizeInBytes = sizeof(Vertex) * mesh->m_VertexNum;
+
+		anim->SetStreamOutBufferView(toAnimateBufferView);
+		anim->SetStreamOutBuffer(streamOutBuffer);
+		};
+
+	m_ECSManager->Execute(func);
+
 	// 임시
 	//PRINT_ALL_BITSET;
 
@@ -329,6 +408,9 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	//	m_ECSManager->AddEntity(cam);
 
 	//m_ToLoadRenderDatas.clear();
+
+
+
 	return true;
 }
 
@@ -484,21 +566,56 @@ int ResourceManager::GetPostProcessingMaterial() const
 	return m_PostProcessingMaterial;
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)
+void ResourceManager::SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState)
 {
-	if (0 <= idx && idx < m_VertexIndexDatas.size())
-		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+	switch (resType) {
+	case RESOURCE_TYPES::SHADER:
+		m_Resources[idx]->TransToState(cmdList, toState);
+		break;
+	case RESOURCE_TYPES::VERTEX:
+		m_VertexIndexDatas[idx]->TransToState(cmdList, toState);
+		break;
+	case RESOURCE_TYPES::OBJECT:
+		m_ObjectDatas[idx]->TransToState(cmdList, toState);
+		break;
+	}
+}
+
+D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetResourceDataGPUAddress(RESOURCE_TYPES resType, int idx)
+{
+	switch (resType) {
+	case RESOURCE_TYPES::SHADER:
+		if (0 <= idx && idx < m_Resources.size())
+			return m_Resources[idx]->GetResource()->GetGPUVirtualAddress();
+		break;
+	case RESOURCE_TYPES::VERTEX:
+		if (0 <= idx && idx < m_VertexIndexDatas.size())
+			return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+		break;
+	case RESOURCE_TYPES::OBJECT:
+		if (0 <= idx && idx < m_ObjectDatas.size())
+			return m_ObjectDatas[idx]->GetResource()->GetGPUVirtualAddress();
+		break;
+	}
 
 	return -1;
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetObjectDataGPUAddress(int idx)
-{
-	if (0 <= idx && idx < m_ObjectDatas.size())
-		return m_ObjectDatas[idx]->GetResource()->GetGPUVirtualAddress();
-
-	return -1;
-}
+//D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetVertexDataGPUAddress(int idx)
+//{
+//	if (0 <= idx && idx < m_VertexIndexDatas.size())
+//		return m_VertexIndexDatas[idx]->GetResource()->GetGPUVirtualAddress();
+//
+//	return -1;
+//}
+//
+//D3D12_GPU_VIRTUAL_ADDRESS ResourceManager::GetObjectDataGPUAddress(int idx)
+//{
+//	if (0 <= idx && idx < m_ObjectDatas.size())
+//		return m_ObjectDatas[idx]->GetResource()->GetGPUVirtualAddress();
+//
+//	return -1;
+//}
 
 int ResourceManager::GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
 {

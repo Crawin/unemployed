@@ -40,6 +40,75 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	return true;
 }
 
+void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	ResourceManager* manager = m_ResourceManager;
+
+	// Set Animation PSO
+	m_ResourceManager->m_AnimationShader->SetPipelineState(commandList);
+
+	// animate to data
+	std::function<void(component::Renderer*, component::Animation*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::Animation* animComp) {
+		int meshIdx = renderComponent->GetMesh();
+		Mesh* mesh = manager->m_Meshes[meshIdx];
+		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
+			// Stream Out 데이터를 Stream Out으로 set
+			int bufidx = animComp->GetStreamOutBuffer();
+			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_STREAM_OUT);
+			auto resPtr = animComp->GetStreamOutBuffer();
+
+			// SO set
+			const auto& view = animComp->GetStreamOutBufferView();
+			D3D12_STREAM_OUTPUT_BUFFER_VIEW bufView[] = { view };
+			commandList->SOSetTargets(0, _countof(bufView), bufView);
+
+			// todo
+			// set animation data here
+
+			mesh->SetVertexBuffer(commandList);
+			mesh->Animate(commandList);
+
+			// 완료 후 Vertex Buffer로 변경
+			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		}
+		};
+
+	m_ECSManager->Execute(animate);
+
+}
+
+void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
+{
+	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
+	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON);
+
+	int postMat = m_ResourceManager->GetPostProcessingMaterial();
+
+	m_ResourceManager->m_Materials[postMat]->GetShader()->SetPipelineState(commandList);
+	m_ResourceManager->m_Materials[postMat]->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+	commandList->DrawInstanced(6, 1, 0, 0);
+
+
+#ifdef _DEBUG
+	// test code
+	// todo 적절한 위치로 옮기도록 하자
+	if (InputManager::GetInstance().GetDebugMode()) {
+		commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+		int debugMat = m_ResourceManager->GetDebuggingMaterial();
+
+		m_ResourceManager->m_Materials[debugMat]->GetShader()->SetPipelineState(commandList);
+		int a[2] = { 0, 0 };
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
+		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+		commandList->DrawInstanced(6, 1, 0, 0);
+	}
+#endif
+}
+
 bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	if (LoadScene(commandList, m_SceneName) == false)
@@ -57,6 +126,17 @@ void Scene::Update(float deltaTime)
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
+	auto& res = m_ResourceManager;
+
+	// heap set
+	auto& heap = res->m_ShaderResourceHeap;
+	commandLists[0]->SetDescriptorHeaps(1, heap.GetAddressOf());
+	commandLists[0]->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
+
+
+	// animate first
+	AnimateToSO(commandLists[0]);
+
 	// default deffered renderer
 	m_ResourceManager->SetMRTStates(commandLists[0], D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -68,10 +148,6 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart();
 	commandLists[0]->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &resultDsv);
 	//commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
-
-	// camera set
-	auto& res = m_ResourceManager;
-	//res->m_MainCamera->SetCameraData(commandLists[0]);
 	
 	// get light to make shadow map
 	// todo 이걸 하자
@@ -95,21 +171,23 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 	camVec[0]->SetCameraData(commandLists[0]);
 
-	// heap set
-	auto& heap = res->m_ShaderResourceHeap;
-	commandLists[0]->SetDescriptorHeaps(1, heap.GetAddressOf());
-	commandLists[0]->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
 
 	// make function
 	std::function<void(component::Renderer*)> func = [&commandLists, &res](component::Renderer* renderComponent) {
 		int material = renderComponent->GetMaterial();
 		int mesh = renderComponent->GetMesh();
 
-		res->m_Materials[material]->GetShader()->Render(commandLists[0]);
+		res->m_Materials[material]->GetShader()->SetPipelineState(commandLists[0]);
 
 		res->m_Materials[material]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 		//XMFLOAT4X4 t = Matrix4x4::Identity();
+		//res->m_Meshes[mesh]->SetVertexBuffer(commandLists[0]);
+
+		const auto& view = renderComponent->GetVertexBufferView();
+		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
+		commandLists[0]->IASetVertexBuffers(0, _countof(bufView), bufView);
+
 		res->m_Meshes[mesh]->Render(commandLists[0], renderComponent->GetWorldMatrix());
 		};
 
@@ -120,48 +198,5 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	// post processing
-	commandLists[0]->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
-	m_ResourceManager->SetMRTStates(commandLists[0], D3D12_RESOURCE_STATE_COMMON);
-
-	int postMat = m_ResourceManager->GetPostProcessingMaterial();
-
-	m_ResourceManager->m_Materials[postMat]->GetShader()->Render(commandLists[0]);
-	m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
-
-	commandLists[0]->DrawInstanced(6, 1, 0, 0);
-
-
-#ifdef _DEBUG
-	// test code
-	// todo 적절한 위치로 옮기도록 하자
-	if (InputManager::GetInstance().GetDebugMode()) {
-		commandLists[0]->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-		int debugMat = m_ResourceManager->GetDebuggingMaterial();
-
-		m_ResourceManager->m_Materials[debugMat]->GetShader()->Render(commandLists[0]);
-		int a[2] = { 0, 0 };
-		commandLists[0]->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
-		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
-
-		commandLists[0]->DrawInstanced(6, 1, 0, 0);
-	}
-#endif
+	PostProcessing(commandLists[0], resultRtv, resultDsv);
 }
-
-//bool Scene::Init()
-//{
-//	m_SceneName = "Base";
-//	//pRenederer = Renderer::GetInstance().GetRendererPtr();
-//	DebugPrint(std::format("씬: {} 생성", m_SceneName));
-//	return true;
-//}
-
-//void Scene::Render()
-//{
-//	if (pRenederer)
-//	{
-//		pRenederer->Render();
-//	}
-//}

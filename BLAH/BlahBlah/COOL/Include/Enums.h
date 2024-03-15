@@ -48,3 +48,9 @@ enum class VERTEX_TYPES {
 	NORMAL,
 	SKINNED
 };
+
+enum class RESOURCE_TYPES {
+	SHADER = 0,
+	VERTEX,
+	OBJECT,
+};

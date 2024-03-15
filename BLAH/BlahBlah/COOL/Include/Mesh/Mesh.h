@@ -42,6 +42,10 @@ private:
 
 #endif
 
+
+	bool m_IsSkinned = false;
+
+
 	// name
 	std::string m_Name = "";
 
@@ -93,5 +97,14 @@ public:
 	void InsertIndexBuffer(int idx)		{ m_IndexBuffer = idx; }
 #endif
 
+	bool IsSkinned() const { return m_IsSkinned; }
+
+	void SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList);
+
 	void Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent);
+
+	// make animation data
+	void Animate(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	int GetVertexNum() const { return m_VertexNum; }
 };

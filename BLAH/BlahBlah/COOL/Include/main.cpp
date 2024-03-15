@@ -40,13 +40,13 @@ static std::wstring GetLatestWinPixGpuCapturerPath()
     return pixInstallationPath / newestVersionFound / L"WinPixGpuCapturer.dll";
 }
 
-
+//
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 #ifdef _DEBUG
     if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0)
     {
-        //LoadLibrary(GetLatestWinPixGpuCapturerPath().c_str());
+        LoadLibrary(GetLatestWinPixGpuCapturerPath().c_str());
     }
 #endif
 

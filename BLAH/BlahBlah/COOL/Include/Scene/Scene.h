@@ -52,6 +52,12 @@ protected:
 private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
+	// render seq 01
+	void AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	// render seq final
+	void PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+
 public:
 
 	// 최초 진입시 할 행동 ex) 맵 로드, npc 생성 등등
