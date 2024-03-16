@@ -79,7 +79,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 
 		case VERTEX_TYPES::SKINNED:
 			LoadVertices<SkinnedVertex>(commandList, file, manager, vertexLen);
-			GetBone(commandList, fileName, manager);
+			m_BoneIdx = GetBone(commandList, fileName, manager);
 			m_IsSkinned = true;
 			break;
 		}

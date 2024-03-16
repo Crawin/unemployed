@@ -70,6 +70,7 @@ private:
 
 		switch (toInsert) {
 		case RESOURCE_TYPES::SHADER:
+			ptr->SetShaderResource();
 			m_Resources.push_back(ptr);
 			return static_cast<int>(m_Resources.size() - 1);
 			break;
@@ -78,6 +79,7 @@ private:
 			return static_cast<int>(m_VertexIndexDatas.size() - 1);
 			break;
 		case RESOURCE_TYPES::OBJECT:
+			//ptr->SetConstant();
 			m_ObjectDatas.push_back(ptr);
 			return static_cast<int>(m_ObjectDatas.size() - 1);
 			break;

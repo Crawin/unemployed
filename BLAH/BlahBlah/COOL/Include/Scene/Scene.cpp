@@ -63,6 +63,14 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			commandList->SOSetTargets(0, _countof(bufView), bufView);
 
 			// todo
+			// set bone here
+			int boneIdx = mesh->GetBoneIdx();
+			
+			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneIdx, static_cast<int>(ANIM_ROOTCONST::BONE_IDX));
+
+			//manager->
+			// animComp->SetBone;
+			// animComp->SetBlahBlah
 			// set animation data here
 
 			mesh->SetVertexBuffer(commandList);

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <format>
+#include <direct.h>
 #include <vector>
 #include <algorithm>
 #include <fstream>
@@ -31,12 +32,13 @@ void SetBoneIndexSet(FbxNode* node) {
 
 	// no bone
 	if (g_Vector.end() == std::find(g_Vector.begin(), g_Vector.end(), node->GetName())) {
-		std::cout << "IDX: " << g_Vector.size() << "Skeleton node name: " << node->GetName() << std::endl;
+		std::cout << "IDX : " << g_Vector.size() << ",\tSkeleton node name : " << node->GetName() << std::endl;
 		XMFLOAT4X4 trans;
 		FbxMatrix fbxTransform = node->EvaluateGlobalTransform();
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				trans.m[i][j] = fbxTransform[i][j];
+				// should transpose
+				trans.m[j][i] = fbxTransform[i][j];
 			}
 		}
 		// insert data to vector
@@ -225,6 +227,8 @@ void FindBone(FbxNode* Node)
 
 int main(int argc, char* argv[])
 {
+	_mkdir("Result");
+
 	for (int i = 1; i < argc; ++i)
 	{
 		// FBX SDK 초기화
@@ -267,7 +271,7 @@ int main(int argc, char* argv[])
 			// if bone, export
 			if (g_BoneMatrixVector.size() > 0) {
 				// export bone file
-				std::string boneFileName = "bone_";
+				std::string boneFileName = "Result\\bone_";
 				boneFileName += fileName;
 				boneFileName += ".bin";
 
@@ -305,7 +309,8 @@ int main(int argc, char* argv[])
 			}
 			
 			std::string outputFileName = ChangeExtensionToBin(fileName);
-			std::fstream outputFile(outputFileName, std::ios::binary | std::ios::out);
+			std::string of = "Result\\" + outputFileName;
+			std::fstream outputFile(of, std::ios::binary | std::ios::out);
 			ExtractToFIle(mesh, outputFile);
 
 			// 정리 작업

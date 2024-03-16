@@ -243,7 +243,8 @@ bool Renderer::CreateRootSignature()
 	// 디스크립터힙 내부: (Texture2D, TextureCube, Texture2D, ...) 
 	// 쉐이더 에서 TexCubeList[1]로 사용 해야 함
 
-	const int numParams = static_cast<int>(ROOT_SIGNATURE_IDX::ROOT_SIGNATURE_IDX_MAX);
+	//const int extraCbufferSpace = 1;
+	const int numParams = static_cast<int>(ROOT_SIGNATURE_IDX::ROOT_SIGNATURE_IDX_MAX);// +extraCbufferSpace;
 	D3D12_ROOT_PARAMETER rootParams[numParams] = {};
 
 	//  ...ROOT_SIGNATURE_IDX enum 참고

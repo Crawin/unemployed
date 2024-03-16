@@ -20,9 +20,40 @@ struct VS_OUTPUT
 	float2 uv : TEXCOORD;
 };
 
+cbuffer MaterialAnim : register(b0)
+{
+	uint boneIdx;
+	uint anim1Idx;
+	uint anim2Idx;
+	float animBlend;
+
+	float anim1PlayTime;
+	float anim2Playtime;
+};
+
+#define MAX_BONE_LEN 64
+
+
+struct BONEDATA
+{
+	matrix boneMat[MAX_BONE_LEN];
+};
+
+struct AnimData
+{
+	matrix anim[MAX_BONE_LEN];
+};
+
+StructuredBuffer<BONEDATA> BoneDataList : register(t0, space6);
+StructuredBuffer<AnimData> AnimDataList : register(t0, space7);
+
 VS_OUTPUT vs(VS_INPUT input)
 {
 	// do animation here
+	BONEDATA bone = BoneDataList[boneIdx].boneMat;
+	
+	
+
 	VS_OUTPUT output;
 	output.position = input.position;
 	output.normal = input.normal;

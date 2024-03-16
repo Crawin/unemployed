@@ -213,6 +213,22 @@ namespace component {
 		int m_StreamOutBuffer = -1;
 		D3D12_STREAM_OUTPUT_BUFFER_VIEW m_ToAnimateBufferView = {};
 
+		int m_CurAnimation = -1;
+		int m_BefAnimation = -1;
+
+		float m_BefAniWeight = 0;
+
+		float m_CurAniPlayTime = 0.0f;
+		float m_BefAniPlayTime = 0.0f;
+
+		// self.idle, self.walk, self.run, self.blabal ...
+		// 전부 만들어 둘까?
+		// 아니면 데이터만 가지고 있고
+		// 다른애가 set 해주게 만들까
+		// ex) GuardAnimationPlayer라는 컴포넌트가 있음, system에서 GuardAnimPlayer & Speed, Animation을 해서 speed에 따라서 currentAnim을 바꿈
+		// 구조를 보면 이게 맞을지도?
+		// 생각해보자
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 

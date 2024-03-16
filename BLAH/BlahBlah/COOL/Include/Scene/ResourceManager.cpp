@@ -58,6 +58,7 @@ int ResourceManager::CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> command
 
 	switch (toInsert) {
 	case RESOURCE_TYPES::SHADER:
+		ptr->SetShaderResource();
 		m_Resources.push_back(ptr);
 		return static_cast<int>(m_Resources.size() - 1);
 		break;

@@ -42,8 +42,8 @@ private:
 
 #endif
 
-
 	bool m_IsSkinned = false;
+	int m_BoneIdx = -1;
 
 
 	// name
@@ -98,7 +98,7 @@ public:
 #endif
 
 	bool IsSkinned() const { return m_IsSkinned; }
-
+	int GetBoneIdx() const { return m_BoneIdx; }
 	void SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	void Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent);
