@@ -80,7 +80,7 @@ D3D12_STREAM_OUTPUT_DESC Shader::GetStreamOutputDesc(int presetID)
 		outputDecl[3] = { 0, "TEXCOORD", 0, 0, 2, 0 };
 
 		UINT* bufferStride = new UINT[1];
-		bufferStride[0] = sizeof(SkinnedVertex);
+		bufferStride[0] = sizeof(Vertex);
 
 		desc.NumEntries = entry;
 		desc.pSODeclaration = outputDecl;
