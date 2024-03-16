@@ -43,6 +43,24 @@ namespace ECSsystem {
 
 	}
 
+	void AnimationPlayTimeAdd::Update(ECSManager* manager, float deltaTime)
+	{
+		std::function<void(component::Animation*)> func = [manager, deltaTime](component::Animation* anim) {
+			float curAnimTime = anim->GetCurrentAnimationPlayTime() + deltaTime;
+			float befAnimTime = anim->GetBeforeAnimationPlayTime() + deltaTime;
+			float curMax = anim->GetCurrentAnimationMaxTime();
+			float befMax = anim->GetBeforeAnimationMaxTime();
+
+			if (curMax < curAnimTime) curAnimTime -= curMax;
+			if (befMax < befAnimTime) befAnimTime -= befMax;
+
+			anim->SetCurrentAnimationPlayTime(curAnimTime);
+			anim->SetBeforeAnimationPlayTime(befAnimTime);
+			};
+
+		manager->Execute(func);
+	}
+
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync with camera

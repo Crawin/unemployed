@@ -73,6 +73,9 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 				// 1. total frame
 				unsigned int totalFrame = end.GetFrameCount(FbxTime::eFrames24);
 				out.write((char*)(&totalFrame), sizeof(unsigned int));
+
+				unsigned int boneSize = g_Vector.size();
+				out.write((char*)(&boneSize), sizeof(unsigned int));
 			}
 
 			std::cout << "StartFrame : " << start.GetFrameCount(FbxTime::eFrames24) << ", EndFrame : " << end.GetFrameCount(FbxTime::eFrames24) << std::endl;
@@ -83,23 +86,28 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 				//std::cout << "Frame " << i << std::endl;
 
 				// Get the local transformation matrix for the node at the current time
-				FbxAMatrix localMatrix = pNode->EvaluateGlobalTransform(currentTime);
-				FbxVector4 translation = localMatrix.GetT();
-				FbxVector4 rotation = localMatrix.GetR();
-				FbxVector4 scaling = localMatrix.GetS();
+				FbxAMatrix globalMatrix = pNode->EvaluateGlobalTransform(currentTime);
+				FbxVector4 translation = globalMatrix.GetT();
+				FbxVector4 rotation = globalMatrix.GetR();
+				FbxVector4 scaling = globalMatrix.GetS();
+				XMFLOAT4X4 trans;
+				for (int i = 0; i < 4; ++i) {
+					for (int j = 0; j < 4; ++j) {
+						// should transpose
+						trans.m[j][i] = globalMatrix[i][j];
+					}
+				}
+				out.write((char*)(&trans), sizeof(XMFLOAT4X4));
 
-				XMFLOAT3 t = { (float)translation[0], (float)translation[1], (float)translation[2] };
+				/*XMFLOAT3 t = { (float)translation[0], (float)translation[1], (float)translation[2] };
 				XMFLOAT3 r = { XMConvertToRadians(rotation[0]),  XMConvertToRadians(rotation[1]), XMConvertToRadians(rotation[2]) };
 				XMFLOAT3 s = { (float)scaling[0], (float)scaling[1], (float)scaling[2] };
 
 				XMMATRIX matrix =
 					XMMatrixMultiply(XMMatrixTranslationFromVector(XMLoadFloat3(&t)),
-						XMMatrixMultiply(XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&r)), XMMatrixScalingFromVector(XMLoadFloat3(&s))));
+						XMMatrixMultiply(XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&r)), XMMatrixScalingFromVector(XMLoadFloat3(&s))));*/
 
 				// transpose
-				matrix = XMMatrixTranspose(matrix);
-				XMFLOAT4X4 mat;
-				XMStoreFloat4x4(&mat, matrix);
 
 				//std::cout << "Translation: (" << translation[0] << ", " << translation[1] << ", " << translation[2] << ")" << std::endl;
 				//std::cout << "Rotation: (" << rotation[0] << ", " << rotation[1] << ", " << rotation[2] << ")" << std::endl;

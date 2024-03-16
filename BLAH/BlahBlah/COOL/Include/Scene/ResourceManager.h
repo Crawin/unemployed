@@ -2,8 +2,11 @@
 #include "Material/Material.h"
 #include "Mesh/Mesh.h"
 #include "Mesh/Bone.h"
+#include "Animation/Animation.h"
+#include "Animation/AnimationPlayer.h"
 //#include "Object/ObjectBase.h"
 
+class Renderer;
 class COOLResource;
 class Material;
 class Mesh;
@@ -52,8 +55,9 @@ private:
 	template<typename VERTEX>
 	friend void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize);
 
-
 	friend void Bone::LoadBone(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
+
+	friend void Animation::LoadAnimation(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 private:
 
@@ -90,18 +94,13 @@ private:
 
 	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER);
 
-	// object 폴더의 file 불러오는 함수
-	bool LoadObjectFile(const std::string& sceneName, bool isCam = false);
-
-	// Json을 파싱해 오브젝트를 실제로 만드는 함수
-	Entity* LoadObjectJson(Json::Value& root, Entity* parent = nullptr);
-
+	
+	bool LoadObjectFile(const std::string& sceneName, bool isCam = false);	// object 폴더의 file 불러오는 함수
+	Entity* LoadObjectJson(Json::Value& root, Entity* parent = nullptr);	// Json을 파싱해 오브젝트를 실제로 만드는 함수
 	int LoadMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
-
 	int LoadMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
-
 	int LoadBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
-
+	int LoadAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 	std::shared_ptr<Shader> LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	// mesh/material 에 로드 할 것들이 남아 있다면 로드
@@ -109,8 +108,6 @@ private:
 
 	// objects
 	bool LoadObjects(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
-
-	// camera
 	bool LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	// for deferred renderer
@@ -135,6 +132,7 @@ public:
 	int GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 	int GetMaterial(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 	int GetBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
+	int GetAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 	std::shared_ptr<Shader> GetShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
 
 	// for late init
@@ -192,6 +190,8 @@ private:
 	// mesh
 	std::vector<Mesh*> m_Meshes;
 	std::vector<Bone*> m_Bones;
+	std::vector<AnimationPlayer*> m_AnimationPlayer;
+	std::vector<Animation*> m_Animations;
 
 	// material, texture
 	std::vector<Material*> m_Materials;

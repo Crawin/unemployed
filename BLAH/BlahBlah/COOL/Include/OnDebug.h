@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // 디버그 모드 활성화 될 것들 모음집.txt
 
 
@@ -20,7 +20,7 @@
 inline void DebugPrint(const std::string& str)
 {
 #ifdef _DEBUG
-	std::cout << str << std::endl;
+	std::cout << str << "\n";
 #endif
 }
 

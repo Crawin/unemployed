@@ -2,6 +2,9 @@
 
 #include "Light.h"
 namespace Json { class Value; }
+namespace ECSsystem { 
+	class AnimationPlayTimeAdd;
+}
 class ResourceManager;
 class Entity;
 
@@ -203,29 +206,37 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// render component
-	// 렌더 관련, mesh, material
+	// AnimationPlayer component
+	// 현재 애니메이션의 재생을 가짐
 	//
 	class Animation : public ComponentBase<Animation> {
+		friend class ECSsystem::AnimationPlayTimeAdd;
 		// blahblah 
 		// animation data
 		// blahblah
 		int m_StreamOutBuffer = -1;
+		D3D12_VERTEX_BUFFER_VIEW m_OriginalBufferView = {};
 		D3D12_STREAM_OUTPUT_BUFFER_VIEW m_ToAnimateBufferView = {};
 
-		int m_CurAnimation = -1;
-		int m_BefAnimation = -1;
+		//D3D12_SHADER_VIEW;
+
+		int m_CurAnimationIdx = -1;
+		int m_BefAnimationIdx = -1;
 
 		float m_BefAniWeight = 0;
 
 		float m_CurAniPlayTime = 0.0f;
 		float m_BefAniPlayTime = 0.0f;
 
+		// 하드코딩하였다...
+		float m_CurAniMaxPlayTime = 0.0f;
+		float m_BefAniMaxPlayTime = 0.0f;
+
 		// self.idle, self.walk, self.run, self.blabal ...
 		// 전부 만들어 둘까?
 		// 아니면 데이터만 가지고 있고
 		// 다른애가 set 해주게 만들까
-		// ex) GuardAnimationPlayer라는 컴포넌트가 있음, system에서 GuardAnimPlayer & Speed, Animation을 해서 speed에 따라서 currentAnim을 바꿈
+		// ex) GuardAnimationPlayer라는 컴포넌트가 있음, system에서 GuardAnimPlayer & Speed, AnimationPlayer을 해서 speed에 따라서 currentAnim을 바꿈
 		// 구조를 보면 이게 맞을지도?
 		// 생각해보자
 
@@ -235,11 +246,28 @@ namespace component {
 		virtual void ShowYourself() const;
 
 		int GetStreamOutBuffer() const { return m_StreamOutBuffer; }
+		const D3D12_VERTEX_BUFFER_VIEW& GetOriginalVertexBufferView() const { return m_OriginalBufferView; }
 		const D3D12_STREAM_OUTPUT_BUFFER_VIEW& GetStreamOutBufferView() const { return m_ToAnimateBufferView; }
+		int GetCurrentAnimation() const { return m_CurAnimationIdx; }
+		int GetBeforeAnimation() const { return m_BefAnimationIdx; }
+		float GetBeforeAnimationWeight() const { return m_BefAniWeight; }
+		float GetCurrentAnimationPlayTime() const { return m_CurAniPlayTime; }
+		float GetBeforeAnimationPlayTime() const { return m_BefAniPlayTime; }
+		float GetCurrentAnimationMaxTime() const { return m_CurAniMaxPlayTime; }
+		float GetBeforeAnimationMaxTime() const { return m_BefAniMaxPlayTime; }
 
 		void SetStreamOutBuffer(int idx) { m_StreamOutBuffer = idx; }
+		void SetOriginalVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view) { m_OriginalBufferView = view; }
 		void SetStreamOutBufferView(const D3D12_STREAM_OUTPUT_BUFFER_VIEW& view) { m_ToAnimateBufferView = view; }
+		void SetCurrentAnimation(int idx) { m_CurAnimationIdx = idx; }
+		void SetBeforeAnimation(int idx) { m_BefAnimationIdx = idx; }
+		void SetBeforeAnimationWeight(float weight) { m_BefAniWeight = weight; }
+		void SetCurrentAnimationPlayTime(float time) { m_CurAniPlayTime = time; }
+		void SetBeforeAnimationPlayTime(float time) { m_BefAniPlayTime = time; }
+		void SetCurrentAnimationMaxTime(float time) { m_CurAniMaxPlayTime = time; }
+		void SetBeforeAnimationMaxTime(float time) { m_BefAniMaxPlayTime = time; }
 
+		void ChangeAnimation(int toAnimIdx) { m_BefAnimationIdx = m_CurAnimationIdx; m_CurAnimationIdx = toAnimIdx; }		// todo 
 	};
 
 	/////////////////////////////////////////////////////////

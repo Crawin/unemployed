@@ -13,6 +13,7 @@ class Bone
 	std::vector<XMFLOAT4X4> m_Bones;
 
 	int m_BoneDataIdx = -1;
+	int m_Lenght = -1;
 
 	void LoadBone(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
@@ -20,5 +21,7 @@ public:
 	
 	const std::string& GetName() const { return m_Name; }
 
+	int GetLength() const { return m_Lenght; }
+	int GetBoneDataIdx() const { return m_BoneDataIdx; }
 };
 

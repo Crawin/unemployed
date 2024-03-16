@@ -18,6 +18,7 @@
 #define TEXTURE_PATH	"SceneData\\Material\\Texture\\"
 #define MATERIAL_PATH	"SceneData\\Material\\"
 #define BONE_PATH		"SceneData\\Mesh\\bone_"
+#define ANIMATION_PATH	"SceneData\\Animation\\anim_"
 
 ResourceManager::ResourceManager()
 {
@@ -31,6 +32,8 @@ ResourceManager::~ResourceManager()
 		delete mes;
 	for (auto& bon : m_Bones)
 		delete bon;
+	for (auto& ani : m_Animations)
+		delete ani;
 	//for (auto& cmp : m_Components)
 	//	delete cmp;
 	
@@ -204,7 +207,26 @@ int ResourceManager::LoadBone(const std::string& name, ComPtr<ID3D12GraphicsComm
 	m_Bones.push_back(bone);
 
 	DebugPrint(std::format("loaded bone file name: {}", bone->m_Name));
-	return 0;
+	return static_cast<int>(m_Bones.size() - 1);
+}
+
+int ResourceManager::LoadAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// todo 이런거 템플릿으로 만들자 제발
+	std::string fileName = ANIMATION_PATH + name + ".bin";
+	std::ifstream animFile(fileName, std::ios::binary);
+	if (animFile.is_open() == false) {
+		DebugPrint(std::format("Failed to open anim file!! fileName: {}", fileName));
+		return -1;
+	}
+
+	Animation* anim = new Animation;
+	anim->m_Name = name;
+	anim->LoadAnimation(commandList, animFile, this);
+	m_Animations.push_back(anim);
+
+	DebugPrint(std::format("loaded anim file name: {}", anim->m_Name));
+	return static_cast<int>(m_Animations.size() - 1);
 }
 
 std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -358,8 +380,6 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		m_ECSManager->AddEntity(ent);
 
 
-	// sync with animation , renderer
-
 	// 람다에 this는 조금 그렇지만
 	// 초기화 부분이라 봐준다
 	// todo 한번 생각해보자
@@ -396,14 +416,27 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		toAnimateBufferView.BufferFilledSizeLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, filledSizeBuff);
 		toAnimateBufferView.SizeInBytes = sizeof(Vertex) * mesh->m_VertexNum;
 
+		anim->SetOriginalVertexBufferView(render->GetVertexBufferView());
 		anim->SetStreamOutBufferView(toAnimateBufferView);
 		anim->SetStreamOutBuffer(streamOutBuffer);
 		};
 
 	m_ECSManager->Execute(func);
 
-	// 임시
-	//PRINT_ALL_BITSET;
+	// test for animation
+	LoadAnimation("dia_dance", commandList);
+
+	Animation* temp = m_Animations[0];
+	// for test
+	// todo 꼭 지워라 꼭 꼭 꼭
+	std::function<void(component::Animation*)> aniTest = [temp](component::Animation* anim) {
+		anim->ChangeAnimation(0);
+		anim->ChangeAnimation(0);
+		anim->SetCurrentAnimationPlayTime(0);
+		anim->SetCurrentAnimationMaxTime(temp->GetEndTime());
+		};
+	
+	m_ECSManager->Execute(aniTest);
 
 	//for (auto& cam : m_Cameras)
 	//	m_ECSManager->AddEntity(cam);
@@ -516,6 +549,16 @@ int ResourceManager::GetBone(const std::string& name, ComPtr<ID3D12GraphicsComma
 			return i;
 
 	if (commandList) return LoadBone(name, commandList);
+	return -1;
+}
+
+int ResourceManager::GetAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	for (int i = 0; i < m_Bones.size(); ++i)
+		if (m_Animations[i]->GetName() == name)
+			return i;
+
+	if (commandList) return LoadAnimation(name, commandList);
 	return -1;
 }
 

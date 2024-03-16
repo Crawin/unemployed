@@ -29,17 +29,21 @@ namespace component
 
 	void Renderer::ShowYourself() const
 	{
-		DebugPrint(std::format("Renderer Comp, mesh: {}, material: {}", m_MeshID, m_MaterialID));
+		DebugPrint(std::format("Renderer Comp\n\tmesh: {}, material: {}", m_MeshID, m_MaterialID));
 	}
 
 	void Animation::Create(Json::Value& v, ResourceManager* rm)
 	{
+		//  todo
+		// resource mamager에게 rm[AnimationPlayer]를 찾아서 나중에 넣어달라 해야함
+		// 
 	}
 
 	void Animation::ShowYourself() const
 	{
 		DebugPrint(std::format("Animation Comp"));
 	}
+
 
 	void Root::Create(Json::Value& v, ResourceManager* rm)
 	{
@@ -152,7 +156,7 @@ namespace component
 
 	void Camera::ShowYourself() const
 	{
-		DebugPrint(std::format("Cam\tPosit: {}, {}, {}", m_Position.x, m_Position.y, m_Position.z));
+		DebugPrint(std::format("Camera Component\n\tPosit: {}, {}, {}", m_Position.x, m_Position.y, m_Position.z));
 	}
 
 	void Camera::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -225,6 +229,7 @@ namespace component
 
 	void Speed::ShowYourself() const
 	{
+		DebugPrint("Speed Comp");
 		DebugPrint(std::format("cur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
 
 	}

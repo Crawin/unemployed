@@ -38,9 +38,14 @@ void SetBoneIndexSet(FbxNode* node) {
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
 				// should transpose
-				trans.m[j][i] = fbxTransform[i][j];
+				trans.m[i][j] = fbxTransform[i][j];
 			}
 		}
+		// to root
+		XMMATRIX inv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&trans));
+		inv = XMMatrixTranspose(inv);
+		XMStoreFloat4x4(&trans, inv);
+
 		// insert data to vector
 		g_Vector.push_back(node->GetName());
 		g_BoneMatrixVector.push_back(trans);

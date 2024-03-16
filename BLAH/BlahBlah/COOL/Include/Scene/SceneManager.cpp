@@ -9,7 +9,7 @@
 void SceneManager::RegisterComponents()
 {
 	// 사용 할 컴포넌트가 늘어날 경우
-	// framework.h COMPONENT_COUNT로 들어가서 숫자를 바꿔라
+	// framework.h로 가서 COMPONENT_COUNT의 숫자를 바꿔라
 	REGISTER_COMPONENT(component::Name, "Name");
 	REGISTER_COMPONENT(component::Renderer, "Renderer");
 	REGISTER_COMPONENT(component::Animation, "Animation");

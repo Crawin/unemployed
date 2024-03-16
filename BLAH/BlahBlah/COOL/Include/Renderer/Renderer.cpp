@@ -279,6 +279,25 @@ bool Renderer::CreateRootSignature()
 	rootParams[4].Descriptor.ShaderRegister = 3;
 	rootParams[4].Descriptor.RegisterSpace = 0;
 	rootParams[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// idx 5: bone data structured buffer
+	rootParams[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	rootParams[5].Descriptor.ShaderRegister = 1;
+	rootParams[5].Descriptor.RegisterSpace = 8;
+	rootParams[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// idx 6: anim1 data structured buffer
+	rootParams[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	rootParams[6].Descriptor.ShaderRegister = 2;
+	rootParams[6].Descriptor.RegisterSpace = 9;
+	rootParams[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+	// idx 7: anim2 data structured buffer
+	rootParams[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	rootParams[7].Descriptor.ShaderRegister = 3;
+	rootParams[7].Descriptor.RegisterSpace = 10;
+	rootParams[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	
 	//
 	// sampler desc
 	const int samplers = 2;
@@ -574,10 +593,12 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 {
 	ID3D12Resource* temp;
 
+	UINT createBytes = ((bytes + 255) & ~255);
+
 	D3D12_RESOURCE_DESC resDesc = {};
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	resDesc.Alignment = 0;
-	resDesc.Width = bytes;
+	resDesc.Width = createBytes;
 	resDesc.Height = 1;
 	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;

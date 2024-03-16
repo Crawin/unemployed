@@ -17,7 +17,15 @@ namespace ECSsystem {
 	/////////////////////////////////////////////////////////
 	// Transform to its children
 	//
-	class LocalToWorldTransform : public System{
+	class LocalToWorldTransform : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
+	/////////////////////////////////////////////////////////
+	// animation playtime add
+	//
+	class AnimationPlayTimeAdd : public System {
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};

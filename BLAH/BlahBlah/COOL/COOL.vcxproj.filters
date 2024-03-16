@@ -79,6 +79,9 @@
     <Filter Include="소스 파일\Scene\SceneData\Mesh\Bone">
       <UniqueIdentifier>{72ee0038-828b-4189-9558-a5191469be31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\SceneData\Animation">
+      <UniqueIdentifier>{6ef35033-3256-4ace-a8e9-02004fe8151a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -159,6 +162,12 @@
     <ClInclude Include="Include\Mesh\Bone.h">
       <Filter>소스 파일\Scene\SceneData\Mesh\Bone</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Animation\Animation.h">
+      <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Animation\AnimationPlayer.h">
+      <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -226,6 +235,12 @@
     </ClCompile>
     <ClCompile Include="Include\Mesh\Bone.cpp">
       <Filter>소스 파일\Scene\SceneData\Mesh\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Animation\Animation.cpp">
+      <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Animation\AnimationPlayer.cpp">
+      <Filter>소스 파일\Scene\SceneData\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
