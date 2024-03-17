@@ -76,6 +76,8 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 
 				unsigned int boneSize = g_Vector.size();
 				out.write((char*)(&boneSize), sizeof(unsigned int));
+
+				isFirst = false;
 			}
 
 			std::cout << "StartFrame : " << start.GetFrameCount(FbxTime::eFrames24) << ", EndFrame : " << end.GetFrameCount(FbxTime::eFrames24) << std::endl;

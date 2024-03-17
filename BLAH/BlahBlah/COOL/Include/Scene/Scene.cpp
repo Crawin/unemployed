@@ -47,10 +47,9 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// Set Animation PSO
 	m_ResourceManager->m_AnimationShader->SetPipelineState(commandList);
-	int count = 0;
+
 	// animate and set animed data
-	std::function<void(component::Renderer*, component::Animation*)> animate = [&commandList, manager, &count](component::Renderer* renderComponent, component::Animation* animComp) {
-		count++;
+	std::function<void(component::Renderer*, component::Animation*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::Animation* animComp) {
 		int meshIdx = renderComponent->GetMesh();
 		Mesh* mesh = manager->m_Meshes[meshIdx];
 		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
@@ -66,19 +65,14 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 			// todo
 			// set bone here
+			// set animation data here
+			// animComp->SetBlahBlah
 			int boneIdx = mesh->GetBoneIdx();
 			int boneLen = manager->m_Bones[boneIdx]->GetLength();
-			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneLen, static_cast<int>(ANIM_ROOTCONST::BONE_LENGTH));
-
-
-			//manager->
-			// animComp->SetBone;
-			// animComp->SetBlahBlah
-			// set animation data here
 			int firstAnimIdx = manager->m_Animations[animComp->GetCurrentAnimation()]->GetDataIdx();
 			int	secondAnimIdx = manager->m_Animations[animComp->GetBeforeAnimation()]->GetDataIdx();
 			float weight = animComp->GetBeforeAnimationWeight();
-			float firstAnimPlayTime = animComp->GetCurrentAnimationPlayTime();
+			int firstAnimPlayTime = (animComp->GetCurrentAnimationPlayTime() * 24.0f);
 			float secondAnimPlayTime = animComp->GetBeforeAnimationPlayTime();
 			int firstAnimFrame = animComp->GetCurrentAnimationMaxTime() * 24.0f;
 			int secondAnimFrame = animComp->GetCurrentAnimationMaxTime() * 24.0f;
@@ -91,11 +85,15 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_FIRST), firstAnim);
 			commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_SECOND), secondAnim);
 
+			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneLen, static_cast<int>(ANIM_ROOTCONST::BONE_LENGTH));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &weight, static_cast<int>(ANIM_ROOTCONST::ANI_BLEND));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_1_PLAYTIME));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_2_PLAYTIME));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_1_FRAME));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_2_FRAME));
+
+			int idx = 32 * firstAnimFrame + firstAnimPlayTime;
+			DebugPrint(std::format("frame: {}, index: {}, play : {}", firstAnimFrame, idx, firstAnimPlayTime));
 
 			mesh->SetVertexBuffer(commandList);
 			mesh->Animate(commandList);
@@ -104,7 +102,7 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 		}
 		};
-	DebugPrint(std::format("count: {}", count));
+
 	m_ECSManager->Execute(animate);
 
 }

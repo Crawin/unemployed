@@ -32,7 +32,6 @@ cbuffer MaterialAnim : register(b0)
 };
 
 #define MAX_BONE_LEN 64
-#define MAX_ANIMATION_FRAME 100
 #define ANIMATION_FPS 24.0f
 
 StructuredBuffer<matrix> Bone : register(t1, space8);
@@ -51,26 +50,25 @@ VS_OUTPUT vs(VS_INPUT input)
 	matrix boneToWorld;
 	matrix animByFrame;
 
-	float frameInterval = 1 / ANIMATION_FPS;
 	float interpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
 
-	int idx1, idx2, boneIdx;
+	int idx, boneIdx;
 	float weight;
 	// for first anim
 	for (int i = 0; i < 4; ++i)
 	{
 		// animation interpolation
-		boneIdx = input.boneIndexs[i];
+		boneIdx = 32;//input.boneIndexs[i];
 		weight = input.boneWeights[i];
-		idx1 = boneIdx * anim1Frame + floor(anim1PlayTime * ANIMATION_FPS);
-		idx2 = boneIdx * anim1Frame + ceil(anim1PlayTime * ANIMATION_FPS);
+		idx = boneIdx * anim1Frame + floor(anim1PlayTime * ANIMATION_FPS);
 		
-		boneToWorld = mul(Bone[boneIdx], Animation[idx1]);//lerp(Animation[idx1], Animation[idx2], interpolWegith));
+		boneToWorld = mul(Bone[boneIdx], lerp(Animation[idx + 1], Animation[idx], interpolWegith));
 		//boneToWorld = Bone[boneIdx];
+		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
 
-		output.position += weight * mul(float4(input.position, 1.0f), boneToWorld).xyz;
-		output.normal += weight * mul(input.normal, (float3x3) boneToWorld);
-		output.tangent += weight * mul(input.tangent, (float3x3) boneToWorld);
+		output.position += weight * mul(input.position, (float3x3)boneToWorld);
+		output.normal += weight * mul(input.normal, (float3x3)boneToWorld);
+		output.tangent += weight * mul(input.tangent, (float3x3)boneToWorld);
 	}
 
 	//output.position = input.position;
