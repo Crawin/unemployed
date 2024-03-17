@@ -58,6 +58,7 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 	std::string name = nodeName.Buffer();
 
 	// if fit
+	static int printCount = 0;
 	if (g_Vector.size() > g_Count && name == g_Vector[g_Count])
 	{
 		++g_Count;
@@ -81,6 +82,12 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 			}
 
 			std::cout << "StartFrame : " << start.GetFrameCount(FbxTime::eFrames24) << ", EndFrame : " << end.GetFrameCount(FbxTime::eFrames24) << std::endl;
+
+			FbxTime time;
+			time.SetFrame(0, FbxTime::eFrames24);
+			FbxAMatrix temp = pNode->EvaluateGlobalTransform(time);
+			FbxVector4 t = temp.GetT();
+			//std::cout << "Translation: (" << t[0] << ", " << t[1] << ", " << t[2] << ")" << std::endl;
 
 			for (FbxLongLong i = start.GetFrameCount(FbxTime::eFrames24); i <= end.GetFrameCount(FbxTime::eFrames24); ++i) {
 				FbxTime currentTime;
@@ -124,10 +131,10 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 						XMMatrixMultiply(XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&r)), XMMatrixScalingFromVector(XMLoadFloat3(&s))));*/
 
 				// transpose
-
-				//std::cout << "Translation: (" << translation[0] << ", " << translation[1] << ", " << translation[2] << ")" << std::endl;
-				//std::cout << "Rotation: (" << rotation[0] << ", " << rotation[1] << ", " << rotation[2] << ")" << std::endl;
-				//std::cout << "Scaling: (" << scaling[0] << ", " << scaling[1] << ", " << scaling[2] << ")" << std::endl;
+				std::cout << printCount++ << std::endl;
+				std::cout << "Translation: (" << translation[0] << ", " << translation[1] << ", " << translation[2] << ")" << std::endl;
+				std::cout << "Rotation: (" << rotation[0] << ", " << rotation[1] << ", " << rotation[2] << ")" << std::endl;
+				std::cout << "Scaling: (" << scaling[0] << ", " << scaling[1] << ", " << scaling[2] << ")" << std::endl;
 			}
 		}
 	}

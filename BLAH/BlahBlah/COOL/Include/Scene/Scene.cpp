@@ -74,8 +74,8 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			float weight = animComp->GetBeforeAnimationWeight();
 			float firstAnimPlayTime = animComp->GetCurrentAnimationPlayTime();
 			float secondAnimPlayTime = animComp->GetBeforeAnimationPlayTime();
-			int firstAnimFrame = animComp->GetCurrentAnimationMaxTime() * 24.0f;
-			int secondAnimFrame = animComp->GetCurrentAnimationMaxTime() * 24.0f;
+			int firstAnimFrame = (animComp->GetCurrentAnimationMaxTime() * 24.0f) + 1;
+			int secondAnimFrame = (animComp->GetCurrentAnimationMaxTime() * 24.0f) + 1;
 
 			D3D12_GPU_VIRTUAL_ADDRESS boneData = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, manager->m_Bones[boneIdx]->GetBoneDataIdx());
 			D3D12_GPU_VIRTUAL_ADDRESS firstAnim = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, firstAnimIdx);
