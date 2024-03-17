@@ -246,6 +246,8 @@ void Mesh::Animate(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	if (m_VertexNum > 0)
 	{
+		XMFLOAT4X4 temp = Matrix4x4::Transpose(m_LocalTransform);
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 		commandList->DrawInstanced(m_VertexNum, 1, 0, 0);
 	}
 }

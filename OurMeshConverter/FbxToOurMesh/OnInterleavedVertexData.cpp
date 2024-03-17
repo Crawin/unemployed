@@ -35,14 +35,31 @@ void SetBoneIndexSet(FbxNode* node) {
 		std::cout << "IDX : " << g_Vector.size() << ",\tSkeleton node name : " << node->GetName() << std::endl;
 		XMFLOAT4X4 trans;
 		FbxMatrix fbxTransform = node->EvaluateGlobalTransform();
+		FbxAMatrix fbxTransformTemp = node->EvaluateGlobalTransform();
+		FbxVector4 t = fbxTransformTemp.GetT();
+		
+		std::cout << "Translation: (" << t[0] << ", " << t[1] << ", " << t[2] << ")" << std::endl;
+		
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				// should transpose
-				trans.m[i][j] = fbxTransform[i][j];
+				trans.m[i][j] = fbxTransformTemp[i][j];
 			}
 		}
+
+		// should transpose
+		// to left handed
+		XMFLOAT4X4 left =
+		{
+			-1,0,0,0,
+			0,1,0,0,
+			0,0,1,0,
+			0,0,0,1
+		};
+		XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+		XMMATRIX boneMat = XMLoadFloat4x4(&trans);
+
 		// to root
-		XMMATRIX inv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&trans));
+		XMMATRIX inv = XMMatrixInverse(nullptr, XMMatrixMultiply(boneMat, convertLeft));
 		inv = XMMatrixTranspose(inv);
 		XMStoreFloat4x4(&trans, inv);
 
@@ -135,6 +152,24 @@ struct NormalMesh : public MeshBase {
 			ConvertToLH(vertices[i].tangent);
 		}
 
+		// matrix
+		XMFLOAT4X4 left =
+		{
+			-1,0,0,0,
+			0,1,0,0,
+			0,0,1,0,
+			0,0,0,1
+		};
+		XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+		XMMATRIX origin = XMLoadFloat4x4(&localTransform);
+		XMMATRIX lefthanded = XMMatrixMultiply(origin, convertLeft);
+		XMStoreFloat4x4(&localTransform, lefthanded);
+
+		// bounding
+		min.x *= -1;
+		max.x *= -1;
+		center.x *= -1;
+
 		// for winding order
 		for (int i = 0; i < vertices.size(); i += 3) {
 			swap(vertices[i + 1], vertices[i + 2]);
@@ -164,6 +199,23 @@ struct SkinnedMesh : public MeshBase {
 	virtual void ConvertToLeftHanded()
 	{
 		// todo 더 해야함
+		// matrix
+		XMFLOAT4X4 left =
+		{
+			-1,0,0,0,
+			0,1,0,0,
+			0,0,1,0,
+			0,0,0,1
+		};
+		XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+		XMMATRIX origin = XMLoadFloat4x4(&localTransform);
+		XMMATRIX lefthanded = XMMatrixMultiply(origin, convertLeft);
+		XMStoreFloat4x4(&localTransform, lefthanded);
+
+		// bounding
+		min.x *= -1;
+		max.x *= -1;
+		center.x *= -1;
 
 		// swap x
 		for (auto& vtx : vertices) {

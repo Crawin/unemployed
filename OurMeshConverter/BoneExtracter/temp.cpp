@@ -96,9 +96,23 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 				for (int i = 0; i < 4; ++i) {
 					for (int j = 0; j < 4; ++j) {
 						// should transpose
-						trans.m[j][i] = globalMatrix[i][j];
+						trans.m[i][j] = globalMatrix[i][j];
 					}
 				}
+				// to left handed
+				XMFLOAT4X4 left =
+				{
+					-1,0,0,0,
+					0,1,0,0,
+					0,0,1,0,
+					0,0,0,1
+				};
+				XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+				XMMATRIX boneMat = XMLoadFloat4x4(&trans);
+				
+				XMMATRIX inv = XMMatrixTranspose(XMMatrixMultiply(boneMat, convertLeft));
+				XMStoreFloat4x4(&trans, inv);
+
 				out.write((char*)(&trans), sizeof(XMFLOAT4X4));
 
 				/*XMFLOAT3 t = { (float)translation[0], (float)translation[1], (float)translation[2] };
