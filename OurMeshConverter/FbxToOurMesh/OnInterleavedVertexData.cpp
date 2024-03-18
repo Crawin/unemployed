@@ -155,7 +155,7 @@ struct NormalMesh : public MeshBase {
 		// matrix
 		XMFLOAT4X4 left =
 		{
-			-1,0,0,0,
+			1,0,0,0,
 			0,1,0,0,
 			0,0,1,0,
 			0,0,0,1
@@ -202,7 +202,7 @@ struct SkinnedMesh : public MeshBase {
 		// matrix
 		XMFLOAT4X4 left =
 		{
-			-1,0,0,0,
+			1,0,0,0,
 			0,1,0,0,
 			0,0,1,0,
 			0,0,0,1
@@ -329,7 +329,7 @@ int main(int argc, char* argv[])
 			if (g_BoneMatrixVector.size() > 0) {
 				// export bone file
 				std::string boneFileName = "Result\\bone_";
-				boneFileName += fileName;
+				boneFileName += removeExtension(fileName);
 				boneFileName += ".bin";
 
 				std::fstream output(boneFileName, std::ios::binary | std::ios::out);

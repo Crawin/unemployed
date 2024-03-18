@@ -424,7 +424,7 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	m_ECSManager->Execute(func);
 
 	// test for animation
-	LoadAnimation("dia_dance", commandList);
+	LoadAnimation("dia_dance_with_skin", commandList);
 
 	Animation* temp = m_Animations[0];
 	// for test

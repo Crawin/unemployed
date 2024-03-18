@@ -10,6 +10,7 @@ using namespace DirectX;
 
 std::vector<std::string> g_Vector;
 
+bool g_LeftHanded = false;
 int g_Count = 0;
 
 std::string removeExtension(const std::string& filename) {
@@ -106,19 +107,28 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 						trans.m[i][j] = globalMatrix[i][j];
 					}
 				}
+
 				// to left handed
-				XMFLOAT4X4 left =
-				{
-					-1,0,0,0,
-					0,1,0,0,
-					0,0,1,0,
-					0,0,0,1
-				};
-				XMMATRIX convertLeft = XMLoadFloat4x4(&left);
-				XMMATRIX boneMat = XMLoadFloat4x4(&trans);
-				
-				XMMATRIX inv = XMMatrixTranspose(XMMatrixMultiply(boneMat, convertLeft));
-				XMStoreFloat4x4(&trans, inv);
+				if (g_LeftHanded == false) {
+					XMFLOAT4X4 left =
+					{
+						-1,0,0,0,
+						0,1,0,0,
+						0,0,1,0,
+						0,0,0,1
+					};
+					XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+					XMMATRIX boneMat = XMLoadFloat4x4(&trans);
+
+					XMStoreFloat4x4(&trans, XMMatrixMultiply(boneMat, convertLeft));
+
+					//std::cout << "to left handed\n";
+
+				}
+
+
+
+				XMStoreFloat4x4(&trans, XMMatrixTranspose(XMLoadFloat4x4(&trans)));
 
 				out.write((char*)(&trans), sizeof(XMFLOAT4X4));
 
@@ -131,10 +141,10 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 						XMMatrixMultiply(XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&r)), XMMatrixScalingFromVector(XMLoadFloat3(&s))));*/
 
 				// transpose
-				std::cout << printCount++ << std::endl;
-				std::cout << "Translation: (" << translation[0] << ", " << translation[1] << ", " << translation[2] << ")" << std::endl;
-				std::cout << "Rotation: (" << rotation[0] << ", " << rotation[1] << ", " << rotation[2] << ")" << std::endl;
-				std::cout << "Scaling: (" << scaling[0] << ", " << scaling[1] << ", " << scaling[2] << ")" << std::endl;
+				//std::cout << printCount++ << std::endl;
+				//std::cout << "Translation: (" << translation[0] << ", " << translation[1] << ", " << translation[2] << ")\n";// << std::endl;
+				//std::cout << "Rotation: (" << rotation[0] << ", " << rotation[1] << ", " << rotation[2] << ")" << std::endl;
+				//std::cout << "Scaling: (" << scaling[0] << ", " << scaling[1] << ", " << scaling[2] << ")" << std::endl;
 			}
 		}
 	}
@@ -167,6 +177,8 @@ int main()
 	// Scene to hold the imported data
 	FbxScene* scene = FbxScene::Create(manager, "MyScene");
 	importer->Import(scene);
+
+	if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() == FbxAxisSystem::eLeftHanded) g_LeftHanded = true;
 
 	// Destroy importer after importing is done
 	importer->Destroy();

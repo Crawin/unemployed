@@ -22,10 +22,10 @@ struct VS_OUTPUT
 
 cbuffer MaterialAnim : register(b0)
 {
-	float animBlend;
 	float anim1PlayTime;
 	float anim2Playtime;
-	
+	float animBlend;
+
 	int anim1Frame;
 	int anim2Frame;
 };
@@ -51,26 +51,31 @@ VS_OUTPUT vs(VS_INPUT input)
 
 	float interpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
 
+	matrix inverseMatrix = inverse(localMatrix);
 	int idx, boneIdx;
 	float weight;
+
+	int currentFrame = floor(anim1PlayTime* ANIMATION_FPS);
+
 	// for first anim
 	for (int i = 0; i < 4; ++i)
 	{
 		// animation interpolation
 		boneIdx = input.boneIndexs[i];
 		weight = input.boneWeights[i];
-		idx = boneIdx * anim1Frame + floor(anim1PlayTime * ANIMATION_FPS);
+		idx = boneIdx * anim1Frame + currentFrame;
 		
-		boneToWorld = mul(Bone[boneIdx], lerp(Animation[idx + 1], Animation[idx], interpolWegith));
+		boneToWorld = mul(Bone[boneIdx], Animation[idx]);//lerp(Animation[idx + 1], Animation[idx], interpolWegith));
 		//boneToWorld = Bone[boneIdx];	
 		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
 
-		output.position += weight * mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld).xyz;
-		output.normal += weight * mul(input.normal, (float3x3)boneToWorld);
-		output.tangent += weight * mul(input.tangent, (float3x3)boneToWorld);
+		output.position += weight * mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
+		output.normal += weight * mul(mul(mul(input.normal, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
+		output.tangent += weight * mul(mul(mul(input.tangent, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
 	}
 
-	//output.position = input.position;
+	output.position.y += anim1PlayTime * 10.0f;
+	//output.position = mul(mul(float4(input.position, 1.0f), localMatrix), inverseMatrix).xyz;
 	//output.normal = input.normal;
 	//output.tangent = input.tangent;
 
