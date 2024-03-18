@@ -268,6 +268,10 @@ namespace component {
 		void SetBeforeAnimationMaxTime(float time) { m_BefAniMaxPlayTime = time; }
 
 		void ChangeAnimation(int toAnimIdx) { m_BefAnimationIdx = m_CurAnimationIdx; m_CurAnimationIdx = toAnimIdx; }		// todo 
+
+		// 하드코딩 되어있다,
+		UINT64* m_StreamSize = 0;
+
 	};
 
 	/////////////////////////////////////////////////////////

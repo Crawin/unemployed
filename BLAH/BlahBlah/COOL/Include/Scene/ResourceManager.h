@@ -92,7 +92,7 @@ private:
 		return -1;
 	}
 
-	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER);
+	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT);
 
 	
 	bool LoadObjectFile(const std::string& sceneName, bool isCam = false);	// object 폴더의 file 불러오는 함수
@@ -120,7 +120,7 @@ public:
 	bool Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
 	// for object
-	int CreateObjectResource(UINT size, const std::string resName, void** toMapData);
+	int CreateObjectResource(UINT size, const std::string resName, void** toMapData, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_UPLOAD);
 
 	// resource
 	D3D12_GPU_VIRTUAL_ADDRESS GetResourceDataGPUAddress(RESOURCE_TYPES resType, int idx);

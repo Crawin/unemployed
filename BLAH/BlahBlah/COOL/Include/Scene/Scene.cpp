@@ -61,8 +61,8 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			// SO set
 			const auto& view = animComp->GetStreamOutBufferView();
 			D3D12_STREAM_OUTPUT_BUFFER_VIEW bufView[] = { view };
+			*(animComp->m_StreamSize) = 0;
 			commandList->SOSetTargets(0, _countof(bufView), bufView);
-
 			// todo
 			// set bone here
 			// set animation data here
@@ -93,8 +93,8 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_1_FRAME));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_2_FRAME));
 
-			int idx = firstAnimFrame + firstAnimPlayTime * 24.0f;
-			DebugPrint(std::format("frame: {}, index: {}, playTime : {}", firstAnimFrame, idx, firstAnimPlayTime));
+			//int idx = firstAnimFrame + firstAnimPlayTime * 24.0f;
+			//DebugPrint(std::format("frame: {}, index: {}, playTime : {}", firstAnimFrame, idx, firstAnimPlayTime));
 
 			mesh->SetVertexBuffer(commandList);
 			mesh->Animate(commandList);
@@ -106,6 +106,12 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	m_ECSManager->Execute(animate);
 
+	//std::function<void(component::Animation*)> debug = [](component::Animation* anim) {
+
+	//	DebugPrint(std::format("{}", *(anim->m_StreamSize)));
+	//	};
+
+	//m_ECSManager->Execute(debug);
 }
 
 void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)

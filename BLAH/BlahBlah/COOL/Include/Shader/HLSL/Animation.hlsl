@@ -67,7 +67,6 @@ VS_OUTPUT vs(VS_INPUT input)
 		boneToWorld = mul(Bone[boneIdx], Animation[idx]);//lerp(Animation[idx + 1], Animation[idx], interpolWegith));
 		//boneToWorld = Bone[boneIdx];	
 		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
-		output.position += anim1PlayTime;
 		output.position += weight * mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
 		output.normal += weight * mul(mul(mul(input.normal, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
 		output.tangent += weight * mul(mul(mul(input.tangent, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);

@@ -49,10 +49,10 @@ ResourceManager::~ResourceManager()
 	m_ObjectDatas.clear();
 }
 
-int ResourceManager::CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert)
+int ResourceManager::CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert, D3D12_HEAP_TYPE heapType)
 {
 	COOLResourcePtr ptr = Renderer::GetInstance().CreateEmptyBuffer(
-		D3D12_HEAP_TYPE_DEFAULT,
+		heapType,
 		D3D12_RESOURCE_STATE_COMMON,
 		size * stride,
 		name);
@@ -397,12 +397,16 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 			std::format("animated_{}", mesh->m_Name),
 			RESOURCE_TYPES::VERTEX);
 
-		int filledSizeBuff = CreateEmptyBuffer(
-			commandList,
-			sizeof(UINT64), sizeof(UINT64),
-			D3D12_RESOURCE_STATE_STREAM_OUT,
+		//int filledSizeBuff = CreateEmptyBuffer(
+		//	commandList,
+		//	sizeof(UINT64), sizeof(UINT64),
+		//	D3D12_RESOURCE_STATE_STREAM_OUT,
+		//	std::format("StreamCount_animated_{}", mesh->m_Name),
+		//	RESOURCE_TYPES::VERTEX);
+		int filledSizeBuff = CreateObjectResource(
+			sizeof(UINT64),
 			std::format("StreamCount_animated_{}", mesh->m_Name),
-			RESOURCE_TYPES::VERTEX);
+			(void**)(&anim->m_StreamSize));
 
 		// update renderer vertex buffer use to this
 		D3D12_VERTEX_BUFFER_VIEW animatedBufferView = {};
@@ -413,7 +417,7 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 		D3D12_STREAM_OUTPUT_BUFFER_VIEW toAnimateBufferView = {};
 		toAnimateBufferView.BufferLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, streamOutBuffer);
-		toAnimateBufferView.BufferFilledSizeLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, filledSizeBuff);
+		toAnimateBufferView.BufferFilledSizeLocation = GetResourceDataGPUAddress(RESOURCE_TYPES::OBJECT, filledSizeBuff);
 		toAnimateBufferView.SizeInBytes = sizeof(Vertex) * mesh->m_VertexNum;
 
 		anim->SetOriginalVertexBufferView(render->GetVertexBufferView());
@@ -495,11 +499,11 @@ bool ResourceManager::MakeExtraRenderTarget()
 	return true;
 }
 
-int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData)
+int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData, D3D12_HEAP_TYPE heapType)
 {
 	COOLResourcePtr res = Renderer::GetInstance().CreateEmptyBuffer(
-		D3D12_HEAP_TYPE_UPLOAD,
-		D3D12_RESOURCE_STATE_GENERIC_READ/*D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER*/,
+		heapType,
+		((heapType == D3D12_HEAP_TYPE_UPLOAD ? D3D12_RESOURCE_STATE_GENERIC_READ : D3D12_RESOURCE_STATE_COMMON))/*D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER*/,
 		size,
 		resName,
 		toMapData);
