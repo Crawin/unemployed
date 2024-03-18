@@ -64,7 +64,7 @@ VS_OUTPUT vs(VS_INPUT input)
 		int boneIdx = input.boneIndexs[i];
 		int idx = boneIdx * anim1Frame + currentFrame;
 		
-		boneToWorld = mul(Bone[boneIdx], Animation[idx]);//lerp(Animation[idx + 1], Animation[idx], interpolWegith));
+		boneToWorld = mul(Bone[boneIdx], lerp(Animation[idx + 1], Animation[idx], interpolWegith));
 		//boneToWorld = Bone[boneIdx];	
 		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
 		output.position += weight * mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
