@@ -17,3 +17,23 @@
 #include <iostream>
 #include <string>
 #include <thread>
+
+void Start_Vivox();
+void MyGamesEventHandler(vx_evt_base_t*);
+void MyGamesResponseHandler(vx_resp_base_t*);
+void OnResponseOrEventFromSdk(void*);
+void CreateConnector(vx_req_connector_create*&);
+void LogIn(const int&);
+void HandleLoginResponse(vx_resp_account_anonymous_login*);
+void HandleLoginStateChange(vx_evt_account_login_state_change*);
+void RequestParticipate(const int&);
+char* GenerateToken(const char*, const char*);
+void HandleMediaStreamUpdatedEvent(vx_evt_media_stream_updated*);
+void HandleTextStreamUpdatedEvent(vx_evt_text_stream_updated*);
+void HandleParticipantAddedEvent(vx_evt_participant_added*);
+void HandleParticipantRemovedEvent(vx_evt_participant_removed*);
+void HandleParticipantUpdatedEvent(vx_evt_participant_updated*);
+void HandleConnectionStateChanged(vx_evt_connection_state_changed*);
+void HandleSessiongroupAddSession(vx_resp_sessiongroup_add_session*);
+void HandleSessiongroupAdded(vx_evt_sessiongroup_added*);
+void HandleSessionAdded(vx_evt_session_added*);
