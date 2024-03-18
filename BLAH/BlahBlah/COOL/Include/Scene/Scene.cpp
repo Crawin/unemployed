@@ -71,7 +71,7 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			//int boneLen = manager->m_Bones[boneIdx]->GetLength();
 			int firstAnimIdx = manager->m_Animations[animComp->GetCurrentAnimation()]->GetDataIdx();
 			int	secondAnimIdx = manager->m_Animations[animComp->GetBeforeAnimation()]->GetDataIdx();
-			float weight = 111.0f;// animComp->GetBeforeAnimationWeight();
+			float weight = animComp->GetBeforeAnimationWeight();
 			float firstAnimPlayTime = animComp->GetCurrentAnimationPlayTime();
 			float secondAnimPlayTime = animComp->GetBeforeAnimationPlayTime();
 			int firstAnimFrame = (animComp->GetCurrentAnimationMaxTime() * 24.0f) + 1;
@@ -87,18 +87,14 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 			//commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneLen, static_cast<int>(ANIM_ROOTCONST::BONE_LENGTH));
 
-			XMFLOAT4 temp = { firstAnimPlayTime, secondAnimPlayTime, weight, 0 };
-
-			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 4, &temp, 0);
-
-			//commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_1_PLAYTIME));
-			//commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_2_PLAYTIME));
-			//commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &weight, static_cast<int>(ANIM_ROOTCONST::ANI_BLEND));
+			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_1_PLAYTIME));
+			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_2_PLAYTIME));
+			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &weight, static_cast<int>(ANIM_ROOTCONST::ANI_BLEND));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_1_FRAME));
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_2_FRAME));
 
 			int idx = firstAnimFrame + firstAnimPlayTime * 24.0f;
-			DebugPrint(std::format("frame: {}, index: {}, play : {}", firstAnimFrame, idx, firstAnimPlayTime));
+			DebugPrint(std::format("frame: {}, index: {}, playTime : {}", firstAnimFrame, idx, firstAnimPlayTime));
 
 			mesh->SetVertexBuffer(commandList);
 			mesh->Animate(commandList);
