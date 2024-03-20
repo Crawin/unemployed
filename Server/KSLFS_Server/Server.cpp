@@ -80,8 +80,24 @@ CRoomServer::~CRoomServer()
 void CRoomServer::Run()
 {
 	PrintInfo("Run");
-	m_sServerState = 1;
-	lRoomThreads.emplace_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
+	m_cServerState = 1;
+
+	Mesh temp;
+	std::string fileName = "Resource\\CubeCube.bin";
+	std::ifstream meshFile(fileName, std::ios::binary);
+	if (meshFile.is_open() == false) {
+		std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
+	}
+	temp.LoadMeshData(meshFile);
+	MeshObjects.emplace_back(temp);
+
+	fileName = "Resource\\practicecubenew.bin";
+	std::ifstream meshFile2(fileName, std::ios::binary);
+	Mesh temp2;
+	temp2.LoadMeshData(meshFile2);
+	MeshObjects.emplace_back(temp2);
+
+	lRoomThreads.emplace_back(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
 }
 
 void CRoomServer::ListenThread()
@@ -138,7 +154,7 @@ void CRoomServer::ListenThread()
 			addr, ntohs(clientaddr.sin_port));
 		Log_Mutex.unlock();
 
-		lRoomThreads.emplace_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
+		lRoomThreads.emplace_back(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
 	}
 
 	// 윈속 종료
@@ -201,13 +217,13 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			//lGameRecvThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
 			const unsigned int GameNum = Make_GameNumber();
 			//  GAME_RUN 쓰레드를 생성
-			lGameRunThreads.emplace_back(std::make_pair(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum)));
+			lGameRunThreads.emplace_back(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum));
 			// mGameStorages에 key값으로 방번호를 넣고, value로 패킷 구조의 리스트를 만들어서, 얘 전용 저장소로 이용한다.
 
 			mGameStorages[GameNum][0].first = client_sock;				// p1 소켓 할당
 
 			// GAME_RECV 쓰레드 생성
-			lGameRecvThreads.emplace_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			lGameRecvThreads.emplace_back(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum));
 			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
@@ -227,7 +243,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			std::cout << "방에 입장합니다." << std::endl;
 			Log_Mutex.unlock();
 			bRoom = false;
-			lGameRecvThreads.emplace_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			lGameRecvThreads.emplace_back(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum));
 			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
@@ -262,7 +278,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 void CRoomServer::Join()
 {
-	m_sServerState = 0;
+	m_cServerState = 0;
 	for (auto start = lRoomThreads.begin(); start != lRoomThreads.end(); ++start)
 	{
 		start->second.join();
@@ -486,7 +502,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 	short GameOver = 1;
 	while (GameOver)
 	{
-		if (!m_sServerState)	break;		// 서버가 꺼졌으면 while문 탈출
+		if (!m_cServerState)	break;		// 서버가 꺼졌으면 while문 탈출
 		// 게임 로직
 		
 		// 접속
@@ -536,7 +552,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 			}
 		}
 
-
+		//MeshObjects
 
 		//충돌
 		//이벤트 발생
@@ -675,4 +691,70 @@ void Player::setTransform(const Socket_position& sp)
 {
 	m_aTransform[1].pos = sp.pos;
 	m_aTransform[1].rot = sp.rot;
+}
+
+void Mesh::LoadMeshData(std::ifstream& meshFile)
+{
+	// 메쉬 파일 구조
+// 1. 이름 길이					// int
+// 2. 이름						// char*
+// 3. 바운딩박스					// float3 x 3
+// 4. 부모 상대 변환 행렬			// float4x4
+// 5. 버텍스 타입				// int
+// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
+// 7. 인덱스 정보				// int int*int
+// 8. 서브메쉬 개수				// int
+// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
+//
+
+// 1. 이름 길이
+	unsigned int size;
+	meshFile.read((char*)&size, sizeof(unsigned int));
+
+	// 2. 이름
+	if (size > 0) {
+		char* name = new char[size + 1];
+		name[size] = '\0';
+		meshFile.read(name, size);
+		m_Name = std::string(name);
+		delete[] name;
+	}
+
+	// 3. 바운딩박스	
+	DirectX::XMFLOAT3 min, max;
+	meshFile.read((char*)&min, sizeof(DirectX::XMFLOAT3));
+	meshFile.read((char*)&max, sizeof(DirectX::XMFLOAT3));
+	meshFile.read((char*)&m_AABBCenter, sizeof(DirectX::XMFLOAT3));
+	m_AABBExtents = DirectX::XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
+
+	// 4. 부모 상대 변환 행렬		// float4x4
+	meshFile.read((char*)&m_LocalTransform, sizeof(DirectX::XMFLOAT4X4));
+
+	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
+	unsigned int vtxType;
+	meshFile.read((char*)&vtxType, sizeof(unsigned int));
+
+	// 6. 버텍스 정보
+	unsigned int vertexLen = 0;
+	meshFile.read((char*)&vertexLen, sizeof(unsigned int));
+
+	if (vertexLen > 0) {
+
+		std::vector<Vertex> vertex(vertexLen);
+		meshFile.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
+
+		m_VertexNum = vertexLen;
+	}
+
+	// 8. 서브메쉬 개수
+	unsigned int childNum;
+	meshFile.read((char*)&childNum, sizeof(unsigned int));
+	m_Childs.reserve(childNum);
+
+	// 9. 서브메쉬(재귀)
+	for (unsigned int i = 0; i < childNum; ++i) {
+		Mesh* newMesh = new Mesh;
+		newMesh->LoadMeshData(meshFile);
+		m_Childs.push_back(newMesh);
+	}
 }

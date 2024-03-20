@@ -27,6 +27,39 @@ struct Socket_event
 	SendType type;		// EVENT일때
 };
 
+struct Vertex
+{
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 normal;
+	DirectX::XMFLOAT3 tangent;
+	DirectX::XMFLOAT2 uv;
+};
+
+class Mesh {
+private:
+	// name
+	std::string m_Name = "";
+
+	// bounding box
+	DirectX::XMFLOAT3 m_AABBCenter = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 m_AABBExtents = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	// todo mesh loader에 아래 데이터 추가 
+	DirectX::XMFLOAT3 m_Position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT4 m_Rotation = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 m_Scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	// 부모와 상대적인 변환행렬
+	DirectX::XMFLOAT4X4 m_LocalTransform;
+	DirectX::XMFLOAT4X4 m_RootTransform;
+
+	std::vector<Mesh*> m_Childs;
+
+	int m_VertexNum = 0;
+public:
+	void LoadMeshData(std::ifstream&);
+};
+
 class CServer
 {
 private:
@@ -34,7 +67,7 @@ private:
 	u_short usServerport = 9000;
 	u_short usBufsize = 512;
 public:
-	void SetSTtype(const ServerType&);
+	inline void SetSTtype(const ServerType&);
 	void PrintInfo(const std::string);
 	std::string GetServerType(const ServerType&);
 	u_short getPort();
@@ -47,11 +80,11 @@ private:
 	std::list<std::pair<std::pair<ServerType, SOCKET>, std::thread>> lRoomThreads;
 	std::list<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> lGameRecvThreads;
 	SOCKET listen_sock;
-	short m_sServerState = 0;
+	char m_cServerState = 0;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
 	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
-
+	std::vector<Mesh> MeshObjects;
 public:
 	CRoomServer();
 	~CRoomServer();
