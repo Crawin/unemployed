@@ -11,14 +11,16 @@
 //#include "Mesh/Mesh.h"
 #include "Shader/Shader.h"
 
-#define SCENE_PATH		"SceneData\\Scene\\"
+#define SCENE_PATH			"SceneData\\Scene\\"
 
-#define MESH_PATH		"SceneData\\Mesh\\"
-#define SHADER_PATH		"SceneData\\Shader\\"
-#define TEXTURE_PATH	"SceneData\\Material\\Texture\\"
-#define MATERIAL_PATH	"SceneData\\Material\\"
-#define BONE_PATH		"SceneData\\Mesh\\bone_"
-#define ANIMATION_PATH	"SceneData\\Animation\\anim_"
+#define MESH_PATH			"SceneData\\Mesh\\"
+#define SHADER_PATH			"SceneData\\Shader\\"
+#define TEXTURE_PATH		"SceneData\\Material\\Texture\\"
+#define MATERIAL_PATH		"SceneData\\Material\\"
+#define BONE_PATH			"SceneData\\Mesh\\bone_"
+#define ANIMATION_SET_PATH	"SceneData\\Animation\\"
+#define ANIMATION_PATH		"SceneData\\Animation\\Data\\"
+
 
 ResourceManager::ResourceManager()
 {
@@ -32,8 +34,11 @@ ResourceManager::~ResourceManager()
 		delete mes;
 	for (auto& bon : m_Bones)
 		delete bon;
-	for (auto& ani : m_Animations)
-		delete ani;
+
+	// sharedptr
+	m_Animations.clear();
+	//for (auto& ani : m_Animations)
+	//	delete ani;
 	//for (auto& cmp : m_Components)
 	//	delete cmp;
 	
@@ -220,7 +225,7 @@ int ResourceManager::LoadAnimation(const std::string& name, ComPtr<ID3D12Graphic
 		return -1;
 	}
 
-	Animation* anim = new Animation;
+	std::shared_ptr<Animation> anim = std::make_shared<Animation>();
 	anim->m_Name = name;
 	anim->LoadAnimation(commandList, animFile, this);
 	m_Animations.push_back(anim);
@@ -244,6 +249,148 @@ std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, Com
 
 	DebugPrint(std::format("loaded shader file name: {}", shader->m_Name));
 	return shader;
+}
+
+bool ResourceManager::LoadDefferedResource(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// load Postprocessing material
+	m_PostProcessingMaterial = GetMaterial(m_PostProcessing, commandList);
+	if (m_PostProcessingMaterial == -1) return false;
+
+	for (int i = 0; i < m_DefferedRenderTargets; ++i)
+		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+
+#ifdef _DEBUG
+	m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
+	if (m_DebuggingMaterial == -1) return false;
+
+	// debug deffered default
+	for (int i = 0; i < m_DefferedRenderTargets; ++i)
+		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+#endif
+
+	return true;
+}
+
+bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// load mesh
+	for (const auto& rendererLoadInfo : m_ToLoadRenderDatas) {
+		// mesh의 json에서는 mesh의 이름을
+		// satodia.satodia_body 와 같은 방식으로 이루어져있다.
+		// 뜻: satodia.bin 파일에 존재하는 satodia_body
+
+		std::string meshFileName = ExtractFileName(rendererLoadInfo.m_MeshName);
+
+		auto it = std::find(rendererLoadInfo.m_MeshName.begin(), rendererLoadInfo.m_MeshName.end(), '.');
+		++it;
+		std::string meshName(it, rendererLoadInfo.m_MeshName.end());
+
+		// 해당 mesh가 없을 때 부모 mesh를 load
+
+		int res = GetMesh(meshName);
+		if (res == -1)
+		{
+			// check first
+			if (GetMesh(meshFileName) != -1) {
+				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
+				DebugPrint("Get All Mesh Name");
+				for (const auto& meshs : m_Meshes) {
+					DebugPrint(std::format("name: {}", meshs->GetName()));
+				}
+				return false;
+			}
+
+			// load parent
+			LoadMesh(meshFileName, commandList);
+		}
+
+		res = GetMesh(meshName);
+
+		if (res == -1) {
+			DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
+			DebugPrint("Get All Mesh Name");
+			for (const auto& meshs : m_Meshes) {
+				DebugPrint(std::format("name: {}", meshs->GetName()));
+			}
+			return false;
+		}
+
+		rendererLoadInfo.m_Renderer->SetMesh(res);
+		rendererLoadInfo.m_Renderer->SetVertexBufferView(m_Meshes[res]->m_VertexBufferView);
+
+		// load material
+		std::string materialFileName = rendererLoadInfo.m_MaterialName;
+		res = GetMaterial(materialFileName, commandList);
+
+		if (res == -1) {
+			DebugPrint(std::format(
+				"ERROR!!, no such material, name: {}\nSet to uv_checker",
+				materialFileName));
+			res = GetMaterial(materialFileName, commandList);
+		}
+
+
+		rendererLoadInfo.m_Renderer->SetMaterial(res);
+
+	}
+
+	return true;
+}
+
+bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// load AnimationSet(Animation) first
+	for (auto& animCont : m_ToLoadAnimCont) {
+		Json::Value root;
+		Json::Reader reader;
+
+		std::string fileName = ANIMATION_SET_PATH + animCont.m_AnimSetName + ".json";
+
+		std::ifstream file(fileName);
+		bool parseResult = reader.parse(file, root);
+
+		if (file.is_open() == false) {
+			DebugPrint(std::format("Cant Open File!!, file Name: {}", fileName));
+			return false;
+		}
+
+		if (parseResult == false) {
+			DebugPrint(std::format("AnimationPlayer file Parse Failed!, fileName: {}\n{}", fileName, reader.getFormattedErrorMessages()));
+			return false;
+		}
+
+		// name
+		AnimationPlayer* player = new AnimationPlayer;
+		player->m_Name = animCont.m_AnimSetName;
+		for (auto& key : root.getMemberNames()) {
+			std::string animName = root[key].asString();
+			int anim = GetAnimation(animName, commandList);
+
+			player->m_AnimationMap[key] = m_Animations[anim];
+		}
+		m_AnimationPlayer.push_back(player);
+
+		animCont.m_Controller->SetPlayer(player);
+		DebugPrint(std::format("loaded animset file name: {}", player->m_Name));
+	}
+
+	// set animation executer
+	for (auto& animExe : m_ToLoadAnimExe) {
+		std::string name = animExe.m_AnimSetName;
+
+		auto it = std::find_if(m_AnimationPlayer.begin(), m_AnimationPlayer.end(), [&name](AnimationPlayer* player) { return player->GetName() == name; });
+
+		// failed to find;
+		if (it == m_AnimationPlayer.end()) {
+			DebugPrint(std::format("Can't find animation set!! name: {}", name));
+			return false;
+		}
+
+		animExe.m_Executor->SetPlayer(*it);
+	}
+
+	return true;
 }
 
 bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
@@ -298,83 +445,14 @@ void ResourceManager::SetECSManager(std::shared_ptr<ECSManager> ptr)
 
 bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-	// load Postprocessing material
-	m_PostProcessingMaterial = GetMaterial(m_PostProcessing, commandList);
-	if (m_PostProcessingMaterial == -1) return false;
-
-	for (int i = 0; i < m_DefferedRenderTargets; ++i)
-		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
-
-#ifdef _DEBUG
-	m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
-	if (m_DebuggingMaterial == -1) return false;
-
-	// debug deffered default
-	for (int i = 0; i < m_DefferedRenderTargets; ++i)
-		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
-#endif
+	// deffered
+	CHECK_CREATE_FAILED(LoadDefferedResource(commandList), "Load DefferedResource Failed!");
 	
-	
-	// load mesh
-	for (const auto& rendererLoadInfo : m_ToLoadRenderDatas) {
-		// mesh의 json에서는 mesh의 이름을
-		// satodia.satodia_body 와 같은 방식으로 이루어져있다.
-		// 뜻: satodia.bin 파일에 존재하는 satodia_body
+	// mesh + material
+	CHECK_CREATE_FAILED(LoadLateInitMesh(commandList), "LateInit, LoadMesh Failed!");
 
-		std::string meshFileName = ExtractFileName(rendererLoadInfo.m_MeshName);
-		
-		auto it = std::find(rendererLoadInfo.m_MeshName.begin(), rendererLoadInfo.m_MeshName.end(), '.');
-		++it;
-		std::string meshName(it, rendererLoadInfo.m_MeshName.end());
-
-		// 해당 mesh가 없을 때 부모 mesh를 load
-
-		int res = GetMesh(meshName);
-		if (res == -1)
-		{
-			// check first
-			if (GetMesh(meshFileName) != -1) {
-				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
-				DebugPrint("Get All Mesh Name");
-				for (const auto& meshs : m_Meshes) {
-					DebugPrint(std::format("name: {}", meshs->GetName()));
-				}
-				return false;
-			}
-			
-			// load parent
-			LoadMesh(meshFileName, commandList);
-		}
-
-		res = GetMesh(meshName);
-
-		if (res == -1) {
-			DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
-			DebugPrint("Get All Mesh Name");
-			for (const auto& meshs : m_Meshes) {
-				DebugPrint(std::format("name: {}", meshs->GetName()));
-			}
-			return false;
-		}
-
-		rendererLoadInfo.m_Renderer->SetMesh(res);
-		rendererLoadInfo.m_Renderer->SetVertexBufferView(m_Meshes[res]->m_VertexBufferView);
-
-		// load material
-		std::string materialFileName = rendererLoadInfo.m_MaterialName;
-		res = GetMaterial(materialFileName, commandList);
-
-		if (res == -1) {
-			DebugPrint(std::format(
-				"ERROR!!, no such material, name: {}\nSet to uv_checker",
-				materialFileName));
-			res = GetMaterial(materialFileName, commandList);
-		}
-
-
-		rendererLoadInfo.m_Renderer->SetMaterial(res);
-
-	}
+	// load Animation
+	CHECK_CREATE_FAILED(LoadLateInitAnimation(commandList), "Animation Late Load Failed!");
 
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
@@ -383,7 +461,9 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// 람다에 this는 조금 그렇지만
 	// 초기화 부분이라 봐준다
 	// todo 한번 생각해보자
-	std::function<void(component::Renderer*, component::Animation*)> func = [&commandList, this](component::Renderer* render, component::Animation* anim) {
+
+	// make animation executer so buf view
+	std::function<void(component::Renderer*, component::AnimationExecutor*)> setSO = [&commandList, this](component::Renderer* render, component::AnimationExecutor* anim) {
 		Mesh* mesh = m_Meshes[render->GetMesh()];
 
 		if (mesh->GetVertexNum() <= 0) return;
@@ -425,22 +505,29 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		anim->SetStreamOutBuffer(streamOutBuffer);
 		};
 
-	m_ECSManager->Execute(func);
+	m_ECSManager->Execute(setSO);
+
+	// set default animation to anim executor;
+	for (auto& player : m_AnimationPlayer) {
+		player->ChangeToAnimation(player->m_AnimationMap["Idle"]);
+		player->ChangeToAnimation(player->m_AnimationMap["Idle"]);
+	};
+
 
 	// test for animation
-	LoadAnimation("dia_dance_with_skin", commandList);
+	//LoadAnimation("dia_dance_with_skin", commandList);
 
-	Animation* temp = m_Animations[0];
+	//auto temp = m_Animations[0];
 	// for test
 	// todo 꼭 지워라 꼭 꼭 꼭
-	std::function<void(component::Animation*)> aniTest = [temp](component::Animation* anim) {
-		anim->ChangeAnimation(0);
-		anim->ChangeAnimation(0);
-		anim->SetCurrentAnimationPlayTime(0);
-		anim->SetCurrentAnimationMaxTime(temp->GetEndTime());
-		};
+	//std::function<void(component::Animation*)> aniTest = [temp](component::Animation* anim) {
+	//	anim->ChangeAnimation(0);
+	//	anim->ChangeAnimation(0);
+	//	anim->SetCurrentAnimationPlayTime(0);
+	//	anim->SetCurrentAnimationMaxTime(temp->GetEndTime());
+	//	};
 	
-	m_ECSManager->Execute(aniTest);
+	//m_ECSManager->Execute(aniTest);
 
 	//for (auto& cam : m_Cameras)
 	//	m_ECSManager->AddEntity(cam);
@@ -558,7 +645,7 @@ int ResourceManager::GetBone(const std::string& name, ComPtr<ID3D12GraphicsComma
 
 int ResourceManager::GetAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-	for (int i = 0; i < m_Bones.size(); ++i)
+	for (int i = 0; i < m_Animations.size(); ++i)
 		if (m_Animations[i]->GetName() == name)
 			return i;
 
@@ -585,6 +672,16 @@ void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& ma
 	info.m_Renderer = renderer;
 
 	m_ToLoadRenderDatas.push_back(info);
+}
+
+void ResourceManager::AddLateLoadAnimController(const std::string& fileName, component::AnimationController* controller)
+{
+	m_ToLoadAnimCont.emplace_back(fileName, controller);
+}
+
+void ResourceManager::AddLateLoadAnimExecutor(const std::string& fileName, component::AnimationExecutor* executor)
+{
+	m_ToLoadAnimExe.emplace_back(fileName, executor);
 }
 
 void ResourceManager::SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)

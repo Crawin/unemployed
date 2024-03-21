@@ -12,7 +12,6 @@ class Material;
 class Mesh;
 class Shader;
 class Bone;
-//class Camera;
 
 class ECSManager;
 
@@ -26,12 +25,24 @@ namespace component {
 	class Component;
 	class Renderer;
 	class Camera;
+	class AnimationController;
+	class AnimationExecutor;
 }
 
 struct ToLoadRendererInfo {
 	std::string m_MeshName;
 	std::string m_MaterialName;
 	component::Renderer* m_Renderer = nullptr;
+};
+
+struct ToLoadAnimControllerInfo {
+	std::string m_AnimSetName;
+	component::AnimationController* m_Controller;
+};
+
+struct ToLoadAnimExecutorInfo {
+	std::string m_AnimSetName;
+	component::AnimationExecutor* m_Executor;
 };
 
 // 이따구로 하는 방법 말고는 없을까...
@@ -103,6 +114,10 @@ private:
 	int LoadAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 	std::shared_ptr<Shader> LoadShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 
+	bool LoadDefferedResource(ComPtr<ID3D12GraphicsCommandList> commandList);
+	bool LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> commandList);
+	bool LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> commandList);
+
 	// mesh/material 에 로드 할 것들이 남아 있다면 로드
 	bool LateInit(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -138,6 +153,12 @@ public:
 	// for late init
 	void AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer);
 	
+	// for late init anim controller
+	void AddLateLoadAnimController(const std::string& fileName, component::AnimationController* controller);
+
+	// for late init anim executor
+	void AddLateLoadAnimExecutor(const std::string& fileName, component::AnimationExecutor* executor);
+
 	// for multiple render target / post processing
 	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
 	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
@@ -190,8 +211,6 @@ private:
 	// mesh
 	std::vector<Mesh*> m_Meshes;
 	std::vector<Bone*> m_Bones;
-	std::vector<AnimationPlayer*> m_AnimationPlayer;
-	std::vector<Animation*> m_Animations;
 
 	// material, texture
 	std::vector<Material*> m_Materials;
@@ -202,6 +221,8 @@ private:
 
 	// animation stream out shader
 	std::shared_ptr<Shader> m_AnimationShader;
+	std::vector<AnimationPlayer*> m_AnimationPlayer;
+	std::vector<std::shared_ptr<Animation>> m_Animations;
 
 	// Deffered render targets
 	// 해당갯수 만큼 m_Resources에 넣음
@@ -227,6 +248,13 @@ private:
 	std::vector<ToLoadRendererInfo> m_ToLoadRenderDatas;
 	std::vector<std::string> m_ToLoadMaterials;
 
+	// ToLoadRenderer의 Animation판
+	// 최초 컴포넌트 생성시에 여기에다 넣어두고
+	// late init에서 로드
+	//
+	std::vector<ToLoadAnimControllerInfo> m_ToLoadAnimCont;
+	std::vector<ToLoadAnimExecutorInfo> m_ToLoadAnimExe;
+	
 	//std::vector<Entity*> m_Cameras;
 	component::Camera* m_MainCamera = nullptr;
 };

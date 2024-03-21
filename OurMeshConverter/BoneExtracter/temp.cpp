@@ -156,60 +156,61 @@ void PrintNodeHierarchy(FbxNode* pNode, std::fstream& out, FbxAnimStack* pAnimSt
 	}
 }
 
-int main() 
+int main(int argc, char* argv[])
 {
 	_mkdir("Result");
 
+	for (int i = 1; i < argc; ++i) {
 
-	FbxManager* manager = FbxManager::Create();
-	FbxIOSettings* ios = FbxIOSettings::Create(manager, IOSROOT);
-	manager->SetIOSettings(ios);
+		FbxManager* manager = FbxManager::Create();
+		FbxIOSettings* ios = FbxIOSettings::Create(manager, IOSROOT);
+		manager->SetIOSettings(ios);
 
-	// Importer to load the FBX file
-	FbxImporter* importer = FbxImporter::Create(manager, "");
-	const char* filename = "dia_dance_with_skin.fbx"; // Replace with your FBX file path
-	if (!importer->Initialize(filename, -1, manager->GetIOSettings())) {
-		std::cerr << "Failed to initialize importer!" << std::endl;
-		std::cerr << "Error returned: " << importer->GetStatus().GetErrorString() << std::endl;
-		return -1;
+		// Importer to load the FBX file
+		FbxImporter* importer = FbxImporter::Create(manager, "");
+		const char* filename = argv[i]; // Replace with your FBX file path
+		if (!importer->Initialize(filename, -1, manager->GetIOSettings())) {
+			std::cerr << "Failed to initialize importer!" << std::endl;
+			std::cerr << "Error returned: " << importer->GetStatus().GetErrorString() << std::endl;
+			return -1;
+		}
+
+		// Scene to hold the imported data
+		FbxScene* scene = FbxScene::Create(manager, "MyScene");
+		importer->Import(scene);
+
+		if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() == FbxAxisSystem::eLeftHanded) g_LeftHanded = true;
+
+		// Destroy importer after importing is done
+		importer->Destroy();
+
+		// Get the root node of the scene
+		FbxNode* rootNode = scene->GetRootNode();
+
+		FindBone(rootNode);
+
+		// Get the number of animation stacks in the scene
+		int numAnimStacks = scene->GetSrcObjectCount<FbxAnimStack>();
+		if (numAnimStacks == 0) {
+			std::cerr << "No animation stack found!" << std::endl;
+			return -1;
+		}
+
+		// Iterate through each animation stack and print animation data
+		for (int i = 0; i < numAnimStacks; ++i) {
+			std::string t = "Result/anim_";
+			t += removeExtension(filename) + ".bin";
+
+			std::fstream outFile(t, std::ios::out | std::ios::binary);
+
+			FbxAnimStack* animStack = scene->GetSrcObject<FbxAnimStack>(i);
+			std::cout << "Animation Stack Name: " << animStack->GetName() << std::endl;
+			PrintNodeHierarchy(rootNode, outFile, animStack);
+		}
+
+		// Destroy the scene and manager
+		scene->Destroy();
+		manager->Destroy();
 	}
-
-	// Scene to hold the imported data
-	FbxScene* scene = FbxScene::Create(manager, "MyScene");
-	importer->Import(scene);
-
-	if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() == FbxAxisSystem::eLeftHanded) g_LeftHanded = true;
-
-	// Destroy importer after importing is done
-	importer->Destroy();
-
-	// Get the root node of the scene
-	FbxNode* rootNode = scene->GetRootNode();
-
-	FindBone(rootNode);
-
-	// Get the number of animation stacks in the scene
-	int numAnimStacks = scene->GetSrcObjectCount<FbxAnimStack>();
-	if (numAnimStacks == 0) {
-		std::cerr << "No animation stack found!" << std::endl;
-		return -1;
-	}
-
-	// Iterate through each animation stack and print animation data
-	for (int i = 0; i < numAnimStacks; ++i) {
-		std::string t = "Result/anim_";
-		t += removeExtension(filename) + ".bin";
-
-		std::fstream outFile(t, std::ios::out | std::ios::binary);
-
-		FbxAnimStack* animStack = scene->GetSrcObject<FbxAnimStack>(i);
-		std::cout << "Animation Stack Name: " << animStack->GetName() << std::endl;
-		PrintNodeHierarchy(rootNode, outFile, animStack);
-	}
-
-	// Destroy the scene and manager
-	scene->Destroy();
-	manager->Destroy();
-
 	return 0;
 }

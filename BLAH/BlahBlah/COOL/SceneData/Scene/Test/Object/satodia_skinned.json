@@ -3,10 +3,25 @@
 
 	"Transform": 
 	{
-		"Position": [200.0, 200.0, 0.0],
-		"Rotate": [0.0, 0.0, 0.0],
+		"Position": [200.0, 0.0, 0.0],
+		"Rotate": [0.0, 180.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
+
+	"AnimationController":
+	{
+		"Player": "Dia"
+	},
+
+	"Speed": 
+	{
+		"MaxVelocity": 300.0,
+		"Acceleration": 300.0
+	},
+
+	"TestInput": {},
+
+	"DiaAnimationControl": {},
 
 	"Children": 
 	[
@@ -23,8 +38,9 @@
 				"Mesh": "test_rigging.satodia_Body_testrig",
 				"Material": "SatoBody"
 			},
-			"Animation": 
+			"AnimationExecutor": 
 			{
+				"Player": "Dia"
 			}
 		},
 
@@ -53,8 +69,9 @@
 						"Mesh": "test_rigging.satodia_Hair_testrig",
 						"Material": "SatoHair"
 					},
-					"Animation": 
+					"AnimationExecutor": 
 					{
+						"Player": "Dia"
 					}
 				},
 				{
@@ -81,8 +98,9 @@
 								"Mesh": "test_rigging.satodia_Eyes_testrig",
 								"Material": "NoMaterial"
 							},
-							"Animation": 
+							"AnimationExecutor": 
 							{
+								"Player": "Dia"
 							}
 
 						},
@@ -99,8 +117,9 @@
 								"Mesh": "test_rigging.satodia_Face_testrig",
 								"Material": "NoMaterial"
 							},
-							"Animation": 
+							"AnimationExecutor": 
 							{
+								"Player": "Dia"
 							}
 						}
 					]

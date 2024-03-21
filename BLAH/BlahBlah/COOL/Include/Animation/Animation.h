@@ -5,6 +5,7 @@ class ResourceManager;
 class Animation
 {
 	friend class ResourceManager;
+	friend class AnimationPlayer;
 
 	// name
 	std::string m_Name = "";
@@ -22,6 +23,7 @@ public:
 	static const int m_Frame = 24;
 
 	float GetEndTime() const { return static_cast<float>(m_TotalPlayFrame) / static_cast<float>(m_Frame); }
+	int GetEndFrame() const { return m_TotalPlayFrame;  }
 	int GetDataIdx() const { return m_AnimationDataIdx; }
 };
 

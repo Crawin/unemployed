@@ -7,6 +7,7 @@ namespace ECSsystem {
 }
 class ResourceManager;
 class Entity;
+class AnimationPlayer;
 
 struct CameraDataShader {
 	XMFLOAT4X4 m_ViewMatrix;
@@ -206,10 +207,29 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// AnimationPlayer component
-	// 현재 애니메이션의 재생을 가짐
+	// AnimationController Component
+	// AnimationPlayer 를 가짐, AnimationPlayer의 수정은 여기서 이뤄짐
 	//
-	class Animation : public ComponentBase<Animation> {
+	class AnimationController : public ComponentBase<AnimationController> {
+		AnimationPlayer* m_AnimationPlayer = nullptr;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void UpdateTime(float deltaTime);
+
+		void ChangeAnimationTo(const std::string& animDef);
+
+		void SetPlayer(AnimationPlayer* player) { m_AnimationPlayer = player; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// AnimationExecutor component
+	// 애니메이션플레이어를 참조, SOBV를 가짐
+	//
+	class AnimationExecutor : public ComponentBase<AnimationExecutor> {
 		friend class ECSsystem::AnimationPlayTimeAdd;
 		// blahblah 
 		// animation data
@@ -220,23 +240,26 @@ namespace component {
 
 		//D3D12_SHADER_VIEW;
 
-		int m_CurAnimationIdx = -1;
-		int m_BefAnimationIdx = -1;
+		// no data change
+		const AnimationPlayer* m_AnimationPlayer = nullptr;
 
-		float m_BefAniWeight = 0;
+		//int m_CurAnimationIdx = -1;
+		//int m_BefAnimationIdx = -1;
 
-		float m_CurAniPlayTime = 0.0f;
-		float m_BefAniPlayTime = 0.0f;
+		//float m_BefAniWeight = 0;
 
-		// 하드코딩하였다...
-		float m_CurAniMaxPlayTime = 0.0f;
-		float m_BefAniMaxPlayTime = 0.0f;
+		//float m_CurAniPlayTime = 0.0f;
+		//float m_BefAniPlayTime = 0.0f;
+
+		//// 하드코딩하였다...
+		//float m_CurAniMaxPlayTime = 0.0f;
+		//float m_BefAniMaxPlayTime = 0.0f;
 
 		// self.idle, self.walk, self.run, self.blabal ...
 		// 전부 만들어 둘까?
 		// 아니면 데이터만 가지고 있고
 		// 다른애가 set 해주게 만들까
-		// ex) GuardAnimationPlayer라는 컴포넌트가 있음, system에서 GuardAnimPlayer & Speed, AnimationPlayer을 해서 speed에 따라서 currentAnim을 바꿈
+		// ex) GuardAnimationPlayer라는 컴포넌트가 있음, system에서 GuardAnimPlayer & Speed, AnimationController을 해서 speed에 따라서 currentAnim을 바꿈
 		// 구조를 보면 이게 맞을지도?
 		// 생각해보자
 
@@ -248,26 +271,31 @@ namespace component {
 		int GetStreamOutBuffer() const { return m_StreamOutBuffer; }
 		const D3D12_VERTEX_BUFFER_VIEW& GetOriginalVertexBufferView() const { return m_OriginalBufferView; }
 		const D3D12_STREAM_OUTPUT_BUFFER_VIEW& GetStreamOutBufferView() const { return m_ToAnimateBufferView; }
-		int GetCurrentAnimation() const { return m_CurAnimationIdx; }
-		int GetBeforeAnimation() const { return m_BefAnimationIdx; }
-		float GetBeforeAnimationWeight() const { return m_BefAniWeight; }
-		float GetCurrentAnimationPlayTime() const { return m_CurAniPlayTime; }
-		float GetBeforeAnimationPlayTime() const { return m_BefAniPlayTime; }
-		float GetCurrentAnimationMaxTime() const { return m_CurAniMaxPlayTime; }
-		float GetBeforeAnimationMaxTime() const { return m_BefAniMaxPlayTime; }
 
 		void SetStreamOutBuffer(int idx) { m_StreamOutBuffer = idx; }
 		void SetOriginalVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view) { m_OriginalBufferView = view; }
 		void SetStreamOutBufferView(const D3D12_STREAM_OUTPUT_BUFFER_VIEW& view) { m_ToAnimateBufferView = view; }
-		void SetCurrentAnimation(int idx) { m_CurAnimationIdx = idx; }
-		void SetBeforeAnimation(int idx) { m_BefAnimationIdx = idx; }
-		void SetBeforeAnimationWeight(float weight) { m_BefAniWeight = weight; }
-		void SetCurrentAnimationPlayTime(float time) { m_CurAniPlayTime = time; }
-		void SetBeforeAnimationPlayTime(float time) { m_BefAniPlayTime = time; }
-		void SetCurrentAnimationMaxTime(float time) { m_CurAniMaxPlayTime = time; }
-		void SetBeforeAnimationMaxTime(float time) { m_BefAniMaxPlayTime = time; }
+		void SetPlayer(AnimationPlayer* player) { m_AnimationPlayer = player; }
 
-		void ChangeAnimation(int toAnimIdx) { m_BefAnimationIdx = m_CurAnimationIdx; m_CurAnimationIdx = toAnimIdx; }		// todo 
+		void SetData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager);
+
+		//int GetCurrentAnimation() const { return m_CurAnimationIdx; }
+		//int GetBeforeAnimation() const { return m_BefAnimationIdx; }
+		//float GetBeforeAnimationWeight() const { return m_BefAniWeight; }
+		//float GetCurrentAnimationPlayTime() const { return m_CurAniPlayTime; }
+		//float GetBeforeAnimationPlayTime() const { return m_BefAniPlayTime; }
+		//float GetCurrentAnimationMaxTime() const { return m_CurAniMaxPlayTime; }
+		//float GetBeforeAnimationMaxTime() const { return m_BefAniMaxPlayTime; }
+
+		//void SetCurrentAnimation(int idx) { m_CurAnimationIdx = idx; }
+		//void SetBeforeAnimation(int idx) { m_BefAnimationIdx = idx; }
+		//void SetBeforeAnimationWeight(float weight) { m_BefAniWeight = weight; }
+		//void SetCurrentAnimationPlayTime(float time) { m_CurAniPlayTime = time; }
+		//void SetBeforeAnimationPlayTime(float time) { m_BefAniPlayTime = time; }
+		//void SetCurrentAnimationMaxTime(float time) { m_CurAniMaxPlayTime = time; }
+		//void SetBeforeAnimationMaxTime(float time) { m_BefAniMaxPlayTime = time; }
+
+		//void ChangeAnimation(int toAnimIdx) { m_BefAnimationIdx = m_CurAnimationIdx; m_CurAnimationIdx = toAnimIdx; }		// todo 
 
 		// 하드코딩 되어있다,
 		UINT64* m_StreamSize = 0;
@@ -389,6 +417,7 @@ namespace component {
 		float m_MaxVelocity = 300.0f;
 		float m_Acceleration = 10.0f;
 		float m_CurrentVelocity = 0.0f;
+		XMFLOAT3 m_CurrentDirection = { 0,0,0 };
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -398,10 +427,12 @@ namespace component {
 		float GetMaxVelocity() const { return m_MaxVelocity; }
 		float GetAcceleration() const { return m_Acceleration; }
 		float GetCurrentVelocity() const { return m_CurrentVelocity; }
+		const XMFLOAT3& GetCurrentDirection() const { return m_CurrentDirection; }
 
 		void SetMaxSpeed(float maxSpeed) { m_MaxVelocity = maxSpeed; }
 		void SetAcceleration(float acc) { m_Acceleration = acc; }
 		void SetCurrentSpeed(float speed) { m_CurrentVelocity = speed; if (m_CurrentVelocity > m_MaxVelocity) m_CurrentVelocity = m_MaxVelocity; }
+		void SetCurrentDirection(XMFLOAT3 dir) { m_CurrentDirection = dir; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -415,6 +446,37 @@ namespace component {
 
 		// for shadow map making material
 		int m_ShadowMapMaterial = -1;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+	};
+
+	/////////////////////////////////////////////////////////
+	// TestInput component
+	// 인풋 테스트용 
+	//
+	class TestInput : public ComponentBase<TestInput> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Dia Animation Controll component
+	// Dia를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
+	//
+	class DiaAnimationControl : public ComponentBase<DiaAnimationControl> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float m_BefSpeed = 0;
+
+		bool m_BefKeyDown = false;
 	};
 }
 

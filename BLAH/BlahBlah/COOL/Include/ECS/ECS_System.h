@@ -56,7 +56,14 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
+	/////////////////////////////////////////////////////////
+	// anim set by speed
+	//
+	class ChangeAnimationTest : public System {
 
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
 }
 
 

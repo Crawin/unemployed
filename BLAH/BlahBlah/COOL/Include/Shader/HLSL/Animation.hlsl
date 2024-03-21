@@ -23,7 +23,7 @@ struct VS_OUTPUT
 cbuffer MaterialAnim : register(b0)
 {
 	float anim1PlayTime;
-	float anim2Playtime;
+	float anim2PlayTime;
 	float animBlend;
 
 	int anim1Frame;
@@ -34,7 +34,8 @@ cbuffer MaterialAnim : register(b0)
 #define ANIMATION_FPS 24.0f
 
 StructuredBuffer<matrix> Bone : register(t1, space8);
-StructuredBuffer<matrix> Animation : register(t2, space9);
+StructuredBuffer<matrix> Animation_cur : register(t2, space9);
+StructuredBuffer<matrix> Animation_bef : register(t3, space10);
 
 VS_OUTPUT vs(VS_INPUT input)
 {
@@ -54,7 +55,8 @@ VS_OUTPUT vs(VS_INPUT input)
 	matrix inverseMatrix = inverse(localMatrix);
 	float weight;
 
-	int currentFrame = floor(anim1PlayTime * ANIMATION_FPS);
+	int currentFrame_cur = floor(anim1PlayTime * ANIMATION_FPS);
+	int currentFrame_bef = floor(anim2PlayTime * ANIMATION_FPS);
 
 	// for first anim
 	for (int i = 0; i < 4; ++i)
@@ -62,9 +64,13 @@ VS_OUTPUT vs(VS_INPUT input)
 		// animation interpolation
 		float weight = input.boneWeights[i];
 		int boneIdx = input.boneIndexs[i];
-		int idx = boneIdx * anim1Frame + currentFrame;
+		int idx1 = boneIdx * anim1Frame + currentFrame_cur;
+		int idx2 = boneIdx * anim2Frame + currentFrame_bef;
 		
-		boneToWorld = mul(Bone[boneIdx], lerp(Animation[idx + 1], Animation[idx], interpolWegith));
+		matrix anim1 = mul(Bone[boneIdx], lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWegith));
+		//matrix anim2 = mul(Bone[boneIdx], lerp(Animation_bef[idx2 + 1], Animation_bef[idx2], interpolWegith));
+		
+		boneToWorld = anim1;//lerp(anim1, anim2, animBlend);
 		//boneToWorld = Bone[boneIdx];	
 		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
 		output.position += weight * mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;

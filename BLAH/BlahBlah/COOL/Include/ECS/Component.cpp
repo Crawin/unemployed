@@ -32,18 +32,48 @@ namespace component
 		DebugPrint(std::format("Renderer Comp\n\tmesh: {}, material: {}", m_MeshID, m_MaterialID));
 	}
 
-	void Animation::Create(Json::Value& v, ResourceManager* rm)
+	void AnimationController::Create(Json::Value& v, ResourceManager* rm)
 	{
 		//  todo
-		// resource mamager에게 rm[AnimationPlayer]를 찾아서 나중에 넣어달라 해야함
-		// 
+		// resource mamager에게 toLoad 뭐시기를 추가해야 한다.
+		Json::Value anim = v["AnimationController"];
+
+		rm->AddLateLoadAnimController(anim["Player"].asString(), this);
 	}
 
-	void Animation::ShowYourself() const
+	void AnimationController::ShowYourself() const
 	{
-		DebugPrint(std::format("Animation Comp"));
+		DebugPrint(std::format("AnimationController Comp"));
 	}
 
+	void AnimationController::UpdateTime(float deltaTime)
+	{
+		m_AnimationPlayer->Update(deltaTime);
+	}
+
+	void AnimationController::ChangeAnimationTo(const std::string& animDef)
+	{
+		m_AnimationPlayer->ChangeToAnimation(animDef);
+	}
+
+	void AnimationExecutor::Create(Json::Value& v, ResourceManager* rm)
+	{
+		//  todo
+		// resource mamager에게 toLoad 뭐시기를 추가해야 한다.
+		Json::Value anim = v["AnimationExecutor"];
+
+		rm->AddLateLoadAnimExecutor(anim["Player"].asString(), this);
+	}
+
+	void AnimationExecutor::ShowYourself() const
+	{
+		DebugPrint(std::format("AnimationExecutor Comp"));
+	}
+
+	void AnimationExecutor::SetData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager)
+	{
+		m_AnimationPlayer->SetAnimationData(commandList, manager);
+	}
 
 	void Root::Create(Json::Value& v, ResourceManager* rm)
 	{
@@ -234,5 +264,30 @@ namespace component
 
 	}
 
+	void Light::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Light::ShowYourself() const
+	{
+	}
+
+	void TestInput::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void TestInput::ShowYourself() const
+	{
+		DebugPrint("TestInput Comp");
+	}
+
+	void DiaAnimationControl::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void DiaAnimationControl::ShowYourself() const
+	{
+		DebugPrint("DiaAnimationControl Comp");
+	}
 
 }

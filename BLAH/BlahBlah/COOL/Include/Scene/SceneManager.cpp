@@ -12,13 +12,16 @@ void SceneManager::RegisterComponents()
 	// framework.h로 가서 COMPONENT_COUNT의 숫자를 바꿔라
 	REGISTER_COMPONENT(component::Name, "Name");
 	REGISTER_COMPONENT(component::Renderer, "Renderer");
-	REGISTER_COMPONENT(component::Animation, "Animation");
+	REGISTER_COMPONENT(component::AnimationController, "AnimationController");
+	REGISTER_COMPONENT(component::AnimationExecutor, "AnimationExecutor");
 	REGISTER_COMPONENT(component::Root, "Root");
 	REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Input, "Input");
 	REGISTER_COMPONENT(component::Speed, "Speed");
+	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
+	REGISTER_COMPONENT(component::TestInput, "TestInput");
 
 	//PRINT_ALL_BITSET;
 }
