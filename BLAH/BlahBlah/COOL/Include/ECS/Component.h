@@ -417,7 +417,7 @@ namespace component {
 		float m_MaxVelocity = 300.0f;
 		float m_Acceleration = 10.0f;
 		float m_CurrentVelocity = 0.0f;
-		XMFLOAT3 m_CurrentDirection = { 0,0,0 };
+		XMFLOAT3 m_Force = { 0,0,0 };
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -427,12 +427,12 @@ namespace component {
 		float GetMaxVelocity() const { return m_MaxVelocity; }
 		float GetAcceleration() const { return m_Acceleration; }
 		float GetCurrentVelocity() const { return m_CurrentVelocity; }
-		const XMFLOAT3& GetCurrentDirection() const { return m_CurrentDirection; }
+		const XMFLOAT3& GetForce() const { return m_Force; }
 
 		void SetMaxSpeed(float maxSpeed) { m_MaxVelocity = maxSpeed; }
 		void SetAcceleration(float acc) { m_Acceleration = acc; }
 		void SetCurrentSpeed(float speed) { m_CurrentVelocity = speed; if (m_CurrentVelocity > m_MaxVelocity) m_CurrentVelocity = m_MaxVelocity; }
-		void SetCurrentDirection(XMFLOAT3 dir) { m_CurrentDirection = dir; }
+		void SetForce(const XMFLOAT3& dir) { m_Force = dir; }
 	};
 
 	/////////////////////////////////////////////////////////

@@ -152,15 +152,19 @@ namespace ECSsystem {
 			tpRot._43 = 0.0f;
 
 			vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+
+			XMFLOAT3 curForce = sp->GetForce();
+			XMVectorAdd(XMLoadFloat3(&sp->GetForce()), vec * speed);
+
 			XMStoreFloat3(&tempMove, vec);
 
 
 			if (move)
-				sp->SetCurrentDirection(tempMove);
+				sp->SetForce(tempMove);
 
 			//DebugPrint(std::format("speed: {}", speed));
 			if (speed != 0)
-				tr->SetPosition(Vector3::Add(sp->GetCurrentDirection(), tr->GetPosition()));
+				tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
 
 
 			// mouse
@@ -215,11 +219,11 @@ namespace ECSsystem {
 
 
 			if (move)
-				sp->SetCurrentDirection(tempMove);
+				sp->SetForce(tempMove);
 
 			//DebugPrint(std::format("speed: {}", speed));
 			if (speed != 0)
-				tr->SetPosition(Vector3::Add(sp->GetCurrentDirection(), tr->GetPosition()));
+				tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
 
 			};
 		// mouse

@@ -21,10 +21,10 @@ void AnimationPlayer::Update(float deltaTime)
 
 	// anim play time
 	m_CurrentAnimationPlayTime += deltaTime * m_CurrentAnimationSpeed;
-	m_BeforeAnimationPlayTime += deltaTime * m_BeforeAnimationPlayTime;
+	m_BeforeAnimationPlayTime += deltaTime * m_BeforeAnimationSpeed;
 
 	if (m_CurrentAnimationPlayTime > m_CurrentAnimation->GetEndTime()) m_CurrentAnimationPlayTime = 0;
-	if (m_BeforeAnimationPlayTime > m_BeforeAnimation->GetEndTime()) m_CurrentAnimationPlayTime = 0;
+	if (m_BeforeAnimationPlayTime > m_BeforeAnimation->GetEndTime()) m_BeforeAnimationPlayTime = 0;
 
 }
 
@@ -72,5 +72,7 @@ void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> command
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_1_FRAME));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_2_FRAME));
 
-	//DebugPrint(std::format("frame: {}, weight: {}, playTime : {}", firstAnimFrame, weight, firstAnimPlayTime));
+	DebugPrint(std::format("first anim frame: {}, weight: {}, playTime : {}", firstAnimFrame, weight, firstAnimPlayTime));
+	DebugPrint(std::format("secon anim frame: {}, weight: {}, playTime : {}", secondAnimFrame, weight, secondAnimPlayTime));
+	DebugPrint("");
 }
