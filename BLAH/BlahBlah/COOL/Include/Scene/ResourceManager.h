@@ -180,6 +180,7 @@ public:
 
 	void SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
 	void ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
 
 	// manual 
 	void SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState);
