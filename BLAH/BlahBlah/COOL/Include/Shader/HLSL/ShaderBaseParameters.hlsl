@@ -1,12 +1,18 @@
 struct LIGHT
 {
 	float4 m_LightColor;
-	float3 m_Direction;
+	
+    float3 m_Direction;
 	float m_Falloff;
-	bool m_CastShadow;
-	bool m_Active;
-	int m_ShadowMapResult;
+
+    float3 m_Position;
 	int m_LightType;
+
+    uint3 m_ShadowMapResults;
+    bool m_IsCascadedShadow;
+
+	bool m_Active;
+	bool m_CastShadow;
 };
 
 

@@ -55,6 +55,9 @@ private:
 	// render seq 01
 	void AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList);
 
+	// render seq final - 1
+	void UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList);
+
 	// render seq final
 	void PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 

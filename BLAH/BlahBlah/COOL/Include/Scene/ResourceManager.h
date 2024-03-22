@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Material/Material.h"
+#include "Light.h"
 #include "Mesh/Mesh.h"
 #include "Mesh/Bone.h"
 #include "Animation/Animation.h"
@@ -27,6 +28,7 @@ namespace component {
 	class Camera;
 	class AnimationController;
 	class AnimationExecutor;
+	class Light;
 }
 
 struct ToLoadRendererInfo {
@@ -44,6 +46,11 @@ struct ToLoadAnimExecutorInfo {
 	std::string m_AnimSetName;
 	component::AnimationExecutor* m_Executor;
 };
+
+//struct ToLoadLightDataInfo {
+//	int idx;
+//	component::Light* m_Light;
+//};
 
 // 이따구로 하는 방법 말고는 없을까...
 // todo 생각해보자
@@ -117,6 +124,7 @@ private:
 	bool LoadDefferedResource(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> commandList);
+	bool MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandList);					// todo 카메라마다 만들어줘야 할지 고민해보자
 
 	// mesh/material 에 로드 할 것들이 남아 있다면 로드
 	bool LateInit(ComPtr<ID3D12GraphicsCommandList> commandList);
@@ -125,7 +133,7 @@ private:
 	bool LoadObjects(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
 
-	// for deferred renderer
+	// for deferred renderer and shadow map
 	bool MakeExtraRenderTarget();
 
 public:
@@ -159,11 +167,19 @@ public:
 	// for late init anim executor
 	void AddLateLoadAnimExecutor(const std::string& fileName, component::AnimationExecutor* executor);
 
+	// for light components
+	void AddLightData();
+
+	//LightData& GetLightData(int idx);
+
 	// for multiple render target / post processing
 	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
 	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
 	int GetPostProcessingMaterial() const;
+
+	void SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
+	void ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
 
 	// manual 
 	void SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState);
@@ -178,10 +194,10 @@ private:
 	// 메시 데이터
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
 
-	// object 데이터
+	// 상수버퍼 데이터
 	std::vector<COOLResourcePtr> m_ObjectDatas;
 
-	// 텍스쳐 데이터
+	// 셰이더 데이터 t register
 	std::vector<COOLResourcePtr> m_Resources;
 
 	// 업로드리소스, 초기화 완료 후 전체 삭제
@@ -224,11 +240,19 @@ private:
 	std::vector<AnimationPlayer*> m_AnimationPlayer;
 	std::vector<std::shared_ptr<Animation>> m_Animations;
 
+	// light datas
+	//std::vector<LightData> m_LightDatas;
+	LightData* m_MappedLightData;
+
 	// Deffered render targets
 	// 해당갯수 만큼 m_Resources에 넣음
-	int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
+	const int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
 	int m_DefferedRTVStartIdx = -1;
 	//D3D12_CPU_DESCRIPTOR_HANDLE m_DefferedRTVStart = D3D12_CPU_DESCRIPTOR_HANDLE();
+
+	// cascaded + other
+	const int m_ShadowMapRenderTargets = 5;
+	int m_ShadowMapRTVStartIdx = -1;
 
 	// postProcessingMaterial;
 	const char* m_PostProcessing = "PostProcessing";
@@ -255,6 +279,9 @@ private:
 	std::vector<ToLoadAnimControllerInfo> m_ToLoadAnimCont;
 	std::vector<ToLoadAnimExecutorInfo> m_ToLoadAnimExe;
 	
+	int m_LightSize = 0;
+	int m_LightIdx = -1;
+
 	//std::vector<Entity*> m_Cameras;
 	component::Camera* m_MainCamera = nullptr;
 };

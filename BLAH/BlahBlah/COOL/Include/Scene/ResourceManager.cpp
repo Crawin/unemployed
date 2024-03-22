@@ -393,6 +393,29 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 	return true;
 }
 
+bool ResourceManager::MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	if (m_LightSize > 0) {
+		COOLResourcePtr res = Renderer::GetInstance().CreateEmptyBuffer(
+			D3D12_HEAP_TYPE_UPLOAD,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			m_LightSize * sizeof(LightData),
+			"LightingData",
+			(void**)&m_MappedLightData);
+
+		res->SetShaderResource();
+		res->SetDimension(D3D12_SRV_DIMENSION_BUFFER);
+		res->SetNumOfElement(m_LightSize);
+		res->SetStride(sizeof(LightData));
+
+
+		m_Resources.push_back(res);
+		m_LightIdx = static_cast<int>(m_Resources.size() - 1);
+	}
+
+	return true;
+}
+
 bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
 	// 1. 씬에 배치 될 오브젝트들을 찾는다.
@@ -415,8 +438,6 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 
 	// Load Objects
 	CHECK_CREATE_FAILED(LoadObjects(sceneName, commandList), "Object Load Failed!!");
-
-	// Load Lights
 
 	// Load Cameras
 	CHECK_CREATE_FAILED(LoadCameras(sceneName, commandList), "Camera Load Fail!!");
@@ -453,6 +474,9 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// load Animation
 	CHECK_CREATE_FAILED(LoadLateInitAnimation(commandList), "Animation Late Load Failed!");
+
+	// make lighting data
+	CHECK_CREATE_FAILED(MakeLightData(commandList), "Light Making Failed!!");
 
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
@@ -568,6 +592,7 @@ bool ResourceManager::LoadCameras(const std::string& sceneName, ComPtr<ID3D12Gra
 
 bool ResourceManager::MakeExtraRenderTarget()
 {
+	// MRT Render Targets
 	m_DefferedRTVStartIdx = static_cast<int>(m_Resources.size());
 
 	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i) {
@@ -582,7 +607,22 @@ bool ResourceManager::MakeExtraRenderTarget()
 		m_Resources[m_DefferedRTVStartIdx + i]->SetShaderResource();
 	}
 
+
+	// ShadowMap Render Targets
+	m_ShadowMapRTVStartIdx = static_cast<int>(m_Resources.size());
 	
+	for (int i = 0; i < m_ShadowMapRenderTargets; ++i) {
+		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
+			D3D12_HEAP_TYPE_DEFAULT,
+			D3D12_RESOURCE_STATE_COMMON,
+			Renderer::GetInstance().GetScreenSize(),
+			std::format("Shadow_Map{}", i),
+			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+		);
+
+		m_Resources[m_ShadowMapRTVStartIdx + i]->SetShaderResource();
+	}
+
 	return true;
 }
 
@@ -684,6 +724,17 @@ void ResourceManager::AddLateLoadAnimExecutor(const std::string& fileName, compo
 	m_ToLoadAnimExe.emplace_back(fileName, executor);
 }
 
+void ResourceManager::AddLightData()
+{
+	++m_LightSize;
+	//return static_cast<int>(m_LightDatas.size() - 1);
+}
+
+//LightData& ResourceManager::GetLightData(int idx)
+//{
+//	return m_LightDatas[idx];
+//}
+
 void ResourceManager::SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)
 {
 	for (int i = m_DefferedRTVStartIdx; i < m_DefferedRTVStartIdx + m_DefferedRenderTargets; ++i) {
@@ -709,6 +760,19 @@ D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart() cons
 int ResourceManager::GetPostProcessingMaterial() const
 {
 	return m_PostProcessingMaterial;
+}
+
+void ResourceManager::SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)
+{
+	for (int i = m_ShadowMapRTVStartIdx; i < m_ShadowMapRTVStartIdx + m_ShadowMapRenderTargets; ++i) {
+		m_Resources[i]->TransToState(cmdList, toState);
+	}
+}
+
+void ResourceManager::ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4])
+{
+	// todo todo todo
+	// shadowmap rendertargets도 가지고 있어야 함.
 }
 
 void ResourceManager::SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState)

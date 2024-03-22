@@ -270,16 +270,26 @@ namespace component
 
 		m_IsMainLight = light["MainLight"].asBool();
 
-
-
 		// todo
 		// rm에게 나 light 쓸래요라고 등록 해야함
+		rm->AddLightData();
+
+		m_LightData.m_LightColor.x = light["LightColor"][0].asFloat();
+		m_LightData.m_LightColor.y = light["LightColor"][1].asFloat();
+		m_LightData.m_LightColor.z = light["LightColor"][2].asFloat();
+		m_LightData.m_LightColor.w = light["LightColor"][3].asFloat();
+
+		m_LightData.m_Falloff = light["FallOff"].asFloat();
+		m_LightData.m_LightType = light["LightType"].asInt();
+
+		m_LightData.m_Active = light["Active"].asBool();
+		m_LightData.m_CastShadow = light["CastShadow"].asBool();
 	}
 
 	void Light::ShowYourself() const
 	{
 		DebugPrint("Light Comp");
-		DebugPrint(std::format("Light map material: {}", m_ShadowMapMaterial));
+		//DebugPrint(std::format("Light map material: {}", m_ShadowMapMaterial));
 	}
 
 	void TestInput::Create(Json::Value& v, ResourceManager* rm)

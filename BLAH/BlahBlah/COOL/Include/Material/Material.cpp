@@ -52,7 +52,9 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 	// MATERIAL_TYPES
 	const char* materialTypes[] = { "BaseColor", "Roughness", "Metalic", "Specular", "Normal" };
 
-	for (int i = 0; i < static_cast<int>(MATERIAL_TYPES::MATERIAL_END); ++i) {
+	//for (int i = 0; i < static_cast<int>(MATERIAL_TYPES::MATERIAL_END); ++i)
+	for (int i = 0; i < _countof(materialTypes); ++i)
+	{
 		if (root[materialTypes[i]].isNull()) continue;
 
 		// texture의 이름

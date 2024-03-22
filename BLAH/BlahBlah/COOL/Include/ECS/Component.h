@@ -442,10 +442,7 @@ namespace component {
 	class Light : public ComponentBase<Light> {
 		// 주의할 점
 		// 카메라와 달리 얘는 배열로 관리 해야함
-		LightData* m_LightData = nullptr;
-
-		// for shadow map making material
-		int m_ShadowMapMaterial = -1;
+		LightData m_LightData;
 
 		bool m_IsMainLight = false;
 
@@ -453,6 +450,8 @@ namespace component {
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
+
+		LightData& GetLightData() { return m_LightData; }
 	};
 
 	/////////////////////////////////////////////////////////

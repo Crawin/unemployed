@@ -64,6 +64,8 @@ namespace ECSsystem {
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
+
+
 }
 
 

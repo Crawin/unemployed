@@ -74,7 +74,7 @@ void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> command
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimIdx, static_cast<int>(ANIM_ROOTCONST::ANI_1_INDEX));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimIdx, static_cast<int>(ANIM_ROOTCONST::ANI_2_INDEX));
 
-	DebugPrint(std::format("first anim frame: {}, weight: {}, playTime : {}", firstAnimFrame, weight, firstAnimPlayTime));
-	DebugPrint(std::format("secon anim frame: {}, weight: {}, playTime : {}", secondAnimFrame, weight, secondAnimPlayTime));
-	DebugPrint("");
+	//DebugPrint(std::format("first anim frame: {}, weight: {}, playTime : {}", firstAnimFrame, weight, firstAnimPlayTime));
+	//DebugPrint(std::format("secon anim frame: {}, weight: {}, playTime : {}", secondAnimFrame, weight, secondAnimPlayTime));
+	//DebugPrint("");
 }

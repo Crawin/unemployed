@@ -94,6 +94,56 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 	//m_ECSManager->Execute(debug);
 }
 
+void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// render shadow map
+
+	// light map
+	// 1. light map을 만드는 모든 light들에 대해 프러스텀 컬링을 실시함 (renderer를 찾아 모아옴)
+	// 2. lightmap 상태 변경(tex -> present)
+	// 3. OM SET
+	// 4. render
+	// 4 - 1. shader에 light 데이터가 가야하는데 어케하지? light data를 
+	// 4 - 2.
+	// 5. present -> tex;
+	
+	// set light map pso
+
+
+	// for lambda capture
+	std::shared_ptr<ECSManager> ecs = m_ECSManager;
+	auto& res = m_ResourceManager;
+
+
+	// set light data to shader
+	int count = 0;
+	LightData* data = m_ResourceManager->m_MappedLightData;
+
+	std::function<void(component::Light*)> updateLight = [&count, data, ecs, commandList, res](component::Light* lightComp) {
+
+		// todo
+		// if 뭐 얘가 좀 쌘 애다
+		std::function<void(component::Renderer*)> render = [commandList, res](component::Renderer* rend) {
+			const auto& view = rend->GetVertexBufferView();
+			D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
+			commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
+			res->m_Meshes[rend->GetMesh()]->Render(commandList, rend->GetWorldMatrix());
+
+			};
+
+		ecs->Execute(render);
+		
+
+
+		// todo 
+		// 뭐 카메라 거리에 자르거나 할 수 있게 할까?
+		memcpy(data + count++, &lightComp->GetLightData(), sizeof(LightData));
+		};
+
+	m_ECSManager->Execute(updateLight);
+
+}
+
 void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
 	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
@@ -101,10 +151,17 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
 	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON);
 
+	UpdateLightData();
+
 	int postMat = m_ResourceManager->GetPostProcessingMaterial();
 
-	m_ResourceManager->m_Materials[postMat]->GetShader()->SetPipelineState(commandList);
-	m_ResourceManager->m_Materials[postMat]->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+	Material* mat = m_ResourceManager->m_Materials[postMat];
+
+	// todo light size
+	mat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_SIZE), m_ResourceManager->m_LightSize);
+	mat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_IDX), m_ResourceManager->m_LightIdx);
+	mat->GetShader()->SetPipelineState(commandList);
+	mat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 	commandList->DrawInstanced(6, 1, 0, 0);
 
@@ -166,21 +223,6 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	commandLists[0]->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &resultDsv);
 	//commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
 	
-	// get light to make shadow map
-	// todo 이걸 하자
-	std::vector<component::Light*> lightVec;
-	std::function<void(component::Light*)> getLight = [&commandLists, &lightVec](component::Light* light) { lightVec.push_back(light); };
-
-	// light map
-	// 1. light map을 만드는 모든 light들에 대해 프러스텀 컬링을 실시함 (renderer를 찾아 모아옴)
-	// 2. lightmap 상태 변경(tex -> present)
-	// 3. OM SET
-	// 4. render
-	// 4 - 1. shader에 light 데이터가 가야하는데 어케하지? light data를 
-	// 4 - 2.
-	// 5. present -> tex;
-
-
 	// get Camera
 	std::vector<component::Camera*> camVec;
 	std::function<void(component::Camera*)> getCam = [&commandLists, &camVec](component::Camera* cam) {	camVec.push_back(cam); };

@@ -14,11 +14,11 @@ enum class ROOT_SIGNATURE_IDX{
 };
 
 enum class MATERIAL_TYPES {
-	BaseColor = 0,
-	Roughness,
-	Metalic,
-	Specular,
-	Normal,
+	ALBEDO = 0,
+	ROUGHNESS,
+	METALIC,
+	SPECULAR,
+	NORMAL,
 	MATERIAL_END
 };
 
@@ -44,6 +44,18 @@ enum class MULTIPLE_RENDER_TARGETS {
 	NormalW,
 	PositionW,
 	MRT_END
+};
+
+enum class MRT_POST_ROOTCONST
+{
+	ALBEDO,
+	ROUGHNESS,
+	METALIC,
+	SPECULAR,
+	NORMAL,
+	POSITION,
+	LIGHT_SIZE,
+	LIGHT_IDX,
 };
 
 enum class VERTEX_TYPES {

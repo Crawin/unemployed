@@ -18,6 +18,7 @@ public:
 	void SetName(std::string_view name) { m_Name = name; }
 
 	void SetTexture(int idx, int tex) { m_TextureIndex[idx] = tex; }
+	void SetDataIndex(int idx, int data) { m_TextureIndex[idx] = data; }
 	void SetAlbedoTextureIndex(int idx) { m_TextureIndex[0] = idx; }
 	//void SetAlbedoTextureIndex(int idx) { m_TextureIndex._11 = idx; }
 

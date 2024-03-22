@@ -85,12 +85,37 @@ namespace ECSsystem {
 
 		manager->Execute(func1);
 
+		// sync with renderer world matrix
 		std::function<void(component::Transform*, component::Renderer*)> func2 = [](component::Transform* tr, component::Renderer* ren) {
 			ren->SetWorldMatrix(tr->GetWorldTransform());
 
 			};
 
 		manager->Execute(func2);
+
+		// sync with Light
+		std::function<void(component::Transform*, component::Light*)> func3 = [manager](component::Transform* tr, component::Light* li) {
+			LightData& light = li->GetLightData();
+
+
+			XMFLOAT3 direction = { 0.0f, 0.0f, 1.0f };
+			XMFLOAT3 rotate = tr->GetRotation();
+			XMFLOAT3 rad;
+			rad.x = XMConvertToRadians(rotate.x);
+			rad.y = XMConvertToRadians(rotate.y);
+			rad.z = XMConvertToRadians(rotate.z);
+
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
+			
+			//int lightIdx = li->GetLightDataIdx();
+
+
+			// light.m_Direction;
+			XMStoreFloat3(&light.m_Direction, XMVector3Normalize(XMVector3Transform(XMLoadFloat3(&direction), rot)));
+			light.m_Position = tr->GetPosition();
+			};
+
+		manager->Execute(func3);
 
 	}
 
