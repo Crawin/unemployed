@@ -7,9 +7,9 @@ enum class ROOT_SIGNATURE_IDX{
 	CAMERA_DATA_CBV,				// 카메라행렬 4x4 x2
 	WORLD_MATRIX,
 	SHADER_DATAS_CBV,				// 뭐 대충 나머지들 (delta time, 등등)
-	BONE,
-	ANIMATION_FIRST,
-	ANIMATION_SECOND,
+	//BONE,
+	//ANIMATION_FIRST,
+	//ANIMATION_SECOND,				// 늘릴 필요 없었다.
 	ROOT_SIGNATURE_IDX_MAX
 };
 
@@ -64,4 +64,7 @@ enum class ANIM_ROOTCONST {
 	ANI_BLEND,
 	ANI_1_FRAME,
 	ANI_2_FRAME,
+	ANI_1_INDEX,
+	ANI_2_INDEX,
+	BONE_INDEX
 };

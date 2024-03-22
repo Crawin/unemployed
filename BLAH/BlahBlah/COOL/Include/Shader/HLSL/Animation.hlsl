@@ -28,14 +28,18 @@ cbuffer MaterialAnim : register(b0)
 
 	int anim1Frame;
 	int anim2Frame;
+
+	int anim1Idx;
+	int anim2Idx;
+	int boneIdx;
 };
 
 #define MAX_BONE_LEN 64
 #define ANIMATION_FPS 24.0f
 
-StructuredBuffer<matrix> Bone : register(t1, space8);
-StructuredBuffer<matrix> Animation_cur : register(t2, space9);
-StructuredBuffer<matrix> Animation_bef : register(t3, space10);
+//StructuredBuffer<matrix> Bone : register(t1, space8);
+//StructuredBuffer<matrix> Animation_cur : register(t2, space9);
+//StructuredBuffer<matrix> Animation_bef : register(t3, space10);
 
 VS_OUTPUT vs(VS_INPUT input)
 {
@@ -47,6 +51,10 @@ VS_OUTPUT vs(VS_INPUT input)
 	output.tangent = float3(0.0f, 0.0f, 0.0f);
 	output.uv = input.uv;
 	
+	StructuredBuffer<matrix> Bone = BonAnimDataList[boneIdx];
+	StructuredBuffer<matrix> Animation_cur = BonAnimDataList[anim1Idx];
+	StructuredBuffer<matrix> Animation_bef = BonAnimDataList[anim2Idx];
+
 	matrix boneToWorld;
 	matrix animByFrame;
 

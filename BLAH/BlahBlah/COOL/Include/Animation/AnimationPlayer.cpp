@@ -60,17 +60,19 @@ void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> command
 	int firstAnimFrame = m_CurrentAnimation->GetEndFrame() + 1;
 	int secondAnimFrame = m_BeforeAnimation->GetEndFrame() + 1;
 
-	D3D12_GPU_VIRTUAL_ADDRESS firstAnim = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, firstAnimIdx);
-	D3D12_GPU_VIRTUAL_ADDRESS secondAnim = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, secondAnimIdx);
+	//D3D12_GPU_VIRTUAL_ADDRESS firstAnim = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, firstAnimIdx);
+	//D3D12_GPU_VIRTUAL_ADDRESS secondAnim = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, secondAnimIdx);
 
-	commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_FIRST), firstAnim);
-	commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_SECOND), secondAnim);
+	//commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_FIRST), firstAnim);
+	//commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_SECOND), secondAnim);
 
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_1_PLAYTIME));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimPlayTime, static_cast<int>(ANIM_ROOTCONST::ANI_2_PLAYTIME));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &weight, static_cast<int>(ANIM_ROOTCONST::ANI_BLEND));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_1_FRAME));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimFrame, static_cast<int>(ANIM_ROOTCONST::ANI_2_FRAME));
+	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimIdx, static_cast<int>(ANIM_ROOTCONST::ANI_1_INDEX));
+	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimIdx, static_cast<int>(ANIM_ROOTCONST::ANI_2_INDEX));
 
 	DebugPrint(std::format("first anim frame: {}, weight: {}, playTime : {}", firstAnimFrame, weight, firstAnimPlayTime));
 	DebugPrint(std::format("secon anim frame: {}, weight: {}, playTime : {}", secondAnimFrame, weight, secondAnimPlayTime));

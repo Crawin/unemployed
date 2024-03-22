@@ -69,10 +69,8 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			commandList->SOSetTargets(0, _countof(bufView), bufView);
 
 			// set bone here
-			// set animation data here
-			int boneIdx = mesh->GetBoneIdx();
-			D3D12_GPU_VIRTUAL_ADDRESS boneData = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, manager->m_Bones[boneIdx]->GetBoneDataIdx());
-			commandList->SetGraphicsRootShaderResourceView(static_cast<int>(ROOT_SIGNATURE_IDX::BONE), boneData);
+			int boneIdx = manager->m_Bones[mesh->GetBoneIdx()]->GetBoneDataIdx();
+			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneIdx, static_cast<int>(ANIM_ROOTCONST::BONE_INDEX));
 
 			// set animation here
 			executor->SetData(commandList, manager);

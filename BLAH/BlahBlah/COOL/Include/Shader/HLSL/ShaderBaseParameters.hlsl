@@ -32,6 +32,9 @@ ByteAddressBuffer RawDataList[] : register(t0, space2);
 Buffer<uint> BufferUintList[] : register(t0, space3);
 Buffer<float> BufferFloatList[] : register(t0, space4);
 StructuredBuffer<LIGHT> LightDataList[] : register(t0, space5);
+StructuredBuffer<matrix> BonAnimDataList[] : register(t0, space6);
+//StructuredBuffer<matrix> LightDataList[] : register(t0, space7);
+//StructuredBuffer<matrix> LightDataList[] : register(t0, space8);
 
 
 

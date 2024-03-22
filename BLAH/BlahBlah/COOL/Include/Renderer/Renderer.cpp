@@ -280,23 +280,23 @@ bool Renderer::CreateRootSignature()
 	rootParams[4].Descriptor.RegisterSpace = 0;
 	rootParams[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 5: bone data structured buffer
-	rootParams[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	rootParams[5].Descriptor.ShaderRegister = 1;
-	rootParams[5].Descriptor.RegisterSpace = 8;
-	rootParams[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	//// idx 5: bone data structured buffer
+	//rootParams[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	//rootParams[5].Descriptor.ShaderRegister = 1;
+	//rootParams[5].Descriptor.RegisterSpace = 8;
+	//rootParams[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 6: anim1 data structured buffer
-	rootParams[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	rootParams[6].Descriptor.ShaderRegister = 2;
-	rootParams[6].Descriptor.RegisterSpace = 9;
-	rootParams[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	//// idx 6: anim1 data structured buffer
+	//rootParams[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	//rootParams[6].Descriptor.ShaderRegister = 2;
+	//rootParams[6].Descriptor.RegisterSpace = 9;
+	//rootParams[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
-	// idx 7: anim2 data structured buffer
-	rootParams[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	rootParams[7].Descriptor.ShaderRegister = 3;
-	rootParams[7].Descriptor.RegisterSpace = 10;
-	rootParams[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	//// idx 7: anim2 data structured buffer
+	//rootParams[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	//rootParams[7].Descriptor.ShaderRegister = 3;
+	//rootParams[7].Descriptor.RegisterSpace = 10;
+	//rootParams[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	
 	//
 	// sampler desc
@@ -331,8 +331,9 @@ bool Renderer::CreateRootSignature()
 	//
 	// create root signature
 	D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlag =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | 
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_STREAM_OUTPUT; /* |
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_STREAM_OUTPUT;/* |
+		D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED; /* |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
 		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS;     */
 

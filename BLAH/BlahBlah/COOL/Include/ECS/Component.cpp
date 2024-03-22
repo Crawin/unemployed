@@ -266,10 +266,20 @@ namespace component
 
 	void Light::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value light = v["Light"];
+
+		m_IsMainLight = light["MainLight"].asBool();
+
+
+
+		// todo
+		// rm에게 나 light 쓸래요라고 등록 해야함
 	}
 
 	void Light::ShowYourself() const
 	{
+		DebugPrint("Light Comp");
+		DebugPrint(std::format("Light map material: {}", m_ShadowMapMaterial));
 	}
 
 	void TestInput::Create(Json::Value& v, ResourceManager* rm)

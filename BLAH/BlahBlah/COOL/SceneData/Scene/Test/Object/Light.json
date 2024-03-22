@@ -1,0 +1,20 @@
+{
+	"Name": "MainLight",
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [45.0, 45.0, 45.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Light":
+	{
+		"LightColor": [1.0, 1.0, 1.0, 1.0],
+		"FallOff": 0.0,
+		"LightType": 0,
+		"Active": true,
+		"CastShadow": true,
+		"Main": true
+	}
+}

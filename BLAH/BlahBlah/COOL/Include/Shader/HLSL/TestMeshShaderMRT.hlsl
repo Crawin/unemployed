@@ -57,7 +57,7 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.Specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	output.NormalW = float4(i.normalW, 1.0f);
-	output.PositionW = i.position.z;
+	output.PositionW = float4(i.positionW.xyz, i.position.z);
 	
 	return output;
 }

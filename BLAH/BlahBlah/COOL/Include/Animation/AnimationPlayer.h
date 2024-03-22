@@ -26,7 +26,7 @@ class AnimationPlayer
 	float m_BeforeAnimWeight = 0.0f;
 
 	// animation change complete time
-	const float m_AnimChangeSpeed = 0.2f;
+	const float m_AnimChangeSpeed = 0.4f;
 
 public:
 	AnimationPlayer();
