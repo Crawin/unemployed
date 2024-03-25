@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "Server.h"
+#include "Mesh.h"
 
 void CServer::SetSTtype(const ServerType& type)
 {
@@ -82,20 +83,18 @@ void CRoomServer::Run()
 	PrintInfo("Run");
 	m_cServerState = 1;
 
-	Mesh temp;
-	std::string fileName = "Resource\\CubeCube.bin";
-	std::ifstream meshFile(fileName, std::ios::binary);
-	if (meshFile.is_open() == false) {
-		std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
-	}
-	temp.LoadMeshData(meshFile);
-	MeshObjects.emplace_back(temp);
 
-	fileName = "Resource\\practicecubenew.bin";
-	std::ifstream meshFile2(fileName, std::ios::binary);
-	Mesh temp2;
-	temp2.LoadMeshData(meshFile2);
-	MeshObjects.emplace_back(temp2);
+	for (const auto& file : std::filesystem::directory_iterator("Resource/"))
+	{
+		const auto fileName = file.path();
+		std::ifstream meshFile(fileName, std::ios::binary);
+		if (meshFile.is_open() == false) {
+			std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
+		}
+		Mesh temp;
+		temp.LoadMeshData(meshFile);
+		m_umMeshes.emplace(fileName.string(), temp);
+	}
 
 	lRoomThreads.emplace_back(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
 }
@@ -382,6 +381,34 @@ void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg, co
 	}
 }
 
+void CRoomServer::WorldCollision(Player& p)
+{
+	DirectX::XMFLOAT3 temp_extents = { 0,0,0 };
+	DirectX::BoundingBox pBound(p.getPos(), temp_extents);
+	for (auto start = m_umMeshes.begin(); start != m_umMeshes.end(); ++start)
+	{
+		DirectX::BoundingBox parent(start->second.GetCenter(), start->second.GetExtents());
+		if (pBound.Intersects(parent))
+		{
+			p.undoPosition();
+			return;
+		}
+
+		if (start->second.m_Childs.size() > 0)
+		{
+			for (auto child = start->second.m_Childs.begin(); child != start->second.m_Childs.end(); ++child)
+			{
+				DirectX::BoundingBox box(child->GetCenter(), child->GetExtents());
+				if (pBound.Intersects(box))
+				{
+					p.undoPosition();
+					return;
+				}
+			}
+		}
+	}
+}
+
 unsigned int CRoomServer::Make_GameNumber()
 {
 	std::random_device rd;
@@ -474,11 +501,12 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 		//	err_display("send()");
 		//	break;
 		//}
-		recv_buf.len = retval;
-		if (WSASend(client_sock, &recv_buf, 1, &retval, 0, 0, 0) == SOCKET_ERROR) {
-			err_display("send()");
-			break;
-		}
+		
+		//recv_buf.len = retval;
+		//if (WSASend(client_sock, &recv_buf, 1, &retval, 0, 0, 0) == SOCKET_ERROR) {
+		//	err_display("send()");
+		//	break;
+		//}
 	}
 
 	// 소켓 닫기
@@ -497,6 +525,9 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 	Log_Mutex.lock();
 	std::cout << "[" << gameNum << "] GameRunThread Run" << std::endl;
 	Log_Mutex.unlock();
+
+	WSABUF wsabuf;
+
 
 	std::array<Player, 2> p;
 	short GameOver = 1;
@@ -552,10 +583,23 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 			}
 		}
 
-		//MeshObjects
-
 		//충돌
+		WorldCollision(p[0]);
+		//WorldCollision(p[1]);
+
 		//이벤트 발생
+
+		//Socket_position sp;
+		//sp.pos = p[0].getPos();
+		//sp.rot = p[0].getRot();
+		//sp.type = POSITION;
+		//wsabuf.buf = (char*)&sp;
+		//wsabuf.len = sizeof(sp);
+		//if (WSASend(mGameStorages[gameNum][0].first, &wsabuf, 1, nullptr, 0, 0, 0) == SOCKET_ERROR)
+		//{
+		//	err_display("send()");
+		//	break;
+		//}
 	}
 }
 
@@ -599,7 +643,7 @@ void CServerManager::CommandThread()
 	Log_Mutex.unlock();
 
 	std::string input;
-	std::map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
+	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
 		{"/STOP",[&CommandState, this]() {
 			CommandState = false;
 			RoomServer->CloseListen();
@@ -632,17 +676,13 @@ void CServerManager::CommandThread()
 		std::string input;
 		std::cin >> input;
 
-		auto result = commands.find(input);
-		if (result != commands.end())
-		{
-			result->second();
-		}
-		else
+		if (commands.find(input) == commands.end())
 		{
 			Log_Mutex.lock();
-			std::cout << "존재하지 않는 명령어 입니다." << std::endl;
+			std::cout << "해당 명령어가 존재하지 않습니다." << std::endl;
 			Log_Mutex.unlock();
 		}
+		else commands[input]();
 	}
 }
 
@@ -661,6 +701,11 @@ void Player::allocateSOCKET(const SOCKET& s)
 const DirectX::XMFLOAT3 Player::getPos()
 {
 	return m_aTransform[1].pos;
+}
+
+const DirectX::XMFLOAT3 Player::getRot()
+{
+	return m_aTransform[1].rot;
 }
 
 // (문자열, 좌표 변경이 있을시에만 출력)
@@ -693,68 +738,7 @@ void Player::setTransform(const Socket_position& sp)
 	m_aTransform[1].rot = sp.rot;
 }
 
-void Mesh::LoadMeshData(std::ifstream& meshFile)
+void Player::undoPosition()
 {
-	// 메쉬 파일 구조
-// 1. 이름 길이					// int
-// 2. 이름						// char*
-// 3. 바운딩박스					// float3 x 3
-// 4. 부모 상대 변환 행렬			// float4x4
-// 5. 버텍스 타입				// int
-// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
-// 7. 인덱스 정보				// int int*int
-// 8. 서브메쉬 개수				// int
-// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
-//
-
-// 1. 이름 길이
-	unsigned int size;
-	meshFile.read((char*)&size, sizeof(unsigned int));
-
-	// 2. 이름
-	if (size > 0) {
-		char* name = new char[size + 1];
-		name[size] = '\0';
-		meshFile.read(name, size);
-		m_Name = std::string(name);
-		delete[] name;
-	}
-
-	// 3. 바운딩박스	
-	DirectX::XMFLOAT3 min, max;
-	meshFile.read((char*)&min, sizeof(DirectX::XMFLOAT3));
-	meshFile.read((char*)&max, sizeof(DirectX::XMFLOAT3));
-	meshFile.read((char*)&m_AABBCenter, sizeof(DirectX::XMFLOAT3));
-	m_AABBExtents = DirectX::XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
-
-	// 4. 부모 상대 변환 행렬		// float4x4
-	meshFile.read((char*)&m_LocalTransform, sizeof(DirectX::XMFLOAT4X4));
-
-	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
-	unsigned int vtxType;
-	meshFile.read((char*)&vtxType, sizeof(unsigned int));
-
-	// 6. 버텍스 정보
-	unsigned int vertexLen = 0;
-	meshFile.read((char*)&vertexLen, sizeof(unsigned int));
-
-	if (vertexLen > 0) {
-
-		std::vector<Vertex> vertex(vertexLen);
-		meshFile.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
-
-		m_VertexNum = vertexLen;
-	}
-
-	// 8. 서브메쉬 개수
-	unsigned int childNum;
-	meshFile.read((char*)&childNum, sizeof(unsigned int));
-	m_Childs.reserve(childNum);
-
-	// 9. 서브메쉬(재귀)
-	for (unsigned int i = 0; i < childNum; ++i) {
-		Mesh* newMesh = new Mesh;
-		newMesh->LoadMeshData(meshFile);
-		m_Childs.push_back(newMesh);
-	}
+	m_aTransform[1].pos = m_aTransform[0].pos;
 }

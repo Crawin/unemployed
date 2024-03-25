@@ -22,6 +22,7 @@ void err_display(int errcode);
 #include <thread>
 #include <functional>
 #include <DirectXMath.h>
+#include <DirectXCollision.h>
 
 #include <string>
 #include <vector>
@@ -29,6 +30,8 @@ void err_display(int errcode);
 #include <mutex>
 #include <list>
 #include <array>
+#include <unordered_map>
 
 #include <random>
 #include <fstream>
+#include <filesystem>

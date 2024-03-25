@@ -27,38 +27,8 @@ struct Socket_event
 	SendType type;		// EVENT일때
 };
 
-struct Vertex
-{
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 normal;
-	DirectX::XMFLOAT3 tangent;
-	DirectX::XMFLOAT2 uv;
-};
-
-class Mesh {
-private:
-	// name
-	std::string m_Name = "";
-
-	// bounding box
-	DirectX::XMFLOAT3 m_AABBCenter = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT3 m_AABBExtents = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
-	// todo mesh loader에 아래 데이터 추가 
-	DirectX::XMFLOAT3 m_Position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT4 m_Rotation = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT3 m_Scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
-	// 부모와 상대적인 변환행렬
-	DirectX::XMFLOAT4X4 m_LocalTransform;
-	DirectX::XMFLOAT4X4 m_RootTransform;
-
-	std::vector<Mesh*> m_Childs;
-
-	int m_VertexNum = 0;
-public:
-	void LoadMeshData(std::ifstream&);
-};
+class Mesh;
+class Player;
 
 class CServer
 {
@@ -84,7 +54,7 @@ private:
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
 	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
-	std::vector<Mesh> MeshObjects;
+	std::unordered_map<std::string, Mesh> m_umMeshes;
 public:
 	CRoomServer();
 	~CRoomServer();
@@ -98,6 +68,7 @@ public:
 	void CloseListen();
 	void PrintThreads();
 	void DeleteThread(const std::string&, const SOCKET&, const unsigned int&);
+	void WorldCollision(Player&);
 	unsigned int Make_GameNumber();
 };
 
@@ -125,11 +96,14 @@ private:
 		DirectX::XMFLOAT3 rot;
 	};
 	std::array< PlayerTransform, 2> m_aTransform;			// [0]: 이전, [1]: 현재
+	DirectX::BoundingOrientedBox m_boundingbox;
 public:
 	const SOCKET getSocket();
 	void allocateSOCKET(const SOCKET&);
 	const DirectX::XMFLOAT3 getPos();
+	const DirectX::XMFLOAT3 getRot();
 	void printPlayerPos(const int&, const bool&);
 	void syncTransform();
 	void setTransform(const Socket_position&);
+	void undoPosition();
 };
