@@ -80,7 +80,7 @@ void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) con
 
 	XMFLOAT3 position = { temp._41, temp._42, temp._43 };
 
-	DebugPrint(std::format("pos: {}, {}, {}", position.x, position.y, position.z));
+	//DebugPrint(std::format("pos: {}, {}, {}", position.x, position.y, position.z));
 
 	// todo 만약 point light 라면 6개의 데이터를 set 해줘야 한다.
 	memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
