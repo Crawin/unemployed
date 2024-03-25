@@ -672,8 +672,8 @@ bool ResourceManager::MakeExtraRenderTarget()
 		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
 			D3D12_HEAP_TYPE_DEFAULT,
 			D3D12_RESOURCE_STATE_COMMON,
-			//{ 2048, 2048 },
-			Renderer::GetInstance().GetScreenSize(),
+			{ 4096, 4096 },
+			//Renderer::GetInstance().GetScreenSize(),
 			std::format("Shadow_Map_{}", i),
 			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
 		);
@@ -687,8 +687,8 @@ bool ResourceManager::MakeExtraRenderTarget()
 	m_ShadowDSV = Renderer::GetInstance().CreateEmpty2DResourceDSV(
 		D3D12_HEAP_TYPE_DEFAULT, 
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, 
-		//{ 2048, 2048 }, 
-		Renderer::GetInstance().GetScreenSize(),
+		{ 4096, 4096 },
+		//Renderer::GetInstance().GetScreenSize(),
 		"shadowmap ds buffer");
 	m_ShadowDSV->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 	m_ShadowDSV->SetName("shadowmap ds buffer");

@@ -1,7 +1,7 @@
 ﻿#include "framework.h"
 #include "ShadowMap.h"
 
-XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, 0.1f, 50000.0f);
+XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, -10000.0f, 100000.0f);
 XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(XMConvertToRadians(90.0f)), 1.0f, 0.1f, 10000.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 
@@ -79,6 +79,8 @@ void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) con
 	XMStoreFloat4x4(&temp, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix)));
 
 	XMFLOAT3 position = { temp._41, temp._42, temp._43 };
+
+	DebugPrint(std::format("pos: {}, {}, {}", position.x, position.y, position.z));
 
 	// todo 만약 point light 라면 6개의 데이터를 set 해줘야 한다.
 	memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));

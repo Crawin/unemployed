@@ -75,7 +75,7 @@ public:
 	COOLResourcePtr CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
 		UINT bytes = static_cast<UINT>(data.size()) * sizeof(T);
-		bytes = ((bytes + 255) & ~255);
+		//bytes = ((bytes + 255) & ~255);
 
 		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON, bytes, name);
 		auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes, std::format("{} upload resource", name));

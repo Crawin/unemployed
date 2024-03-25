@@ -47,7 +47,7 @@ float ShadowCalculate(float4 worldPos, float dotNormal, int camIdx, int mapIdx)
 
 	for (int i = -1; i <= 1; ++i) {
 		for (int j = -1; j <= 1; ++j) {
-			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 1024.0f)).r;
+			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 4096.0f)).r;
 			shadow += (depth + bias) < ndc.z ? 0.0 : 1.0;
 		}
 	}

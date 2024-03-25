@@ -11,13 +11,13 @@
 
 class ShadowMap
 {
-	static const int m_ShadowMapWidth = 2048;
-	static const int m_ShadowMapHeight = 2048;
+	static const int m_ShadowMapWidth = 4096;
+	static const int m_ShadowMapHeight = 4096;
 
 	static XMFLOAT4X4 m_ShadowPerspectiveProj;
 	static XMFLOAT4X4 m_ShadowOrthographicProj;
 
-	SIZE m_MapSize = { 2048, 2048 };
+	SIZE m_MapSize = { 4096, 4096 };
 
 	// ShadowMap Camera Setting
 	// 6개가 될 수도 있다.

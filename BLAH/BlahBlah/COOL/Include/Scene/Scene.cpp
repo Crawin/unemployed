@@ -199,6 +199,20 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	m_ResourceManager->ClearShadowMaps(commandList, clearColor);
 	auto dsv = 	m_ResourceManager->m_ShadowMapDSVHeap->GetCPUDescriptorHandleForHeapStart();
 
+	// set viewport
+	// 하드코딩 경보
+	D3D12_VIEWPORT vp;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	vp.Width = static_cast<float>(4096);
+	vp.Height = static_cast<float>(4096);
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+
+	RECT scRect = { 0, 0, 4096, 4096 };
+
+	commandList->RSSetViewports(1, &vp);
+	commandList->RSSetScissorRects(1, &scRect);
 	
 	// normal render code
 	std::function<void(component::Renderer*)> render = [commandList, res](component::Renderer* rend) {
@@ -225,6 +239,13 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	}
 
+	vp.Width = static_cast<float>(1280);
+	vp.Height = static_cast<float>(720);
+
+	scRect = { 0, 0, 1280, 720};
+
+	commandList->RSSetViewports(1, &vp);
+	commandList->RSSetScissorRects(1, &scRect);
 	// set render target
 
 }
