@@ -47,7 +47,7 @@ public:
 //private:
 	// -------------------  Device가 하는 일들 단순 묶음 -------------------
 
-	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D", D3D12_RESOURCE_FLAGS resFlag = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	COOLResourcePtr CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D", D3D12_RESOURCE_FLAGS resFlag = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 	COOLResourcePtr CreateEmpty2DResourceDSV(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name = "empty2D");
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty");
 	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 일단 없앰
@@ -61,6 +61,9 @@ public:
 	// create rtv
 	bool CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources, int startIdx, int numOfIdx);
 
+	// create dsv
+	bool CreateDepthStencilView(ComPtr<ID3D12DescriptorHeap>& heap, COOLResourcePtr& resources);
+
 	// create pso, shader
 	bool CreateShader(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& fileName, std::shared_ptr<Shader> shader);
 
@@ -72,7 +75,7 @@ public:
 	COOLResourcePtr CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer")
 	{
 		UINT bytes = static_cast<UINT>(data.size()) * sizeof(T);
-		//bytes = ((bytes + 255) & ~255);
+		bytes = ((bytes + 255) & ~255);
 
 		auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON, bytes, name);
 		auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes, std::format("{} upload resource", name));

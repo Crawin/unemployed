@@ -31,7 +31,7 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	input.uv.x *= 6;
 	input.uv.y *= 4;
 	
-	int idx = floor(input.uv.x) + (3 * floor(input.uv.y));
+	int idx = floor(input.uv.x) + (3 * floor(input.uv.y)) + matIdx0.x;
 
 	// sample all
 	//float4 albedoColor = float4(Tex2DList[ALBEDO].Sample(samplerWarp, input.uv));

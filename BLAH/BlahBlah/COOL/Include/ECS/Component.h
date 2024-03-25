@@ -9,11 +9,7 @@ class ResourceManager;
 class Entity;
 class AnimationPlayer;
 
-struct CameraDataShader {
-	XMFLOAT4X4 m_ViewMatrix;
-	XMFLOAT4X4 m_ProjMatrix;
-	XMFLOAT3 m_CameraPosition;
-};
+
 
 
 namespace component {
@@ -379,6 +375,7 @@ namespace component {
 		const XMFLOAT3& GetLook() const { return m_Look; }
 		const XMFLOAT3& GetRight() const { return m_Right; }
 		const XMFLOAT3& GetUp() const { return m_Up; }
+		const XMFLOAT3& GetPosition() const { return m_Position; }
 
 		const XMFLOAT4X4& GetViewMat() const { return m_ViewMatrix; }
 		const XMFLOAT4X4& GetProjMat() const { return m_ProjMatrix; }

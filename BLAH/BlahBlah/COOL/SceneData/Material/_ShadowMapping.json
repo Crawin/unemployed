@@ -1,0 +1,9 @@
+{
+	"name": "ShadowMapping",
+	"BaseColor": null,
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "_ShadowMapping"
+}

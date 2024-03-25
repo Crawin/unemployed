@@ -5,5 +5,5 @@
 	"Metalic": null,
 	"Specular": null,
 	"Normal": null,
-	"Shader": "PostProcessing"
+	"Shader": "_PostProcessing"
 }

@@ -13,8 +13,15 @@ struct LIGHT
 
 	bool m_Active;
 	bool m_CastShadow;
+   	int m_CameraIdx;
 };
 
+struct CameraData {
+   	matrix viewMatrix;
+	matrix projectionMatrix;
+	float3 cameraPosition;
+    float CAMPADDING;
+};
 
 /*
 enum ROOT_SIGNATURE_IDX {
@@ -39,6 +46,7 @@ Buffer<uint> BufferUintList[] : register(t0, space3);
 Buffer<float> BufferFloatList[] : register(t0, space4);
 StructuredBuffer<LIGHT> LightDataList[] : register(t0, space5);
 StructuredBuffer<matrix> BonAnimDataList[] : register(t0, space6);
+StructuredBuffer<CameraData> ShadowCameraDataList[] : register(t0, space7);
 //StructuredBuffer<matrix> LightDataList[] : register(t0, space7);
 //StructuredBuffer<matrix> LightDataList[] : register(t0, space8);
 
@@ -71,6 +79,7 @@ cbuffer CameraInfo : register(b1)
 	matrix viewMatrix;
 	matrix projectionMatrix;
 	float3 cameraPosition;
+    float CAMPADDING;
 };
 
 cbuffer WorldMatrix : register(b2)

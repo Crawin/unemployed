@@ -106,8 +106,7 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// 4 - 1. shader에 light 데이터가 가야하는데 어케하지? light data를 
 	// 4 - 2.
 	// 5. present -> tex;
-	
-	// set light map pso
+
 
 
 	// for lambda capture
@@ -119,28 +118,114 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	int count = 0;
 	LightData* data = m_ResourceManager->m_MappedLightData;
 
-	std::function<void(component::Light*)> updateLight = [&count, data, ecs, commandList, res](component::Light* lightComp) {
+	// unoccupy
+	res->UnOccupyShadowRTVs();
+
+	// get Camera
+	std::vector<component::Camera*> camVec;
+	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
+	m_ECSManager->Execute(getCam);
+
+	std::function<void(component::Light*)> updateLight = [&count, data, res, &camVec](component::Light* lightComp) {
 
 		// todo
-		// if 뭐 얘가 좀 쌘 애다
-		std::function<void(component::Renderer*)> render = [commandList, res](component::Renderer* rend) {
-			const auto& view = rend->GetVertexBufferView();
-			D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
-			commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
-			res->m_Meshes[rend->GetMesh()]->Render(commandList, rend->GetWorldMatrix());
-
-			};
-
-		ecs->Execute(render);
+		// if 뭐 얘가 좀 쌘 애다, shadowmap 만들기
+		LightData& light = lightComp->GetLightData();
+		int idx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
 		
+		// if light dir == directional, update light map
+		switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
+		case LIGHT_TYPES::DIRECTIONAL_LIGHT: 
+		{
+			// todo 
+			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
+			auto p = camVec[0]->GetPosition();
+			
+			XMFLOAT3 up = light.m_Direction;
+			up.x *= -5000.0;
+			up.y *= -5000.0;
+			up.z *= -5000.0;
+			XMFLOAT3 pos = { p.x + up.x, p.y+ up.y, p.z + up.z };
 
+			light.m_CameraIdx = res->GetShadowMapCamIdx(count);
+			light.m_Position = pos;
+			//DebugPrint(std::format("vie: {}, {}, {}", -mat._14, -mat._24, -mat._34));
+			//DebugPrint(std::format("lig: {}, {}, {}", pos.x, pos.y, pos.z));
+		}
+			break;
+		case LIGHT_TYPES::SPOT_LIGHT:
+			DebugPrint("No current shadow map setting for spot light now");
 
+			break;
+		case LIGHT_TYPES::POINT_LIGHT:
+			DebugPrint("No current shadow map setting for point light now");
+			break;
+
+		};
+
+		
+		// set result
+		res->SetShadowMapRTVIdx(count, idx);
+		res->UpdateShadowMapView(count, light);
+		light.m_ShadowMapResults[0] = idx + res->m_ShadowMapRTVStartIdx;
+
+		// clear Dsv;
 		// todo 
 		// 뭐 카메라 거리에 자르거나 할 수 있게 할까?
 		memcpy(data + count++, &lightComp->GetLightData(), sizeof(LightData));
 		};
 
 	m_ECSManager->Execute(updateLight);
+
+	// 여기서 셰도으맵을 만든대
+
+
+	// 
+	// OMSet
+	// Render
+	// LOOP
+	// 
+	// set light map pso
+	int shadowMat = m_ResourceManager->GetShadowMappingMaterial();
+	Material* mat = m_ResourceManager->m_Materials[shadowMat];
+	mat->GetShader()->SetPipelineState(commandList);
+
+
+	// Set Resource To RTV
+	m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// Clear RTV Clear DSV
+	const float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	m_ResourceManager->ClearShadowMaps(commandList, clearColor);
+	auto dsv = 	m_ResourceManager->m_ShadowMapDSVHeap->GetCPUDescriptorHandleForHeapStart();
+
+	
+	// normal render code
+	std::function<void(component::Renderer*)> render = [commandList, res](component::Renderer* rend) {
+		const auto& view = rend->GetVertexBufferView();
+		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
+		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
+		res->m_Meshes[rend->GetMesh()]->Render(commandList, rend->GetWorldMatrix());
+		};
+
+	for (int i = 0; i < m_ResourceManager->m_ShadowMaps.size(); ++i) {
+		if (m_ResourceManager->m_ShadowMapOccupied[i] == false) break;
+		int idx = res->GetShadowMapRTVIdx(i);
+		D3D12_CPU_DESCRIPTOR_HANDLE targetRtv = res->GetShadowMapRenderTarget(idx);
+		
+		commandList->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+		commandList->OMSetRenderTargets(1, &targetRtv, true, &dsv);
+
+		// set camera
+		res->SetShadowMapCamera(commandList, idx);
+
+		// 일단 임시로 update함
+		ecs->Execute(render);
+
+
+	}
+
+	// set render target
 
 }
 
@@ -150,8 +235,7 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 
 	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
 	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON);
-
-	UpdateLightData();
+	m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_COMMON);
 
 	int postMat = m_ResourceManager->GetPostProcessingMaterial();
 
@@ -174,7 +258,12 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 		int debugMat = m_ResourceManager->GetDebuggingMaterial();
 
 		m_ResourceManager->m_Materials[debugMat]->GetShader()->SetPipelineState(commandList);
+
 		int a[2] = { 0, 0 };
+		
+		if (GetAsyncKeyState(VK_F9) & 0x8000)
+			a[0] = m_ResourceManager->m_ShadowMapRTVStartIdx;
+
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
 		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
@@ -255,6 +344,9 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 	// mrt render end
 	///////////////////////////////////////////////////////////////////////////////////////////
+
+	// update light, and shadowm map 
+	UpdateLightData(commandLists[0]);
 
 	// post processing
 	PostProcessing(commandLists[0], resultRtv, resultDsv);

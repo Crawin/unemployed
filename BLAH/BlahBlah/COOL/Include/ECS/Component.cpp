@@ -232,7 +232,10 @@ namespace component
 		XMFLOAT4X4 proj;
 		XMStoreFloat4x4(&proj, XMMatrixTranspose(XMLoadFloat4x4(&m_ProjMatrix)));
 
-		m_Position = { -m_ViewMatrix._41, -m_ViewMatrix._42,-m_ViewMatrix._43 };
+		XMFLOAT4X4 temp;
+		XMStoreFloat4x4(&temp, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix)));
+
+		m_Position= { temp._41, temp._42, temp._43 };
 
 		memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
 		memcpy(&m_ShaderData->m_ProjMatrix, &proj, sizeof(XMFLOAT4X4));

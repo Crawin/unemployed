@@ -163,6 +163,13 @@ namespace Matrix4x4
 		return result;
 	}
 
+	inline XMFLOAT4X4 Orthographic(float ViewWidth, float ViewHeight, float nearZ, float farZ)
+	{
+		XMFLOAT4X4 result;
+		XMStoreFloat4x4(&result, XMMatrixOrthographicLH(ViewWidth, ViewHeight, nearZ, farZ));
+		return result;
+	}
+
 	inline XMFLOAT4X4 PerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ)
 	{
 		XMFLOAT4X4 result;

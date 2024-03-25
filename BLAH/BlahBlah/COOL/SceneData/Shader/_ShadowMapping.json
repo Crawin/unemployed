@@ -1,0 +1,16 @@
+{
+	"name": "ShadowMapping",
+	"NumRenderTargets": 1,
+	"PrimitiveTopologyType": 3,
+	"PrimitiveTopology": 4,
+	"VS": "ShadowMapping.hlsl",
+	"HS": null,
+	"DS": null,
+	"GS": null,
+	"PS": "ShadowMapping.hlsl",
+	"StreamOutput": 0,
+	"BlendState": 0,
+	"RasterizerState": 0,
+	"DepthStencilState": 0,
+	"InputLayout": 1
+}

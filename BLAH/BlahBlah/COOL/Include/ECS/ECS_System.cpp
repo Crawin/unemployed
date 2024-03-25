@@ -80,6 +80,10 @@ namespace ECSsystem {
 			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
 			XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
 
+			XMFLOAT3 pos = tr->GetPosition();
+			//DebugPrint(std::format("cam: {}, {}, {}", pos.x, pos.y, pos.z));
+
+			//cam->SetPosition(tr->GetPosition());
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
 			};
 
@@ -97,7 +101,6 @@ namespace ECSsystem {
 		std::function<void(component::Transform*, component::Light*)> func3 = [manager](component::Transform* tr, component::Light* li) {
 			LightData& light = li->GetLightData();
 
-
 			XMFLOAT3 direction = { 0.0f, 0.0f, 1.0f };
 			XMFLOAT3 rotate = tr->GetRotation();
 			XMFLOAT3 rad;
@@ -107,9 +110,6 @@ namespace ECSsystem {
 
 			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
 			
-			//int lightIdx = li->GetLightDataIdx();
-
-
 			// light.m_Direction;
 			XMStoreFloat3(&light.m_Direction, XMVector3Normalize(XMVector3Transform(XMLoadFloat3(&direction), rot)));
 			light.m_Position = tr->GetPosition();

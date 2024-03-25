@@ -34,6 +34,27 @@ cbuffer PostMaterial : register(b0)
 	int lightIdx;
 };
 
+float ShadowCalculate(float4 worldPos, float dotNormal, int camIdx, int mapIdx)
+{
+	StructuredBuffer<CameraData> shadowCams = ShadowCameraDataList[camIdx];
+	CameraData cam = shadowCams[0];
+	float4 fragPos = mul(mul(worldPos, cam.viewMatrix), cam.projectionMatrix);
+	float3 ndc = fragPos.xyz / fragPos.w * 0.5f + 0.5f;
+	ndc.y = 1 - ndc.y;
+	float shadow = 0.0;
+
+	float bias = max(0.00029 * (1.0 - dotNormal), 0.00005);
+
+	for (int i = -1; i <= 1; ++i) {
+		for (int j = -1; j <= 1; ++j) {
+			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 1024.0f)).r;
+			shadow += (depth + bias) < ndc.z ? 0.0 : 1.0;
+		}
+	}
+
+	return shadow / 9.0f;
+}
+
 float4 Lighting(float4 albedo, float4 roughness, float4 metalic, float4 specular, float4 worldNormal, float4 worldPosition)
 {
 	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
@@ -48,14 +69,17 @@ float4 Lighting(float4 albedo, float4 roughness, float4 metalic, float4 specular
 		float3 ambient = lights[i].m_LightColor.rgb * 0.2f * albedo.rgb;
 
 		// diffuse
-		float3 diff = max(dot(worldNormal.rgb, lights[i].m_Direction), float3(0.0f, 0.0f, 0.0f));
+		float dotNormal = dot(worldNormal.rgb, lights[i].m_Direction);
+		float3 diff = max(dotNormal, float3(0.0f, 0.0f, 0.0f));
 		float3 diffuse = lights[i].m_LightColor.rgb * diff * 0.7f * albedo.rgb;
 
 		float3 refl = reflect(-lights[i].m_Direction, worldNormal.rgb);
 		float specInt = pow(max(dot(viewDir, refl), 0.0f), 32.0f);
 		float3 specularres = lights[i].m_LightColor.rgb * specInt * 0.1f * albedo.rgb;
 
-		result += float4(ambient + diffuse + specularres, 0.0f);
+		float shadow = ShadowCalculate(worldPosition, dotNormal, lights[i].m_CameraIdx, lights[i].m_ShadowMapResults.x);
+
+		result += float4(ambient + shadow * (diffuse + specularres), 0.0f);
 	}
 
 	return result;

@@ -73,14 +73,14 @@
     <Filter Include="소스 파일\App\Timer">
       <UniqueIdentifier>{291f99da-0d1f-4a1e-953c-ee268ee8509b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\Scene\SceneData\Light">
-      <UniqueIdentifier>{c3d45ae8-73d7-4e8f-b8ce-ba2407ecf4e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\Scene\SceneData\Mesh\Bone">
       <UniqueIdentifier>{72ee0038-828b-4189-9558-a5191469be31}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\Scene\SceneData\Animation">
       <UniqueIdentifier>{6ef35033-3256-4ace-a8e9-02004fe8151a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Scene\SceneData\Lighting">
+      <UniqueIdentifier>{c3d45ae8-73d7-4e8f-b8ce-ba2407ecf4e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +157,7 @@
       <Filter>소스 파일\App\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Include\Light.h">
-      <Filter>소스 파일\Scene\SceneData\Light</Filter>
+      <Filter>소스 파일\Scene\SceneData\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Include\Mesh\Bone.h">
       <Filter>소스 파일\Scene\SceneData\Mesh\Bone</Filter>
@@ -167,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="Include\Animation\AnimationPlayer.h">
       <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Lighting\ShadowMap.h">
+      <Filter>소스 파일\Scene\SceneData\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="Include\Animation\AnimationPlayer.cpp">
       <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Lighting\ShadowMap.cpp">
+      <Filter>소스 파일\Scene\SceneData\Lighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

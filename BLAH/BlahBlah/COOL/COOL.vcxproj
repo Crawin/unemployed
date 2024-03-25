@@ -173,6 +173,7 @@
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Light.h" />
+    <ClInclude Include="Include\Lighting\ShadowMap.h" />
     <ClInclude Include="Include\Material\Material.h" />
     <ClInclude Include="Include\Mesh\Bone.h" />
     <ClInclude Include="Include\mymath.h" />
@@ -205,6 +206,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Include\Lighting\ShadowMap.cpp" />
     <ClCompile Include="Include\main.cpp" />
     <ClCompile Include="Include\Material\Material.cpp" />
     <ClCompile Include="Include\Mesh\Bone.cpp" />

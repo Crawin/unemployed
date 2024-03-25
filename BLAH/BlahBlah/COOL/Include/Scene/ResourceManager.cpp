@@ -5,6 +5,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Component.h"
 #include "ECS/ECSManager.h"
+#include "Lighting/ShadowMap.h"
 #include <json/json.h>
 
 //#include "Material/Material.h"
@@ -241,7 +242,7 @@ std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, Com
 	std::string fileName = SHADER_PATH + name + ".json";
 
 	if (false == Renderer::GetInstance().CreateShader(commandList, fileName, shader)) {
-		DebugPrint(std::format("Failed to load shader file!! fileName: {}", fileName));
+		ERROR_QUIT(std::format("Failed to load shader file!! fileName: {}", fileName));
 		return nullptr;
 	}
 
@@ -416,6 +417,58 @@ bool ResourceManager::MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandLis
 	return true;
 }
 
+bool ResourceManager::MakeShadowMaps(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	m_ShadowMaps.reserve(m_ShadowMapRenderTargets);
+
+	// make shadow map object
+	for (int i = 0; i < m_ShadowMapRenderTargets; ++i) {
+		m_ShadowMaps.push_back(ShadowMap());
+
+		CameraDataShader* data = nullptr;
+		int idx = CreateObjectResource(
+			sizeof(CameraDataShader) * 6,
+			std::format("ShadowMap Camera Shader Data_{}", i),
+			(void**)(&data),
+			D3D12_HEAP_TYPE_UPLOAD,
+			RESOURCE_TYPES::SHADER);
+		
+		auto gpuAddr = GetResourceDataGPUAddress(RESOURCE_TYPES::SHADER, idx);
+		
+		m_ShadowMaps[i].SetCameraShaderData(data);
+		m_ShadowMaps[i].SetCameraShaderDataIdx(idx);
+		m_ShadowMaps[i].SetCameraShaderDataGPUAddr(gpuAddr);
+	}
+
+	return true;
+}
+
+bool ResourceManager::LoadShadowMappingResource(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	// load Postprocessing material
+	m_ShadowMappingMaterial = GetMaterial(m_ShadowMapping, commandList);
+	if (m_ShadowMappingMaterial == -1) return false;
+
+
+#ifdef _DEBUG
+	
+	// debugggg
+	
+	//for (int i = 0; i < m_ShadowMapRenderTargets; ++i)
+	//	m_Materials[m_ShadowMappingMaterial]->SetTexture(i, i + m_ShadowMapRTVStartIdx);
+	
+
+	//m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
+	//if (m_DebuggingMaterial == -1) return false;
+
+	//// debug deffered default
+	//for (int i = 0; i < m_DefferedRenderTargets; ++i)
+	//	m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+#endif
+
+	return true;
+}
+
 bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
 	// 1. 씬에 배치 될 오브젝트들을 찾는다.
@@ -445,15 +498,24 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	// Load Mesh, Material, Texture, Shader to use
 	CHECK_CREATE_FAILED(LateInit(commandList), "LateInit Fail!");
 
-	// Make shader for animation stream out
-	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
-	CHECK_CREATE_FAILED(m_AnimationShader, "Shader Making Failed!!");
-
 	// build mrt rtv heap
-	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateRenderTargetView(m_MRTHeap, m_Resources, m_DefferedRTVStartIdx, m_DefferedRenderTargets), "Create MRT RTV Failed!!");
+	CHECK_CREATE_FAILED(
+		Renderer::GetInstance().CreateRenderTargetView(m_MRTHeap, m_Resources, m_DefferedRTVStartIdx, m_DefferedRenderTargets), 
+		"Create MRT RTV Failed!!");
+
+	// build shadow map heap
+	CHECK_CREATE_FAILED(
+		Renderer::GetInstance().CreateRenderTargetView(m_ShadowMapHeap, m_Resources, m_ShadowMapRTVStartIdx, m_ShadowMapRenderTargets), 
+		"Create ShadowMap RTV Failed!!");
+
+	CHECK_CREATE_FAILED(
+		Renderer::GetInstance().CreateDepthStencilView(m_ShadowMapDSVHeap, m_ShadowDSV),
+		"Create ShadowMap DSV Failed!!");
 
 	// build resource heap
-	CHECK_CREATE_FAILED(Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), "CreateResourceDescriptorHeap Fail!!");
+	CHECK_CREATE_FAILED(
+		Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), 
+		"CreateResourceDescriptorHeap Fail!!");
 
 
 	return true;
@@ -478,9 +540,14 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// make lighting data
 	CHECK_CREATE_FAILED(MakeLightData(commandList), "Light Making Failed!!");
 
+	// make Shadow Map Objects
+	CHECK_CREATE_FAILED(MakeShadowMaps(commandList), "Shadow Map Making Failed!!");
+
+	// shadow map pso
+	CHECK_CREATE_FAILED(LoadShadowMappingResource(commandList), "Load ShadowMappingResource Failed!!");
+
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
-
 
 	// 람다에 this는 조금 그렇지만
 	// 초기화 부분이라 봐준다
@@ -537,28 +604,9 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		player->ChangeToAnimation(player->m_AnimationMap["Idle"]);
 	};
 
-
-	// test for animation
-	//LoadAnimation("dia_dance_with_skin", commandList);
-
-	//auto temp = m_Animations[0];
-	// for test
-	// todo 꼭 지워라 꼭 꼭 꼭
-	//std::function<void(component::Animation*)> aniTest = [temp](component::Animation* anim) {
-	//	anim->ChangeAnimation(0);
-	//	anim->ChangeAnimation(0);
-	//	anim->SetCurrentAnimationPlayTime(0);
-	//	anim->SetCurrentAnimationMaxTime(temp->GetEndTime());
-	//	};
-	
-	//m_ECSManager->Execute(aniTest);
-
-	//for (auto& cam : m_Cameras)
-	//	m_ECSManager->AddEntity(cam);
-
-	//m_ToLoadRenderDatas.clear();
-
-
+	// Make shader for animation stream out
+	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
+	CHECK_CREATE_FAILED(m_AnimationShader, "Shader Making Failed!!");
 
 	return true;
 }
@@ -595,13 +643,23 @@ bool ResourceManager::MakeExtraRenderTarget()
 	// MRT Render Targets
 	m_DefferedRTVStartIdx = static_cast<int>(m_Resources.size());
 
+	DXGI_FORMAT format[static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END)] = {
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R32G32B32A32_FLOAT
+	};
+
 	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i) {
 		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
-			D3D12_HEAP_TYPE_DEFAULT, 
-			D3D12_RESOURCE_STATE_COMMON, 
+			D3D12_HEAP_TYPE_DEFAULT,
+			D3D12_RESOURCE_STATE_COMMON,
 			Renderer::GetInstance().GetScreenSize(),
-			std::format("DifferedTarget_{}", i), 
-			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+			std::format("DifferedTarget_{}", i),
+			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+			format[i])
 		);
 
 		m_Resources[m_DefferedRTVStartIdx + i]->SetShaderResource();
@@ -610,23 +668,35 @@ bool ResourceManager::MakeExtraRenderTarget()
 
 	// ShadowMap Render Targets
 	m_ShadowMapRTVStartIdx = static_cast<int>(m_Resources.size());
-	
 	for (int i = 0; i < m_ShadowMapRenderTargets; ++i) {
 		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
 			D3D12_HEAP_TYPE_DEFAULT,
 			D3D12_RESOURCE_STATE_COMMON,
+			//{ 2048, 2048 },
 			Renderer::GetInstance().GetScreenSize(),
-			std::format("Shadow_Map{}", i),
+			std::format("Shadow_Map_{}", i),
 			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
 		);
 
 		m_Resources[m_ShadowMapRTVStartIdx + i]->SetShaderResource();
 	}
+	
+	// create Shadpw map dsv;
+	//m_ShadowMapDSVStartIdx = static_cast<int>(m_Resources.size());
+
+	m_ShadowDSV = Renderer::GetInstance().CreateEmpty2DResourceDSV(
+		D3D12_HEAP_TYPE_DEFAULT, 
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, 
+		//{ 2048, 2048 }, 
+		Renderer::GetInstance().GetScreenSize(),
+		"shadowmap ds buffer");
+	m_ShadowDSV->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	m_ShadowDSV->SetName("shadowmap ds buffer");
 
 	return true;
 }
 
-int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData, D3D12_HEAP_TYPE heapType)
+int ResourceManager::CreateObjectResource(UINT size, const std::string resName, void** toMapData, D3D12_HEAP_TYPE heapType, RESOURCE_TYPES toInsert)
 {
 	COOLResourcePtr res = Renderer::GetInstance().CreateEmptyBuffer(
 		heapType,
@@ -637,9 +707,17 @@ int ResourceManager::CreateObjectResource(UINT size, const std::string resName, 
 
 	res->SetConstant();
 
-	m_ObjectDatas.push_back(res);
-
-	return static_cast<int>(m_ObjectDatas.size() - 1);
+	switch (toInsert) {
+	case RESOURCE_TYPES::OBJECT:
+		m_ObjectDatas.push_back(res);
+		return static_cast<int>(m_ObjectDatas.size() - 1);
+	case RESOURCE_TYPES::SHADER:
+		m_Resources.push_back(res);
+		return static_cast<int>(m_Resources.size() - 1);
+	case RESOURCE_TYPES::VERTEX:
+		m_VertexIndexDatas.push_back(res);
+		return static_cast<int>(m_VertexIndexDatas.size() - 1);
+	}
 }
 
 void ResourceManager::SetDatas()
@@ -771,8 +849,75 @@ void ResourceManager::SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdLi
 
 void ResourceManager::ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4])
 {
-	// todo todo todo
-	// shadowmap rendertargets도 가지고 있어야 함.
+	auto inc = Renderer::GetInstance().GetRTVHeapIncSize();
+	auto decs = m_ShadowMapHeap->GetCPUDescriptorHandleForHeapStart();
+	for (int i = 0; i < m_ShadowMapRenderTargets; ++i) {
+		cmdList->ClearRenderTargetView(decs, color, 0, nullptr);
+		decs.ptr += inc;
+	}
+
+}
+
+int ResourceManager::GetUnOccupiedShadowMapRenderTarget(LIGHT_TYPES lightType)
+{
+	for (int i = 0; i < _countof(m_ShadowMapOccupied); ++i) {
+		if (m_ShadowMapOccupied[i] == false) {
+			m_ShadowMapOccupied[i] = true;
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetShadowMapRenderTarget(int idx) const
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE temp = m_ShadowMapHeap->GetCPUDescriptorHandleForHeapStart();
+	
+	temp.ptr += Renderer::GetInstance().GetRTVHeapIncSize() * idx;
+
+	return temp;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetShadowMapDepthStencil() const
+{
+	return m_ShadowMapDSVHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+int ResourceManager::GetShadowMapCamIdx(int idx)
+{
+	return m_ShadowMaps[idx].GetCameraDataIdx();
+}
+
+void ResourceManager::SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdList, int idx) const
+{
+	m_ShadowMaps[idx].SetCameraData(cmdList);
+}
+
+void ResourceManager::UpdateShadowMapView(int idx, const LightData& light)
+{
+	m_ShadowMaps[idx].UpdateViewMatrixByLight(light);
+}
+
+int ResourceManager::GetShadowMappingMaterial() const
+{
+	return m_ShadowMappingMaterial;
+}
+
+int ResourceManager::GetShadowMapRTVIdx(int idx)
+{
+	return m_ShadowMaps[idx].GetRenderTargetIdx();
+}
+
+void ResourceManager::SetShadowMapRTVIdx(int idx, int rtvIdx)
+{
+	m_ShadowMaps[idx].SetRenderTargetIdx(rtvIdx);
+}
+
+void ResourceManager::UnOccupyShadowRTVs()
+{
+	for (int i = 0; i < _countof(m_ShadowMapOccupied); ++i)
+		m_ShadowMapOccupied[i] = false;
 }
 
 void ResourceManager::SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState)

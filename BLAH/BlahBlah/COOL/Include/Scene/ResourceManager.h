@@ -13,6 +13,7 @@ class Material;
 class Mesh;
 class Shader;
 class Bone;
+class ShadowMap;
 
 class ECSManager;
 
@@ -125,6 +126,8 @@ private:
 	bool LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandList);					// todo 카메라마다 만들어줘야 할지 고민해보자
+	bool MakeShadowMaps(ComPtr<ID3D12GraphicsCommandList> commandList);
+	bool LoadShadowMappingResource(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	// mesh/material 에 로드 할 것들이 남아 있다면 로드
 	bool LateInit(ComPtr<ID3D12GraphicsCommandList> commandList);
@@ -143,7 +146,7 @@ public:
 	bool Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
 	// for object
-	int CreateObjectResource(UINT size, const std::string resName, void** toMapData, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_UPLOAD);
+	int CreateObjectResource(UINT size, const std::string resName, void** toMapData, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_UPLOAD, RESOURCE_TYPES toInsert = RESOURCE_TYPES::OBJECT);
 
 	// resource
 	D3D12_GPU_VIRTUAL_ADDRESS GetResourceDataGPUAddress(RESOURCE_TYPES resType, int idx);
@@ -170,17 +173,28 @@ public:
 	// for light components
 	void AddLightData();
 
-	//LightData& GetLightData(int idx);
-
 	// for multiple render target / post processing
 	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
 	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
+
 	int GetPostProcessingMaterial() const;
 
+	// for shadowmap
 	void SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
 	void ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
+	int GetUnOccupiedShadowMapRenderTarget(LIGHT_TYPES lightType);				// todo light type이 point light일 때에도 대응 해야함
+	D3D12_CPU_DESCRIPTOR_HANDLE GetShadowMapRenderTarget(int idx) const;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetShadowMapDepthStencil() const;
+
+	int GetShadowMapCamIdx(int idx);
+	void SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdList, int idx) const;
+	void UpdateShadowMapView(int idx, const LightData& light);
+	int GetShadowMappingMaterial() const;
+
+	int GetShadowMapRTVIdx(int idx);
+	void SetShadowMapRTVIdx(int idx, int rtvIdx);
+	void UnOccupyShadowRTVs();
 
 	// manual 
 	void SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState);
@@ -206,8 +220,12 @@ private:
 
 	// 리소스힙, t0번 슬롯에 set
 	ComPtr<ID3D12DescriptorHeap> m_ShaderResourceHeap;
-	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
 
+	// 추가 렌더타겟들
+	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
+	ComPtr<ID3D12DescriptorHeap> m_ShadowMapHeap;
+	ComPtr<ID3D12DescriptorHeap> m_ShadowMapDSVHeap;
+	COOLResourcePtr m_ShadowDSV;
 	////////////////////////////////////////////////////////
 	// ECS SYSTEM
 	////////////////////////////////////////////////////////
@@ -241,28 +259,36 @@ private:
 	std::vector<AnimationPlayer*> m_AnimationPlayer;
 	std::vector<std::shared_ptr<Animation>> m_Animations;
 
-	// light datas
-	//std::vector<LightData> m_LightDatas;
-	LightData* m_MappedLightData;
-
 	// Deffered render targets
 	// 해당갯수 만큼 m_Resources에 넣음
-	const int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
+	static const int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
 	int m_DefferedRTVStartIdx = -1;
 	//D3D12_CPU_DESCRIPTOR_HANDLE m_DefferedRTVStart = D3D12_CPU_DESCRIPTOR_HANDLE();
 
 	// cascaded + other
-	const int m_ShadowMapRenderTargets = 5;
+	static const int m_ShadowMapRenderTargets = 5;
 	int m_ShadowMapRTVStartIdx = -1;
+	int m_ShadowMapDSVStartIdx = -1;
 
 	// postProcessingMaterial;
-	const char* m_PostProcessing = "PostProcessing";
+	const char* m_PostProcessing = "_PostProcessing";
 	int m_PostProcessingMaterial = -1;
 
+	// shadowMappingMaterial;
+	const char* m_ShadowMapping = "_ShadowMapping";
+	int m_ShadowMappingMaterial = -1;
+
 #ifdef _DEBUG
-	const char* m_Debuggging = "ForDebug";
+	const char* m_Debuggging = "_ForDebug";
 	int m_DebuggingMaterial = -1;
 #endif
+
+	// light datas
+	//std::vector<LightData> m_LightDatas;
+	std::vector<ShadowMap> m_ShadowMaps;
+	bool m_ShadowMapOccupied[m_ShadowMapRenderTargets] = {};
+	LightData* m_MappedLightData;
+
 
 	// 로드 해야 할 mesh, material들을 저장만 해둔 후 나중에 로드 한다.
 	// 추가 설명

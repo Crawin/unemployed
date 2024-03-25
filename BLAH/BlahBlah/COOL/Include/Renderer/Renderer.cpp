@@ -508,7 +508,7 @@ bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 	return true;
 }
 
-COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name, D3D12_RESOURCE_FLAGS resFlag)
+COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, const SIZE& size, std::string_view name, D3D12_RESOURCE_FLAGS resFlag, DXGI_FORMAT format)
 {
 	ID3D12Resource* temp;
 
@@ -519,7 +519,7 @@ COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_
 	resDesc.Height = size.cy;
 	resDesc.DepthOrArraySize = 1;										// 텍스쳐어레이같은건 안쓸 예정 아마도
 	resDesc.MipLevels = 1;
-	resDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	resDesc.Format = format; // DXGI_FORMAT_R8G8B8A8_UNORM;
 	resDesc.SampleDesc.Count = (m_MsaaEnable) ? 4 : 1;
 	resDesc.SampleDesc.Quality = (m_MsaaEnable) ? (m_MsaaQualityLevels - 1) : 0;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
@@ -533,7 +533,7 @@ COOLResourcePtr Renderer::CreateEmpty2DResource(D3D12_HEAP_TYPE heapType, D3D12_
 	heapProperty.VisibleNodeMask = 1;
 
 	D3D12_CLEAR_VALUE clearValue = {};
-	clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	clearValue.Format = format;
 	clearValue.Color[0] = m_ClearColor[0];
 	clearValue.Color[1] = m_ClearColor[1];
 	clearValue.Color[2] = m_ClearColor[2];
@@ -749,6 +749,28 @@ bool Renderer::CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::v
 		m_Device->CreateRenderTargetView(resource, &rtvDesc, currentCPUPtr);
 		currentCPUPtr.ptr += m_RtvDescIncrSize;
 	}
+
+	return true;
+}
+
+bool Renderer::CreateDepthStencilView(ComPtr<ID3D12DescriptorHeap>& heap, COOLResourcePtr& resources)
+{
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
+	descriptorDesc.NumDescriptors = 1;
+	descriptorDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+	descriptorDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	descriptorDesc.NodeMask = 0;
+
+	m_Device->CreateDescriptorHeap(&descriptorDesc, IID_PPV_ARGS(heap.GetAddressOf()));
+	CHECK_CREATE_FAILED(heap, "dsv heap 생성 실패!");
+
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvCPUHandle = heap->GetCPUDescriptorHandleForHeapStart();
+	m_Device->CreateDepthStencilView(resources->GetResource(), &dsvDesc, dsvCPUHandle);
 
 	return true;
 }
