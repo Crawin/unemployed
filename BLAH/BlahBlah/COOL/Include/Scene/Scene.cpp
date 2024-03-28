@@ -198,7 +198,15 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 			up.x *= -5000.0;
 			up.y *= -5000.0;
 			up.z *= -5000.0;
-			XMFLOAT3 pos = { p.x + up.x, p.y+ up.y, p.z + up.z };
+
+			if (up.y < 0) {
+				light.m_Direction.y *= -1;
+				light.m_Direction.z *= -1;
+				up.y *= -1;
+				up.z *= -1;
+			}
+
+			XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
 
 			light.m_CameraIdx = res->GetShadowMapCamIdx(count);
 			light.m_Position = pos;
@@ -225,7 +233,7 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		// clear Dsv;
 		// todo 
 		// 뭐 카메라 거리에 자르거나 할 수 있게 할까?
-		memcpy(data + count++, &lightComp->GetLightData(), sizeof(LightData));
+		memcpy(data + count++, &light, sizeof(LightData));
 		};
 
 	m_ECSManager->Execute(updateLight);

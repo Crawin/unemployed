@@ -149,6 +149,7 @@ namespace component
 
 		m_IsMainCamera = cam["IsMainCamera"].asBool();
 
+		// todo entity에 등록하고 해당 함수를 넣어버려
 		if (m_IsMainCamera) rm->SetMainCamera(this);
 
 		m_Right.x = cam["Right"][0].asFloat();

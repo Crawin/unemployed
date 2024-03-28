@@ -1,7 +1,7 @@
 ﻿#include "framework.h"
 #include "ShadowMap.h"
 
-XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, -10000.0f, 100000.0f);
+XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, -1000.0f, 10000.0f);
 XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(XMConvertToRadians(90.0f)), 1.0f, 0.1f, 10000.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 
@@ -31,11 +31,30 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 	m_Type = static_cast<LIGHT_TYPES>(light.m_LightType);
 
 	// light position이 갱신 되었다고 치자
-	XMVECTOR pos = XMLoadFloat3(&light.m_Position);
-	XMVECTOR lookAt = pos + XMLoadFloat3(&light.m_Direction);
-	XMFLOAT3 u = { 0,1,0 };
+	XMFLOAT3 zAxis = { 0,0,1 };
+	XMFLOAT3 allAx = { 1,1,1 };
 
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtLH(pos, lookAt, XMLoadFloat3(&u)));
+	XMVECTOR from = XMLoadFloat3(&zAxis);
+	XMVECTOR to = XMLoadFloat3(&light.m_Direction);
+	XMVECTOR axis = XMVector3Normalize(XMVector3Cross(from, to));
+
+	float axisLength = XMVectorGetX(XMVector3Length(axis));
+	float dotProduct = XMVectorGetX(XMVector3Dot(from, to));
+
+	// 스칼라삼중적
+
+	float angle = acosf(dotProduct);
+	float axisReverse = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&allAx), axis));
+
+	XMMATRIX rot;
+	if (axisLength == 0) rot = XMMatrixIdentity();
+	else rot = XMMatrixRotationAxis(axis, angle);
+
+	XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&light.m_Position));
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixInverse(nullptr, rot * trs));
+
+	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtRH(pos, lookAt, XMLoadFloat3(&u)));
 
 	//switch (m_Type) {
 	//case LIGHT_TYPES::DIRECTIONAL_LIGHT:

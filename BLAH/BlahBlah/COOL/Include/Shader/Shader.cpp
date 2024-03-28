@@ -138,6 +138,12 @@ D3D12_RASTERIZER_DESC Shader::GetRasterizerStateDesc(int presetID)
 
 	switch (presetID) {
 	case 0:
+		break;
+	case 1:
+		// cull front
+		// shadowmap
+		desc.CullMode = D3D12_CULL_MODE_FRONT;
+		break;
 	default:
 		// default
 		// fill = solid / cull = back
