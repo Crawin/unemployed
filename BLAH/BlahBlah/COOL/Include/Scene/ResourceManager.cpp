@@ -417,7 +417,7 @@ bool ResourceManager::MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandLis
 	return true;
 }
 
-bool ResourceManager::MakeShadowMaps(ComPtr<ID3D12GraphicsCommandList> commandList)
+bool ResourceManager::MakeShadowMaps()
 {
 	m_ShadowMaps.reserve(m_ShadowMapRenderTargets);
 
@@ -539,9 +539,6 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// make lighting data
 	CHECK_CREATE_FAILED(MakeLightData(commandList), "Light Making Failed!!");
-
-	// make Shadow Map Objects
-	CHECK_CREATE_FAILED(MakeShadowMaps(commandList), "Shadow Map Making Failed!!");
 
 	// shadow map pso
 	CHECK_CREATE_FAILED(LoadShadowMappingResource(commandList), "Load ShadowMappingResource Failed!!");
@@ -666,13 +663,16 @@ bool ResourceManager::MakeExtraRenderTarget()
 	}
 
 
+	// make Shadow Map Objects
+	CHECK_CREATE_FAILED(MakeShadowMaps(), "Shadow Map Making Failed!!");
+
 	// ShadowMap Render Targets
 	m_ShadowMapRTVStartIdx = static_cast<int>(m_Resources.size());
 	for (int i = 0; i < m_ShadowMapRenderTargets; ++i) {
 		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
 			D3D12_HEAP_TYPE_DEFAULT,
 			D3D12_RESOURCE_STATE_COMMON,
-			{ 4096, 4096 },
+			m_ShadowMaps[i].GetRTSize(),
 			//Renderer::GetInstance().GetScreenSize(),
 			std::format("Shadow_Map_{}", i),
 			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
@@ -687,7 +687,7 @@ bool ResourceManager::MakeExtraRenderTarget()
 	m_ShadowDSV = Renderer::GetInstance().CreateEmpty2DResourceDSV(
 		D3D12_HEAP_TYPE_DEFAULT, 
 		D3D12_RESOURCE_STATE_DEPTH_WRITE, 
-		{ 4096, 4096 },
+		m_ShadowMaps[0].GetRTSize(),
 		//Renderer::GetInstance().GetScreenSize(),
 		"shadowmap ds buffer");
 	m_ShadowDSV->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);

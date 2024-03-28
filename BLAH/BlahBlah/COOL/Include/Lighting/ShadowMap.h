@@ -17,7 +17,7 @@ class ShadowMap
 	static XMFLOAT4X4 m_ShadowPerspectiveProj;
 	static XMFLOAT4X4 m_ShadowOrthographicProj;
 
-	SIZE m_MapSize = { 4096, 4096 };
+	SIZE m_RenderTargetSize = { 4096, 4096 };
 
 	// ShadowMap Camera Setting
 	// 6개가 될 수도 있다.
@@ -44,6 +44,7 @@ public:
 	int GetRenderTargetIdx() const { return m_RenderTargetIdx; }
 	int GetCameraDataIdx() const { return m_ShaderDataIdx; }
 
+	const SIZE& GetRTSize() const { return m_RenderTargetSize; }
 
 	// update view matrix by light data
 	void UpdateViewMatrixByLight(const LightData& light);

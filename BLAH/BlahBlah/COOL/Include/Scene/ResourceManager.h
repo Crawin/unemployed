@@ -126,7 +126,7 @@ private:
 	bool LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandList);					// todo 카메라마다 만들어줘야 할지 고민해보자
-	bool MakeShadowMaps(ComPtr<ID3D12GraphicsCommandList> commandList);
+	bool MakeShadowMaps();
 	bool LoadShadowMappingResource(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	// mesh/material 에 로드 할 것들이 남아 있다면 로드

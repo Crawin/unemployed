@@ -263,7 +263,7 @@ namespace component
 	void Speed::ShowYourself() const
 	{
 		DebugPrint("Speed Comp");
-		DebugPrint(std::format("cur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
+		DebugPrint(std::format("\tcur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
 
 	}
 
@@ -311,6 +311,34 @@ namespace component
 	void DiaAnimationControl::ShowYourself() const
 	{
 		DebugPrint("DiaAnimationControl Comp");
+	}
+
+	void DayLight::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value d = v["DayLight"];
+		m_DayCycle = d["DayCycle"].asFloat();
+
+		m_NoonLight.x = d["NoonLight"][0].asFloat();
+		m_NoonLight.y = d["NoonLight"][1].asFloat();
+		m_NoonLight.z = d["NoonLight"][2].asFloat();
+		m_NoonLight.w = d["NoonLight"][3].asFloat();
+
+		m_SunSetLight.x = d["SunSetLight"][0].asFloat();
+		m_SunSetLight.y = d["SunSetLight"][1].asFloat();
+		m_SunSetLight.z = d["SunSetLight"][2].asFloat();
+		m_SunSetLight.w = d["SunSetLight"][3].asFloat();
+
+		m_MoonLight.x = d["MoonLight"][0].asFloat();
+		m_MoonLight.y = d["MoonLight"][1].asFloat();
+		m_MoonLight.z = d["MoonLight"][2].asFloat();
+		m_MoonLight.w = d["MoonLight"][3].asFloat();
+
+	}
+
+	void DayLight::ShowYourself() const
+	{
+		DebugPrint("DayLight Comp");
+		DebugPrint(std::format("\tDay Cycle: {}", m_DayCycle));
 	}
 
 }

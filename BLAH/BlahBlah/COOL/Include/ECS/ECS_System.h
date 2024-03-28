@@ -65,6 +65,14 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
+	/////////////////////////////////////////////////////////
+	// rotate directional light by time
+	//
+	class DayLight : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
 
 }
 

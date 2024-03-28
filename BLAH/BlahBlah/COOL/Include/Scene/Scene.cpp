@@ -31,12 +31,17 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 
 	// default systems
 	// 넣는 순서에 따라 system이 돌아가는게 달라짐
-	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
+	// 우선순위들 정리
+	// 1. 각 객체들의 transform을 바꾸는 system
+	// 999. 부모에 따라 transform을 바꾸는 system(LocalToWorldTransform)
 	m_ECSManager->InsertSystem(new ECSsystem::AnimationPlayTimeAdd);
 	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
 	m_ECSManager->InsertSystem(new ECSsystem::Friction);
+	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByInput);
 	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
+
+	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
 
 	CHECK_CREATE_FAILED(m_ResourceManager->Init(commandList, sceneName), std::format("Can't Load Scene, name: {}", sceneName));
 
@@ -92,6 +97,54 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 	//	};
 
 	//m_ECSManager->Execute(debug);
+}
+
+void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
+{
+	auto& res = m_ResourceManager;
+
+	// default deffered renderer
+	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// clear mrt
+	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	m_ResourceManager->ClearMRTS(commandList, clearColor);
+
+	// OM set
+	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart();
+	commandList->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &resultDsv);
+	//commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
+
+	// get Camera
+	std::vector<component::Camera*> camVec;
+	std::function<void(component::Camera*)> getCam = [&commandList, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
+	m_ECSManager->Execute(getCam);
+
+	camVec[0]->SetCameraData(commandList);
+
+
+	// make function
+	std::function<void(component::Renderer*)> func = [&commandList, &res](component::Renderer* renderComponent) {
+		int material = renderComponent->GetMaterial();
+		int mesh = renderComponent->GetMesh();
+
+		res->m_Materials[material]->GetShader()->SetPipelineState(commandList);
+
+		res->m_Materials[material]->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+		//XMFLOAT4X4 t = Matrix4x4::Identity();
+		//res->m_Meshes[mesh]->SetVertexBuffer(commandLists[0]);
+
+		const auto& view = renderComponent->GetVertexBufferView();
+		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
+		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
+
+		res->m_Meshes[mesh]->Render(commandList, renderComponent->GetWorldMatrix());
+		};
+
+	// execute function
+	m_ECSManager->Execute<component::Renderer>(func);
+
 }
 
 void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -321,49 +374,8 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	// animate first
 	AnimateToSO(commandLists[0]);
 
-	// default deffered renderer
-	m_ResourceManager->SetMRTStates(commandLists[0], D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-	// clear mrt
-	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	m_ResourceManager->ClearMRTS(commandLists[0], clearColor);
-
-	// OM set
-	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart();
-	commandLists[0]->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &resultDsv);
-	//commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
-	
-	// get Camera
-	std::vector<component::Camera*> camVec;
-	std::function<void(component::Camera*)> getCam = [&commandLists, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
-	m_ECSManager->Execute(getCam);
-
-	camVec[0]->SetCameraData(commandLists[0]);
-
-
-	// make function
-	std::function<void(component::Renderer*)> func = [&commandLists, &res](component::Renderer* renderComponent) {
-		int material = renderComponent->GetMaterial();
-		int mesh = renderComponent->GetMesh();
-
-		res->m_Materials[material]->GetShader()->SetPipelineState(commandLists[0]);
-
-		res->m_Materials[material]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
-
-		//XMFLOAT4X4 t = Matrix4x4::Identity();
-		//res->m_Meshes[mesh]->SetVertexBuffer(commandLists[0]);
-
-		const auto& view = renderComponent->GetVertexBufferView();
-		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
-		commandLists[0]->IASetVertexBuffers(0, _countof(bufView), bufView);
-
-		res->m_Meshes[mesh]->Render(commandLists[0], renderComponent->GetWorldMatrix());
-		};
-
-	// execute function
-	m_ECSManager->Execute<component::Renderer>(func);
-
 	// mrt render end
+	RenderOnMRT(commandLists[0], resultDsv);
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	// update light, and shadowm map 

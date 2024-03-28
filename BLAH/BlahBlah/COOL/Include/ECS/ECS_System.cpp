@@ -283,4 +283,53 @@ namespace ECSsystem {
 
 	}
 
+	void DayLight::Update(ECSManager* manager, float deltaTime)
+	{
+		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
+			[deltaTime](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
+			float rotSpeed = 360.0f / dayLight->GetDayCycle();
+
+			XMFLOAT3 newRot = transform->GetRotation();
+			newRot.x += rotSpeed * deltaTime;
+			if (newRot.x > 360.0f) newRot.x = 0.0f;
+
+			transform->SetRotation(newRot);
+
+			// change light color
+			// weight == sin(angle.x)
+			//XMFLOAT4 curLight = 
+
+			// 0, 90, 180
+			// 0   1   0
+			// day time
+			float weight = abs(sin(XMConvertToRadians(newRot.x)));
+
+			LightData& li = light->GetLightData();
+
+			// day time
+			if (newRot.x > 180.0f) {
+				XMStoreFloat4(&li.m_LightColor,
+					XMVectorLerp(
+						XMLoadFloat4(&dayLight->GetSunSetLight()),
+						XMLoadFloat4(&dayLight->GetNoonLight()),
+						weight));
+			}
+			// night time
+			else {
+				XMStoreFloat4(&li.m_LightColor,
+					XMVectorLerp(
+						XMLoadFloat4(&dayLight->GetSunSetLight()),
+						XMLoadFloat4(&dayLight->GetMoonLight()),
+						weight));
+			}
+
+
+
+			DebugPrint(std::format("angle : {}\tweight : {}", newRot.x, weight));
+
+			};
+
+		manager->Execute(func);
+	}
+
 }

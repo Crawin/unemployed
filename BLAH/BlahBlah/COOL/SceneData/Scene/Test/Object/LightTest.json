@@ -4,7 +4,7 @@
 	"Transform": 
 	{
 		"Position": [0.0, 0.0, 0.0],
-		"Rotate": [-45.0, 0.0, 0.0],
+		"Rotate": [315.0, 0.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
 
@@ -16,5 +16,13 @@
 		"Active": true,
 		"CastShadow": true,
 		"Main": true
+	},
+
+	"DayLight": 
+	{
+		"DayCycle": 10,
+		"NoonLight": [1.0, 1.0, 1.0, 1.0],
+		"SunSetLight": [0.92, 0.45, 0.04, 1.0],
+		"MoonLight": [0.33, 0.42, 0.56, 1.0]
 	}
 }

@@ -52,8 +52,12 @@ protected:
 private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
+protected:
 	// render seq 01
 	void AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	// render seq
+	void RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
 	// render seq final - 1
 	void UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList);

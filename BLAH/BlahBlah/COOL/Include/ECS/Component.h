@@ -476,6 +476,29 @@ namespace component {
 
 		bool m_BefKeyDown = false;
 	};
+
+	/////////////////////////////////////////////////////////
+	// Day Light component
+	// 시간에 따라 Directional Light가 회전되기 위한 컴포넌트
+	//
+	class DayLight : public ComponentBase<DayLight> {
+		// 초단위
+		float m_DayCycle = 30.0f;
+
+		XMFLOAT4 m_NoonLight = {};
+		XMFLOAT4 m_SunSetLight = {};
+		XMFLOAT4 m_MoonLight = {};
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float GetDayCycle() const { return m_DayCycle; }
+		const XMFLOAT4& GetNoonLight() const { return m_NoonLight; }
+		const XMFLOAT4& GetSunSetLight() const { return m_SunSetLight; }
+		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
+	};
 }
 
 
