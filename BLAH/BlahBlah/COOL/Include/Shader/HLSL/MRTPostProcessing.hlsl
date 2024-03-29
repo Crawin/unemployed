@@ -39,17 +39,21 @@ float ShadowCalculate(float4 worldPos, float dotNormal, int camIdx, int mapIdx)
 	StructuredBuffer<CameraData> shadowCams = ShadowCameraDataList[camIdx];
 	CameraData cam = shadowCams[0];
 	float4 fragPos = mul(mul(worldPos, cam.viewMatrix), cam.projectionMatrix);
-	float3 ndc = fragPos.xyz / fragPos.w * 0.5f + 0.5f;
-	//ndc.xyz = ndc * 0.5f + 0.5f;
+	//float3 ndc = fragPos.xyz / fragPos.w * 0.5f + 0.5f;
+	float3 ndc = fragPos.xyz / fragPos.w;
+	ndc.xy *= 0.5f;
+	ndc.xy += 0.5f;
+	//ndc.z *= 0.5f;
+	//ndc.z += 0.5f;
 	ndc.y = 1 - ndc.y;
 	float shadow = 0.0;
 
-	float bias = max(0.05 * (1.0 - dotNormal), 0.005);
+	float bias = max(0.0005 * (1.0 - dotNormal), 0.00005);
 
 	for (int i = -1; i <= 1; ++i) {
 		for (int j = -1; j <= 1; ++j) {
-			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 4096.0f)).r;
-			shadow += (depth - bias) < ndc.z ? 0.0 : 1.0;  
+			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 8192.0f)).r;
+			shadow += (depth + bias) < ndc.z ? 0.0 : 1.0;  
 		}
 	}
 

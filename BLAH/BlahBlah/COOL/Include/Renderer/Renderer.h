@@ -99,6 +99,8 @@ public:
 		return resource;
 	}
 
+	COOLResourcePtr CreateBufferFromPointer(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfValue, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer");
+
 	// 그냥 진짜 비어있는 리소스 생성, toMapData를 넣으면 자동으로 데이터 맵핑까지
 	COOLResourcePtr CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty", void** toMapData = nullptr);
 

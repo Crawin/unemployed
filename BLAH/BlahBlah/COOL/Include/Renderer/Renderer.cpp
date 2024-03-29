@@ -861,6 +861,33 @@ COOLResourcePtr Renderer::CreateTextureFromDDSFile(ComPtr<ID3D12GraphicsCommandL
 	return newResource;
 }
 
+COOLResourcePtr Renderer::CreateBufferFromPointer(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfValue, D3D12_RESOURCE_STATES resourceState, std::string_view name)
+{
+	UINT bytes = static_cast<UINT>(numOfValue) * static_cast<UINT>(stride);
+	//bytes = ((bytes + 255) & ~255);
+
+	auto resource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_COMMON, bytes, name);
+	auto uploadResource = CreateEmptyBufferResource(D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ, bytes, std::format("{} upload resource", name));
+	uploadResource->DontReleaseOnDesctruct();
+
+	resource->TransToState(commandList, D3D12_RESOURCE_STATE_COPY_DEST);
+
+	D3D12_SUBRESOURCE_DATA subresourceData = {};
+	subresourceData.pData = &(data[0]);
+	subresourceData.SlicePitch = subresourceData.RowPitch = bytes;
+	UpdateSubresources<1>(commandList.Get(), resource->GetResource(), uploadResource->GetResource(), 0, 0, 1, &subresourceData);
+
+	resource->TransToState(commandList, resourceState);
+
+	m_UploadResources.push_back(uploadResource->GetResource());
+
+	resource->SetDimension(D3D12_SRV_DIMENSION_BUFFER);
+	resource->SetStride(stride);
+	resource->SetNumOfElement(numOfValue);
+
+	return resource;
+}
+
 COOLResourcePtr Renderer::CreateEmptyBuffer(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name, void** toMapData)
 {
 	UINT createBytes = ((bytes + 255) & ~255);

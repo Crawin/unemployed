@@ -55,6 +55,30 @@ ResourceManager::~ResourceManager()
 	m_ObjectDatas.clear();
 }
 
+int ResourceManager::CreateBufferFromData(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfData, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert)
+{
+	COOLResourcePtr ptr = Renderer::GetInstance().CreateBufferFromPointer(commandList, data, stride, numOfData, resourceState, name);
+
+	switch (toInsert) {
+	case RESOURCE_TYPES::SHADER:
+		ptr->SetShaderResource();
+		m_Resources.push_back(ptr);
+		return static_cast<int>(m_Resources.size() - 1);
+		break;
+	case RESOURCE_TYPES::VERTEX:
+		m_VertexIndexDatas.push_back(ptr);
+		return static_cast<int>(m_VertexIndexDatas.size() - 1);
+		break;
+	case RESOURCE_TYPES::OBJECT:
+		//ptr->SetConstant();
+		m_ObjectDatas.push_back(ptr);
+		return static_cast<int>(m_ObjectDatas.size() - 1);
+		break;
+	}
+
+	return -1;
+}
+
 int ResourceManager::CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert, D3D12_HEAP_TYPE heapType)
 {
 	COOLResourcePtr ptr = Renderer::GetInstance().CreateEmptyBuffer(
@@ -675,7 +699,8 @@ bool ResourceManager::MakeExtraRenderTarget()
 			m_ShadowMaps[i].GetRTSize(),
 			//Renderer::GetInstance().GetScreenSize(),
 			std::format("Shadow_Map_{}", i),
-			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+			DXGI_FORMAT_R32_FLOAT)
 		);
 
 		m_Resources[m_ShadowMapRTVStartIdx + i]->SetShaderResource();

@@ -112,6 +112,8 @@ private:
 		return -1;
 	}
 
+	int CreateBufferFromData(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfData, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::VERTEX);
+
 	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT);
 
 	

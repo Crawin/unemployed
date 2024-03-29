@@ -223,7 +223,7 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		{
 			// todo 
 			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
-			auto p = camVec[0]->GetPosition();
+			auto& p = camVec[0]->GetPosition();
 			
 			XMFLOAT3 up = light.m_Direction;
 			up.x *= -5000.0;
@@ -298,12 +298,12 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	D3D12_VIEWPORT vp;
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
-	vp.Width = static_cast<float>(4096);
-	vp.Height = static_cast<float>(4096);
+	vp.Width = static_cast<float>(8192);
+	vp.Height = static_cast<float>(8192);
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 
-	RECT scRect = { 0, 0, 4096, 4096 };
+	RECT scRect = { 0, 0, 8192, 8192 };
 
 	commandList->RSSetViewports(1, &vp);
 	commandList->RSSetScissorRects(1, &scRect);

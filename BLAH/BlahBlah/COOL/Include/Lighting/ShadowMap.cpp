@@ -1,7 +1,7 @@
 ﻿#include "framework.h"
 #include "ShadowMap.h"
 
-XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, -1000.0f, 10000.0f);
+XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, 1.0f, 7000.0f);
 XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(XMConvertToRadians(90.0f)), 1.0f, 0.1f, 10000.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 

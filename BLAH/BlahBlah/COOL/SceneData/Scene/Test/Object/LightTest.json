@@ -20,7 +20,7 @@
 
 	"DayLight": 
 	{
-		"DayCycle": 5,
+		"DayCycle": 5000000000000000000,
 		"NoonLight": [1.0, 1.0, 1.0, 1.0],
 		"SunSetLight": [0.92, 0.45, 0.04, 1.0],
 		"MoonLight": [0.33, 0.42, 0.56, 1.0]

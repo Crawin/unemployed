@@ -56,7 +56,7 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	//float4 frustumPos = mul(i.position, inverseMatrix(projectionMatrix));
 	//float3 viewDir = mul(frustumPos.xyz / frustumPos.w, (float3x3)viewMatrix)
 
-	output.Albedo = lights[MainLightIdx].m_LightColor;// * float4(0.6f, 0.8f, 1.0f, 1.0f);
+	output.Albedo = lights[MainLightIdx].m_LightColor * float4(0.6f, 0.8f, 1.0f, 1.0f);
 	output.Roughness = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);

@@ -17,7 +17,7 @@ class ShadowMap
 	static XMFLOAT4X4 m_ShadowPerspectiveProj;
 	static XMFLOAT4X4 m_ShadowOrthographicProj;
 
-	SIZE m_RenderTargetSize = { 4096, 4096 };
+	SIZE m_RenderTargetSize = { 8192, 8192 };
 
 	// ShadowMap Camera Setting
 	// 6개가 될 수도 있다.
