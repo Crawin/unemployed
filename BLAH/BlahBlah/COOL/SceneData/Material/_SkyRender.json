@@ -1,0 +1,9 @@
+{
+	"name": "SkyRender",
+	"BaseColor": null,
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "_SkyRender"
+}

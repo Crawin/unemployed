@@ -53,11 +53,23 @@ private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
 protected:
+	virtual bool AddSystem();
+
+	virtual bool LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	void SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
+
 	// render seq 01
 	void AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList);
 
+	// pre render on mrt
+	virtual void OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv) {}
+
 	// render seq
 	void RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+
+	// post render on mrt
+	virtual void OnPostRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv) {}
 
 	// render seq final - 1
 	void UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList);

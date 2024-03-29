@@ -489,15 +489,20 @@ namespace component {
 		XMFLOAT4 m_SunSetLight = {};
 		XMFLOAT4 m_MoonLight = {};
 
+		float m_LightAngle = 0.0f;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
+		void SetLightAngle(float angle) { m_LightAngle = angle; }
+
 		float GetDayCycle() const { return m_DayCycle; }
 		const XMFLOAT4& GetNoonLight() const { return m_NoonLight; }
 		const XMFLOAT4& GetSunSetLight() const { return m_SunSetLight; }
 		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
+		float GetLightAngle() const { return m_LightAngle; }
 	};
 }
 

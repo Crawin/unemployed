@@ -41,11 +41,8 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 	float axisLength = XMVectorGetX(XMVector3Length(axis));
 	float dotProduct = XMVectorGetX(XMVector3Dot(from, to));
 
-	// 스칼라삼중적
-
 	float angle = acosf(dotProduct);
-	float axisReverse = XMVectorGetX(XMVector3Dot(XMLoadFloat3(&allAx), axis));
-
+	
 	XMMATRIX rot;
 	if (axisLength == 0) rot = XMMatrixIdentity();
 	else rot = XMMatrixRotationAxis(axis, angle);

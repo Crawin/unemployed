@@ -14,7 +14,7 @@ enum class LIGHT_TYPES {
 // data to send GPU
 struct LightData {
 	XMFLOAT4 m_LightColor;
-	
+
 	XMFLOAT3 m_Direction;			// Transform에 연계하여 바뀐다.
 	float m_Falloff;
 	
@@ -28,6 +28,7 @@ struct LightData {
 	BOOL m_Active = TRUE;			// HLSL에서 bool은 4bytes, C++에서의 bool <- 1byte, BOOL은 int를 확장
 	BOOL m_CastShadow = FALSE;		// 상황에 맞게 판단하여 그때그때 켜진다.
 	int m_CameraIdx = -1;
+	float m_Temperature = -1;		// 1 이상이라면 켜진거임		2000 ~ 7000 (주황 - 하양), 
 };
 
 

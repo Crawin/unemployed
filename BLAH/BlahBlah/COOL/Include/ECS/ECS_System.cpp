@@ -282,6 +282,8 @@ namespace ECSsystem {
 
 			transform->SetRotation(newRot);
 
+			dayLight->SetLightAngle(newRot.x);
+
 			// change light color
 			// weight == sin(angle.x)
 			//XMFLOAT4 curLight = 
@@ -289,7 +291,7 @@ namespace ECSsystem {
 			// 0, 90, 180
 			// 0   1   0
 			// day time
-			float weight = abs(sin(XMConvertToRadians(newRot.x)));
+			float weight = pow((sin(XMConvertToRadians(newRot.x))), 2);
 
 			LightData& li = light->GetLightData();
 

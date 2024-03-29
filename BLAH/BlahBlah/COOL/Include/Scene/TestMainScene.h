@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include "Scene.h"
 
-class ObjectBase;
-//class Camera;
+class Material;
 
 class TestMainScene :
     public Scene
@@ -13,6 +12,14 @@ public:
     TestMainScene() {}
     virtual ~TestMainScene() {}
 
+private:
+    int m_SkyMaterialIdx = -1;
+
+protected:
+    virtual bool LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+    virtual void OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+
 public:
     virtual bool Enter(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -22,5 +29,7 @@ public:
 
     virtual bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);
 
+    // 최종 결과를 resultRtv, resultDsv에 넘긴다
+    //virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 };
 

@@ -720,9 +720,10 @@ int ResourceManager::CreateObjectResource(UINT size, const std::string resName, 
 	}
 }
 
-void ResourceManager::SetDatas()
+void ResourceManager::SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-
+	commandList->SetDescriptorHeaps(1, m_ShaderResourceHeap.GetAddressOf());
+	commandList->SetGraphicsRootDescriptorTable(0, m_ShaderResourceHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 int ResourceManager::GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name)
@@ -781,6 +782,17 @@ std::shared_ptr<Shader> ResourceManager::GetShader(const std::string& name, ComP
 	if (commandList) return LoadShader(name, commandList);
 	return nullptr;
 }
+
+//void ResourceManager::SetPSO(ComPtr<ID3D12GraphicsCommandList> commandList, int materialIdx)
+//{
+//	m_Materials[materialIdx]->GetShader()->SetPipelineState(commandList);
+//	//commandList->SetPipelineState(m_Materials[materialIdx]->GetShader()->m_PipelineState);
+//}
+
+//void ResourceManager::RenderMesh(ComPtr<ID3D12GraphicsCommandList> commandList, int meshIdx, const XMFLOAT4X4& parentMatrix)
+//{
+//	m_Meshes[meshIdx]->Render(commandList, parentMatrix);
+//}
 
 void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer)
 {

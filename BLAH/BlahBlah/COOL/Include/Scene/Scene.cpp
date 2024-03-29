@@ -29,10 +29,22 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 
 	m_ResourceManager->SetECSManager(m_ECSManager);
 
+	CHECK_CREATE_FAILED(AddSystem(), std::format("Error on add system!!, name: {}", sceneName));
+
+	CHECK_CREATE_FAILED(m_ResourceManager->Init(commandList, sceneName), std::format("Can't Load Scene, name: {}", sceneName));
+	
+	CHECK_CREATE_FAILED(LoadSceneExtra(commandList), std::format("Can't Load Scene Extra, name: {}", sceneName));
+
+	return true;
+}
+
+bool Scene::AddSystem()
+{
 	// default systems
 	// 넣는 순서에 따라 system이 돌아가는게 달라짐
 	// 우선순위들 정리
 	// 1. 각 객체들의 transform을 바꾸는 system
+	// 998. todo 충돌처리
 	// 999. 부모에 따라 transform을 바꾸는 system(LocalToWorldTransform)
 	m_ECSManager->InsertSystem(new ECSsystem::AnimationPlayTimeAdd);
 	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
@@ -43,9 +55,20 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
 
-	CHECK_CREATE_FAILED(m_ResourceManager->Init(commandList, sceneName), std::format("Can't Load Scene, name: {}", sceneName));
+	return true;
+}
+
+bool Scene::LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	//m_ResourceManager->GetMaterial("", commandList);
 
 	return true;
+}
+
+void Scene::SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
+{
+	m_ResourceManager->SetResourceHeap(commandList);
+
 }
 
 void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -53,12 +76,12 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 	ResourceManager* manager = m_ResourceManager;
 
 	// Set Animation PSO
-	m_ResourceManager->m_AnimationShader->SetPipelineState(commandList);
+	m_ResourceManager->GetAnimationShader()->SetPipelineState(commandList);
 
 	// animate and set animed data
 	std::function<void(component::Renderer*, component::AnimationExecutor*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
 		int meshIdx = renderComponent->GetMesh();
-		Mesh* mesh = manager->m_Meshes[meshIdx];
+		Mesh* mesh = manager->GetMesh(meshIdx);
 		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
 			// Stream Out data set to  Stream Out
 			int bufidx = executor->GetStreamOutBuffer();
@@ -74,7 +97,7 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			commandList->SOSetTargets(0, _countof(bufView), bufView);
 
 			// set bone here
-			int boneIdx = manager->m_Bones[mesh->GetBoneIdx()]->GetBoneDataIdx();
+			int boneIdx = manager->GetBone(mesh->GetBoneIdx())->GetBoneDataIdx();
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneIdx, static_cast<int>(ANIM_ROOTCONST::BONE_INDEX));
 
 			// set animation here
@@ -122,15 +145,19 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 
 	camVec[0]->SetCameraData(commandList);
 
+	OnPreRender(commandList, resultDsv);
+
 
 	// make function
 	std::function<void(component::Renderer*)> func = [&commandList, &res](component::Renderer* renderComponent) {
-		int material = renderComponent->GetMaterial();
-		int mesh = renderComponent->GetMesh();
+		int materialIdx = renderComponent->GetMaterial();
+		int meshIdx = renderComponent->GetMesh();
 
-		res->m_Materials[material]->GetShader()->SetPipelineState(commandList);
+		Material* material = res->GetMaterial(materialIdx);
+		Mesh* mesh = res->GetMesh(meshIdx);
 
-		res->m_Materials[material]->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+		material->GetShader()->SetPipelineState(commandList);
+		material->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 		//XMFLOAT4X4 t = Matrix4x4::Identity();
 		//res->m_Meshes[mesh]->SetVertexBuffer(commandLists[0]);
@@ -139,11 +166,15 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
 
-		res->m_Meshes[mesh]->Render(commandList, renderComponent->GetWorldMatrix());
+		mesh->Render(commandList, renderComponent->GetWorldMatrix());
 		};
 
 	// execute function
 	m_ECSManager->Execute<component::Renderer>(func);
+
+	OnPostRender(commandList, resultDsv);
+
+	// render sky here
 
 }
 
@@ -228,7 +259,7 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		// set result
 		res->SetShadowMapRTVIdx(count, idx);
 		res->UpdateShadowMapView(count, light);
-		light.m_ShadowMapResults[0] = idx + res->m_ShadowMapRTVStartIdx;
+		light.m_ShadowMapResults[0] = idx + res->GetShadowMapRTVStartIdx();
 
 		// clear Dsv;
 		// todo 
@@ -248,7 +279,8 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// 
 	// set light map pso
 	int shadowMat = m_ResourceManager->GetShadowMappingMaterial();
-	Material* mat = m_ResourceManager->m_Materials[shadowMat];
+	//m_ResourceManager->SetPSO(commandList, shadowMat);
+	Material* mat = m_ResourceManager->GetMaterial(shadowMat);
 	mat->GetShader()->SetPipelineState(commandList);
 
 
@@ -258,7 +290,8 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// Clear RTV Clear DSV
 	const float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	m_ResourceManager->ClearShadowMaps(commandList, clearColor);
-	auto dsv = 	m_ResourceManager->m_ShadowMapDSVHeap->GetCPUDescriptorHandleForHeapStart();
+	auto dsv = m_ResourceManager->GetShadowMapDepthStencil();
+		//m_ResourceManager->m_ShadowMapDSVHeap->GetCPUDescriptorHandleForHeapStart();
 
 	// set viewport
 	// 하드코딩 경보
@@ -280,7 +313,8 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		const auto& view = rend->GetVertexBufferView();
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
-		res->m_Meshes[rend->GetMesh()]->Render(commandList, rend->GetWorldMatrix());
+		//res->RenderMesh(commandList, rend->GetMesh(), rend->GetWorldMatrix());
+		res->GetMesh(rend->GetMesh())->Render(commandList, rend->GetWorldMatrix());
 		};
 
 	for (int i = 0; i < m_ResourceManager->m_ShadowMaps.size(); ++i) {
@@ -321,12 +355,13 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 
 	int postMat = m_ResourceManager->GetPostProcessingMaterial();
 
-	Material* mat = m_ResourceManager->m_Materials[postMat];
+	Material* mat = m_ResourceManager->GetMaterial(postMat);
 
 	// todo light size
 	mat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_SIZE), m_ResourceManager->m_LightSize);
 	mat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_IDX), m_ResourceManager->m_LightIdx);
 	mat->GetShader()->SetPipelineState(commandList);
+	//m_ResourceManager->SetPSO(commandList, postMat);
 	mat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 	commandList->DrawInstanced(6, 1, 0, 0);
@@ -339,12 +374,13 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 		commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 		int debugMat = m_ResourceManager->GetDebuggingMaterial();
 
-		m_ResourceManager->m_Materials[debugMat]->GetShader()->SetPipelineState(commandList);
+		//m_ResourceManager->SetPSO(commandList, debugMat);
+		m_ResourceManager->GetMaterial(debugMat)->GetShader()->SetPipelineState(commandList);
 
 		int a[2] = { 0, 0 };
 		
 		if (GetAsyncKeyState(VK_F9) & 0x8000)
-			a[0] = m_ResourceManager->m_ShadowMapRTVStartIdx;
+			a[0] = m_ResourceManager->GetShadowMapRTVStartIdx();
 
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
 		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
@@ -371,13 +407,8 @@ void Scene::Update(float deltaTime)
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
-	auto& res = m_ResourceManager;
-
 	// heap set
-	auto& heap = res->m_ShaderResourceHeap;
-	commandLists[0]->SetDescriptorHeaps(1, heap.GetAddressOf());
-	commandLists[0]->SetGraphicsRootDescriptorTable(0, heap->GetGPUDescriptorHandleForHeapStart());
-
+	SetResourceHeap(commandLists[0]);
 
 	// animate first
 	AnimateToSO(commandLists[0]);

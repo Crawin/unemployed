@@ -81,7 +81,7 @@ float4 Lighting(float4 albedo, float4 roughness, float4 metalic, float4 specular
 		float3 specularres = lights[i].m_LightColor.rgb * specInt * 0.1f * albedo.rgb;
 
 		float shadow = ShadowCalculate(worldPosition, dotNormal, lights[i].m_CameraIdx, lights[i].m_ShadowMapResults.x);
-		//shadow = 1.0f;
+		shadow = shadow * worldPosition.w + (1 - worldPosition.w);
 		result += float4(ambient + shadow * (diffuse + specularres), 0.0f);
 	}
 

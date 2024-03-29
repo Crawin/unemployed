@@ -223,7 +223,7 @@ void Mesh::SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
 }
 
-void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent)
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& parent)
 {
 	if (m_VertexNum > 0) {
 

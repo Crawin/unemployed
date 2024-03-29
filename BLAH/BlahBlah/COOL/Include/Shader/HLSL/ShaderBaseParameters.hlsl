@@ -14,6 +14,7 @@ struct LIGHT
 	bool m_Active;
 	bool m_CastShadow;
    	int m_CameraIdx;
+    float m_Temperature;
 };
 
 struct CameraData {
