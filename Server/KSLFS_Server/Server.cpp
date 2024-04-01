@@ -526,8 +526,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 	std::cout << "[" << gameNum << "] GameRunThread Run" << std::endl;
 	Log_Mutex.unlock();
 
-	WSABUF wsabuf;
-
+	WSABUF wsabuf[1];
 
 	std::array<Player, 2> p;
 	short GameOver = 1;
@@ -537,7 +536,27 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 		// 게임 로직
 		
 		// 접속
-		for (int i = 0; i < 2; ++i)
+		//for (int i = 0; i < 2; ++i)
+		//{
+		//	if (p[i].getSocket() == NULL)		// P[i]이 연결되어 있지 않은 상태에서
+		//	{
+		//		// p[i] 가 연결이 되었는가?
+		//		if (mGameStorages[gameNum][i].first)
+		//		{
+		//			Log_Mutex.lock();
+		//			std::cout << "P"<<i+1<<"[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
+		//			Log_Mutex.unlock();
+		//			p[i].allocateSOCKET(mGameStorages[gameNum][i].first);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		p[i].printPlayerPos(i, true);
+		//		p[i].syncTransform();
+		//	}
+
+		//}
+		for (int i = 0; i < 1; ++i)
 		{
 			if (p[i].getSocket() == NULL)		// P[i]이 연결되어 있지 않은 상태에서
 			{
@@ -545,7 +564,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 				if (mGameStorages[gameNum][i].first)
 				{
 					Log_Mutex.lock();
-					std::cout << "P"<<i+1<<"[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
+					std::cout << "P" << i + 1 << "[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
 					Log_Mutex.unlock();
 					p[i].allocateSOCKET(mGameStorages[gameNum][i].first);
 				}
@@ -555,8 +574,8 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 				p[i].printPlayerPos(i, true);
 				p[i].syncTransform();
 			}
-
 		}
+
 
 		// 명령 처리
 		for (int i = 0; i < 2; ++i)
@@ -586,16 +605,23 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 		//충돌
 		WorldCollision(p[0]);
 		//WorldCollision(p[1]);
-
+			
 		//이벤트 발생
 
-		//Socket_position sp;
-		//sp.pos = p[0].getPos();
-		//sp.rot = p[0].getRot();
-		//sp.type = POSITION;
-		//wsabuf.buf = (char*)&sp;
-		//wsabuf.len = sizeof(sp);
-		//if (WSASend(mGameStorages[gameNum][0].first, &wsabuf, 1, nullptr, 0, 0, 0) == SOCKET_ERROR)
+		/*Socket_position sp;
+		sp.pos = p[0].getPos();
+		sp.rot = p[0].getRot();
+		sp.type = POSITION;
+		wsabuf[0].buf = (char*)&sp;
+		wsabuf[0].len = sizeof(sp);
+		SOCKET temp = mGameStorages[gameNum][0].first;
+		int retval = send(mGameStorages[gameNum][0].first, (char*)&sp, sizeof(sp), NULL);
+		if (retval == SOCKET_ERROR)
+		{
+			err_display("send()");
+			break;
+		}*/
+		//if (WSASend(temp, wsabuf, 1, nullptr, 0, 0, 0) == SOCKET_ERROR)
 		//{
 		//	err_display("send()");
 		//	break;
@@ -694,7 +720,7 @@ const SOCKET Player::getSocket()
 void Player::allocateSOCKET(const SOCKET& s)
 {
 	socket = s;
-	m_aTransform[1].pos = DirectX::XMFLOAT3(0, 0, 0);
+	m_aTransform[1].pos = DirectX::XMFLOAT3(0, 75, -100);
 	m_aTransform[1].rot = DirectX::XMFLOAT3(0, 0, 0);
 }
 

@@ -120,9 +120,17 @@ namespace ECSsystem {
 
 			vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
 			XMStoreFloat3(&tempMove, vec);
+			auto& q = Client::GetInstance().m_vPosition_Queue;
+			if (q.size() > 0)
+			{
+				tr->SetPosition(q.back().getPos());
+				tr->SetRotation(q.back().getRot());
+			}
+
+			auto pos = Vector3::Add(tempMove, tr->GetPosition());
 
 			tr->SetPosition(Vector3::Add(tempMove, tr->GetPosition()));
-			
+
 			//tempMove = tr->GetPosition();
 			//DebugPrint(std::format("x: {}, y: {}, z: {}", tempMove.x, tempMove.y, tempMove.z));
 
@@ -135,18 +143,16 @@ namespace ECSsystem {
 				const float rootSpeed = 10.0f;
 				rot.y += (mouseMove.x / rootSpeed);
 				rot.x += (mouseMove.y / rootSpeed);
+				
+				// Send To Server
+				Client::GetInstance().Send_Pos(pos, rot);
+
 				tr->SetRotation(rot);
 				
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
 			}
 			
 
-			// Send To Server
-			if (Client::GetInstance().Get_RecvState())
-			{	
-				SendPosition sp = { POSITION,tr->GetPosition(),tr->GetRotation() };
-				Client::GetInstance().Send_Pos(sp);
-			}
 
 			};
 

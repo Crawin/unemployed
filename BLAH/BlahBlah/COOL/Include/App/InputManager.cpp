@@ -48,7 +48,6 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		break;
 	case 'P':
 		Client::GetInstance().Connect_Server();
-		Client::GetInstance().Send_Str("방생성");
 		break;
 	}
 }
