@@ -66,19 +66,19 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	else {
 		mainLight = MoonLight;
 		subLight = DayLight;
-		angle -= 180.0f
+		angle -= 180.0f;
 	}
 
-	//float weight = abs((sin(radians(LightAngle))));
+	float weight = abs((sin(radians(angle))));
 
-	//float4 currentDayLight = lerp(SunSetLight, mainLight, weight);
-	//float4 nextDayLight = lerp(SunSetLight, subLight, weight);
+	float4 currentDayLight = lerp(SunSetLight, mainLight, weight);
+	float4 nextDayLight = lerp(SunSetLight, subLight, weight);
 
-	//float4 color = lerp(currentDayLight, nextDayLight, i.normalOnPos.y);
+	float4 color = lerp(currentDayLight, nextDayLight, i.normalOnPos.y);
 
 	
 
-	float4 currentDayLight;
+	//float4 currentDayLight;
 
 	//color.xyz = i.normalOnPos;
 	output.Albedo = currentDayLight;
