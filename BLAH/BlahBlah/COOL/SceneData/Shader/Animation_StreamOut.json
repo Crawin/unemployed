@@ -1,6 +1,6 @@
 {
 	"name": "Animation_StreamOut",
-	"NumRenderTargets": 1,
+	"NumRenderTargets": 0,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
 	"VS": "Animation.hlsl",

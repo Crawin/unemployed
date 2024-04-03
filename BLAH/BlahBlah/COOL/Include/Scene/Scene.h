@@ -48,6 +48,8 @@ protected:
 	// ECS System
 	std::shared_ptr<ECSManager> m_ECSManager = nullptr;
 
+	int m_ActiveLightSize = 0;
+
 	//virtual bool Init();
 private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);

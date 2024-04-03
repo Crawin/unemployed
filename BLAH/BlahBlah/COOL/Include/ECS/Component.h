@@ -504,6 +504,17 @@ namespace component {
 		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
 		float GetLightAngle() const { return m_LightAngle; }
 	};
+
+	/////////////////////////////////////////////////////////
+	// Cloud component
+	// 
+	//
+	class CloudComponent : public ComponentBase<CloudComponent> {
+		float m_Width = 1000.0f;
+		float m_Height = 1000.0f;
+
+		int m_Clouds = 1000;
+	};
 }
 
 

@@ -897,6 +897,8 @@ void ResourceManager::ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList,
 
 int ResourceManager::GetUnOccupiedShadowMapRenderTarget(LIGHT_TYPES lightType)
 {
+	// todo light type에 따라 light render target을 따로 주자
+	// ex) Directional Light -> cascaded / point -> texCube
 	for (int i = 0; i < _countof(m_ShadowMapOccupied); ++i) {
 		if (m_ShadowMapOccupied[i] == false) {
 			m_ShadowMapOccupied[i] = true;

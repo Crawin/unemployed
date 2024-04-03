@@ -22,7 +22,7 @@ struct LightData {
 	int m_LightType = 0;
 	
 	// for shadow map
-	int m_ShadowMapResults[3] = {-1,};
+	int m_ShadowMapResults[3] = {-1,};		// Descriptor Heap(리소스 배열)의 인덱스로 사용함
 	BOOL m_CascadedShadow = FALSE;	// main light 일 경우에만 켜진다.
 	
 	BOOL m_Active = TRUE;			// HLSL에서 bool은 4bytes, C++에서의 bool <- 1byte, BOOL은 int를 확장

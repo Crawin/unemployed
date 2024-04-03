@@ -210,17 +210,25 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
 	m_ECSManager->Execute(getCam);
 
-	std::function<void(component::Light*)> updateLight = [&count, data, res, &camVec](component::Light* lightComp) {
+	int& activeLights = m_ActiveLightSize;
+	activeLights = 0;
+
+	std::function<void(component::Light*)> updateLight = [&count, data, res, &camVec, &activeLights](component::Light* lightComp) {
 
 		// todo
 		// if 뭐 얘가 좀 쌘 애다, shadowmap 만들기
 		LightData& light = lightComp->GetLightData();
-		int idx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
-		
+		int shadowMapIdx = -1;
+
+		// 일단 light cam의 연결을 끊는다.
+		light.m_CameraIdx = -1;
+
 		// if light dir == directional, update light map
 		switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
 		case LIGHT_TYPES::DIRECTIONAL_LIGHT: 
 		{
+			++activeLights;
+
 			// todo 
 			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
 			auto& p = camVec[0]->GetPosition();
@@ -230,17 +238,26 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 			up.y *= -5000.0;
 			up.z *= -5000.0;
 
-			if (up.y < 0) {
-				light.m_Direction.y *= -1;
-				light.m_Direction.z *= -1;
-				up.y *= -1;
-				up.z *= -1;
-			}
-
 			XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
-
-			light.m_CameraIdx = res->GetShadowMapCamIdx(count);
 			light.m_Position = pos;
+
+			// 뒷면이라면
+			if (up.y < 0) {
+				// 셰도우맵핑을 끄자
+				break;
+			}
+			// 해당 함수가 불리면 shadow mapping을 한다.
+			shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
+			res->UpdateShadowMapView(shadowMapIdx, light);
+
+			// set result
+			light.m_CameraIdx = res->GetShadowMapCamIdx(shadowMapIdx);
+			light.m_ShadowMapResults[0] = shadowMapIdx + res->GetShadowMapRTVStartIdx();
+
+			// todo
+			// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
+			res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
+
 			//DebugPrint(std::format("vie: {}, {}, {}", -mat._14, -mat._24, -mat._34));
 			//DebugPrint(std::format("lig: {}, {}, {}", pos.x, pos.y, pos.z));
 		}
@@ -255,15 +272,12 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 		};
 
-		
-		// set result
-		res->SetShadowMapRTVIdx(count, idx);
-		res->UpdateShadowMapView(count, light);
-		light.m_ShadowMapResults[0] = idx + res->GetShadowMapRTVStartIdx();
 
 		// clear Dsv;
 		// todo 
 		// 뭐 카메라 거리에 자르거나 할 수 있게 할까?
+
+
 		memcpy(data + count++, &light, sizeof(LightData));
 		};
 
@@ -321,6 +335,10 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		if (m_ResourceManager->m_ShadowMapOccupied[i] == false) break;
 		int idx = res->GetShadowMapRTVIdx(i);
 		D3D12_CPU_DESCRIPTOR_HANDLE targetRtv = res->GetShadowMapRenderTarget(idx);
+
+		if (idx < 0) {
+			DebugPrint("ERROR~!!!!");
+		}
 		
 		commandList->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 		commandList->OMSetRenderTargets(1, &targetRtv, true, &dsv);

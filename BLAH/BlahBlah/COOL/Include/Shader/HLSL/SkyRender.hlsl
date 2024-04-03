@@ -56,11 +56,37 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	//float4 frustumPos = mul(i.position, inverseMatrix(projectionMatrix));
 	//float3 viewDir = mul(frustumPos.xyz / frustumPos.w, (float3x3)viewMatrix)
 
-	output.Albedo = lights[MainLightIdx].m_LightColor * float4(0.6f, 0.8f, 1.0f, 1.0f);
+	float4 mainLight, subLight;
+	// day light is main
+	float angle = LightAngle;
+	if (angle < 180.0f) {
+		mainLight = DayLight;
+		subLight = MoonLight;
+	}
+	else {
+		mainLight = MoonLight;
+		subLight = DayLight;
+		angle -= 180.0f
+	}
+
+	//float weight = abs((sin(radians(LightAngle))));
+
+	//float4 currentDayLight = lerp(SunSetLight, mainLight, weight);
+	//float4 nextDayLight = lerp(SunSetLight, subLight, weight);
+
+	//float4 color = lerp(currentDayLight, nextDayLight, i.normalOnPos.y);
+
+	
+
+	float4 currentDayLight;
+
+	//color.xyz = i.normalOnPos;
+	output.Albedo = currentDayLight;
+	//output.Albedo = lights[MainLightIdx].m_LightColor * color;
 	output.Roughness = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	output.NormalW = float4(i.normalOnPos.y, i.normalOnPos.y, i.normalOnPos.y, 0.0f);
+	output.NormalW = float4(normalize(i.normalOnPos), 0.0f);//float4(i.normalOnPos.y, i.normalOnPos.y, i.normalOnPos.y, 0.0f);
 	output.PositionW = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	return output;
