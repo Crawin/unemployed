@@ -76,6 +76,9 @@
     <Filter Include="소스 파일\Scene\SceneData\Light">
       <UniqueIdentifier>{c3d45ae8-73d7-4e8f-b8ce-ba2407ecf4e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="외부\VIVOX">
+      <UniqueIdentifier>{12e7057c-f27c-413b-91b4-aec5b18de983}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -165,6 +168,9 @@
     <ClInclude Include="Include\Network\Packets.h">
       <Filter>소스 파일\Network</Filter>
     </ClInclude>
+    <ClInclude Include="External\Include\VIVOX\vivoxheaders.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -238,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="Include\App\Timer.cpp">
       <Filter>소스 파일\App\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Include\VIVOX\VIVOX.cpp">
+      <Filter>외부\VIVOX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

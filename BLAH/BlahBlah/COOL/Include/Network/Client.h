@@ -62,6 +62,7 @@ private:
 	WSABUF wsabuf[1];
 	WSAOVERLAPPED wsaover;
 	char buf[BUFSIZE];
+	SOCKET playerSock;
 public:
 	std::list<char> over_buf;
 	std::unordered_map<int, GameCharacters> characters;
@@ -71,6 +72,8 @@ public:
 	void Send_Pos(const DirectX::XMFLOAT3& , const DirectX::XMFLOAT3&);
 	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
+	void setPSock(const SOCKET&);
+	const SOCKET getPSock() { return playerSock; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

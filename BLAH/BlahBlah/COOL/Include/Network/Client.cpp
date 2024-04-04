@@ -1,4 +1,5 @@
 ﻿#include "Client.h"
+#include "VIVOX/vivoxheaders.h"
 #define SERVERPORT 9000
 
 Client::Client()
@@ -89,6 +90,11 @@ void Client::Connect_Server()
 	Recv_Start();
 }
 
+void Client::setPSock(const SOCKET& player)
+{
+	playerSock = player;
+}
+
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
 {
 	if (0 != err)
@@ -166,12 +172,15 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 			{
 				sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
 				client.characters.try_emplace(buf->player);
+				client.setPSock(buf->player);
 				break;
 			}
-			case 2:
+			case 2:									// make_room
 			{
 				sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
-				std::cout << buf->getGameNum()<<" 방 생성 완료" << std::endl;
+				std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
+				std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
+				vivox.detach();
 				break;
 			}
 		}

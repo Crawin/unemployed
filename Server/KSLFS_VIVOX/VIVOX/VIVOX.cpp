@@ -2,13 +2,14 @@
 
 int main()
 {
-    Start_Vivox();
+    KSLFS_VIVOX a;
+    a.Start_Vivox();
     return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Start_Vivox()
+void KSLFS_VIVOX::Start_Vivox()
 {
     vx_sdk_config_t defaultConfig;
     int status = vx_get_default_config3(&defaultConfig, sizeof(defaultConfig));
@@ -62,7 +63,7 @@ void Start_Vivox()
     status = vx_uninitialize();
 }
 
-void MyGamesEventHandler(vx_evt_base_t* evt)
+void KSLFS_VIVOX::MyGamesEventHandler(vx_evt_base_t* evt)
 {
     switch (evt->type)
     {
@@ -99,7 +100,7 @@ void MyGamesEventHandler(vx_evt_base_t* evt)
     }
 }
 
-void MyGamesResponseHandler(vx_resp_base_t* resp)
+void KSLFS_VIVOX::MyGamesResponseHandler(vx_resp_base_t* resp)
 {
     switch (resp->type)
     {
@@ -122,7 +123,7 @@ void MyGamesResponseHandler(vx_resp_base_t* resp)
 
 
 //메세지 핸들러
-void OnResponseOrEventFromSdk(void* callback_handle) 
+void KSLFS_VIVOX::OnResponseOrEventFromSdk(void* callback_handle)
 {
     int status;
     vx_message_base_t* msg;
@@ -147,7 +148,7 @@ void OnResponseOrEventFromSdk(void* callback_handle)
     }
 }
 
-void OnAudioBeforeRecvAudioRendered(
+void KSLFS_VIVOX::OnAudioBeforeRecvAudioRendered(
     void* callback_handle,
     const char* session_group_handle,
     const char* initial_target_uri,
@@ -160,7 +161,7 @@ void OnAudioBeforeRecvAudioRendered(
     std::cout << "오디오 콜백 등장" << std::endl;
 }
 
-void OnBeforeReceivedAudioMixed(
+void KSLFS_VIVOX::OnBeforeReceivedAudioMixed(
     void* callback_handle,
     const char* session_group_handle,
     const char* initial_target_uri,
@@ -193,7 +194,7 @@ void OnBeforeReceivedAudioMixed(
     //}
 }
 
-void CreateConnector(vx_req_connector_create*& req)
+void KSLFS_VIVOX::CreateConnector(vx_req_connector_create*& req)
 {
     //커넥터 핸들 제작
     vx_req_connector_create_create(&req);
@@ -203,7 +204,7 @@ void CreateConnector(vx_req_connector_create*& req)
     int vx_issue_request3_response = vx_issue_request3(&req->base, &request_count);
 }
 
-void LogIn(const int& sock)
+void KSLFS_VIVOX::LogIn(const int& sock)
 {
     std::string sock_str = std::to_string(sock);
     std::string UserName = VIVOX_ISSUER;
@@ -220,7 +221,7 @@ void LogIn(const int& sock)
     vx_issue_request3(&req->base,NULL);
 }
 
-void HandleLoginResponse(vx_resp_account_anonymous_login* resp)
+void KSLFS_VIVOX::HandleLoginResponse(vx_resp_account_anonymous_login* resp)
 {
     if (resp->base.return_code == 1)
     {
@@ -230,7 +231,7 @@ void HandleLoginResponse(vx_resp_account_anonymous_login* resp)
     std::cout << "[ account_handle: " << resp->account_handle << " ], 해당 작업 항목의 상태를 진행 중 상태로 변경합니다." << std::endl;
 }
 
-void HandleLoginStateChange(vx_evt_account_login_state_change* evt)
+void KSLFS_VIVOX::HandleLoginStateChange(vx_evt_account_login_state_change* evt)
 {
     if (evt->state == login_state_logged_in)
     {
@@ -255,7 +256,7 @@ void HandleLoginStateChange(vx_evt_account_login_state_change* evt)
 
 // 로그아웃 할 때는 클라이언트가 vx_req_account_logout 요청을 제출한 후에 클라이언트 애플리케이션이 종료됩니다.
 
-void RequestParticipate(const int& sock, const int& gameNum)
+void KSLFS_VIVOX::RequestParticipate(const int& sock, const int& gameNum)
 {
     std::string sock_str = std::to_string(sock);
     std::string gameNum_str = std::to_string(gameNum);
@@ -273,7 +274,7 @@ void RequestParticipate(const int& sock, const int& gameNum)
     req->access_token = GenerateToken("join", temp, sock);
     vx_issue_request3(&req->base, NULL);
 }
-char* GenerateToken(const char* payload, const char* uri,const int& sock)
+char* KSLFS_VIVOX::GenerateToken(const char* payload, const char* uri,const int& sock)
 {
     //int socketnum = 100;
     std::string UserName = VIVOX_ISSUER;
@@ -283,7 +284,7 @@ char* GenerateToken(const char* payload, const char* uri,const int& sock)
     return vx_strdup(vx_debug_generate_token(VIVOX_ISSUER, vx_time_t(-1), payload, 2, NULL, vx_get_user_uri(&UserName[0], VIVOX_DOMAIN, NULL), uri, (const unsigned char*)VIVOX_KEY, strlen(VIVOX_KEY)));
 }
 
-void HandleMediaStreamUpdatedEvent(vx_evt_media_stream_updated* evt)
+void KSLFS_VIVOX::HandleMediaStreamUpdatedEvent(vx_evt_media_stream_updated* evt)
 {
     if (evt->state == session_media_connected)
     {
@@ -305,7 +306,7 @@ void HandleMediaStreamUpdatedEvent(vx_evt_media_stream_updated* evt)
         std::cout << "[" << evt->session_handle << "] 연결중..." << std::endl;
     }
 }
-void HandleTextStreamUpdatedEvent(vx_evt_text_stream_updated* evt)
+void KSLFS_VIVOX::HandleTextStreamUpdatedEvent(vx_evt_text_stream_updated* evt)
 {
     if (evt->state == session_text_connected)
     {
@@ -324,27 +325,27 @@ void HandleTextStreamUpdatedEvent(vx_evt_text_stream_updated* evt)
     }
 }
 
-void HandleParticipantAddedEvent(vx_evt_participant_added* evt)
+void KSLFS_VIVOX::HandleParticipantAddedEvent(vx_evt_participant_added* evt)
 {
     printf("User %s joined %s\n", evt->encoded_uri_with_tag, evt->session_handle);
 }
 
-void HandleParticipantRemovedEvent(vx_evt_participant_removed* evt)
+void KSLFS_VIVOX::HandleParticipantRemovedEvent(vx_evt_participant_removed* evt)
 {
     printf("User %s left %s\n", evt->encoded_uri_with_tag, evt->session_handle);
 }
 
-void HandleParticipantUpdatedEvent(vx_evt_participant_updated* evt)
+void KSLFS_VIVOX::HandleParticipantUpdatedEvent(vx_evt_participant_updated* evt)
 {
     //printf("User %s %s speaking to %s\n", evt->encoded_uri_with_tag, evt->is_speaking ? "is" : "is not", evt->session_handle);
 }
 
-void HandleConnectionStateChanged(vx_evt_connection_state_changed* evt)
+void KSLFS_VIVOX::HandleConnectionStateChanged(vx_evt_connection_state_changed* evt)
 {
     std::cout << evt->account_handle << "이 " << evt->connection_state << "로 상태가 변경되었습니다." << std::endl;
 }
 
-void HandleSessiongroupAddSession(vx_resp_sessiongroup_add_session* evt)
+void KSLFS_VIVOX::HandleSessiongroupAddSession(vx_resp_sessiongroup_add_session* evt)
 {
     if (evt->base.return_code == 1)
     {
@@ -354,17 +355,17 @@ void HandleSessiongroupAddSession(vx_resp_sessiongroup_add_session* evt)
     std::cout <<"["<< evt->session_handle << "] SessiongroupAddSession" << std::endl;
 }
 
-void HandleSessiongroupAdded(vx_evt_sessiongroup_added* evt)
+void KSLFS_VIVOX::HandleSessiongroupAdded(vx_evt_sessiongroup_added* evt)
 {
     std::cout <<"["<< evt->account_handle << "] Sessiongroup Added" << std::endl;
 }
 
-void HandleSessionAdded(vx_evt_session_added* evt)
+void KSLFS_VIVOX::HandleSessionAdded(vx_evt_session_added* evt)
 {
     std::cout << "[" << evt->session_handle << "] SessionAdded" << std::endl;
 }
 
-void ExitChannel(const int& gameNum)
+void KSLFS_VIVOX::ExitChannel(const int& gameNum)
 {
     std::string gameNum_str = std::to_string(gameNum);
     vx_req_sessiongroup_remove_session* req;
@@ -374,7 +375,7 @@ void ExitChannel(const int& gameNum)
     vx_issue_request3(&req->base, NULL);
 }
 
-void LogOut(const int& sock)
+void KSLFS_VIVOX::LogOut(const int& sock)
 {
     std::string sock_str = std::to_string(sock);
     vx_req_account_logout* req;
