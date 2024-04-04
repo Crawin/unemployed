@@ -254,8 +254,8 @@ void RequestParticipate(const int& sock, const int& gameNum)
 {
     std::string sock_str = std::to_string(sock);
     std::string gameNum_str = std::to_string(gameNum);
-    char* temp = vx_get_echo_channel_uri(&gameNum_str[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 에코채널
-    //char* temp = vx_get_general_channel_uri(&std::to_string(gameNum)[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 논포지셔널채널
+    //char* temp = vx_get_echo_channel_uri(&gameNum_str[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 에코채널
+    char* temp = vx_get_general_channel_uri(&std::to_string(gameNum)[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 논포지셔널채널
 
     vx_req_sessiongroup_add_session* req;
     vx_req_sessiongroup_add_session_create(&req);
