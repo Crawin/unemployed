@@ -69,7 +69,7 @@ public:
 	void Recv_Start();
 	char* Get_Buf();
 	void Send_Pos(const DirectX::XMFLOAT3& , const DirectX::XMFLOAT3&);
-	void Send_Event(const EVENT_TYPE&, const unsigned int&);
+	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
 };
 

@@ -98,7 +98,17 @@ public:
 				auto sendOver = new EXP_OVER(login);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
-				std::cout << "send ¿Ï·á2   "<< sendOver->wsabuf->len << std::endl;
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case 2:				//	pMAKEROOM
+			{
+				auto room = reinterpret_cast<sc_packet_make_room*>(base);
+				auto sendOver = new EXP_OVER(room);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
@@ -115,6 +125,9 @@ public:
 		std::cout << std::endl;
 	}
 
+	const SOCKET getSock() { return client_s; }
+
+	void setState(const PlayerState& ps) { state = ps; }
 	//void broadcast(int m_size)
 	//{
 	//	for (auto& p : g_players)
@@ -126,16 +139,33 @@ class Lobby
 {
 };
 
+class Player
+{
+public:
+	unsigned int id = NULL;
+	SOCKET sock = NULL;
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 rotation;
+};
+
 class Game
 {
+	unsigned int GameNum;
+	Player p[2];
+public:
+	Game() { std::cout << "Game initialize error" << std::endl; }
+	Game(const unsigned int& n) : GameNum(n) {}
+	void init(const unsigned int& i, const SOCKET& s);
 };
 
 class IOCP_SERVER_MANAGER
 {
 private:
 	std::unordered_map<SOCKET, SESSION> login_players;
-	Lobby* lobby = nullptr;
+	unsigned int currentRoom = 10000;
+	std::unordered_map<unsigned int, Game> Games;
 public:
 	IOCP_SERVER_MANAGER() {}
 	void start();
+	void process_packet(const unsigned int&, EXP_OVER*&);
 };

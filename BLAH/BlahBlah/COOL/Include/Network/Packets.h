@@ -15,7 +15,7 @@ enum PACKET_TYPE
 {
 	pPOSITION,
 	pLOGIN,
-	pEVENT
+	pMAKEROOM
 };
 
 class packet_base
@@ -28,13 +28,12 @@ public:
 	const unsigned char getType() { return type; }
 };
 
-class sc_packet_position : packet_base
+class sc_packet_position : public packet_base
 {
 	SOCKET player;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 public:
-	sc_packet_position() {};
 	sc_packet_position(const sc_packet_position& t) : player(t.player), position(t.position), rotation(t.rotation) {
 		size = t.size;
 		type = t.type;
@@ -44,12 +43,11 @@ public:
 	const DirectX::XMFLOAT3 getRot() { return rotation; }
 };
 
-class sc_packet_login : packet_base
+class sc_packet_login : public packet_base
 {
 public:
 	SOCKET player = NULL;
 public:
-	sc_packet_login() {};
 	sc_packet_login(const SOCKET sc_socket)
 	{
 		player = sc_socket;
@@ -58,8 +56,21 @@ public:
 	}
 };
 
+class sc_packet_make_room : public packet_base
+{
+	unsigned int gameNum;
+public:
+	sc_packet_make_room(const unsigned int& n) : gameNum(n)
+	{
+		size = sizeof(sc_packet_make_room);
+		type = pMAKEROOM;
+	}
+	const unsigned int getGameNum() { return gameNum; }
+};
 
-class cs_packet_position : packet_base
+//--------------------------------------------------------------------------------------------------------------------
+
+class cs_packet_position : public packet_base
 {
 private:
 	DirectX::XMFLOAT3 position;
@@ -72,19 +83,12 @@ public:
 	};
 };
 
-enum EVENT_TYPE
+class cs_packet_make_room : public packet_base
 {
-	MAKEROOM,
-	ENTERROOM
-};
-
-class cs_packet_event : packet_base
-{
-	EVENT_TYPE eventType;
 public:
-	cs_packet_event(const EVENT_TYPE& t) : eventType(t)
+	cs_packet_make_room(const PACKET_TYPE& p)
 	{
-		size = sizeof(cs_packet_event);
-		type = pEVENT;
+		size = sizeof(cs_packet_make_room);
+		type = p;
 	}
 };

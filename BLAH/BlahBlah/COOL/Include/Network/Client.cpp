@@ -49,10 +49,14 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
 }
 
-void Client::Send_Event(const EVENT_TYPE& type, const unsigned int& gameNum)
+void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)
 {
-	cs_packet_event eve(MAKEROOM);
+	cs_packet_make_room makeroom(type);
+	wsabuf[0].buf = reinterpret_cast<char*>(&makeroom);
+	wsabuf[0].len = sizeof(cs_packet_make_room);
 
+	ZeroMemory(&wsaover, sizeof(wsaover));
+	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
 }
 
 void Client::Connect_Server()
@@ -147,6 +151,7 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 		{
 			while (current_size < recv_size)
 				client.over_buf.emplace_back(reinterpret_cast<char*>(base)[current_size++]);
+			break;
 		}
 
 		switch (base->getType())		// PACKET_TYPE
@@ -165,6 +170,8 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 			}
 			case 2:
 			{
+				sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
+				std::cout << buf->getGameNum()<<" 방 생성 완료" << std::endl;
 				break;
 			}
 		}

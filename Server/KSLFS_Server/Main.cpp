@@ -1,9 +1,9 @@
-#include "Common.h"
-#include "Server.h"
+//#include "Common.h"
+//#include "Server.h"
 #include "IOCP_Common.h"
 #include "IOCP.h"
 
-std::mutex Log_Mutex;
+//std::mutex Log_Mutex;
 int main(int argc, char* argv[])
 {
 	//CServerManager* ServerManager = new CServerManager;
