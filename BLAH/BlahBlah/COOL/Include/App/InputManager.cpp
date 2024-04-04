@@ -49,5 +49,7 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 	case 'P':
 		Client::GetInstance().Connect_Server();
 		break;
+	case 'O':
+		Client::GetInstance().S
 	}
 }

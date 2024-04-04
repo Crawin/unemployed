@@ -2,6 +2,10 @@
 constexpr short PORT = 9000;
 constexpr int BUFSIZE = 256;
 
+class packet_base;
+class sc_packet_position;
+class sc_packet_login;
+
 enum C_OP { C_RECV, C_SEND, C_ACCEPT };
 
 class EXP_OVER
@@ -29,17 +33,26 @@ public:
 		buf[1] = s_id;
 		memcpy(buf + 2, mess, m_size);
 	}
+
+	template<typename packet>
+	EXP_OVER(packet* p)
+	{
+		ZeroMemory(&over, sizeof(over));
+		wsabuf[0].buf = buf;
+		wsabuf[0].len = sizeof(packet);
+		memcpy(buf, p, sizeof(packet));
+	}
 };
 
 enum PlayerState { PS_LOBBY, PS_GAME };
 
 class SESSION {
-	PlayerState state;
 	EXP_OVER recv_over;
 	SOCKET client_s;
-	char c_id;
+	PlayerState state;
+	int mi_id;
 public:
-	SESSION(SOCKET s, char my_id, PlayerState ps) : client_s(s), c_id(my_id), state(ps) {
+	SESSION(int id, SOCKET s, PlayerState ps) :mi_id(id), client_s(s), state(ps) {
 		recv_over.c_op = C_RECV;
 	}
 	SESSION() {
@@ -65,13 +78,38 @@ public:
 		b->c_op = C_SEND;
 		int res = WSASend(client_s, b->wsabuf, 1, nullptr, 0, &b->over, nullptr);
 		if (0 != res) {
-			print_error("WSARecv", WSAGetLastError());
+			print_error("WSASend", WSAGetLastError());
+		}
+	}
+
+
+	void send_packet(packet_base* base)
+	{
+		switch (base->getType())
+		{
+			case 0:				// POSITION
+			{
+				auto position = reinterpret_cast<sc_packet_position*>(base);
+			}
+				break;
+			case 1:				// LOGIN
+			{
+				auto login = reinterpret_cast<sc_packet_login*>(base);
+				auto sendOver = new EXP_OVER(login);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				std::cout << "send ¿Ï·á2   "<< sendOver->wsabuf->len << std::endl;
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
 		}
 	}
 
 	void print_message(DWORD recv_size)
 	{
-		std::cout << "Client[" << c_id << "] Sent : ";
+		std::cout << "Client[" << mi_id << "] Sent : ";
 		for (DWORD i = 0; i < recv_size; ++i)
 			std::cout << recv_over.buf[i];
 		std::cout << std::endl;
@@ -95,8 +133,9 @@ class Game
 class IOCP_SERVER_MANAGER
 {
 private:
-	std::unordered_map<int, SESSION> login_players;
-	Lobby* lobby;
+	std::unordered_map<SOCKET, SESSION> login_players;
+	Lobby* lobby = nullptr;
 public:
+	IOCP_SERVER_MANAGER() {}
 	void start();
 };

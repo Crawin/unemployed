@@ -120,12 +120,12 @@ namespace ECSsystem {
 
 			vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
 			XMStoreFloat3(&tempMove, vec);
-			auto& q = Client::GetInstance().m_vPosition_Queue;
-			if (q.size() > 0)
+			//auto& q = Client::GetInstance().m_vPosition_Queue;
+	/*		if (q.size() > 0)
 			{
 				tr->SetPosition(q.back().getPos());
 				tr->SetRotation(q.back().getRot());
-			}
+			}*/
 
 			auto pos = Vector3::Add(tempMove, tr->GetPosition());
 

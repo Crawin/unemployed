@@ -17,6 +17,7 @@
 #include <DirectXMath.h>
 #include <string.h>
 #include <unordered_map>
+#include "Packets.h"
 
 #define BUFSIZE    512
 
@@ -32,58 +33,19 @@ void print_error(const char* msg, int err_no)
 	LocalFree(msg_buf);
 }
 
-/*
-	PACKCET
-	-----------------------------
-	size
-	type
-	playernum;
-	xmfloat3 pos
-	xmfloat3 rot
-*/
-
-
-enum PACKET_TYPE
+class GameCharacters
 {
-	POSITION,
-	LOGIN
-};
-
-// SendType, XMFLOAT3
-struct SendPosition {
-	PACKET_TYPE type;
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 rot;
-};
-
-class sc_packet_position
-{
-	int size;
-	PACKET_TYPE type;
-	SOCKET player;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 public:
-	sc_packet_position() {};
-	sc_packet_position(const sc_packet_position& t) :size(t.size), type(t.type), player(t.player), position(t.position), rotation(t.rotation) {}
-	const DirectX::XMFLOAT3 getPos() { return position; }
-	const DirectX::XMFLOAT3 getRot() { return rotation; }
-};
-
-class cs_packet_position
-{
-private:
-	int size;
-	PACKET_TYPE type;
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 rotation;
-public:
-	cs_packet_position(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot) :position(pos), rotation(rot)
+	GameCharacters() 
 	{
-		size = sizeof(int) + sizeof(PACKET_TYPE) + sizeof(SOCKET) + (sizeof(DirectX::XMFLOAT3) * 2);
-		type = POSITION;
+		position = DirectX::XMFLOAT3(0, 0, 0);
+		rotation = DirectX::XMFLOAT3(0, 0, 0);
 	};
+	void setPosRot(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot) { position = pos; rotation = rot;}
 };
+
 
 class Client
 {
@@ -101,12 +63,13 @@ private:
 	WSAOVERLAPPED wsaover;
 	char buf[BUFSIZE];
 public:
-	std::vector<sc_packet_position> m_vPosition_Queue;
 	std::list<char> over_buf;
+	std::unordered_map<int, GameCharacters> characters;
 
 	void Recv_Start();
 	char* Get_Buf();
 	void Send_Pos(const DirectX::XMFLOAT3& , const DirectX::XMFLOAT3&);
+	void Send_Event(const EVENT_TYPE&, const unsigned int&);
 	void Connect_Server();
 };
 

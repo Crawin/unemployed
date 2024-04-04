@@ -49,6 +49,12 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
 }
 
+void Client::Send_Event(const EVENT_TYPE& type, const unsigned int& gameNum)
+{
+	cs_packet_event eve(MAKEROOM);
+
+}
+
 void Client::Connect_Server()
 {
 	std::wcout.imbue(std::locale("korean"));
@@ -88,10 +94,12 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 		print_error("WSARecv", WSAGetLastError());
 	}
 	auto& client = Client::GetInstance();
+	
 	int current_size = 0;
+	char* recv_buf = client.Get_Buf();
 	while (current_size < recv_size)
 	{
-		char* recv_buf = client.Get_Buf();
+		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
 		if (client.over_buf.size() > 0)
 		{
@@ -109,17 +117,18 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 				temp_buf[i++] = recv_buf[current_size++];
 			}
 
-			switch (recv_buf[current_size + 1])		// PACKET_TYPE
+			switch (base->getType())		// PACKET_TYPE
 			{
 				case 0:									// POSITION
 				{
-					sc_packet_position temp;
-					memcpy(&temp, recv_buf + current_size, sizeof(sc_packet_position));
-					Client::GetInstance().m_vPosition_Queue.emplace_back(temp);
+					sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
+					client.characters[buf->getPlayer()].setPosRot(buf->getPos(), buf->getRot());
 					break;
 				}
-				case 1:
+				case 1:									// LOGIN
 				{
+					sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
+					client.characters.try_emplace(buf->player);
 					break;
 				}
 				case 2:
@@ -131,25 +140,27 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 			continue;				// 잘린 패킷 처리 완료
 		}
 
-		int size = recv_buf[current_size];
+		int size = base->getSize();
+		if (size == 0) break;									// 왜 서버에선 16바이트 보냈는데 32바이트를 받는거지?
 		
 		if (current_size + size > recv_size)				// 패킷이 짤려서 들어왔으면
 		{
 			while (current_size < recv_size)
-				client.over_buf.emplace_back(recv_buf[current_size++]);
+				client.over_buf.emplace_back(reinterpret_cast<char*>(base)[current_size++]);
 		}
 
-		switch (recv_buf[current_size + 1])		// PACKET_TYPE
+		switch (base->getType())		// PACKET_TYPE
 		{
 			case 0:									// POSITION
 			{
-				sc_packet_position temp;
-				memcpy(&temp, recv_buf + current_size, sizeof(sc_packet_position));
-				Client::GetInstance().m_vPosition_Queue.emplace_back(temp);
+				sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
+				client.characters[buf->getPlayer()].setPosRot(buf->getPos(),buf->getRot());
 				break;
 			}
-			case 1:
+			case 1:									// LOGIN
 			{
+				sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
+				client.characters.try_emplace(buf->player);
 				break;
 			}
 			case 2:
