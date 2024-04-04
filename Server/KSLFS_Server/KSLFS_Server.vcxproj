@@ -132,12 +132,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp" />
+    <ClCompile Include="IOCP.cpp" />
+    <ClCompile Include="IOCP_Common.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="IOCP.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Server.h" />
   </ItemGroup>
