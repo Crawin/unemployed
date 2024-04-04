@@ -4,8 +4,8 @@
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
-	//m_cpServerIP = (char*)"127.0.0.1";
+	//m_cpServerIP = (char*)"freerain.mooo.com";
+	m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 

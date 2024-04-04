@@ -36,7 +36,7 @@ void IOCP_SERVER_MANAGER::start()
 		BOOL ret = GetQueuedCompletionStatus(h_iocp, &rw_byte, &key, &over, INFINITE);
 		if (FALSE == ret) {
 			print_error("GQCS", WSAGetLastError());
-			exit(-1);
+			//exit(-1);
 		}
 		EXP_OVER* e_over = reinterpret_cast<EXP_OVER*>(over);
 		switch (e_over->c_op)
@@ -60,6 +60,8 @@ void IOCP_SERVER_MANAGER::start()
 			{
 				unsigned int my_id = static_cast<unsigned int>(key);
 				if (0 == rw_byte) {
+					SOCKET playerSock = login_players[my_id].getSock();
+					std::cout << "[" << my_id << "," << playerSock << "] 이 연결을 종료했습니다." << std::endl;
 					login_players.erase(my_id);
 					continue;
 				}
@@ -113,6 +115,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				Games[n].init(id, login_players[id].getSock());
 				sc_packet_enter_room sc_enter(n, true);
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
+				std::cout << "[" << id << ", " << login_players[id].getSock() << "] 이용자가 " << n << "방에 입장하였습니다." << std::endl;
 			}
 			else
 			{

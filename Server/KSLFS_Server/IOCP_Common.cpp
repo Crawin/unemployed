@@ -9,6 +9,6 @@ void print_error(const char* msg, int err_no)
 		reinterpret_cast<LPWSTR>(&msg_buf), 0, NULL);
 	std::cout << msg;
 	std::wcout << L" : ¿¡·¯ : " << msg_buf;
-	while (true);
+	//while (true);
 	LocalFree(msg_buf);
 }
