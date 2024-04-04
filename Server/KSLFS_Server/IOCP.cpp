@@ -96,12 +96,29 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			Games.try_emplace(currentRoom, currentRoom);
 			Games[currentRoom].init(id, login_players[id].getSock());
-			currentRoom;
 			std::cout << "[" << id << ", " << login_players[id].getSock() << "] 이용자가 " << currentRoom << "방을 생성하였습니다." << std::endl;
 
-			sc_packet_make_room room(currentRoom);
-			login_players[id].send_packet(reinterpret_cast<packet_base*>(&room));
+			sc_packet_make_room make(currentRoom);
+			login_players[id].send_packet(reinterpret_cast<packet_base*>(&make));
 			++currentRoom;
+		}
+			break;
+		case 3:										//		pENTERROOM
+		{
+			cs_packet_enter_room* cs_enter = reinterpret_cast<cs_packet_enter_room*>(base);
+			const unsigned n = cs_enter->getRoomNum();
+			auto f = Games.find(n);
+			if (f != Games.end())
+			{
+				Games[n].init(id, login_players[id].getSock());
+				sc_packet_enter_room sc_enter(n, true);
+				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
+			}
+			else
+			{
+				sc_packet_enter_room sc_enter(n, false);
+				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
+			}
 		}
 			break;
 	}

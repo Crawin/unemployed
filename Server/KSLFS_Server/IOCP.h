@@ -114,6 +114,17 @@ public:
 				}
 			}
 				break;
+			case 3:				// pENTERROOM
+			{
+				auto enter = reinterpret_cast<sc_packet_enter_room*>(base);
+				auto sendOver = new EXP_OVER(enter);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
 		}
 	}
 
@@ -161,7 +172,7 @@ public:
 class IOCP_SERVER_MANAGER
 {
 private:
-	std::unordered_map<SOCKET, SESSION> login_players;
+	std::unordered_map<unsigned int, SESSION> login_players;
 	unsigned int currentRoom = 10000;
 	std::unordered_map<unsigned int, Game> Games;
 public:

@@ -15,7 +15,8 @@ enum PACKET_TYPE
 {
 	pPOSITION,
 	pLOGIN,
-	pMAKEROOM
+	pMAKEROOM,
+	pENTERROOM
 };
 
 class packet_base
@@ -68,6 +69,20 @@ public:
 	const unsigned int getGameNum() { return gameNum; }
 };
 
+class sc_packet_enter_room : public packet_base
+{
+	unsigned int gameNum;
+	bool enter;
+public:
+	sc_packet_enter_room(const unsigned int& n, const bool& b) : gameNum(n), enter(b)
+	{
+		size = sizeof(sc_packet_enter_room);
+		type = pENTERROOM;
+	}
+	const bool getBool() { return enter; }
+	const unsigned int getGameNum() { return gameNum; }
+};
+
 //--------------------------------------------------------------------------------------------------------------------
 
 class cs_packet_position : public packet_base
@@ -91,4 +106,17 @@ public:
 		size = sizeof(cs_packet_make_room);
 		type = p;
 	}
+};
+
+class cs_packet_enter_room : public packet_base
+{
+	unsigned int roomNum;
+public:
+	cs_packet_enter_room(const PACKET_TYPE& p, const unsigned int& n)
+	{
+		size = sizeof(cs_packet_enter_room);
+		type = p;
+		roomNum = n;
+	}
+	const unsigned int getRoomNum() { return roomNum; }
 };

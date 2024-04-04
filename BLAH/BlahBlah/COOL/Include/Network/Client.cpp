@@ -4,8 +4,8 @@
 
 Client::Client()
 {
-	//m_cpServerIP = (char*)"freerain.mooo.com";
-	m_cpServerIP = (char*)"127.0.0.1";
+	m_cpServerIP = (char*)"freerain.mooo.com";
+	//m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -52,10 +52,18 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 
 void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)
 {
-	cs_packet_make_room makeroom(type);
-	wsabuf[0].buf = reinterpret_cast<char*>(&makeroom);
-	wsabuf[0].len = sizeof(cs_packet_make_room);
-
+	if (gameNum == NULL)
+	{
+		cs_packet_make_room makeroom(type);
+		wsabuf[0].buf = reinterpret_cast<char*>(&makeroom);
+		wsabuf[0].len = sizeof(cs_packet_make_room);
+	}
+	else
+	{
+		cs_packet_enter_room enter(type, gameNum);
+		wsabuf[0].buf = reinterpret_cast<char*>(&enter);
+		wsabuf[0].len = sizeof(cs_packet_enter_room);
+	}
 	ZeroMemory(&wsaover, sizeof(wsaover));
 	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
 }
@@ -141,7 +149,15 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 					client.characters.try_emplace(buf->player);
 					break;
 				}
-				case 2:
+				case 2:									// make_room
+				{
+					sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
+					std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
+					std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
+					vivox.detach();
+					break;
+				}
+				case 3:									// enter_room
 				{
 					break;
 				}
@@ -181,6 +197,20 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 				std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
 				std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
 				vivox.detach();
+				break;
+			}
+			case 3:									// enter_room
+			{
+				sc_packet_enter_room* buf = reinterpret_cast<sc_packet_enter_room*>(base);
+				if (buf->getBool())
+				{
+					std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
+					vivox.detach();
+				}
+				else
+				{
+					std::cout << buf->getGameNum() << " 방이 존재하지 않습니다." << std::endl;
+				}
 				break;
 			}
 		}
