@@ -260,7 +260,13 @@ namespace ECSsystem {
 				if (speed >= 10.0f)
 				animCtrl->ChangeAnimationTo("Walk");
 			}
-			//animCtrl->ChangeAnimationTo("Dance");
+
+			if (GetAsyncKeyState(VK_END) & 0x0001) {
+				animCtrl->ChangeAnimationTo("FallingDown");
+				animCtrl->ChangeAnimationTo("GetUp");
+				animCtrl->ChangeAnimationTo("Idle");
+			}
+
 
 			dia->m_BefSpeed = speed;
 

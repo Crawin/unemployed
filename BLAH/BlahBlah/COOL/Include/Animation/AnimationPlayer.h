@@ -14,6 +14,9 @@ class AnimationPlayer
 	std::shared_ptr<Animation> m_CurrentAnimation;
 	std::shared_ptr<Animation> m_BeforeAnimation;
 
+	// play end play
+	std::queue<std::shared_ptr<Animation>> m_NextAnimationQueue;
+
 	// animation play time
 	float m_CurrentAnimationPlayTime = 0.0f;
 	float m_BeforeAnimationPlayTime = 0.0f;
@@ -26,7 +29,13 @@ class AnimationPlayer
 	float m_BeforeAnimWeight = 0.0f;
 
 	// animation change complete time
-	const float m_AnimChangeSpeed = 0.4f;
+	const float m_AnimChangeSpeed = 0.2f;
+
+	bool m_CurrentAnimationLoop = true;
+
+	bool m_FinishPlaying = false;
+
+	void ChangeToNextAnimation();
 
 public:
 	AnimationPlayer();

@@ -15,6 +15,7 @@ class Animation
 
 	void LoadAnimation(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 	
+	bool m_Loop = true;
 public:
 
 	const std::string& GetName() const { return m_Name; }
@@ -25,5 +26,6 @@ public:
 	float GetEndTime() const { return static_cast<float>(m_TotalPlayFrame) / static_cast<float>(m_Frame); }
 	int GetEndFrame() const { return m_TotalPlayFrame;  }
 	int GetDataIdx() const { return m_AnimationDataIdx; }
+	bool GetLoop() const { return m_Loop; }
 };
 

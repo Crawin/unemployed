@@ -58,7 +58,8 @@ VS_OUTPUT vs(VS_INPUT input)
 	matrix boneToWorld;
 	matrix animByFrame;
 
-	float interpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
+	float anim1InterpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
+	float anim2InterpolWegith = ceil(anim2PlayTime * ANIMATION_FPS) - anim2PlayTime * ANIMATION_FPS;
 
 	matrix inverseMatrix = inverse(localMatrix);
 	float weight;
@@ -75,10 +76,10 @@ VS_OUTPUT vs(VS_INPUT input)
 		int idx1 = boneIdx * anim1Frame + currentFrame_cur;
 		int idx2 = boneIdx * anim2Frame + currentFrame_bef;
 		
-		matrix anim1 = mul(Bone[boneIdx], lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWegith));
+		matrix anim1 = mul(Bone[boneIdx], lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], anim1InterpolWegith));
 
 		if (animBlend > 0){
-			matrix anim2 = mul(Bone[boneIdx], lerp(Animation_bef[idx2 + 1], Animation_bef[idx2], interpolWegith));
+			matrix anim2 = mul(Bone[boneIdx], lerp(Animation_bef[idx2 + 1], Animation_bef[idx2], anim2InterpolWegith));
 			boneToWorld = lerp(anim1, anim2, animBlend);
 		}
 		else
