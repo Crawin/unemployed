@@ -28,6 +28,12 @@ class ShadowMap
 	// 위치
 	XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
 
+	// todo
+	// BoundingFrustum
+	BoundingFrustum m_BoundingFrustumWorld;
+	BoundingFrustum m_BoundingFrustumOrtho;
+	BoundingFrustum m_BoundingFrustumPerspective;
+
 	int m_RenderTargetIdx = -1;
 
 	LIGHT_TYPES m_Type = LIGHT_TYPES::DIRECTIONAL_LIGHT;
@@ -50,6 +56,9 @@ public:
 	void UpdateViewMatrixByLight(const LightData& light);
 
 	void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) const;
+
+	//bool IsInFrustum(const BoundingOrientedBox& boundingBox) const { return m_BoundingFrustumWorld.Intersects(boundingBox); }
+	BoundingFrustum* GetBoundingFrustum() { return &m_BoundingFrustumWorld; }
 
 };
 

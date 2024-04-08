@@ -45,6 +45,29 @@ VS_OUTPUT vs(uint vtxID : SV_VertexID)
 	return output; 
 }
 
+#define ATMOSPHERE_HEIGHT 32.0f
+#define HORIZONTAL_LENGTH 640.0f
+
+float CalculateLayDensity(float3 normal, float3 lay)
+{
+	float3 up = float3(0.0f, 1.0f, 0.0f);
+
+	// atmosphere height = 32km
+	// horizontal length = 640km
+	float length = lerp(HORIZONTAL_LENGTH, ATMOSPHERE_HEIGHT, dot(up, -lay));
+
+	float density = length * (1 + dot(normal, lay));
+
+	return density;
+}
+
+float CalculateColorMult(float lambda, float density, float3 normal, float3 lay)
+{
+	float3 up = float3(0.0f, 1.0f, 0.0f);
+	float polarAngle = acos(dot(up, -lay));
+
+	return (8 * pow(3.1415926f, 25) * pow(polarAngle, 2)) / (pow(lambda, 4) * density);
+}
 
 
 PS_MRT_OUTPUT ps(VS_OUTPUT i)
@@ -59,14 +82,14 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	float4 mainLight, subLight;
 	// day light is main
 	float angle = LightAngle;
-	if (angle < 180.0f) {
+	if (angle > 180.0f) {
 		mainLight = DayLight;
 		subLight = MoonLight;
+		angle -= 180.0f;
 	}
 	else {
 		mainLight = MoonLight;
 		subLight = DayLight;
-		angle -= 180.0f;
 	}
 
 	float weight = abs((sin(radians(angle))));
@@ -76,17 +99,24 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 
 	float4 color = lerp(currentDayLight, nextDayLight, i.normalOnPos.y);
 
-	
+	float density = CalculateLayDensity(i.normalOnPos, lights[MainLightIdx].m_Direction);
 
+	currentDayLight = lerp(SunSetLight, mainLight, density / 630);
+
+	currentDayLight = float4(0,0,0,1);
+	currentDayLight += float4(1.0f, 0.0f, 0.0f, 0.0f) * CalculateColorMult(685.0f, density, i.normalOnPos, lights[MainLightIdx].m_Direction);
+	currentDayLight += float4(0.0f, 1.0f, 0.0f, 0.0f) * CalculateColorMult(532.5f, density, i.normalOnPos, lights[MainLightIdx].m_Direction);
+	currentDayLight += float4(0.0f, 0.0f, 1.0f, 0.0f) * CalculateColorMult(460.0f, density, i.normalOnPos, lights[MainLightIdx].m_Direction);
 	//float4 currentDayLight;
 
 	//color.xyz = i.normalOnPos;
 	output.Albedo = currentDayLight;
+	//output.Albedo = float4(density,density,density,1.0f);
 	//output.Albedo = lights[MainLightIdx].m_LightColor * color;
 	output.Roughness = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	output.NormalW = float4(normalize(i.normalOnPos), 0.0f);//float4(i.normalOnPos.y, i.normalOnPos.y, i.normalOnPos.y, 0.0f);
+	output.NormalW = float4(normalize(i.normalOnPos), 0.0f);
 	output.PositionW = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	return output;

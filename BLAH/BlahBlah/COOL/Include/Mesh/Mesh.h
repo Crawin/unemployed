@@ -107,4 +107,6 @@ public:
 	void Animate(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	int GetVertexNum() const { return m_VertexNum; }
+
+	BoundingOrientedBox* GetBoundingBox() {	return &m_ModelBoundingBox; }
 };

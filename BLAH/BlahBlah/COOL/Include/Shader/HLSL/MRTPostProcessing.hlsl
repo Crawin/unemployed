@@ -68,7 +68,7 @@ float4 Lighting(float4 albedo, float4 roughness, float4 metalic, float4 specular
 	float4 result = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	for(int i = 0; i < lightSize; ++i) {
-		lights[i];
+		//lights[i];
 		// if on light (light map)
 		// ambient
 		float3 ambient = lights[i].m_LightColor.rgb * 0.2f * albedo.rgb;

@@ -5,7 +5,7 @@
 	"RenderTargetFormat_1": 0,
 	"RenderTargetFormat_2": 0,
 	"RenderTargetFormat_3": 0,
-	"RenderTargetFormat_4": 0,
+	"RenderTargetFormat_4": 5,
 	"RenderTargetFormat_5": 5,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,

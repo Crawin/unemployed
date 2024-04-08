@@ -148,6 +148,8 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 	OnPreRender(commandList, resultDsv);
 
 
+	BoundingOrientedBox tempOBB;
+
 	// make function
 	std::function<void(component::Renderer*)> func = [&commandList, &res](component::Renderer* renderComponent) {
 		int materialIdx = renderComponent->GetMaterial();
@@ -323,14 +325,31 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->RSSetScissorRects(1, &scRect);
 	
 	// normal render code
-	std::function<void(component::Renderer*)> render = [commandList, res](component::Renderer* rend) {
+
+	BoundingFrustum* cameraFustum;
+	BoundingOrientedBox tempOBB;
+
+	std::function<void(component::Renderer*)> render = [commandList, res, &cameraFustum, &tempOBB](component::Renderer* rend) {
+		Mesh* mesh = res->GetMesh(rend->GetMesh());
+
+		BoundingOrientedBox* meshOBB = mesh->GetBoundingBox();
+		meshOBB->Transform(tempOBB, XMLoadFloat4x4(&rend->GetWorldMatrix()));
+
+		// frustum culling
+		if (cameraFustum->Intersects(tempOBB) == false) return;
+
 		const auto& view = rend->GetVertexBufferView();
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
 		//res->RenderMesh(commandList, rend->GetMesh(), rend->GetWorldMatrix());
-		res->GetMesh(rend->GetMesh())->Render(commandList, rend->GetWorldMatrix());
+
+
+		// 
+
+		mesh->Render(commandList, rend->GetWorldMatrix());
 		};
 
+	// 모든 활성화된 셰도우맵에 대해서
 	for (int i = 0; i < m_ResourceManager->m_ShadowMaps.size(); ++i) {
 		if (m_ResourceManager->m_ShadowMapOccupied[i] == false) break;
 		int idx = res->GetShadowMapRTVIdx(i);
@@ -347,9 +366,9 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		res->SetShadowMapCamera(commandList, idx);
 
 		// 일단 임시로 update함
+
+		cameraFustum = res->GetShadowMapFrustum(idx);
 		ecs->Execute(render);
-
-
 	}
 
 	vp.Width = static_cast<float>(1280);

@@ -943,6 +943,11 @@ int ResourceManager::GetShadowMappingMaterial() const
 	return m_ShadowMappingMaterial;
 }
 
+BoundingFrustum* ResourceManager::GetShadowMapFrustum(int idx)
+{
+	return m_ShadowMaps[idx].GetBoundingFrustum();
+}
+
 int ResourceManager::GetShadowMapRTVIdx(int idx)
 {
 	return m_ShadowMaps[idx].GetRenderTargetIdx();

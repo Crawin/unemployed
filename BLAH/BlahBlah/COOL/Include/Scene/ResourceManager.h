@@ -202,6 +202,7 @@ public:
 	void SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdList, int idx) const;
 	void UpdateShadowMapView(int idx, const LightData& light);
 	int GetShadowMappingMaterial() const;
+	BoundingFrustum* GetShadowMapFrustum(int idx);
 
 	int GetShadowMapRTVIdx(int idx);
 	void SetShadowMapRTVIdx(int idx, int rtvIdx);

@@ -8,7 +8,8 @@ XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMCo
 
 ShadowMap::ShadowMap()
 {
-
+	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumOrtho, XMLoadFloat4x4(&m_ShadowOrthographicProj));
+	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
 }
 
 ShadowMap::~ShadowMap()
@@ -49,23 +50,29 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 
 	XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&light.m_Position));
 
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixInverse(nullptr, rot * trs));
+	XMMATRIX result = rot * trs;
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixInverse(nullptr, result));
 
 	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtRH(pos, lookAt, XMLoadFloat3(&u)));
 
-	//switch (m_Type) {
-	//case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+	switch (m_Type) {
+	case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+		// bounding frustum update
+		m_BoundingFrustumOrtho.Transform(m_BoundingFrustumWorld, result);
 
-	//	break;
-	//case LIGHT_TYPES::SPOT_LIGHT:
-	//	DebugPrint("No current shadow map setting for spot light now");
+		break;
+	case LIGHT_TYPES::SPOT_LIGHT:
+		m_BoundingFrustumPerspective.Transform(m_BoundingFrustumWorld, result);
 
-	//	break;
-	//case LIGHT_TYPES::POINT_LIGHT:
-	//	DebugPrint("No current shadow map setting for point light now");
-	//	break;
+		DebugPrint("No current shadow map setting for spot light now");
 
-	//};
+		break;
+	case LIGHT_TYPES::POINT_LIGHT:
+		DebugPrint("No current shadow map setting for point light now");
+		break;
+
+	};
 }
 
 void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) const

@@ -239,9 +239,12 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X
 	if (m_VertexNum > 0) {
 
 
-		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
+		//m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
 
-		XMFLOAT4X4 temp = Matrix4x4::Transpose(m_RootTransform);
+		XMMATRIX t = XMMatrixTranspose(XMLoadFloat4x4(&m_LocalTransform) * XMLoadFloat4x4(&parent));
+		XMFLOAT4X4 temp;
+		//XMFLOAT4X4 temp = Matrix4x4::Transpose(Matrix4x4::Multiply(m_LocalTransform, parent));
+		XMStoreFloat4x4(&temp, t);
 
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 
