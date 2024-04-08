@@ -64,7 +64,8 @@ public:
 
 private:
 	// 임시, todo 나중에 지울것
-	friend class Scene;
+	//friend class Scene;
+	//friend class TestMainScene;
 	friend class SceneManager;
 
 	friend bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::string& fileName, ResourceManager* manager, std::string& shaderName);
@@ -111,6 +112,8 @@ private:
 		return -1;
 	}
 
+	int CreateBufferFromData(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfData, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::VERTEX);
+
 	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT);
 
 	
@@ -151,8 +154,8 @@ public:
 	// resource
 	D3D12_GPU_VIRTUAL_ADDRESS GetResourceDataGPUAddress(RESOURCE_TYPES resType, int idx);
 
-	// 렌더 전 디스크립터테이블 set
-	void SetDatas();
+	// 렌더 전 디스크립터테이블 set, 사용하지 않는듯?
+	void SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
 	
 	// get datas
 	int GetMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
@@ -160,6 +163,14 @@ public:
 	int GetBone(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 	int GetAnimation(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
 	std::shared_ptr<Shader> GetShader(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList = nullptr);
+
+	Mesh* GetMesh(int idx) { return m_Meshes[idx]; }
+	Material* GetMaterial(int idx) { return m_Materials[idx]; }
+	Bone* GetBone(int idx) { return m_Bones[idx]; }
+	std::shared_ptr<Shader> GetAnimationShader() { return m_AnimationShader; }
+	// on scene::render
+	//void SetPSO(ComPtr<ID3D12GraphicsCommandList> commandList, int materialIdx);
+	//void RenderMesh(ComPtr<ID3D12GraphicsCommandList> commandList, int meshIdx, const XMFLOAT4X4& parentMatrix);
 
 	// for late init
 	void AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer);
@@ -191,10 +202,13 @@ public:
 	void SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdList, int idx) const;
 	void UpdateShadowMapView(int idx, const LightData& light);
 	int GetShadowMappingMaterial() const;
+	BoundingFrustum* GetShadowMapFrustum(int idx);
 
 	int GetShadowMapRTVIdx(int idx);
 	void SetShadowMapRTVIdx(int idx, int rtvIdx);
 	void UnOccupyShadowRTVs();
+
+	int GetShadowMapRTVStartIdx() const { return m_ShadowMapRTVStartIdx; }
 
 	// manual 
 	void SetResourceState(ComPtr<ID3D12GraphicsCommandList> cmdList, RESOURCE_TYPES resType, int idx, D3D12_RESOURCE_STATES toState);
@@ -283,12 +297,18 @@ private:
 	int m_DebuggingMaterial = -1;
 #endif
 
+public:
 	// light datas
 	//std::vector<LightData> m_LightDatas;
 	std::vector<ShadowMap> m_ShadowMaps;
 	bool m_ShadowMapOccupied[m_ShadowMapRenderTargets] = {};
+
 	LightData* m_MappedLightData;
 
+	int m_LightSize = 0;
+	int m_LightIdx = -1;
+
+private:
 
 	// 로드 해야 할 mesh, material들을 저장만 해둔 후 나중에 로드 한다.
 	// 추가 설명
@@ -305,9 +325,7 @@ private:
 	//
 	std::vector<ToLoadAnimControllerInfo> m_ToLoadAnimCont;
 	std::vector<ToLoadAnimExecutorInfo> m_ToLoadAnimExe;
-	
-	int m_LightSize = 0;
-	int m_LightIdx = -1;
+
 
 	//std::vector<Entity*> m_Cameras;
 	component::Camera* m_MainCamera = nullptr;

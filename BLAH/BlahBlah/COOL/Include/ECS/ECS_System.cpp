@@ -46,19 +46,6 @@ namespace ECSsystem {
 	void AnimationPlayTimeAdd::Update(ECSManager* manager, float deltaTime)
 	{
 		std::function<void(component::AnimationController*)> func = [manager, deltaTime](component::AnimationController* anim) {
-
-			// todo AnimationPlayComponent가 실행을 해야한다.
-			//float curAnimTime = anim->GetCurrentAnimationPlayTime() + deltaTime;
-			//float befAnimTime = anim->GetBeforeAnimationPlayTime() + deltaTime;
-			//float curMax = anim->GetCurrentAnimationMaxTime();
-			//float befMax = anim->GetBeforeAnimationMaxTime();
-
-			//if (curMax < curAnimTime) curAnimTime -= curMax;
-			//if (befMax < befAnimTime) befAnimTime -= befMax;
-
-			//anim->SetCurrentAnimationPlayTime(curAnimTime);
-			//anim->SetBeforeAnimationPlayTime(befAnimTime);
-
 			anim->UpdateTime(deltaTime);
 			};
 
@@ -295,6 +282,8 @@ namespace ECSsystem {
 
 			transform->SetRotation(newRot);
 
+			dayLight->SetLightAngle(newRot.x);
+
 			// change light color
 			// weight == sin(angle.x)
 			//XMFLOAT4 curLight = 
@@ -302,12 +291,12 @@ namespace ECSsystem {
 			// 0, 90, 180
 			// 0   1   0
 			// day time
-			float weight = abs(sin(XMConvertToRadians(newRot.x)));
+			float weight = pow((sin(XMConvertToRadians(newRot.x))), 2);
 
 			LightData& li = light->GetLightData();
 
 			// day time
-			if (newRot.x > 180.0f) {
+			if (newRot.x < 180.0f) {
 				XMStoreFloat4(&li.m_LightColor,
 					XMVectorLerp(
 						XMLoadFloat4(&dayLight->GetSunSetLight()),

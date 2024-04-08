@@ -1,6 +1,7 @@
 {
 	"name": "PostProcessing",
 	"NumRenderTargets": 1,
+	"RenderTargetFormat_0": 0,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
 	"VS": "MRTPostProcessing.hlsl",

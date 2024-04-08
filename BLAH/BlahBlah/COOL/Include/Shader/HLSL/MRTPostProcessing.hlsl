@@ -39,16 +39,21 @@ float ShadowCalculate(float4 worldPos, float dotNormal, int camIdx, int mapIdx)
 	StructuredBuffer<CameraData> shadowCams = ShadowCameraDataList[camIdx];
 	CameraData cam = shadowCams[0];
 	float4 fragPos = mul(mul(worldPos, cam.viewMatrix), cam.projectionMatrix);
-	float3 ndc = fragPos.xyz / fragPos.w * 0.5f + 0.5f;
+	//float3 ndc = fragPos.xyz / fragPos.w * 0.5f + 0.5f;
+	float3 ndc = fragPos.xyz / fragPos.w;
+	ndc.xy *= 0.5f;
+	ndc.xy += 0.5f;
+	//ndc.z *= 0.5f;
+	//ndc.z += 0.5f;
 	ndc.y = 1 - ndc.y;
 	float shadow = 0.0;
 
-	float bias = max(0.00029 * (1.0 - dotNormal), 0.00005);
+	float bias = max(0.0005 * (1.0 - dotNormal), 0.00005);
 
 	for (int i = -1; i <= 1; ++i) {
 		for (int j = -1; j <= 1; ++j) {
-			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 4096.0f)).r;
-			shadow += (depth + bias) < ndc.z ? 0.0 : 1.0;
+			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 8192.0f)).r;
+			shadow += (depth + bias) < ndc.z ? 0.0 : 1.0;  
 		}
 	}
 
@@ -63,21 +68,26 @@ float4 Lighting(float4 albedo, float4 roughness, float4 metalic, float4 specular
 	float4 result = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	for(int i = 0; i < lightSize; ++i) {
-		lights[i];
+		//lights[i];
 		// if on light (light map)
 		// ambient
 		float3 ambient = lights[i].m_LightColor.rgb * 0.2f * albedo.rgb;
 
 		// diffuse
-		float dotNormal = dot(worldNormal.rgb, lights[i].m_Direction);
+		float3 lightDir = -lights[i].m_Direction;
+
+		float dotNormal = dot(worldNormal.rgb, lightDir);
 		float3 diff = max(dotNormal, float3(0.0f, 0.0f, 0.0f));
 		float3 diffuse = lights[i].m_LightColor.rgb * diff * 0.7f * albedo.rgb;
 
-		float3 refl = reflect(-lights[i].m_Direction, worldNormal.rgb);
+		float3 refl = reflect(lightDir, worldNormal.rgb);
 		float specInt = pow(max(dot(viewDir, refl), 0.0f), 32.0f);
 		float3 specularres = lights[i].m_LightColor.rgb * specInt * 0.1f * albedo.rgb;
 
-		float shadow = ShadowCalculate(worldPosition, dotNormal, lights[i].m_CameraIdx, lights[i].m_ShadowMapResults.x);
+		float shadow = 1;
+		if (lights[i].m_CameraIdx > 0)
+			shadow = ShadowCalculate(worldPosition, dotNormal, lights[i].m_CameraIdx, lights[i].m_ShadowMapResults.x);
+		shadow = shadow * worldPosition.w + (1 - worldPosition.w);
 
 		result += float4(ambient + shadow * (diffuse + specularres), 0.0f);
 	}

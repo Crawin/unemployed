@@ -138,6 +138,12 @@ D3D12_RASTERIZER_DESC Shader::GetRasterizerStateDesc(int presetID)
 
 	switch (presetID) {
 	case 0:
+		break;
+	case 1:
+		// cull front
+		// shadowmap
+		desc.CullMode = D3D12_CULL_MODE_FRONT;
+		break;
 	default:
 		// default
 		// fill = solid / cull = back
@@ -382,7 +388,8 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 	psoDesc.InputLayout = GetInputLayout(root["InputLayout"].asInt());							// 없음
 	psoDesc.PrimitiveTopologyType = m_PrimitiveTopologyType;									// D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 	psoDesc.NumRenderTargets = m_NumRenderTargets;												// 1
-	for (UINT i = 0; i < m_NumRenderTargets; ++i) psoDesc.RTVFormats[i] = m_RTFormats[i];		// DXGI_FORMAT_R8G8B8A8_UNORM
+	for (UINT i = 0; i < m_NumRenderTargets; ++i) 
+		psoDesc.RTVFormats[i] = m_RTFormats[root[std::format("RenderTargetFormat_{}", i)].asInt()];		// DXGI_FORMAT_R8G8B8A8_UNORM
 	psoDesc.DSVFormat = m_DSVFormat;															// DXGI_FORMAT_R8G8B8A8_UNORM
 	psoDesc.SampleDesc = GetSampleDesc();														// count = 1
 	psoDesc.Flags = m_PsoFlags;																	// D3D12_PIPELINE_STATE_FLAG_NONE

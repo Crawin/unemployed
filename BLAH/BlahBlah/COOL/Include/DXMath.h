@@ -128,7 +128,7 @@ namespace Matrix4x4
 		return result;
 	}
 
-	inline XMFLOAT4X4 Multiply(XMFLOAT4X4& mat1, XMFLOAT4X4& mat2)
+	inline XMFLOAT4X4 Multiply(const XMFLOAT4X4& mat1, const XMFLOAT4X4& mat2)
 	{
 		XMFLOAT4X4 result;
 		XMStoreFloat4x4(&result, XMLoadFloat4x4(&mat1) * XMLoadFloat4x4(&mat2));

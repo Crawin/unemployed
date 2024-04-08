@@ -17,7 +17,7 @@ class ShadowMap
 	static XMFLOAT4X4 m_ShadowPerspectiveProj;
 	static XMFLOAT4X4 m_ShadowOrthographicProj;
 
-	SIZE m_RenderTargetSize = { 4096, 4096 };
+	SIZE m_RenderTargetSize = { 8192, 8192 };
 
 	// ShadowMap Camera Setting
 	// 6개가 될 수도 있다.
@@ -27,6 +27,12 @@ class ShadowMap
 
 	// 위치
 	XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
+
+	// todo
+	// BoundingFrustum
+	BoundingFrustum m_BoundingFrustumWorld;
+	BoundingFrustum m_BoundingFrustumOrtho;
+	BoundingFrustum m_BoundingFrustumPerspective;
 
 	int m_RenderTargetIdx = -1;
 
@@ -50,6 +56,9 @@ public:
 	void UpdateViewMatrixByLight(const LightData& light);
 
 	void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) const;
+
+	//bool IsInFrustum(const BoundingOrientedBox& boundingBox) const { return m_BoundingFrustumWorld.Intersects(boundingBox); }
+	BoundingFrustum* GetBoundingFrustum() { return &m_BoundingFrustumWorld; }
 
 };
 

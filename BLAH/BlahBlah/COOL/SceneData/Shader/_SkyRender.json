@@ -1,5 +1,5 @@
 {
-	"name": "TestMeshDiffered",
+	"name": "SkyRender",
 	"NumRenderTargets": 6,
 	"RenderTargetFormat_0": 0,
 	"RenderTargetFormat_1": 0,
@@ -9,14 +9,14 @@
 	"RenderTargetFormat_5": 5,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
-	"VS": "TestMeshShaderMRT.hlsl",
+	"VS": "SkyRender.hlsl",
 	"HS": null,
 	"DS": null,
 	"GS": null,
-	"PS": "TestMeshShaderMRT.hlsl",
+	"PS": "SkyRender.hlsl",
 	"StreamOutput": 0,
 	"BlendState": 0,
 	"RasterizerState": 0,
 	"DepthStencilState": 0,
-	"InputLayout": 1
+	"InputLayout": 0
 }

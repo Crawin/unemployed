@@ -1,14 +1,15 @@
 ﻿#include "framework.h"
 #include "ShadowMap.h"
 
-XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, -10000.0f, 100000.0f);
+XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, 1.0f, 7000.0f);
 XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(XMConvertToRadians(90.0f)), 1.0f, 0.1f, 10000.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 
 
 ShadowMap::ShadowMap()
 {
-
+	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumOrtho, XMLoadFloat4x4(&m_ShadowOrthographicProj));
+	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
 }
 
 ShadowMap::~ShadowMap()
@@ -31,25 +32,47 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 	m_Type = static_cast<LIGHT_TYPES>(light.m_LightType);
 
 	// light position이 갱신 되었다고 치자
-	XMVECTOR pos = XMLoadFloat3(&light.m_Position);
-	XMVECTOR lookAt = pos + XMLoadFloat3(&light.m_Direction);
-	XMFLOAT3 u = { 0,1,0 };
+	XMFLOAT3 zAxis = { 0,0,1 };
+	XMFLOAT3 allAx = { 1,1,1 };
 
-	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtLH(pos, lookAt, XMLoadFloat3(&u)));
+	XMVECTOR from = XMLoadFloat3(&zAxis);
+	XMVECTOR to = XMLoadFloat3(&light.m_Direction);
+	XMVECTOR axis = XMVector3Normalize(XMVector3Cross(from, to));
 
-	//switch (m_Type) {
-	//case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+	float axisLength = XMVectorGetX(XMVector3Length(axis));
+	float dotProduct = XMVectorGetX(XMVector3Dot(from, to));
 
-	//	break;
-	//case LIGHT_TYPES::SPOT_LIGHT:
-	//	DebugPrint("No current shadow map setting for spot light now");
+	float angle = acosf(dotProduct);
+	
+	XMMATRIX rot;
+	if (axisLength == 0) rot = XMMatrixIdentity();
+	else rot = XMMatrixRotationAxis(axis, angle);
 
-	//	break;
-	//case LIGHT_TYPES::POINT_LIGHT:
-	//	DebugPrint("No current shadow map setting for point light now");
-	//	break;
+	XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&light.m_Position));
 
-	//};
+	XMMATRIX result = rot * trs;
+
+	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixInverse(nullptr, result));
+
+	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtRH(pos, lookAt, XMLoadFloat3(&u)));
+
+	switch (m_Type) {
+	case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+		// bounding frustum update
+		m_BoundingFrustumOrtho.Transform(m_BoundingFrustumWorld, result);
+
+		break;
+	case LIGHT_TYPES::SPOT_LIGHT:
+		m_BoundingFrustumPerspective.Transform(m_BoundingFrustumWorld, result);
+
+		DebugPrint("No current shadow map setting for spot light now");
+
+		break;
+	case LIGHT_TYPES::POINT_LIGHT:
+		DebugPrint("No current shadow map setting for point light now");
+		break;
+
+	};
 }
 
 void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) const

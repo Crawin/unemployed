@@ -5,12 +5,21 @@
 template<typename VERTEX>
 inline void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager, int vtxSize)
 {
-	std::vector<VERTEX> vertex(vtxSize);
-	file.read((char*)(&vertex[0]), sizeof(VERTEX) * vtxSize);
+	UINT size = sizeof(VERTEX) * vtxSize;
+	size = ((size + 255) & ~255);
 
-	m_VertexBuffer = manager->CreateBufferFromVector(
+
+	//std::vector<VERTEX> vertex(vtxSize);
+
+	char* data = new char[size];
+
+	file.read(data, sizeof(VERTEX) * vtxSize);
+
+	m_VertexBuffer = manager->CreateBufferFromData(
 		commandList,
-		vertex,
+		data,
+		sizeof(VERTEX),
+		vtxSize,
 		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER,
 		std::format("{}_vertex data", m_Name),
 		RESOURCE_TYPES::VERTEX
@@ -19,6 +28,8 @@ inline void Mesh::LoadVertices(ComPtr<ID3D12GraphicsCommandList> commandList, st
 	m_VertexBufferView.BufferLocation = manager->GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, m_VertexBuffer);
 	m_VertexBufferView.StrideInBytes = sizeof(VERTEX);
 	m_VertexBufferView.SizeInBytes = sizeof(VERTEX) * vtxSize;
+
+	delete[] data;
 };
 
 void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, const std::string& fileName, ResourceManager* manager)
@@ -223,14 +234,17 @@ void Mesh::SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
 }
 
-void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, XMFLOAT4X4& parent)
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& parent)
 {
 	if (m_VertexNum > 0) {
 
 
-		m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
+		//m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
 
-		XMFLOAT4X4 temp = Matrix4x4::Transpose(m_RootTransform);
+		XMMATRIX t = XMMatrixTranspose(XMLoadFloat4x4(&m_LocalTransform) * XMLoadFloat4x4(&parent));
+		XMFLOAT4X4 temp;
+		//XMFLOAT4X4 temp = Matrix4x4::Transpose(Matrix4x4::Multiply(m_LocalTransform, parent));
+		XMStoreFloat4x4(&temp, t);
 
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 

@@ -55,6 +55,30 @@ ResourceManager::~ResourceManager()
 	m_ObjectDatas.clear();
 }
 
+int ResourceManager::CreateBufferFromData(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfData, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert)
+{
+	COOLResourcePtr ptr = Renderer::GetInstance().CreateBufferFromPointer(commandList, data, stride, numOfData, resourceState, name);
+
+	switch (toInsert) {
+	case RESOURCE_TYPES::SHADER:
+		ptr->SetShaderResource();
+		m_Resources.push_back(ptr);
+		return static_cast<int>(m_Resources.size() - 1);
+		break;
+	case RESOURCE_TYPES::VERTEX:
+		m_VertexIndexDatas.push_back(ptr);
+		return static_cast<int>(m_VertexIndexDatas.size() - 1);
+		break;
+	case RESOURCE_TYPES::OBJECT:
+		//ptr->SetConstant();
+		m_ObjectDatas.push_back(ptr);
+		return static_cast<int>(m_ObjectDatas.size() - 1);
+		break;
+	}
+
+	return -1;
+}
+
 int ResourceManager::CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name, RESOURCE_TYPES toInsert, D3D12_HEAP_TYPE heapType)
 {
 	COOLResourcePtr ptr = Renderer::GetInstance().CreateEmptyBuffer(
@@ -675,7 +699,8 @@ bool ResourceManager::MakeExtraRenderTarget()
 			m_ShadowMaps[i].GetRTSize(),
 			//Renderer::GetInstance().GetScreenSize(),
 			std::format("Shadow_Map_{}", i),
-			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+			DXGI_FORMAT_R32_FLOAT)
 		);
 
 		m_Resources[m_ShadowMapRTVStartIdx + i]->SetShaderResource();
@@ -720,9 +745,10 @@ int ResourceManager::CreateObjectResource(UINT size, const std::string resName, 
 	}
 }
 
-void ResourceManager::SetDatas()
+void ResourceManager::SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-
+	commandList->SetDescriptorHeaps(1, m_ShaderResourceHeap.GetAddressOf());
+	commandList->SetGraphicsRootDescriptorTable(0, m_ShaderResourceHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 int ResourceManager::GetTexture(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& name)
@@ -781,6 +807,17 @@ std::shared_ptr<Shader> ResourceManager::GetShader(const std::string& name, ComP
 	if (commandList) return LoadShader(name, commandList);
 	return nullptr;
 }
+
+//void ResourceManager::SetPSO(ComPtr<ID3D12GraphicsCommandList> commandList, int materialIdx)
+//{
+//	m_Materials[materialIdx]->GetShader()->SetPipelineState(commandList);
+//	//commandList->SetPipelineState(m_Materials[materialIdx]->GetShader()->m_PipelineState);
+//}
+
+//void ResourceManager::RenderMesh(ComPtr<ID3D12GraphicsCommandList> commandList, int meshIdx, const XMFLOAT4X4& parentMatrix)
+//{
+//	m_Meshes[meshIdx]->Render(commandList, parentMatrix);
+//}
 
 void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer)
 {
@@ -860,6 +897,8 @@ void ResourceManager::ClearShadowMaps(ComPtr<ID3D12GraphicsCommandList> cmdList,
 
 int ResourceManager::GetUnOccupiedShadowMapRenderTarget(LIGHT_TYPES lightType)
 {
+	// todo light type에 따라 light render target을 따로 주자
+	// ex) Directional Light -> cascaded / point -> texCube
 	for (int i = 0; i < _countof(m_ShadowMapOccupied); ++i) {
 		if (m_ShadowMapOccupied[i] == false) {
 			m_ShadowMapOccupied[i] = true;
@@ -902,6 +941,11 @@ void ResourceManager::UpdateShadowMapView(int idx, const LightData& light)
 int ResourceManager::GetShadowMappingMaterial() const
 {
 	return m_ShadowMappingMaterial;
+}
+
+BoundingFrustum* ResourceManager::GetShadowMapFrustum(int idx)
+{
+	return m_ShadowMaps[idx].GetBoundingFrustum();
 }
 
 int ResourceManager::GetShadowMapRTVIdx(int idx)
