@@ -206,11 +206,11 @@ namespace ECSsystem {
 			}
 
 			// Send To Server
-			if (Client::GetInstance().Get_RecvState())
-			{
-				SendPosition sp = { POSITION,tr->GetPosition(),tr->GetRotation() };
-				Client::GetInstance().Send_Pos(sp);
-			}
+			//if (Client::GetInstance().Get_RecvState())
+			//{
+			//	SendPosition sp = { POSITION,tr->GetPosition(),tr->GetRotation() };
+			//	Client::GetInstance().Send_Pos(sp);
+			//}
 			};
 
 		std::function<void(Transform*, TestInput*, Speed*)> func2 = [deltaTime](Transform* tr, TestInput* in, Speed* sp) {

@@ -191,6 +191,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp" />
+    <ClCompile Include="External\Include\VIVOX\VIVOX.cpp" />
     <ClCompile Include="Include\Animation\Animation.cpp" />
     <ClCompile Include="Include\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="Include\App\Application.cpp" />

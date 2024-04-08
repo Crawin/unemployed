@@ -248,6 +248,9 @@
     <ClCompile Include="Include\Lighting\ShadowMap.cpp">
       <Filter>소스 파일\Scene\SceneData\Lighting</Filter>
     </ClCompile>
+    <ClCompile Include="External\Include\VIVOX\VIVOX.cpp">
+      <Filter>소스 파일\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt">
