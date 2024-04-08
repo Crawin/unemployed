@@ -27,6 +27,9 @@ struct Socket_event
 	SendType type;		// EVENT일때
 };
 
+class Mesh;
+class Player;
+
 class CServer
 {
 private:
@@ -34,7 +37,7 @@ private:
 	u_short usServerport = 9000;
 	u_short usBufsize = 512;
 public:
-	void SetSTtype(const ServerType&);
+	inline void SetSTtype(const ServerType&);
 	void PrintInfo(const std::string);
 	std::string GetServerType(const ServerType&);
 	u_short getPort();
@@ -47,11 +50,11 @@ private:
 	std::list<std::pair<std::pair<ServerType, SOCKET>, std::thread>> lRoomThreads;
 	std::list<std::pair<std::pair<ServerType, std::pair<SOCKET, unsigned int>>, std::thread>> lGameRecvThreads;
 	SOCKET listen_sock;
-	short m_sServerState = 0;
+	char m_cServerState = 0;
 private:
 	std::list<std::pair<std::pair<ServerType, unsigned int>, std::thread>> lGameRunThreads;
 	std::map<unsigned int, std::array<std::pair<SOCKET, std::pair<std::list<std::string>, std::mutex>>, 2>> mGameStorages;
-
+	std::unordered_map<std::string, Mesh> m_umMeshes;
 public:
 	CRoomServer();
 	~CRoomServer();
@@ -65,6 +68,7 @@ public:
 	void CloseListen();
 	void PrintThreads();
 	void DeleteThread(const std::string&, const SOCKET&, const unsigned int&);
+	void WorldCollision(Player&);
 	unsigned int Make_GameNumber();
 };
 
@@ -92,11 +96,14 @@ private:
 		DirectX::XMFLOAT3 rot;
 	};
 	std::array< PlayerTransform, 2> m_aTransform;			// [0]: 이전, [1]: 현재
+	DirectX::BoundingOrientedBox m_boundingbox;
 public:
 	const SOCKET getSocket();
 	void allocateSOCKET(const SOCKET&);
 	const DirectX::XMFLOAT3 getPos();
+	const DirectX::XMFLOAT3 getRot();
 	void printPlayerPos(const int&, const bool&);
 	void syncTransform();
 	void setTransform(const Socket_position&);
+	void undoPosition();
 };

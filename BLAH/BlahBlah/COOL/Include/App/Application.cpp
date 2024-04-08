@@ -113,6 +113,7 @@ int Application::StartProgram()
 #endif // DEBUG
 
 		}
+		SleepEx(0, true);
 	}
 	return 0;
 }

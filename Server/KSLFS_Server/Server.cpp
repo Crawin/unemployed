@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "Server.h"
+#include "Mesh.h"
 
 void CServer::SetSTtype(const ServerType& type)
 {
@@ -80,8 +81,22 @@ CRoomServer::~CRoomServer()
 void CRoomServer::Run()
 {
 	PrintInfo("Run");
-	m_sServerState = 1;
-	lRoomThreads.emplace_back(std::make_pair(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this)));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
+	m_cServerState = 1;
+
+
+	for (const auto& file : std::filesystem::directory_iterator("Resource/"))
+	{
+		const auto fileName = file.path();
+		std::ifstream meshFile(fileName, std::ios::binary);
+		if (meshFile.is_open() == false) {
+			std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
+		}
+		Mesh temp;
+		temp.LoadMeshData(meshFile);
+		m_umMeshes.emplace(fileName.string(), temp);
+	}
+
+	lRoomThreads.emplace_back(std::make_pair(LISTEN, NULL), std::thread(&CRoomServer::ListenThread, this));		// ListenThread 실행, lRoomThreads에 ListenThread 추가
 }
 
 void CRoomServer::ListenThread()
@@ -98,7 +113,8 @@ void CRoomServer::ListenThread()
 		return;
 
 	// 소켓 생성
-	listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+	//listen_sock = socket(AF_INET, SOCK_STREAM, 0);		//표준 Socket API
+	listen_sock = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
 	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
 
 	// bind()
@@ -122,7 +138,8 @@ void CRoomServer::ListenThread()
 	while (1) {
 		// accept()
 		addrlen = sizeof(clientaddr);
-		client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);
+		//client_sock = accept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen);		//표준 Socket API
+		client_sock = WSAAccept(listen_sock, (struct sockaddr*)&clientaddr, &addrlen, NULL, 0);
 		if (client_sock == INVALID_SOCKET) {
 			err_display("accept()");
 			break;
@@ -136,7 +153,7 @@ void CRoomServer::ListenThread()
 			addr, ntohs(clientaddr.sin_port));
 		Log_Mutex.unlock();
 
-		lRoomThreads.emplace_back(std::make_pair(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock)));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
+		lRoomThreads.emplace_back(std::make_pair(ROOM_RECV, client_sock), std::thread(&CRoomServer::RecvThread, this, client_sock));	// Accept 될때마다 Recv쓰레드를 각각 생성 및 mRoomThreads에 추가 (타입, 쓰레드)	
 	}
 
 	// 윈속 종료
@@ -152,13 +169,16 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 	std::cout << "RecvThread Run" << std::endl;
 	Log_Mutex.unlock();
 
-	int retval;
+	DWORD retval;
 	SOCKET client_sock = (SOCKET)arg;
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	u_short bufsize = getBufsize();
 	char* buf = new char[bufsize + 1];
+	WSABUF recv_buf;
+	recv_buf.buf = buf;
+	DWORD recv_flag = 0;
 
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
@@ -168,13 +188,18 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 	bool bRoom = true;
 	while (bRoom) {
 		// 데이터 받기
-		retval = recv(client_sock, buf, bufsize, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = recv(client_sock, buf, bufsize, 0);		//표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("recv()");
+		//	break;
+		//}
+		//else if (retval == 0)
+		//	break;
+		recv_buf.len = bufsize + 1;
+		if (WSARecv(client_sock, &recv_buf, 1, &retval, &recv_flag, 0, 0) == SOCKET_ERROR) {
 			err_display("recv()");
 			break;
 		}
-		else if (retval == 0)
-			break;
 
 		// 받은 데이터 출력
 		buf[retval] = '\0';
@@ -191,13 +216,13 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			//lGameRecvThreads 에 새로운 쓰레드를 한개 만들고, 이 쓰레드는 종료시키자.
 			const unsigned int GameNum = Make_GameNumber();
 			//  GAME_RUN 쓰레드를 생성
-			lGameRunThreads.emplace_back(std::make_pair(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum)));
+			lGameRunThreads.emplace_back(std::make_pair(GAME_RUN, GameNum), std::thread(&CRoomServer::GameRunThread, this, GameNum));
 			// mGameStorages에 key값으로 방번호를 넣고, value로 패킷 구조의 리스트를 만들어서, 얘 전용 저장소로 이용한다.
 
 			mGameStorages[GameNum][0].first = client_sock;				// p1 소켓 할당
 
 			// GAME_RECV 쓰레드 생성
-			lGameRecvThreads.emplace_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			lGameRecvThreads.emplace_back(std::make_pair(GAME_RECV, std::make_pair(arg, GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum));
 			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
@@ -217,15 +242,20 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 			std::cout << "방에 입장합니다." << std::endl;
 			Log_Mutex.unlock();
 			bRoom = false;
-			lGameRecvThreads.emplace_back(std::make_pair(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum)));
+			lGameRecvThreads.emplace_back(std::make_pair(GAME_RECV, std::make_pair(arg,GameNum)), std::thread(&CRoomServer::GameRecvThread, this, client_sock, GameNum));
 			std::thread t(&CRoomServer::DeleteThread, this, "lRoomThreads", client_sock, NULL);
 			t.detach();
 		}
 
 
 		// 데이터 보내기
-		retval = send(client_sock, buf, retval, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = send(client_sock, buf, retval, 0);		//표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("send()");
+		//	break;
+		//}
+		recv_buf.len = retval;
+		if (WSASend(client_sock, &recv_buf, 1, &retval, 0, 0, 0) == SOCKET_ERROR) {
 			err_display("send()");
 			break;
 		}
@@ -247,7 +277,7 @@ void CRoomServer::RecvThread(const SOCKET& arg)
 
 void CRoomServer::Join()
 {
-	m_sServerState = 0;
+	m_cServerState = 0;
 	for (auto start = lRoomThreads.begin(); start != lRoomThreads.end(); ++start)
 	{
 		start->second.join();
@@ -351,6 +381,34 @@ void CRoomServer::DeleteThread(const std::string& vThread, const SOCKET& arg, co
 	}
 }
 
+void CRoomServer::WorldCollision(Player& p)
+{
+	DirectX::XMFLOAT3 temp_extents = { 0,0,0 };
+	DirectX::BoundingBox pBound(p.getPos(), temp_extents);
+	for (auto start = m_umMeshes.begin(); start != m_umMeshes.end(); ++start)
+	{
+		DirectX::BoundingBox parent(start->second.GetCenter(), start->second.GetExtents());
+		if (pBound.Intersects(parent))
+		{
+			p.undoPosition();
+			return;
+		}
+
+		if (start->second.m_Childs.size() > 0)
+		{
+			for (auto child = start->second.m_Childs.begin(); child != start->second.m_Childs.end(); ++child)
+			{
+				DirectX::BoundingBox box(child->GetCenter(), child->GetExtents());
+				if (pBound.Intersects(box))
+				{
+					p.undoPosition();
+					return;
+				}
+			}
+		}
+	}
+}
+
 unsigned int CRoomServer::Make_GameNumber()
 {
 	std::random_device rd;
@@ -381,28 +439,33 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 	std::cout << "Socket: [" << client_sock << "] , RoomNumber: [" << gameNum << "] GameRecvThread Run " << std::endl;
 	Log_Mutex.unlock();
 
-	int retval;
+	DWORD retval;
 	struct sockaddr_in clientaddr;
 	char addr[INET_ADDRSTRLEN];
 	int addrlen;
 	u_short bufsize = getBufsize();
 	char* buf = new char[bufsize + 1];
-
+	WSABUF recv_buf;
+	recv_buf.buf = buf;
+	DWORD recv_flag = 0;
 	// 클라이언트 정보 얻기
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (struct sockaddr*)&clientaddr, &addrlen);
 	inet_ntop(AF_INET, &clientaddr.sin_addr, addr, sizeof(addr));
-	//std::string temp(bufsi)
+
 	bool bRoom = true;
 	while (bRoom) {
 		// 데이터 받기
-		retval = recv(client_sock, buf, bufsize, 0);
-		if (retval == SOCKET_ERROR) {
+		//retval = recv(client_sock, buf, bufsize, 0);		// 표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("recv()");
+		//	break;
+		//}
+		recv_buf.len = bufsize + 1;
+		if (WSARecv(client_sock, &recv_buf, 1, &retval, &recv_flag, 0, 0) == SOCKET_ERROR) {
 			err_display("recv()");
 			break;
-		}
-		else if (retval == 0)
-			break;
+		};
 
 		std::string save_buf(buf, retval);
 
@@ -426,18 +489,24 @@ void CRoomServer::GameRecvThread(const SOCKET& client_sock, const unsigned int& 
 			break;
 		}
 
-		//// 받은 데이터 출력
+		// 받은 데이터 출력
 		//buf[retval] = '\0';
 		//Log_Mutex.lock();
 		//std::cout << "[GAME_RECV] [TCP " << addr << ":" << ntohs(clientaddr.sin_port) << "]: " << buf << std::endl;
 		//Log_Mutex.unlock();
 
 		// 데이터 보내기
-		retval = send(client_sock, &buf[0], retval, 0);
-		if (retval == SOCKET_ERROR) {
-			err_display("send()");
-			break;
-		}
+		//retval = send(client_sock, &buf[0], retval, 0);		// 표준 Socket API
+		//if (retval == SOCKET_ERROR) {
+		//	err_display("send()");
+		//	break;
+		//}
+		
+		//recv_buf.len = retval;
+		//if (WSASend(client_sock, &recv_buf, 1, &retval, 0, 0, 0) == SOCKET_ERROR) {
+		//	err_display("send()");
+		//	break;
+		//}
 	}
 
 	// 소켓 닫기
@@ -457,15 +526,37 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 	std::cout << "[" << gameNum << "] GameRunThread Run" << std::endl;
 	Log_Mutex.unlock();
 
+	WSABUF wsabuf[1];
+
 	std::array<Player, 2> p;
 	short GameOver = 1;
 	while (GameOver)
 	{
-		if (!m_sServerState)	break;		// 서버가 꺼졌으면 while문 탈출
+		if (!m_cServerState)	break;		// 서버가 꺼졌으면 while문 탈출
 		// 게임 로직
 		
 		// 접속
-		for (int i = 0; i < 2; ++i)
+		//for (int i = 0; i < 2; ++i)
+		//{
+		//	if (p[i].getSocket() == NULL)		// P[i]이 연결되어 있지 않은 상태에서
+		//	{
+		//		// p[i] 가 연결이 되었는가?
+		//		if (mGameStorages[gameNum][i].first)
+		//		{
+		//			Log_Mutex.lock();
+		//			std::cout << "P"<<i+1<<"[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
+		//			Log_Mutex.unlock();
+		//			p[i].allocateSOCKET(mGameStorages[gameNum][i].first);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		p[i].printPlayerPos(i, true);
+		//		p[i].syncTransform();
+		//	}
+
+		//}
+		for (int i = 0; i < 1; ++i)
 		{
 			if (p[i].getSocket() == NULL)		// P[i]이 연결되어 있지 않은 상태에서
 			{
@@ -473,7 +564,7 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 				if (mGameStorages[gameNum][i].first)
 				{
 					Log_Mutex.lock();
-					std::cout << "P"<<i+1<<"[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
+					std::cout << "P" << i + 1 << "[" << mGameStorages[gameNum][i].first << "]이 연결되었습니다." << std::endl;
 					Log_Mutex.unlock();
 					p[i].allocateSOCKET(mGameStorages[gameNum][i].first);
 				}
@@ -483,8 +574,8 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 				p[i].printPlayerPos(i, true);
 				p[i].syncTransform();
 			}
-
 		}
+
 
 		// 명령 처리
 		for (int i = 0; i < 2; ++i)
@@ -511,10 +602,30 @@ void CRoomServer::GameRunThread(const unsigned int& gameNum)
 			}
 		}
 
-
-
 		//충돌
+		WorldCollision(p[0]);
+		//WorldCollision(p[1]);
+			
 		//이벤트 발생
+
+		/*Socket_position sp;
+		sp.pos = p[0].getPos();
+		sp.rot = p[0].getRot();
+		sp.type = POSITION;
+		wsabuf[0].buf = (char*)&sp;
+		wsabuf[0].len = sizeof(sp);
+		SOCKET temp = mGameStorages[gameNum][0].first;
+		int retval = send(mGameStorages[gameNum][0].first, (char*)&sp, sizeof(sp), NULL);
+		if (retval == SOCKET_ERROR)
+		{
+			err_display("send()");
+			break;
+		}*/
+		//if (WSASend(temp, wsabuf, 1, nullptr, 0, 0, 0) == SOCKET_ERROR)
+		//{
+		//	err_display("send()");
+		//	break;
+		//}
 	}
 }
 
@@ -558,7 +669,7 @@ void CServerManager::CommandThread()
 	Log_Mutex.unlock();
 
 	std::string input;
-	std::map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
+	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
 		{"/STOP",[&CommandState, this]() {
 			CommandState = false;
 			RoomServer->CloseListen();
@@ -591,17 +702,13 @@ void CServerManager::CommandThread()
 		std::string input;
 		std::cin >> input;
 
-		auto result = commands.find(input);
-		if (result != commands.end())
-		{
-			result->second();
-		}
-		else
+		if (commands.find(input) == commands.end())
 		{
 			Log_Mutex.lock();
-			std::cout << "존재하지 않는 명령어 입니다." << std::endl;
+			std::cout << "해당 명령어가 존재하지 않습니다." << std::endl;
 			Log_Mutex.unlock();
 		}
+		else commands[input]();
 	}
 }
 
@@ -613,13 +720,18 @@ const SOCKET Player::getSocket()
 void Player::allocateSOCKET(const SOCKET& s)
 {
 	socket = s;
-	m_aTransform[1].pos = DirectX::XMFLOAT3(0, 0, 0);
+	m_aTransform[1].pos = DirectX::XMFLOAT3(0, 75, -100);
 	m_aTransform[1].rot = DirectX::XMFLOAT3(0, 0, 0);
 }
 
 const DirectX::XMFLOAT3 Player::getPos()
 {
 	return m_aTransform[1].pos;
+}
+
+const DirectX::XMFLOAT3 Player::getRot()
+{
+	return m_aTransform[1].rot;
 }
 
 // (문자열, 좌표 변경이 있을시에만 출력)
@@ -650,4 +762,9 @@ void Player::setTransform(const Socket_position& sp)
 {
 	m_aTransform[1].pos = sp.pos;
 	m_aTransform[1].rot = sp.rot;
+}
+
+void Player::undoPosition()
+{
+	m_aTransform[1].pos = m_aTransform[0].pos;
 }

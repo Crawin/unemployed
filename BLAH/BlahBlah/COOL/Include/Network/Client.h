@@ -16,58 +16,36 @@
 #include <vector>
 #include <DirectXMath.h>
 #include <string.h>
+#include <unordered_map>
+#include "Packets.h"
 
-// 소켓 함수 오류 출력 후 종료
-void err_quit(const char* msg)
+#define BUFSIZE    512
+
+void print_error(const char* msg, int err_no)
 {
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf, 0, NULL);
-	MessageBoxA(NULL, (const char*)lpMsgBuf, msg, MB_ICONERROR);
-	LocalFree(lpMsgBuf);
-	//exit(1);
+	WCHAR* msg_buf;
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, err_no,
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(&msg_buf), 0, NULL);
+	std::cout << msg;
+	std::wcout << L" : 에러 : " << msg_buf;
+	//while (true);
+	LocalFree(msg_buf);
 }
 
-// 소켓 함수 오류 출력
-void err_display(const char* msg)
+class GameCharacters
 {
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, WSAGetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf, 0, NULL);
-	printf("[%s] %s\n", msg, (char*)lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
-// 소켓 함수 오류 출력
-void err_display(int errcode)
-{
-	LPVOID lpMsgBuf;
-	FormatMessageA(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL, errcode,
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(char*)&lpMsgBuf, 0, NULL);
-	printf("[오류] %s\n", (char*)lpMsgBuf);
-	LocalFree(lpMsgBuf);
-}
-
-enum SendType
-{
-	POSITION
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 rotation;
+public:
+	GameCharacters() 
+	{
+		position = DirectX::XMFLOAT3(0, 0, 0);
+		rotation = DirectX::XMFLOAT3(0, 0, 0);
+	};
+	void setPosRot(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot) { position = pos; rotation = rot;}
 };
 
-// SendType, XMFLOAT3
-struct SendPosition {
-	SendType type;
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 rot;
-};
 
 class Client
 {
@@ -77,19 +55,26 @@ public:
 		return inst;
 	}
 private:
-	char* m_cpServerIP;
-	SOCKET m_Sock;
-	std::thread m_Recv_Thread;
-	short m_sRecv;		// 0 꺼짐, 1 켜짐
-	std::vector<SendPosition> m_vRecv_Queue;
-public:
 	Client();
 	~Client();
-	int Connect_Server();
-	void Send_Pos(const SendPosition&);
-	void Send_Str(const std::string&);
-	void Recv_Data();
-	int Get_Recv_Size();
-	short Get_RecvState();
-	DirectX::XMFLOAT3 Get_Recv_Queue();
+	char* m_cpServerIP;
+	SOCKET m_sServer;
+	WSABUF wsabuf[1];
+	WSAOVERLAPPED wsaover;
+	char buf[BUFSIZE];
+	SOCKET playerSock;
+public:
+	std::list<char> over_buf;
+	std::unordered_map<int, GameCharacters> characters;
+
+	void Recv_Start();
+	char* Get_Buf();
+	void Send_Pos(const DirectX::XMFLOAT3& , const DirectX::XMFLOAT3&);
+	void Send_Room(const PACKET_TYPE&, const unsigned int&);
+	void Connect_Server();
+	void setPSock(const SOCKET&);
+	const SOCKET getPSock() { return playerSock; }
 };
+
+void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
+void CALLBACK send_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
