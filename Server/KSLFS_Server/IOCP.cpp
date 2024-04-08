@@ -1,9 +1,23 @@
 #include "IOCP_Common.h"
+#include "Mesh.h"
 #include "IOCP.h"
 
 void IOCP_SERVER_MANAGER::start()
 {
-	std::cout << "서버 실행" << std::endl;
+	std::cout << "장애물 로드 시작" << std::endl;
+	for (const auto& file : std::filesystem::directory_iterator("Resource/"))
+	{
+		const auto fileName = file.path();
+		std::ifstream meshFile(fileName, std::ios::binary);
+		if (meshFile.is_open() == false) {
+			std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
+		}
+		Mesh* temp = new Mesh;
+		temp->LoadMeshData(meshFile);
+		m_umMeshes.emplace(fileName.string(), temp);
+	}
+	std::cout << "장애물 로드 완료" << std::endl;
+
 	std::wcout.imbue(std::locale("korean"));
 
 	WSADATA WSAData;
@@ -27,6 +41,7 @@ void IOCP_SERVER_MANAGER::start()
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(server_s), h_iocp, -1, 0);
 	AcceptEx(server_s, client_s, accept_over.buf, 0, addr_size + 16, addr_size + 16, nullptr, &accept_over.over);
 	
+	std::cout << "서버 실행" << std::endl;
 	//lobby = new Lobby;
 	while (true)
 	{

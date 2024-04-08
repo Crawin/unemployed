@@ -5,6 +5,7 @@ constexpr int BUFSIZE = 256;
 class packet_base;
 class sc_packet_position;
 class sc_packet_login;
+class Mesh;
 
 enum C_OP { C_RECV, C_SEND, C_ACCEPT };
 
@@ -175,6 +176,7 @@ private:
 	std::unordered_map<unsigned int, SESSION> login_players;
 	unsigned int currentRoom = 10000;
 	std::unordered_map<unsigned int, Game> Games;
+	std::unordered_map<std::string, Mesh*> m_umMeshes;
 public:
 	IOCP_SERVER_MANAGER() {}
 	void start();
