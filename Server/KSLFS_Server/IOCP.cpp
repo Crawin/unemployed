@@ -32,7 +32,7 @@ void IOCP_SERVER_MANAGER::start()
 	bind(server_s, reinterpret_cast<sockaddr*>(&server_a), sizeof(server_a));
 	listen(server_s, SOMAXCONN);
 	int addr_size = sizeof(server_a);
-	unsigned int id = 0;
+	unsigned int id = 1;
 
 	SOCKET client_s = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 	EXP_OVER accept_over;
@@ -113,6 +113,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			Games.try_emplace(currentRoom, currentRoom);
 			Games[currentRoom].init(id, login_players[id].getSock());
+			login_players[id].setState(PS_GAME);
 			std::cout << "[" << id << ", " << login_players[id].getSock() << "] 이용자가 " << currentRoom << "방을 생성하였습니다." << std::endl;
 
 			sc_packet_make_room make(currentRoom);
@@ -128,13 +129,20 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			if (f != Games.end())
 			{
 				Games[n].init(id, login_players[id].getSock());
-				sc_packet_enter_room sc_enter(n, true);
+				Player* players = Games[n].getPlayer();
+				// 방 게스트에게 호스트 소켓번호 보내주기
+				sc_packet_enter_room sc_enter(n, true, players[0].sock);
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
+				login_players[id].setState(PS_GAME);
 				std::cout << "[" << id << ", " << login_players[id].getSock() << "] 이용자가 " << n << "방에 입장하였습니다." << std::endl;
+				
+				// 방 호스트에게 게스트 소켓번호 보내주기
+				sc_packet_enter_room enter(n, true, players[1].sock);
+				login_players[players[0].id].send_packet(reinterpret_cast<packet_base*>(&enter));
 			}
 			else
 			{
-				sc_packet_enter_room sc_enter(n, false);
+				sc_packet_enter_room sc_enter(n, false, NULL);
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
 			}
 		}
