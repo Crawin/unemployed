@@ -78,3 +78,5 @@ public:
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
 void CALLBACK send_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
+
+void process_packet(packet_base*&);
