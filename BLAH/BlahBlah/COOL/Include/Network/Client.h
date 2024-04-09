@@ -63,6 +63,7 @@ private:
 	WSAOVERLAPPED wsaover;
 	char buf[BUFSIZE];
 	SOCKET playerSock;
+	unsigned int roomNum = NULL;
 public:
 	std::list<char> over_buf;
 	std::unordered_map<int, GameCharacters> characters;
@@ -74,6 +75,8 @@ public:
 	void Connect_Server();
 	void setPSock(const SOCKET&);
 	const SOCKET getPSock() { return playerSock; }
+	void setRoomNum(const unsigned int n) { roomNum = n; }
+	const unsigned int getRoomNum() { return roomNum; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

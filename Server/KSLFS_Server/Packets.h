@@ -98,6 +98,8 @@ public:
 		size = sizeof(cs_packet_position);
 		type = pPOSITION;
 	};
+	const DirectX::XMFLOAT3 getPosition() { return position; }
+	const DirectX::XMFLOAT3 getRotation() { return rotation; }
 };
 
 class cs_packet_make_room : public packet_base

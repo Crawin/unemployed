@@ -175,8 +175,9 @@ namespace ECSsystem {
 				sp->SetForce(tempMove);
 
 			//DebugPrint(std::format("speed: {}", speed));
+			XMFLOAT3 pos = Vector3::Add(sp->GetForce(), tr->GetPosition());
 			if (speed != 0)
-				tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
+				tr->SetPosition(pos);
 
 
 			// mouse
@@ -190,6 +191,10 @@ namespace ECSsystem {
 				tr->SetRotation(rot);
 
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
+				if (Client::GetInstance().getRoomNum())
+				{
+					Client::GetInstance().Send_Pos(pos, rot);
+				}
 			}
 
 			// Send To Server

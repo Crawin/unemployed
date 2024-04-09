@@ -105,6 +105,13 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 	switch (base->getType())
 	{
 		case 0:										//		pPOSITION,
+		{
+			cs_packet_position* position = reinterpret_cast<cs_packet_position*>(base);
+			DirectX::XMFLOAT3 pos = position->getPosition();
+			DirectX::XMFLOAT3 rot = position->getRotation();
+			std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+
+		}
 			break;
 		case 1:										//		pLOGIN,
 			std::cout << "오류 발생 ["<<id<<" , "<<login_players[id].getSock()<<"] 로 부터 pLOGIN 형태의 패킷 수신" << std::endl;

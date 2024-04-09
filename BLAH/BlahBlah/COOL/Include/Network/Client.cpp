@@ -184,6 +184,7 @@ void process_packet(packet_base*& base)
 	{
 		sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
+		client.setRoomNum(buf->getGameNum());
 		//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
 		//vivox.detach();
 		break;
@@ -194,6 +195,7 @@ void process_packet(packet_base*& base)
 		if (buf->getBool())
 		{
 			std::cout << buf->getGameNum() << "방 입장 완료" << std::endl;
+			client.setRoomNum(buf->getGameNum());
 			std::cout << "참가한 소켓은" << buf->getPlayer() << "입니다." << std::endl;
 			client.characters.try_emplace(buf->getPlayer());
 			//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
