@@ -168,6 +168,7 @@ public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n) {}
 	void init(const unsigned int& i, const SOCKET& s);
+	Player* getPlayer() { return p; };
 };
 
 class IOCP_SERVER_MANAGER

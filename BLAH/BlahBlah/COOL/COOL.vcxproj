@@ -179,6 +179,7 @@
     <ClInclude Include="Include\mymath.h" />
     <ClInclude Include="Include\Mesh\Mesh.h" />
     <ClInclude Include="Include\Network\Client.h" />
+    <ClInclude Include="Include\Network\Packets.h" />
     <ClInclude Include="Include\OnDebug.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />

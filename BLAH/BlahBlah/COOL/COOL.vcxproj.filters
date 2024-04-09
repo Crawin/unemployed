@@ -171,6 +171,9 @@
     <ClInclude Include="Include\Lighting\ShadowMap.h">
       <Filter>소스 파일\Scene\SceneData\Lighting</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Network\Packets.h">
+      <Filter>소스 파일\Network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">

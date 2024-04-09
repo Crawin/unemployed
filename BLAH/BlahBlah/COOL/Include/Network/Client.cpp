@@ -134,35 +134,8 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 			{
 				temp_buf[i++] = recv_buf[current_size++];
 			}
-
-			switch (base->getType())		// PACKET_TYPE
-			{
-				case 0:									// POSITION
-				{
-					sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-					client.characters[buf->getPlayer()].setPosRot(buf->getPos(), buf->getRot());
-					break;
-				}
-				case 1:									// LOGIN
-				{
-					sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
-					client.characters.try_emplace(buf->player);
-					break;
-				}
-				case 2:									// make_room
-				{
-					sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
-					std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
-					std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
-					vivox.detach();
-					break;
-				}
-				case 3:									// enter_room
-				{
-					break;
-				}
-			}
-			client.over_buf.clear();
+			packet_base* connected_packet = reinterpret_cast<packet_base*>(temp_buf);
+			process_packet(connected_packet);
 			continue;				// 잘린 패킷 처리 완료
 		}
 
@@ -175,45 +148,7 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 				client.over_buf.emplace_back(reinterpret_cast<char*>(base)[current_size++]);
 			break;
 		}
-
-		switch (base->getType())		// PACKET_TYPE
-		{
-			case 0:									// POSITION
-			{
-				sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-				client.characters[buf->getPlayer()].setPosRot(buf->getPos(),buf->getRot());
-				break;
-			}
-			case 1:									// LOGIN
-			{
-				sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
-				client.characters.try_emplace(buf->player);
-				client.setPSock(buf->player);
-				break;
-			}
-			case 2:									// make_room
-			{
-				sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
-				std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
-				std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
-				vivox.detach();
-				break;
-			}
-			case 3:									// enter_room
-			{
-				sc_packet_enter_room* buf = reinterpret_cast<sc_packet_enter_room*>(base);
-				if (buf->getBool())
-				{
-					std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
-					vivox.detach();
-				}
-				else
-				{
-					std::cout << buf->getGameNum() << " 방이 존재하지 않습니다." << std::endl;
-				}
-				break;
-			}
-		}
+		process_packet(base);
 		current_size += size;
 	}
 	client.Recv_Start();
@@ -224,5 +159,51 @@ void CALLBACK send_callback(DWORD err, DWORD sent_size, LPWSAOVERLAPPED pwsaover
 	if (0 != err)
 	{
 		print_error("WSASend", WSAGetLastError());
+	}
+}
+
+void process_packet(packet_base*& base)
+{
+	auto& client = Client::GetInstance();
+	switch (base->getType())		// PACKET_TYPE
+	{
+	case 0:									// POSITION
+	{
+		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
+		client.characters[buf->getPlayer()].setPosRot(buf->getPos(), buf->getRot());
+		break;
+	}
+	case 1:									// LOGIN
+	{
+		sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
+		client.characters.try_emplace(buf->player);
+		client.setPSock(buf->player);
+		break;
+	}
+	case 2:									// make_room
+	{
+		sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
+		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
+		//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
+		//vivox.detach();
+		break;
+	}
+	case 3:									// enter_room
+	{
+		sc_packet_enter_room* buf = reinterpret_cast<sc_packet_enter_room*>(base);
+		if (buf->getBool())
+		{
+			std::cout << buf->getGameNum() << "방 입장 완료" << std::endl;
+			std::cout << "참가한 소켓은" << buf->getPlayer() << "입니다." << std::endl;
+			client.characters.try_emplace(buf->getPlayer());
+			//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
+			//vivox.detach();
+		}
+		else
+		{
+			std::cout << buf->getGameNum() << " 방이 존재하지 않습니다." << std::endl;
+		}
+		break;
+	}
 	}
 }
