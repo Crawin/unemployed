@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#pragma pack(push,1)
 /*
 	PACKCET
 	-----------------------------
@@ -73,14 +73,16 @@ class sc_packet_enter_room : public packet_base
 {
 	unsigned int gameNum;
 	bool enter;
+	SOCKET player;
 public:
-	sc_packet_enter_room(const unsigned int& n, const bool& b) : gameNum(n), enter(b) 
+	sc_packet_enter_room(const unsigned int& n, const bool& b, const SOCKET& p) : gameNum(n), enter(b), player(p)
 	{
 		size = sizeof(sc_packet_enter_room);
 		type = pENTERROOM;
 	}
 	const bool getBool() { return enter; }
 	const unsigned int getGameNum() { return gameNum; }
+	const SOCKET getPlayer() { return player; }
 };
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -120,3 +122,5 @@ public:
 	}
 	const unsigned int getRoomNum() { return roomNum; }
 };
+
+#pragma pack(pop)
