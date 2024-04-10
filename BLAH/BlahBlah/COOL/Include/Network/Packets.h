@@ -35,9 +35,9 @@ class sc_packet_position : public packet_base
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 public:
-	sc_packet_position(const sc_packet_position& t) : player(t.player), position(t.position), rotation(t.rotation) {
-		size = t.size;
-		type = t.type;
+	sc_packet_position(const SOCKET s, const DirectX::XMFLOAT3 p, const DirectX::XMFLOAT3 r) : player(s), position(p), rotation(r) {
+		size = sizeof(sc_packet_position);
+		type = pPOSITION;
 	}
 	const SOCKET getPlayer() { return player; }
 	const DirectX::XMFLOAT3 getPos() { return position; }
@@ -90,14 +90,16 @@ public:
 class cs_packet_position : public packet_base
 {
 private:
+	unsigned int roomNum;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 public:
-	cs_packet_position(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot) :position(pos), rotation(rot)
+	cs_packet_position(const unsigned int& n, const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot) :roomNum(n), position(pos), rotation(rot)
 	{
 		size = sizeof(cs_packet_position);
 		type = pPOSITION;
 	};
+	const unsigned int getNum() { return roomNum; }
 	const DirectX::XMFLOAT3 getPosition() { return position; }
 	const DirectX::XMFLOAT3 getRotation() { return rotation; }
 };

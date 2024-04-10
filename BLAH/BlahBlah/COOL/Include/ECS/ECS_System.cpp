@@ -147,6 +147,8 @@ namespace ECSsystem {
 
 			float speed = sp->GetCurrentVelocity();
 
+			auto& client = Client::GetInstance();
+
 			// update speed if key down
 			if (move) {
 				// move to look at;
@@ -191,18 +193,12 @@ namespace ECSsystem {
 				tr->SetRotation(rot);
 
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
-				if (Client::GetInstance().getRoomNum())
+				if (client.getRoomNum())
 				{
-					Client::GetInstance().Send_Pos(pos, rot);
+					tr->SetPosition(client.characters[client.getPSock()].getPos());
+					client.Send_Pos(pos, rot);
 				}
 			}
-
-			// Send To Server
-			//if (Client::GetInstance().Get_RecvState())
-			//{
-			//	SendPosition sp = { POSITION,tr->GetPosition(),tr->GetRotation() };
-			//	Client::GetInstance().Send_Pos(sp);
-			//}
 			};
 
 		std::function<void(Transform*, TestInput*, Speed*)> func2 = [deltaTime](Transform* tr, TestInput* in, Speed* sp) {

@@ -42,7 +42,7 @@ char* Client::Get_Buf()
 
 void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot)
 {
-	cs_packet_position temp(pos, rot);
+	cs_packet_position temp(roomNum, pos, rot);
 	wsabuf[0].buf = reinterpret_cast<char*>(&temp);
 	wsabuf[0].len = sizeof(cs_packet_position);
 
@@ -136,6 +136,7 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 			}
 			packet_base* connected_packet = reinterpret_cast<packet_base*>(temp_buf);
 			process_packet(connected_packet);
+			client.over_buf.clear();
 			continue;				// 잘린 패킷 처리 완료
 		}
 

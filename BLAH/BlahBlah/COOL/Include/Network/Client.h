@@ -44,6 +44,8 @@ public:
 		rotation = DirectX::XMFLOAT3(0, 0, 0);
 	};
 	void setPosRot(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot) { position = pos; rotation = rot;}
+	const DirectX::XMFLOAT3 getPos() { return position; }
+	const DirectX::XMFLOAT3 getRot() { return rotation; }
 };
 
 
