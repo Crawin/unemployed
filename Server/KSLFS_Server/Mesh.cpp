@@ -62,6 +62,9 @@ void Mesh::LoadMeshData(std::ifstream& meshFile)
 	// 9. 서브메쉬(재귀)
 	for (unsigned int i = 0; i < childNum; ++i) {
 		Mesh newMesh;
+		DirectX::XMMATRIX root = DirectX::XMLoadFloat4x4(&m_RootTransform);
+		DirectX::XMMATRIX local = DirectX::XMLoadFloat4x4(&m_LocalTransform);
+		DirectX::XMStoreFloat4x4(&newMesh.m_RootTransform, DirectX::XMMatrixMultiply(root, local));
 		newMesh.LoadMeshData(meshFile);
 		m_Childs.push_back(newMesh);
 	}
@@ -75,4 +78,23 @@ DirectX::XMFLOAT3 Mesh::GetCenter()
 DirectX::XMFLOAT3 Mesh::GetExtents()
 {
 	return m_AABBExtents;
+}
+
+bool Mesh::collision(const DirectX::BoundingOrientedBox& player)
+{
+	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
+	DirectX::BoundingOrientedBox obb(m_AABBCenter, m_AABBExtents, orient);
+	if (player.Intersects(obb))
+	{
+		return true;
+	}
+	else
+	{
+		for (auto& child : m_Childs)
+		{
+			if (child.collision(player))
+				return true;
+		}
+	}
+	return false;
 }

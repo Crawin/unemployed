@@ -22,8 +22,8 @@ private:
 	DirectX::XMFLOAT3 m_Scale = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	// 부모와 상대적인 변환행렬
-	DirectX::XMFLOAT4X4 m_LocalTransform;
-	DirectX::XMFLOAT4X4 m_RootTransform;
+	DirectX::XMFLOAT4X4 m_LocalTransform = { 1,0,0,0 ,0,1,0,0, 0,0,1,0, 0,0,0,1 };
+	DirectX::XMFLOAT4X4 m_RootTransform = { 1,0,0,0 ,0,1,0,0, 0,0,1,0, 0,0,0,1 };
 
 	int m_VertexNum = 0;
 public:
@@ -31,4 +31,5 @@ public:
 	void LoadMeshData(std::ifstream&);
 	DirectX::XMFLOAT3 GetCenter();
 	DirectX::XMFLOAT3 GetExtents();
+	bool collision(const DirectX::BoundingOrientedBox&);
 };
