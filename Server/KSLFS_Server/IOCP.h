@@ -91,6 +91,12 @@ public:
 			case 0:				// POSITION
 			{
 				auto position = reinterpret_cast<sc_packet_position*>(base);
+				auto sendOver = new EXP_OVER(position);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
 			}
 				break;
 			case 1:				// LOGIN
@@ -168,7 +174,11 @@ public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n) {}
 	void init(const unsigned int& i, const SOCKET& s);
-	Player* getPlayer() { return p; };
+	Player* getPlayers() { return p; };
+	void setPlayerPR(const unsigned int&, cs_packet_position*&);
+	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
+	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
+	void broadcast();
 };
 
 class IOCP_SERVER_MANAGER
@@ -178,8 +188,10 @@ private:
 	unsigned int currentRoom = 10000;
 	std::unordered_map<unsigned int, Game> Games;
 	std::unordered_map<std::string, Mesh*> m_umMeshes;
+	std::vector<Mesh*> m_vMeshes;
 public:
 	IOCP_SERVER_MANAGER() {}
 	void start();
 	void process_packet(const unsigned int&, EXP_OVER*&);
+	bool world_collision(cs_packet_position*&);
 };

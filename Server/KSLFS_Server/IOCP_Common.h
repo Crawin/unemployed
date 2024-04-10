@@ -9,5 +9,6 @@
 #include "Packets.h"
 #include <filesystem>
 #include <fstream>
+#include <DirectXCollision.h>
 
 void print_error(const char* msg, int err_no);

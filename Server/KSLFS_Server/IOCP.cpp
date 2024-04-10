@@ -14,7 +14,8 @@ void IOCP_SERVER_MANAGER::start()
 		}
 		Mesh* temp = new Mesh;
 		temp->LoadMeshData(meshFile);
-		m_umMeshes.emplace(fileName.string(), temp);
+		//m_umMeshes.emplace(fileName.string(), temp);
+		m_vMeshes.emplace_back(temp);
 	}
 	std::cout << "장애물 로드 완료" << std::endl;
 
@@ -107,10 +108,30 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		case 0:										//		pPOSITION,
 		{
 			cs_packet_position* position = reinterpret_cast<cs_packet_position*>(base);
+			auto& gameRoom = Games[position->getNum()];
+			if (!world_collision(position))
+				gameRoom.setPlayerPR(id, position);
+			else
+			{
+				std::cout << "[" << id << ", " << login_players[id].getSock() << "] 충돌" << std::endl;
+			}
+
+			// 충돌 이후 좌표 패킷을 만든 후
+			sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id));
+			
+			// 게임 방 내의 플레이어들 모두에게 패킷 전송
+			Player* players = Games[position->getNum()].getPlayers();
+			for (int i = 0; i < 1; ++i)
+			{
+				if (players[i].id)
+					login_players[players[i].id].send_packet(reinterpret_cast<packet_base*>(&after_pos));
+			}
+
+			//Games[position->getNum()].world_collision(position);
 			DirectX::XMFLOAT3 pos = position->getPosition();
 			DirectX::XMFLOAT3 rot = position->getRotation();
 			std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
-
+			
 		}
 			break;
 		case 1:										//		pLOGIN,
@@ -136,7 +157,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			if (f != Games.end())
 			{
 				Games[n].init(id, login_players[id].getSock());
-				Player* players = Games[n].getPlayer();
+				Player* players = Games[n].getPlayers();
 				// 방 게스트에게 호스트 소켓번호 보내주기
 				sc_packet_enter_room sc_enter(n, true, players[0].sock);
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
@@ -157,6 +178,35 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 	}
 }
 
+bool IOCP_SERVER_MANAGER::world_collision(cs_packet_position*& player)
+{
+	DirectX::XMFLOAT3 pos = player->getPosition();
+	DirectX::XMFLOAT3 rot = player->getRotation();
+
+	float randianX = DirectX::XMConvertToRadians(rot.x);
+	float randianY = DirectX::XMConvertToRadians(rot.y);
+	DirectX::XMVECTOR quaternionX = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1, 0, 0, 0), randianX);
+	DirectX::XMVECTOR quaternionY = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), randianY);
+	//DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 0, 1, 0), rot.z);
+
+	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionX, quaternionY);
+
+	DirectX::XMFLOAT4 quaternionValues;
+	DirectX::XMStoreFloat4(&quaternionValues, quaternion);
+
+	DirectX::XMFLOAT3 temp_extents = { 1,1,1 };
+	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
+	for (auto& world : m_vMeshes)
+	{
+		if (world->collision(pOBB))
+		{
+			std::cout << "충돌" << std::endl;
+			return true;
+		}
+	}
+	return false;
+}
+
 void Game::init(const unsigned int& i, const SOCKET& s)
 {
 	if (p[0].id == NULL)
@@ -168,5 +218,39 @@ void Game::init(const unsigned int& i, const SOCKET& s)
 	{
 		p[1].id = i;
 		p[1].sock = s;
+	}
+}
+
+const DirectX::XMFLOAT3 Game::getPlayerPos(const unsigned int& id)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
+			return player.position;
+		}
+	}
+}
+
+void Game::setPlayerPR(const unsigned int& id, cs_packet_position*& packet)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
+			player.position = packet->getPosition();
+			player.rotation = packet->getRotation();
+		}
+	}
+}
+
+const DirectX::XMFLOAT3 Game::getPlayerRot(const unsigned int& id)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
+			return player.rotation;
+		}
 	}
 }
