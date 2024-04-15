@@ -16,7 +16,8 @@ enum PACKET_TYPE
 	pPOSITION,
 	pLOGIN,
 	pMAKEROOM,
-	pENTERROOM
+	pENTERROOM,
+	pRoomPlayer
 };
 
 class packet_base
@@ -83,6 +84,19 @@ public:
 	const bool getBool() { return enter; }
 	const unsigned int getGameNum() { return gameNum; }
 	const SOCKET getPlayer() { return player; }
+};
+
+class sc_packet_room_player : public packet_base
+{
+	SOCKET player = NULL;
+public:
+	sc_packet_room_player(const SOCKET playerSocket)
+	{
+		player = playerSocket;
+		size = sizeof(sc_packet_room_player);
+		type = pRoomPlayer;
+	}
+	const SOCKET getPlayerSock() { return player; }
 };
 
 //--------------------------------------------------------------------------------------------------------------------
