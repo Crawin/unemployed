@@ -2,6 +2,8 @@
 #include "Mesh.h"
 #include "IOCP.h"
 
+void command_thread(bool*);
+
 void IOCP_SERVER_MANAGER::start()
 {
 	std::cout << "장애물 로드 시작" << std::endl;
@@ -42,9 +44,13 @@ void IOCP_SERVER_MANAGER::start()
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(server_s), h_iocp, -1, 0);
 	AcceptEx(server_s, client_s, accept_over.buf, 0, addr_size + 16, addr_size + 16, nullptr, &accept_over.over);
 	
+	bool server_on = true;
+
+	std::thread command(command_thread, &server_on);
+
 	std::cout << "서버 실행" << std::endl;
 	//lobby = new Lobby;
-	while (true)
+	while (server_on)
 	{
 		DWORD rw_byte;
 		ULONG_PTR key;
@@ -98,6 +104,7 @@ void IOCP_SERVER_MANAGER::start()
 	//delete lobby;
 	closesocket(server_s);
 	WSACleanup();
+	command.join();
 }
 
 void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over)
@@ -158,15 +165,16 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				Games[n].init(id, login_players[id].getSock());
 				Player* players = Games[n].getPlayers();
-				// 방 게스트에게 호스트 소켓번호 보내주기
+				login_players[id].setState(PS_GAME);
+				// 방 입장 알림 보내기 및  방 게스트에게 호스트 소켓번호 보내주기
 				sc_packet_enter_room sc_enter(n, true, players[0].sock);
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
-				login_players[id].setState(PS_GAME);
+
 				std::cout << "[" << id << ", " << login_players[id].getSock() << "] 이용자가 " << n << "방에 입장하였습니다." << std::endl;
 				
 				// 방 호스트에게 게스트 소켓번호 보내주기
-				sc_packet_enter_room enter(n, true, players[1].sock);
-				login_players[players[0].id].send_packet(reinterpret_cast<packet_base*>(&enter));
+				sc_packet_room_player htog(players[1].sock);
+				login_players[players[0].id].send_packet(reinterpret_cast<packet_base*>(&htog));
 			}
 			else
 			{
@@ -196,13 +204,13 @@ bool IOCP_SERVER_MANAGER::world_collision(cs_packet_position*& player)
 
 	DirectX::XMFLOAT3 temp_extents = { 1,1,1 };
 	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
-	std::cout << "Player : (" << pOBB.Center.x << "," << pOBB.Center.y << "," << pOBB.Center.z << "), Extents: ("
-		<< pOBB.Extents.x << "," << pOBB.Extents.y << "," << pOBB.Extents.z << ")" << std::endl;
+	//std::cout << "Player : (" << pOBB.Center.x << "," << pOBB.Center.y << "," << pOBB.Center.z << "), Extents: ("
+	//	<< pOBB.Extents.x << "," << pOBB.Extents.y << "," << pOBB.Extents.z << ")" << std::endl;
 	for (auto& world : m_vMeshes)
 	{
 		if (world->collision(pOBB))
 		{
-			std::cout << "충돌" << std::endl;
+			//std::cout << "충돌" << std::endl;
 			return true;
 		}
 	}
@@ -254,5 +262,27 @@ const DirectX::XMFLOAT3 Game::getPlayerRot(const unsigned int& id)
 		{
 			return player.rotation;
 		}
+	}
+}
+
+void command_thread(bool* state)
+{
+	std::string input;
+	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
+		{"/STOP",[&state]() {
+			*state = false;
+		}},
+	};
+
+	while (*state)
+	{
+		std::string input;
+		std::cin >> input;
+
+		if (commands.find(input) == commands.end())
+		{
+			std::cout << "해당 명령어가 존재하지 않습니다." << std::endl;
+		}
+		else commands[input]();
 	}
 }

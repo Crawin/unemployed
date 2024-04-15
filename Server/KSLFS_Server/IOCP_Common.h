@@ -10,5 +10,6 @@
 #include <filesystem>
 #include <fstream>
 #include <DirectXCollision.h>
+#include <functional>
 
 void print_error(const char* msg, int err_no);
