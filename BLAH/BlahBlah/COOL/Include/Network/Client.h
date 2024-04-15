@@ -64,7 +64,7 @@ private:
 	WSABUF wsabuf[1];
 	WSAOVERLAPPED wsaover;
 	char buf[BUFSIZE];
-	SOCKET playerSock;
+	SOCKET playerSock[2];
 	unsigned int roomNum = NULL;
 public:
 	std::list<char> over_buf;
@@ -76,7 +76,7 @@ public:
 	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
 	void setPSock(const SOCKET&);
-	const SOCKET getPSock() { return playerSock; }
+	const SOCKET* getPSock() { return playerSock; }
 	void setRoomNum(const unsigned int n) { roomNum = n; }
 	const unsigned int getRoomNum() { return roomNum; }
 };

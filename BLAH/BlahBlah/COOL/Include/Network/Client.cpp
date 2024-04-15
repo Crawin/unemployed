@@ -4,8 +4,8 @@
 
 Client::Client()
 {
-	//m_cpServerIP = (char*)"freerain.mooo.com";
-	m_cpServerIP = (char*)"127.0.0.1";
+	m_cpServerIP = (char*)"freerain.mooo.com";
+	//m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -100,7 +100,10 @@ void Client::Connect_Server()
 
 void Client::setPSock(const SOCKET& player)
 {
-	playerSock = player;
+	if (playerSock[0] == NULL)
+		playerSock[0] = player;
+	else
+		playerSock[1] = player;
 }
 
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
@@ -208,5 +211,13 @@ void process_packet(packet_base*& base)
 		}
 		break;
 	}
+	case 4:									// pRoomPlayer
+	{
+		sc_packet_room_player* buf = reinterpret_cast<sc_packet_room_player*>(base);
+		SOCKET playerSock = buf->getPlayerSock();
+		client.characters.try_emplace(playerSock);
+		client.setPSock(playerSock);
+	}
+		break;
 	}
 }
