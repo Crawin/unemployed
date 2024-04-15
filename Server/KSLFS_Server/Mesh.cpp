@@ -34,7 +34,7 @@ void Mesh::LoadMeshData(std::ifstream& meshFile)
 	meshFile.read((char*)&max, sizeof(DirectX::XMFLOAT3));
 	meshFile.read((char*)&m_AABBCenter, sizeof(DirectX::XMFLOAT3));
 	m_AABBExtents = DirectX::XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
-
+	m_AABBExtents_Divide = DirectX::XMFLOAT3(m_AABBExtents.x / 2, m_AABBExtents.y / 2, m_AABBExtents.z / 2);
 	// 4. 부모 상대 변환 행렬		// float4x4
 	meshFile.read((char*)&m_LocalTransform, sizeof(DirectX::XMFLOAT4X4));
 
@@ -83,7 +83,10 @@ DirectX::XMFLOAT3 Mesh::GetExtents()
 bool Mesh::collision(const DirectX::BoundingOrientedBox& player)
 {
 	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
-	DirectX::BoundingOrientedBox obb(m_AABBCenter, m_AABBExtents, orient);
+	DirectX::BoundingOrientedBox obb(m_AABBCenter, m_AABBExtents_Divide, orient);
+
+	std::cout << this->m_Name << " Center : (" << obb.Center.x << "," << obb.Center.y << "," << obb.Center.z << "), Extents : ("
+		<< obb.Extents.x << "," << obb.Extents.y << "," << obb.Extents.z << ")" << std::endl;
 	if (player.Intersects(obb))
 	{
 		return true;

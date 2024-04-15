@@ -196,6 +196,8 @@ bool IOCP_SERVER_MANAGER::world_collision(cs_packet_position*& player)
 
 	DirectX::XMFLOAT3 temp_extents = { 1,1,1 };
 	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
+	std::cout << "Player : (" << pOBB.Center.x << "," << pOBB.Center.y << "," << pOBB.Center.z << "), Extents: ("
+		<< pOBB.Extents.x << "," << pOBB.Extents.y << "," << pOBB.Extents.z << ")" << std::endl;
 	for (auto& world : m_vMeshes)
 	{
 		if (world->collision(pOBB))

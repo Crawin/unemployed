@@ -15,6 +15,7 @@ private:
 	// bounding box
 	DirectX::XMFLOAT3 m_AABBCenter = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	DirectX::XMFLOAT3 m_AABBExtents = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 m_AABBExtents_Divide = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	// todo mesh loader에 아래 데이터 추가 
 	DirectX::XMFLOAT3 m_Position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
