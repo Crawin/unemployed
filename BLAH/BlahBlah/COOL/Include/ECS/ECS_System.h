@@ -40,7 +40,7 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// simple physics (friction)
+	// simple physics (friction on air?)
 	//
 	class Friction : public System {
 	public:

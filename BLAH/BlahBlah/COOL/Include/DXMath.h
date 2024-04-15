@@ -61,7 +61,7 @@ namespace Vector3
 		return m_xmf3Normal;
 	}
 
-	inline float Length(XMFLOAT3& vector)
+	inline float Length(const XMFLOAT3& vector)
 	{
 		XMFLOAT3 result;
 		XMStoreFloat3(&result, XMVector3Length(XMLoadFloat3(&vector)));

@@ -24,7 +24,7 @@
 	"Speed":
 	{
 		"MaxVelocity" : 300.0,
-		"Acceleration" : 300.0
+		"Acceleration" : [300.0, 300.0, 300.0]
 	}
 
 

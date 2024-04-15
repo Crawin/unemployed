@@ -257,15 +257,33 @@ namespace component
 		Json::Value s = v["Speed"];
 
 		m_MaxVelocity = s["MaxVelocity"].asFloat();
-		m_Acceleration = s["Acceleration"].asFloat();
+		//m_Acceleration = s["Acceleration"].asFloat();
+
+		m_Acceleration.x = s["Acceleration"][0].asFloat();
+		m_Acceleration.y = s["Acceleration"][1].asFloat();
+		m_Acceleration.z = s["Acceleration"][2].asFloat();
+
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
 	void Speed::ShowYourself() const
 	{
 		DebugPrint("Speed Comp");
-		DebugPrint(std::format("\tcur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
+		DebugPrint(std::format("\tcur speed: ({}, {}, {}), max speed: {}, acc : {}", m_Velocity.x, m_Velocity.y, m_Velocity.z, m_MaxVelocity, m_Acceleration.x));
 
+	}
+
+	void Speed::AddVelocity(const XMFLOAT3& direction, float deltaTime)
+	{
+		// add direction * deltatime * acceleration
+
+		XMVECTOR dir = XMLoadFloat3(&direction);
+		XMVECTOR vel = XMLoadFloat3(&m_Velocity);
+		XMVECTOR acc = XMLoadFloat3(&m_Acceleration);
+
+		vel += dir * acc * deltaTime;
+
+		XMStoreFloat3(&m_Velocity, vel);
 	}
 
 	void Light::Create(Json::Value& v, ResourceManager* rm)
