@@ -195,7 +195,7 @@ namespace ECSsystem {
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
 				if (client.getRoomNum())
 				{
-					tr->SetPosition(client.characters[client.getPSock()].getPos());
+					//tr->SetPosition(client.characters[client.getPSock()[0]].getPos());
 					client.Send_Pos(pos, rot);
 				}
 			}
@@ -320,6 +320,35 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(func);
+	}
+
+	void SyncPosition::Update(ECSManager* manager, float deltaTime)
+	{
+		std::function<void(component::Server*, component::Name*, component::Transform*)> func = [](component::Server* server, component::Name* name, component::Transform* tr) {
+			auto& client = Client::GetInstance();
+			const SOCKET* playerSock = client.getPSock();
+			if (playerSock[0])
+			{
+				auto& n = name->getName();
+				if (server->getID() == NULL && n.compare("Player1") == 0)
+					server->setID(playerSock[0]);
+			}
+			if (playerSock[1])
+			{
+				auto& n = name->getName();
+				if (server->getID() == NULL && n.compare("Player2") == 0)
+					server->setID(playerSock[1]);
+			}
+			// client의 1P, 2P 소켓 아이디 적용
+
+			if(server->getID())
+			{
+				tr->SetPosition(client.characters[server->getID()].getPos());
+			}
+
+		};
+
+		manager->Execute(func); 
 	}
 
 }

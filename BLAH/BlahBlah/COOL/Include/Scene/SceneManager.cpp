@@ -24,6 +24,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
+	REGISTER_COMPONENT(component::Server, "Server");
 
 	//PRINT_ALL_BITSET;
 }

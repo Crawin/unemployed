@@ -138,6 +138,8 @@ namespace component {
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
+
+		const std::string getName() { return m_Name; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -514,6 +516,17 @@ namespace component {
 		float m_Height = 1000.0f;
 
 		int m_Clouds = 1000;
+	};
+
+	class Server : public ComponentBase<Server> {
+		unsigned int m_id;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		const unsigned int getID() { return m_id; }
+		void setID(const unsigned int&);
 	};
 }
 

@@ -50,6 +50,7 @@ bool Scene::AddSystem()
 	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
 	m_ECSManager->InsertSystem(new ECSsystem::Friction);
 	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
+	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByInput);
 	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
 

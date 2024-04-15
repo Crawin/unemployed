@@ -1,0 +1,135 @@
+{
+	"Name": "Player1",
+
+	"Server": {},
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 180.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"AnimationController":
+	{
+		"Player": "Dia"
+	},
+
+	"Speed": 
+	{
+		"MaxVelocity": 300.0,
+		"Acceleration": 300.0
+	},
+
+	"TestInput": {},
+
+	"DiaAnimationControl": {},
+
+	"Children": 
+	[
+		{
+			"Name": "Satono_Diamond_01_Body",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "test_rigging.satodia_Body_testrig",
+				"Material": "SatoBody"
+			},
+			"AnimationExecutor": 
+			{
+				"Player": "Dia"
+			}
+		},
+
+		{
+			"Name": "Satono_Diamond_01_HairRoot",
+			"Transform": 
+			{
+				"Position": [0.0, 0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+
+
+			"Children":
+			[
+				{
+					"Name" : "Satono_Diamond_01_Hair",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "test_rigging.satodia_Hair_testrig",
+						"Material": "SatoHair"
+					},
+					"AnimationExecutor": 
+					{
+						"Player": "Dia"
+					}
+				},
+				{
+					"Name" : "Satono_Diamond_01_FaceRoot",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+
+					"Children":
+					[
+						{
+							"Name" : "Satono_Diamond_01_Eyes",
+							"Transform": 
+							{
+								"Position": [0.0, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Renderer" : 
+							{
+								"Mesh": "test_rigging.satodia_Eyes_testrig",
+								"Material": "NoMaterial"
+							},
+							"AnimationExecutor": 
+							{
+								"Player": "Dia"
+							}
+
+						},
+						{
+							"Name" : "Satono_Diamond_01_Face",
+							"Transform": 
+							{
+								"Position": [0.0, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Renderer" : 
+							{
+								"Mesh": "test_rigging.satodia_Face_testrig",
+								"Material": "NoMaterial"
+							},
+							"AnimationExecutor": 
+							{
+								"Player": "Dia"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+
+
+
+}

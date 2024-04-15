@@ -342,4 +342,20 @@ namespace component
 		DebugPrint(std::format("\tDay Cycle: {}", m_DayCycle));
 	}
 
+
+	void Server::Create(Json::Value& v, ResourceManager* rm)
+	{
+		m_id = NULL;
+	}
+
+	void Server::ShowYourself() const
+	{
+		DebugPrint("Server Comp");
+	}
+
+	void Server::setID(const unsigned int& id)
+	{
+		m_id = id;
+	}
+
 }

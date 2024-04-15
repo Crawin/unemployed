@@ -47,6 +47,11 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
+	class SyncPosition : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
 	/////////////////////////////////////////////////////////
 	// move by input
 	//
