@@ -315,7 +315,7 @@ namespace ECSsystem {
 
 
 
-			DebugPrint(std::format("angle : {}\tweight : {}", newRot.x, weight));
+			//DebugPrint(std::format("angle : {}\tweight : {}", newRot.x, weight));
 
 			};
 

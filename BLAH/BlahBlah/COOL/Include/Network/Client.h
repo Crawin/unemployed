@@ -68,6 +68,7 @@ private:
 	unsigned int roomNum = NULL;
 public:
 	std::list<char> over_buf;
+	char* overbuf;
 	std::unordered_map<int, GameCharacters> characters;
 
 	void Recv_Start();
@@ -76,6 +77,7 @@ public:
 	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
 	void setPSock(const SOCKET&);
+	void swapPSock();
 	const SOCKET* getPSock() { return playerSock; }
 	void setRoomNum(const unsigned int n) { roomNum = n; }
 	const unsigned int getRoomNum() { return roomNum; }

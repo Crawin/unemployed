@@ -128,16 +128,19 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			
 			// 게임 방 내의 플레이어들 모두에게 패킷 전송
 			Player* players = Games[position->getNum()].getPlayers();
-			for (int i = 0; i < 1; ++i)
+			for (int i = 0; i < 2; ++i)
 			{
 				if (players[i].id)
+				{
 					login_players[players[i].id].send_packet(reinterpret_cast<packet_base*>(&after_pos));
+					//std::cout << players[i].id << "에게 전송 완료" << std::endl;
+				}
 			}
 
 			//Games[position->getNum()].world_collision(position);
-			DirectX::XMFLOAT3 pos = position->getPosition();
-			DirectX::XMFLOAT3 rot = position->getRotation();
-			std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+			//DirectX::XMFLOAT3 pos = position->getPosition();
+			//DirectX::XMFLOAT3 rot = position->getRotation();
+			//std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
 			
 		}
 			break;

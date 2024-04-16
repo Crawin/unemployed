@@ -4,8 +4,8 @@
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
-	//m_cpServerIP = (char*)"127.0.0.1";
+	//m_cpServerIP = (char*)"freerain.mooo.com";
+	m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -106,6 +106,13 @@ void Client::setPSock(const SOCKET& player)
 		playerSock[1] = player;
 }
 
+void Client::swapPSock()
+{
+	SOCKET temp = playerSock[0];
+	playerSock[0] = playerSock[1];
+	playerSock[1] = temp;
+}
+
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
 {
 	if (0 != err)
@@ -124,8 +131,8 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 
 		if (client.over_buf.size() > 0)
 		{
-			char temp_buf[50];
-			ZeroMemory(temp_buf, 50);
+			char temp_buf[256];
+			ZeroMemory(temp_buf, 256);
 			int i = 0;
 			for (auto c : client.over_buf)		// 이전에 들어와서 짤려있던 패킷을 temp_buf로 이동
 			{
@@ -200,8 +207,10 @@ void process_packet(packet_base*& base)
 		{
 			std::cout << buf->getGameNum() << "방 입장 완료" << std::endl;
 			client.setRoomNum(buf->getGameNum());
-			std::cout << "참가한 소켓은" << buf->getPlayer() << "입니다." << std::endl;
-			client.characters.try_emplace(buf->getPlayer());
+			SOCKET playerSock = buf->getPlayer();
+			std::cout << "참가한 소켓은" << playerSock << "입니다." << std::endl;
+			client.characters.try_emplace(playerSock);
+			client.setPSock(playerSock);
 			//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
 			//vivox.detach();
 		}

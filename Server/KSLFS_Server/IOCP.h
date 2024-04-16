@@ -157,11 +157,6 @@ public:
 	const SOCKET getSock() { return client_s; }
 
 	void setState(const PlayerState& ps) { state = ps; }
-	//void broadcast(int m_size)
-	//{
-	//	for (auto& p : g_players)
-	//		p.second.do_send(static_cast<int>(p.first), recv_over.buf, m_size);
-	//}
 };
 
 class Lobby
