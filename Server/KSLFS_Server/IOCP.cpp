@@ -138,9 +138,9 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			}
 
 			//Games[position->getNum()].world_collision(position);
-			//DirectX::XMFLOAT3 pos = position->getPosition();
-			//DirectX::XMFLOAT3 rot = position->getRotation();
-			//std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+			DirectX::XMFLOAT3 pos = position->getPosition();
+			DirectX::XMFLOAT3 rot = position->getRotation();
+			std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
 			
 		}
 			break;

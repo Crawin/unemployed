@@ -57,8 +57,8 @@ public:
 		recv_over.c_op = C_RECV;
 	}
 	SESSION() {
-		std::cout << "ERROR";
-		exit(-1);
+		//std::cout << "ERROR";
+		//exit(-1);
 	}
 	~SESSION() { closesocket(client_s); }
 	void do_recv()

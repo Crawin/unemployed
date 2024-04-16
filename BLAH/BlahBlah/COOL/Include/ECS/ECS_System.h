@@ -78,7 +78,10 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
-
+	class SendToServer : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
 }
 
 

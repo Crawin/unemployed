@@ -193,11 +193,6 @@ namespace ECSsystem {
 				tr->SetRotation(rot);
 
 				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
-				if (client.getRoomNum())
-				{
-					//tr->SetPosition(client.characters[client.getPSock()[0]].getPos());
-					client.Send_Pos(pos, rot);
-				}
 			}
 			};
 
@@ -344,6 +339,7 @@ namespace ECSsystem {
 			if(server->getID())
 			{
 				tr->SetPosition(client.characters[server->getID()].getPos());
+				tr->SetRotation(client.characters[server->getID()].getRot());
 			}
 
 		};
@@ -351,4 +347,15 @@ namespace ECSsystem {
 		manager->Execute(func); 
 	}
 
+	void SendToServer::Update(ECSManager* manager, float deltaTime)
+	{
+		std::function<void(component::Transform*, component::Camera*)> func = [](component::Transform* tr, component::Camera* cam) {
+			auto& client = Client::GetInstance();
+			if (client.getRoomNum())
+			{
+				client.Send_Pos(tr->GetPosition(), tr->GetRotation());
+			}
+		};
+		manager->Execute(func);
+	}
 }
