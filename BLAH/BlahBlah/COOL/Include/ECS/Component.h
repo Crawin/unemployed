@@ -165,7 +165,8 @@ namespace component {
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 		
 		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
-		XMFLOAT4X4 GetWorldTransform();
+		XMFLOAT4X4& GetWorldTransform();
+		XMFLOAT4X4& GetLocalTransform();
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
@@ -414,9 +415,9 @@ namespace component {
 	//
 	class Speed : public ComponentBase<Speed> {
 		float m_MaxVelocity = 300.0f;
-		float m_Acceleration = 10.0f;
-		float m_CurrentVelocity = 0.0f;
-		XMFLOAT3 m_Force = { 0,0,0 };
+
+		XMFLOAT3 m_Velocity = { 0,0,0 };
+		XMFLOAT3 m_Acceleration = { 0,0,0 };
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -424,14 +425,16 @@ namespace component {
 		virtual void ShowYourself() const;
 
 		float GetMaxVelocity() const { return m_MaxVelocity; }
-		float GetAcceleration() const { return m_Acceleration; }
-		float GetCurrentVelocity() const { return m_CurrentVelocity; }
-		const XMFLOAT3& GetForce() const { return m_Force; }
+
+		float GetCurrentVelocityLen() const { return Vector3::Length(m_Velocity); }
+		const XMFLOAT3& GetVelocity() const { return m_Velocity; }
+		const XMFLOAT3 GetAcceleration() const { return m_Acceleration; }
 
 		void SetMaxSpeed(float maxSpeed) { m_MaxVelocity = maxSpeed; }
-		void SetAcceleration(float acc) { m_Acceleration = acc; }
-		void SetCurrentSpeed(float speed) { m_CurrentVelocity = speed; if (m_CurrentVelocity > m_MaxVelocity) m_CurrentVelocity = m_MaxVelocity; }
-		void SetForce(const XMFLOAT3& dir) { m_Force = dir; }
+		void SetVelocity(const XMFLOAT3& vel) { m_Velocity = vel; }
+		void SetAcceleration(const XMFLOAT3& acc) { m_Acceleration = acc; }
+
+		void AddVelocity(const XMFLOAT3& direction, float deltaTime);
 	};
 
 	/////////////////////////////////////////////////////////

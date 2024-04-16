@@ -40,7 +40,7 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// simple physics (friction)
+	// simple physics (friction on air?)
 	//
 	class Friction : public System {
 	public:
@@ -78,10 +78,10 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
-	class SendToServer : public System {
-	public:
-		virtual void Update(ECSManager* manager, float deltaTime);
-	};
+	//class SendToServer : public System {
+	//public:
+	//	virtual void Update(ECSManager* manager, float deltaTime);
+	//};
 }
 
 

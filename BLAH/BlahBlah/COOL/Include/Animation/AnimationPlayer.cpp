@@ -3,6 +3,26 @@
 #include "Animation/Animation.h"
 #include "Scene/ResourceManager.h"
 
+void AnimationPlayer::ChangeToNextAnimation()
+{
+	auto anim = m_NextAnimationQueue.front();
+
+	m_FinishPlaying = false;
+
+	m_BeforeAnimation = m_CurrentAnimation;
+	m_BeforeAnimationPlayTime = m_CurrentAnimationPlayTime;
+	m_BeforeAnimationSpeed = m_CurrentAnimationSpeed;
+
+	// todo 새로운 정보를 받아옴
+	m_BeforeAnimWeight = 1.0f;
+	m_CurrentAnimation = anim;
+	m_CurrentAnimationPlayTime = 0.0f;
+	// todo default speed? 
+	m_CurrentAnimationSpeed = 1.0f;
+
+	m_NextAnimationQueue.pop();
+}
+
 AnimationPlayer::AnimationPlayer()
 {
 }
@@ -20,16 +40,42 @@ void AnimationPlayer::Update(float deltaTime)
 	}
 
 	// anim play time
-	m_CurrentAnimationPlayTime += deltaTime * m_CurrentAnimationSpeed;
-	m_BeforeAnimationPlayTime += deltaTime * m_BeforeAnimationSpeed;
+	if (m_BeforeAnimation->GetLoop() == true || m_FinishPlaying == false) m_CurrentAnimationPlayTime += deltaTime * m_CurrentAnimationSpeed;
+	if (m_BeforeAnimation->GetLoop() == true) m_BeforeAnimationPlayTime += deltaTime * m_BeforeAnimationSpeed;
 
-	if (m_CurrentAnimationPlayTime > m_CurrentAnimation->GetEndTime()) m_CurrentAnimationPlayTime = 0;
-	if (m_BeforeAnimationPlayTime > m_BeforeAnimation->GetEndTime()) m_BeforeAnimationPlayTime = 0;
+	if (m_CurrentAnimationPlayTime > m_CurrentAnimation->GetEndTime()) {
+		
+		// loop 일 때
+		if (m_CurrentAnimation->GetLoop() == true)
+		{
+			m_CurrentAnimationPlayTime = 0;
+		}
+		else 
+		{
+			m_FinishPlaying = true;
+			// change to nextAnimation;
+			if (m_NextAnimationQueue.empty() == false)
+				ChangeToNextAnimation();
+		}
+
+	}
+	if (m_BeforeAnimation->GetLoop() == true && m_BeforeAnimationPlayTime > m_BeforeAnimation->GetEndTime()) m_BeforeAnimationPlayTime = 0;
 
 }
 
 void AnimationPlayer::ChangeToAnimation(std::shared_ptr<Animation> newAnim)
 {
+
+	if (m_CurrentAnimation && m_CurrentAnimation->GetLoop() == false) {
+		m_NextAnimationQueue.push(newAnim);
+		return;
+	}
+
+	for(int i = 0; i < m_NextAnimationQueue.size(); ++i)
+		m_NextAnimationQueue.pop();
+	
+	if (newAnim->GetLoop()) m_FinishPlaying = false;
+
 	m_BeforeAnimation = m_CurrentAnimation;
 	m_BeforeAnimationPlayTime = m_CurrentAnimationPlayTime;
 	m_BeforeAnimationSpeed = m_CurrentAnimationSpeed;

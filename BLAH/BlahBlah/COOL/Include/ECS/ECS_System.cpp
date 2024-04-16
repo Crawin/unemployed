@@ -11,21 +11,33 @@ namespace ECSsystem {
 	void LocalToWorldTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
-		
-		std::function<void(Transform*, Children*)> func = [&func, &manager](Transform* trans, Children* childComp) {
+
+		std::function<void(Name*, Transform*, Children*)> func = [&func, &manager](Name* name, Transform* trans, Children* childComp) {
 			Entity* ent = childComp->GetEntity();
 
 			const std::vector<Entity*>& children = ent->GetChildren();
 
 			// build world matrix for child
-			XMFLOAT4X4 temp = trans->GetWorldTransform();
+			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
+
+			XMFLOAT4X4 temp;
+
+			//DebugPrint(std::format("parent: {}", name->getName()));
+
 
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();
 				int innerId = child->GetInnerID();
 
+				// todo 지우자
+				Name* childName = manager->GetComponent<Name>(bit, innerId);
+				//DebugPrint(std::format("\tchild: {}", childName->getName()));
+
 				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
 				if (childTrans != nullptr) {
+					XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
+					XMStoreFloat4x4(&temp, XMLoadFloat4x4(&myTransform) * XMLoadFloat4x4(&parentMatrix));
+
 					// do st trans to child
 					// make world transform from this trans
 					childTrans->SetParentTransform(temp);
@@ -112,19 +124,31 @@ namespace ECSsystem {
 		std::function<void(Speed*)> func = [deltaTime](Speed* sp) {
 			const float friction = 200.0f;
 			// if moving
-			float speed = sp->GetCurrentVelocity();
-			float slowdown = friction * deltaTime;
+			float speed = sp->GetCurrentVelocityLen();// sp->GetCurrentVelocity();
 
 			if (speed > 0) {
-				sp->SetCurrentSpeed(speed - slowdown);
-				if (speed < 0) sp->SetCurrentSpeed(0);
-			}
-			else if (speed < 0) {
-				sp->SetCurrentSpeed(speed + slowdown);
-				if (speed > 0) sp->SetCurrentSpeed(0);
+				// do friction here
+				XMVECTOR vel = XMLoadFloat3(&sp->GetVelocity());
+				XMVECTOR nor = XMVector3Normalize(vel);
+				XMVECTOR res = vel - nor * friction * deltaTime;
+
+				XMFLOAT3 temp;
+				XMStoreFloat3(&temp, res);
+
+				// 부호가 바뀜
+				if (XMVectorGetX(vel) * XMVectorGetX(res) < 0) temp.x = 0;
+				if (XMVectorGetY(vel) * XMVectorGetY(res) < 0) temp.y = 0;
+				if (XMVectorGetZ(vel) * XMVectorGetZ(res) < 0) temp.z = 0;
+
+				// update
+				sp->SetVelocity(temp);
+				speed = sp->GetCurrentVelocityLen();
+
+				if (abs(speed) < 0.01f) {
+					sp->SetVelocity({ 0,0,0 });
+				}
 			}
 
-			if (abs(speed) < 0.01f) sp->SetCurrentSpeed(0);
 
 			};
 
@@ -134,7 +158,9 @@ namespace ECSsystem {
 	void MoveByInput::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
-		std::function<void(Transform*, Input*, Speed*)> func = [deltaTime](Transform* tr, Input* in, Speed* sp) {
+
+		// input으로 speed 업데이트
+		std::function<void(Transform*, Input*, Speed*)> inputFunc = [deltaTime](Transform* tr, Input* in, Speed* sp) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
@@ -145,42 +171,23 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
 			if (GetAsyncKeyState('E') & 0x8000) { tempMove.y += 1.0f; move = true; }
 
-			float speed = sp->GetCurrentVelocity();
+			float speed = sp->GetCurrentVelocityLen();
 
 			auto& client = Client::GetInstance();
 
 			// update speed if key down
 			if (move) {
-				// move to look at;
-				speed += sp->GetAcceleration() * deltaTime;
+				XMVECTOR vec = XMLoadFloat3(&tempMove);
+				XMFLOAT4X4 tpRot = tr->GetWorldTransform();
+				tpRot._41 = 0.0f;
+				tpRot._42 = 0.0f;
+				tpRot._43 = 0.0f;
 
-				if (speed > sp->GetMaxVelocity()) speed = sp->GetMaxVelocity();
-				sp->SetCurrentSpeed(speed);
+				vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+				
+				XMStoreFloat3(&tempMove, vec);
+				sp->AddVelocity(tempMove, deltaTime);
 			}
-
-			XMVECTOR vec = XMLoadFloat3(&tempMove) * speed * deltaTime;
-
-			XMFLOAT4X4 tpRot = tr->GetWorldTransform();
-			tpRot._41 = 0.0f;
-			tpRot._42 = 0.0f;
-			tpRot._43 = 0.0f;
-
-			vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-
-			XMFLOAT3 curForce = sp->GetForce();
-			XMVectorAdd(XMLoadFloat3(&sp->GetForce()), vec * speed);
-
-			XMStoreFloat3(&tempMove, vec);
-
-
-			if (move)
-				sp->SetForce(tempMove);
-
-			//DebugPrint(std::format("speed: {}", speed));
-			XMFLOAT3 pos = Vector3::Add(sp->GetForce(), tr->GetPosition());
-			if (speed != 0)
-				tr->SetPosition(pos);
-
 
 			// mouse
 			//if (InputManager::GetInstance().GetDrag()) 
@@ -191,12 +198,10 @@ namespace ECSsystem {
 				rot.y += (mouseMove.x / rootSpeed);
 				rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
-
-				//DebugPrint(std::format("x: {}, y: {}", mouseMove.cx, mouseMove.cy));// , rot.z));
 			}
 			};
 
-		std::function<void(Transform*, TestInput*, Speed*)> func2 = [deltaTime](Transform* tr, TestInput* in, Speed* sp) {
+		std::function<void(Transform*, TestInput*, Speed*)> inputFunc2 = [deltaTime](Transform* tr, TestInput* in, Speed* sp) {
 			// keyboard input
 			bool move = false;
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
@@ -205,40 +210,59 @@ namespace ECSsystem {
 			if (GetAsyncKeyState(VK_LEFT) & 0x8000)		{ tempMove.x -= 1.0f; move = true; }
 			if (GetAsyncKeyState(VK_RIGHT) & 0x8000)	{ tempMove.x += 1.0f; move = true; }
 
-			float speed = sp->GetCurrentVelocity();
+			float speed = sp->GetCurrentVelocityLen();
+
 			// update speed if key down
 			if (move) {
-				// move to look at;
-				speed += sp->GetAcceleration() * deltaTime;
+				XMVECTOR vec = XMLoadFloat3(&tempMove);
+				XMFLOAT4X4 tpRot = tr->GetWorldTransform();
+				tpRot._41 = 0.0f;
+				tpRot._42 = 0.0f;
+				tpRot._43 = 0.0f;
 
-				if (speed > sp->GetMaxVelocity()) speed = sp->GetMaxVelocity();
-				sp->SetCurrentSpeed(speed);
+				vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+
+				XMStoreFloat3(&tempMove, vec);
+				sp->AddVelocity(tempMove, deltaTime);
 			}
 
-			XMVECTOR vec = XMLoadFloat3(&tempMove) * speed * deltaTime;
 
-			XMFLOAT4X4 tpRot = tr->GetWorldTransform();
-			tpRot._41 = 0.0f;
-			tpRot._42 = 0.0f;
-			tpRot._43 = 0.0f;
+			//XMVECTOR vec = XMLoadFloat3(&tempMove) * speed * deltaTime;
 
-			vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-			XMStoreFloat3(&tempMove, vec);
+			//XMFLOAT4X4 tpRot = tr->GetWorldTransform();
+			//tpRot._41 = 0.0f;
+			//tpRot._42 = 0.0f;
+			//tpRot._43 = 0.0f;
+
+			//vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+			//XMStoreFloat3(&tempMove, vec);
 
 
-			if (move)
-				sp->SetForce(tempMove);
+			//if (move)
+			//	sp->SetForce(tempMove);
 
-			//DebugPrint(std::format("speed: {}", speed));
-			if (speed != 0)
-				tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
+			////DebugPrint(std::format("speed: {}", speed));
+			//if (speed != 0)
+			//	tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
 
 			};
 		// mouse
 
+		// move by speed
+		std::function<void(Transform*, Speed*)> move = [deltaTime](Transform* tr, Speed* sp) {
+			XMVECTOR pos = XMLoadFloat3(&tr->GetPosition());
+			XMVECTOR vel= XMLoadFloat3(&sp->GetVelocity());
 
-		manager->Execute(func);
-		manager->Execute(func2);
+			XMFLOAT3 temp;
+			pos += vel * deltaTime;
+			XMStoreFloat3(&temp, pos);
+
+			tr->SetPosition(temp);
+			};
+
+		manager->Execute(inputFunc);
+		manager->Execute(inputFunc2);
+		manager->Execute(move);
 	}
 
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
@@ -246,7 +270,7 @@ namespace ECSsystem {
 		std::function<void(component::Speed*, component::AnimationController*, component::DiaAnimationControl*)> func1 = 
 			[](component::Speed* sp, component::AnimationController* animCtrl, component::DiaAnimationControl* dia) {
 
-			float speed = sp->GetCurrentVelocity();
+			float speed = sp->GetCurrentVelocityLen();
 
 			if (dia->m_BefSpeed > 10.0f) {
 				if (speed <= 10.0f)
@@ -256,7 +280,13 @@ namespace ECSsystem {
 				if (speed >= 10.0f)
 				animCtrl->ChangeAnimationTo("Walk");
 			}
-			//animCtrl->ChangeAnimationTo("Dance");
+
+			if (GetAsyncKeyState(VK_END) & 0x0001) {
+				animCtrl->ChangeAnimationTo("FallingDown");
+				animCtrl->ChangeAnimationTo("GetUp");
+				animCtrl->ChangeAnimationTo("Idle");
+			}
+
 
 			dia->m_BefSpeed = speed;
 

@@ -119,7 +119,7 @@ namespace component
 
 	}
 
-	XMFLOAT4X4 Transform::GetWorldTransform()
+	XMFLOAT4X4& Transform::GetWorldTransform()
 	{
 		// TODO: 여기에 return 문을 삽입합니다.
 		//XMMATRIX mat = XMMatrixMultiply(
@@ -139,6 +139,24 @@ namespace component
 
 		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
 		XMStoreFloat4x4(&worldMat, XMMatrixMultiply(mat, XMLoadFloat4x4(&m_ParentTransform)));
+
+		return worldMat;
+	}
+
+	XMFLOAT4X4& Transform::GetLocalTransform()
+	{
+		XMFLOAT3 rotRad;
+		rotRad.x = XMConvertToRadians(m_Rotate.x);
+		rotRad.y = XMConvertToRadians(m_Rotate.y);
+		rotRad.z = XMConvertToRadians(m_Rotate.z);
+		XMMATRIX mat = XMMatrixMultiply(
+			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
+			XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
+				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
+
+
+		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
+		XMStoreFloat4x4(&worldMat, mat);
 
 		return worldMat;
 	}
@@ -257,15 +275,33 @@ namespace component
 		Json::Value s = v["Speed"];
 
 		m_MaxVelocity = s["MaxVelocity"].asFloat();
-		m_Acceleration = s["Acceleration"].asFloat();
+		//m_Acceleration = s["Acceleration"].asFloat();
+
+		m_Acceleration.x = s["Acceleration"][0].asFloat();
+		m_Acceleration.y = s["Acceleration"][1].asFloat();
+		m_Acceleration.z = s["Acceleration"][2].asFloat();
+
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
 	void Speed::ShowYourself() const
 	{
 		DebugPrint("Speed Comp");
-		DebugPrint(std::format("\tcur speed: {}, max speed: {}, acc : {}", m_CurrentVelocity, m_MaxVelocity, m_CurrentVelocity));
+		DebugPrint(std::format("\tcur speed: ({}, {}, {}), max speed: {}, acc : {}", m_Velocity.x, m_Velocity.y, m_Velocity.z, m_MaxVelocity, m_Acceleration.x));
 
+	}
+
+	void Speed::AddVelocity(const XMFLOAT3& direction, float deltaTime)
+	{
+		// add direction * deltatime * acceleration
+
+		XMVECTOR dir = XMLoadFloat3(&direction);
+		XMVECTOR vel = XMLoadFloat3(&m_Velocity);
+		XMVECTOR acc = XMLoadFloat3(&m_Acceleration);
+
+		vel += dir * acc * deltaTime;
+
+		XMStoreFloat3(&m_Velocity, vel);
 	}
 
 	void Light::Create(Json::Value& v, ResourceManager* rm)

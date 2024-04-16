@@ -392,7 +392,15 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 			std::string animName = root[key].asString();
 			int anim = GetAnimation(animName, commandList);
 
+			if (anim < 0) ERROR_QUIT("Failed To Load Animation");
+
 			player->m_AnimationMap[key] = m_Animations[anim];
+
+			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
+			// 나중에 꼭 꼭 고쳐야한다
+			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up") {
+				m_Animations[anim]->m_Loop = false;
+			}
 		}
 		m_AnimationPlayer.push_back(player);
 
@@ -669,7 +677,7 @@ bool ResourceManager::MakeExtraRenderTarget()
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R32G32B32A32_FLOAT,
 		DXGI_FORMAT_R32G32B32A32_FLOAT
 	};
 
