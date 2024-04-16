@@ -85,9 +85,7 @@ bool Mesh::collision(const DirectX::BoundingOrientedBox& player)
 	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
 	DirectX::BoundingOrientedBox obb(m_AABBCenter, m_AABBExtents_Divide, orient);
 
-	//std::cout << this->m_Name << " Center : (" << obb.Center.x << "," << obb.Center.y << "," << obb.Center.z << "), Extents : ("
-	//	<< obb.Extents.x << "," << obb.Extents.y << "," << obb.Extents.z << ")" << std::endl;
-	if (player.Intersects(obb))
+	if (player.Intersects(obb) && m_Name != "")
 	{
 		return true;
 	}
