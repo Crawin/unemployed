@@ -163,7 +163,8 @@ namespace component {
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 		
 		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
-		XMFLOAT4X4 GetWorldTransform();
+		XMFLOAT4X4& GetWorldTransform();
+		XMFLOAT4X4& GetLocalTransform();
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }

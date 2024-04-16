@@ -119,7 +119,7 @@ namespace component
 
 	}
 
-	XMFLOAT4X4 Transform::GetWorldTransform()
+	XMFLOAT4X4& Transform::GetWorldTransform()
 	{
 		// TODO: 여기에 return 문을 삽입합니다.
 		//XMMATRIX mat = XMMatrixMultiply(
@@ -139,6 +139,24 @@ namespace component
 
 		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
 		XMStoreFloat4x4(&worldMat, XMMatrixMultiply(mat, XMLoadFloat4x4(&m_ParentTransform)));
+
+		return worldMat;
+	}
+
+	XMFLOAT4X4& Transform::GetLocalTransform()
+	{
+		XMFLOAT3 rotRad;
+		rotRad.x = XMConvertToRadians(m_Rotate.x);
+		rotRad.y = XMConvertToRadians(m_Rotate.y);
+		rotRad.z = XMConvertToRadians(m_Rotate.z);
+		XMMATRIX mat = XMMatrixMultiply(
+			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
+			XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
+				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
+
+
+		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
+		XMStoreFloat4x4(&worldMat, mat);
 
 		return worldMat;
 	}

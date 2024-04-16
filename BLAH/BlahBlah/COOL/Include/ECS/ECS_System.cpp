@@ -11,21 +11,33 @@ namespace ECSsystem {
 	void LocalToWorldTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
-		
-		std::function<void(Transform*, Children*)> func = [&func, &manager](Transform* trans, Children* childComp) {
+
+		std::function<void(Name*, Transform*, Children*)> func = [&func, &manager](Name* name, Transform* trans, Children* childComp) {
 			Entity* ent = childComp->GetEntity();
 
 			const std::vector<Entity*>& children = ent->GetChildren();
 
 			// build world matrix for child
-			XMFLOAT4X4 temp = trans->GetWorldTransform();
+			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
+
+			XMFLOAT4X4 temp;
+
+			//DebugPrint(std::format("parent: {}", name->getName()));
+
 
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();
 				int innerId = child->GetInnerID();
 
+				// todo 지우자
+				Name* childName = manager->GetComponent<Name>(bit, innerId);
+				//DebugPrint(std::format("\tchild: {}", childName->getName()));
+
 				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
 				if (childTrans != nullptr) {
+					XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
+					XMStoreFloat4x4(&temp, XMLoadFloat4x4(&myTransform) * XMLoadFloat4x4(&parentMatrix));
+
 					// do st trans to child
 					// make world transform from this trans
 					childTrans->SetParentTransform(temp);
