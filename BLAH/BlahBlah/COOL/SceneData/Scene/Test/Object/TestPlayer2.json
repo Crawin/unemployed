@@ -12,7 +12,7 @@
 
 	"AnimationController":
 	{
-		"Player": "Dia"
+		"Player": "Dia2"
 	},
 
 	"Speed": 
@@ -42,7 +42,7 @@
 			},
 			"AnimationExecutor": 
 			{
-				"Player": "Dia"
+				"Player": "Dia2"
 			}
 		},
 
@@ -73,7 +73,7 @@
 					},
 					"AnimationExecutor": 
 					{
-						"Player": "Dia"
+						"Player": "Dia2"
 					}
 				},
 				{
@@ -102,7 +102,7 @@
 							},
 							"AnimationExecutor": 
 							{
-								"Player": "Dia"
+								"Player": "Dia2"
 							}
 
 						},
@@ -121,7 +121,7 @@
 							},
 							"AnimationExecutor": 
 							{
-								"Player": "Dia"
+								"Player": "Dia2"
 							}
 						}
 					]

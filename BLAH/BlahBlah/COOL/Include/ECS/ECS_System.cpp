@@ -70,20 +70,22 @@ namespace ECSsystem {
 		// first person cam
 		std::function<void(component::Transform*, component::Camera*)> func1 = [](component::Transform* tr, component::Camera* cam) {
 
-			XMFLOAT3 rotate = tr->GetRotation();
-			XMFLOAT3 rad;
-			rad.x = XMConvertToRadians(rotate.x);
-			rad.y = XMConvertToRadians(rotate.y);
-			rad.z = XMConvertToRadians(rotate.z);
+			//XMFLOAT3 rotate = tr->GetRotation();
+			//XMFLOAT3 rad;
+			//rad.x = XMConvertToRadians(rotate.x);
+			//rad.y = XMConvertToRadians(rotate.y);
+			//rad.z = XMConvertToRadians(rotate.z);
 
-			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
-			XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
+			//XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
+			//XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
 
-			XMFLOAT3 pos = tr->GetPosition();
+			//XMFLOAT3 pos = tr->GetPosition();
 			//DebugPrint(std::format("cam: {}, {}, {}", pos.x, pos.y, pos.z));
 
 			//cam->SetPosition(tr->GetPosition());
-			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
+			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
+			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
+
 			};
 
 		manager->Execute(func1);
@@ -178,7 +180,7 @@ namespace ECSsystem {
 			// update speed if key down
 			if (move) {
 				XMVECTOR vec = XMLoadFloat3(&tempMove);
-				XMFLOAT4X4 tpRot = tr->GetWorldTransform();
+				XMFLOAT4X4 tpRot = tr->GetLocalTransform();
 				tpRot._41 = 0.0f;
 				tpRot._42 = 0.0f;
 				tpRot._43 = 0.0f;
@@ -199,6 +201,7 @@ namespace ECSsystem {
 				rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
 			}
+
 			};
 
 		std::function<void(Transform*, TestInput*, Speed*)> inputFunc2 = [deltaTime](Transform* tr, TestInput* in, Speed* sp) {
@@ -260,9 +263,17 @@ namespace ECSsystem {
 			tr->SetPosition(temp);
 			};
 
+
+		// send
+		std::function<void(Transform*, Input*, Speed*)> send = [deltaTime](Transform* tr, Input* in, Speed* sp) {
+
+			if(sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+				Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation());
+			};
 		manager->Execute(inputFunc);
 		manager->Execute(inputFunc2);
 		manager->Execute(move);
+		manager->Execute(send);
 	}
 
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
@@ -377,15 +388,15 @@ namespace ECSsystem {
 		manager->Execute(func); 
 	}
 
-	void SendToServer::Update(ECSManager* manager, float deltaTime)
-	{
-		std::function<void(component::Transform*, component::Camera*)> func = [](component::Transform* tr, component::Camera* cam) {
-			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
-			{
-				client.Send_Pos(tr->GetPosition(), tr->GetRotation());
-			}
-		};
-		manager->Execute(func);
-	}
+	//void SendToServer::Update(ECSManager* manager, float deltaTime)
+	//{
+	//	std::function<void(component::Transform*, component::Speed*)> func = [](component::Transform* tr, component::Speed* sp) {
+	//		auto& client = Client::GetInstance();
+	//		if (client.getRoomNum())
+	//		{
+	//			
+	//		}
+	//	};
+	//	manager->Execute(func);
+	//}
 }

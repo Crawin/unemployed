@@ -119,6 +119,22 @@ namespace component
 
 	}
 
+	const XMFLOAT3& Transform::GetWorldPosition() const
+	{
+		XMFLOAT3 temp;
+		XMStoreFloat3(&temp, XMVector3Transform(XMLoadFloat3(&m_Position), XMLoadFloat4x4(&m_ParentTransform)));
+
+		return temp;
+	}
+
+	const XMFLOAT3& Transform::GetWorldRotation() const
+	{
+		XMFLOAT3 temp;
+		XMStoreFloat3(&temp, XMVector3Transform(XMLoadFloat3(&m_Rotate), XMLoadFloat4x4(&m_ParentTransform)));
+
+		return temp;
+	}
+
 	XMFLOAT4X4& Transform::GetWorldTransform()
 	{
 		// TODO: 여기에 return 문을 삽입합니다.

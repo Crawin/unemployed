@@ -161,6 +161,9 @@ namespace component {
 
 		const XMFLOAT3& GetPosition() const { return m_Position; }
 		const XMFLOAT3& GetRotation() const { return m_Rotate; }
+		const XMFLOAT3& GetWorldPosition() const;
+		const XMFLOAT3& GetWorldRotation() const;
+
 		const XMFLOAT3& GetScale() const { return m_Scale; }
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 		
