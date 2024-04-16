@@ -394,7 +394,7 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 
 			if (anim < 0) ERROR_QUIT("Failed To Load Animation");
 
-			player->m_AnimationMap[key] = m_Animations[anim];
+			player->m_AnimationMap[ConvertStringToAnimationSet(key)] = m_Animations[anim];
 
 			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
 			// 나중에 꼭 꼭 고쳐야한다
@@ -629,8 +629,8 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// set default animation to anim executor;
 	for (auto& player : m_AnimationPlayer) {
-		player->ChangeToAnimation(player->m_AnimationMap["Idle"]);
-		player->ChangeToAnimation(player->m_AnimationMap["Idle"]);
+		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_SET::IDLE]);
+		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_SET::IDLE]);
 	};
 
 	// Make shader for animation stream out

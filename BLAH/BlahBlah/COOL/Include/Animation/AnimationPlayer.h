@@ -8,7 +8,7 @@ class AnimationPlayer
 	std::string m_Name = "no name anim";
 
 	// Animation that this player can play
-	std::map <std::string, std::shared_ptr<Animation>> m_AnimationMap;
+	std::map <ANIMATION_SET, std::shared_ptr<Animation>> m_AnimationMap;
 
 	// animation
 	std::shared_ptr<Animation> m_CurrentAnimation;
@@ -46,7 +46,7 @@ public:
 	void Update(float deltaTime);
 
 	void ChangeToAnimation(std::shared_ptr<Animation> newAnim);
-	void ChangeToAnimation(const std::string& animName);
+	void ChangeToAnimation(ANIMATION_SET animSet);
 
 	void SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager) const;
 };

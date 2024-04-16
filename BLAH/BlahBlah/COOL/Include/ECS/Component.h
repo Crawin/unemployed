@@ -222,7 +222,7 @@ namespace component {
 
 		void UpdateTime(float deltaTime);
 
-		void ChangeAnimationTo(const std::string& animDef);
+		void ChangeAnimationTo(ANIMATION_SET animSet);
 
 		void SetPlayer(AnimationPlayer* player) { m_AnimationPlayer = player; }
 	};

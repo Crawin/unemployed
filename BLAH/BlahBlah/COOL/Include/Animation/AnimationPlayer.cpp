@@ -88,12 +88,12 @@ void AnimationPlayer::ChangeToAnimation(std::shared_ptr<Animation> newAnim)
 	m_CurrentAnimationSpeed = 1.0f;
 }
 
-void AnimationPlayer::ChangeToAnimation(const std::string& animName)
+void AnimationPlayer::ChangeToAnimation(ANIMATION_SET animSet)
 {
-	if (m_AnimationMap.contains(animName)) 
-		ChangeToAnimation(m_AnimationMap[animName]);
+	if (m_AnimationMap.contains(animSet))
+		ChangeToAnimation(m_AnimationMap[animSet]);
 	else
-		ERROR_QUIT(std::format("NO SUCH ANIMATION DEFINED!!, name: {}", animName));
+		ERROR_QUIT(std::format("NO SUCH ANIMATION DEFINED!!, name: {}", ConvertAnimationSetToString(animSet)));
 }
 
 void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager) const

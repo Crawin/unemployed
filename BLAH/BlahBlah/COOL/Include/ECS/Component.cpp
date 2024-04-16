@@ -51,9 +51,9 @@ namespace component
 		m_AnimationPlayer->Update(deltaTime);
 	}
 
-	void AnimationController::ChangeAnimationTo(const std::string& animDef)
+	void AnimationController::ChangeAnimationTo(ANIMATION_SET animSet)
 	{
-		m_AnimationPlayer->ChangeToAnimation(animDef);
+		m_AnimationPlayer->ChangeToAnimation(animSet);
 	}
 
 	void AnimationExecutor::Create(Json::Value& v, ResourceManager* rm)

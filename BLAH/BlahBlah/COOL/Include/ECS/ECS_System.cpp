@@ -285,17 +285,17 @@ namespace ECSsystem {
 
 			if (dia->m_BefSpeed > 10.0f) {
 				if (speed <= 10.0f)
-				animCtrl->ChangeAnimationTo("Idle");
+				animCtrl->ChangeAnimationTo(ANIMATION_SET::IDLE);
 			}
 			else {
 				if (speed >= 10.0f)
-				animCtrl->ChangeAnimationTo("Walk");
+				animCtrl->ChangeAnimationTo(ANIMATION_SET::WALK);
 			}
 
 			if (GetAsyncKeyState(VK_END) & 0x0001) {
-				animCtrl->ChangeAnimationTo("FallingDown");
-				animCtrl->ChangeAnimationTo("GetUp");
-				animCtrl->ChangeAnimationTo("Idle");
+				animCtrl->ChangeAnimationTo(ANIMATION_SET::FALLINGDOWN);
+				animCtrl->ChangeAnimationTo(ANIMATION_SET::GETUP);
+				animCtrl->ChangeAnimationTo(ANIMATION_SET::IDLE);
 			}
 
 
