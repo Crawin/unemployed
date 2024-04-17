@@ -38,7 +38,7 @@
 			"Renderer":
 			{
 				"Mesh": "test_rigging.satodia_Body_testrig",
-				"Material": "SatoBody"
+				"Material": "NoMaterial"
 			},
 			"AnimationExecutor": 
 			{

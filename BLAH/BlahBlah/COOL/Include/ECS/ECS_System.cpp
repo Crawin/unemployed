@@ -369,45 +369,60 @@ namespace ECSsystem {
 			const SOCKET* playerSock = client.getPSock();
 			short type = client.getCharType();
 			auto& n = name->getName();
-			if (playerSock[0])				// 클라 본인의 캐릭터가 할당되었을 때
+			if (playerSock[0])
 			{
-				switch (type)				// 클라 본인이 호스트인가 게스트인가?
-				{
-				case 0:
-					// 아직 방 생성 전
-					break;
-				case 1:						// 호스트
-					if (server->getID() == NULL && n.compare("Player1") == 0)
-						server->setID(playerSock[0]);
-					break;
-				case 2:						// 게스트
-					if (server->getID() == NULL && n.compare("Player2") == 0)
-						server->setID(playerSock[0]);
-					break;
-				default:
-					std::cout << "클라이언트 주인의 캐릭터 타입 오류" << std::endl;
-					while (1);
-					break;
-				}
+				if (server->getID() == NULL && n.compare("Player1") == 0)
+					server->setID(playerSock[0]);
 			}
-			if (playerSock[1])				// 상대편의 클라가 할당되었을 때
+			if (playerSock[1])
 			{
-				switch (type)				// 클라 본인이 호스트인가 게스트인가?
-				{
-				case 1:						// 클라 본인이 호스트이므로, 상대편 클라는 게스트로 할당
-					if (server->getID() == NULL && n.compare("Player2") == 0)
-						server->setID(playerSock[1]);
-					break;
-				case 2:						// 클라 본인이 게스트이므로, 상대편 클라는 호스트로 할당
-					if (server->getID() == NULL && n.compare("Player1") == 0)
-						server->setID(playerSock[1]);
-					break;
-				default:
-					std::cout << "클라이언트 주인의 캐릭터 타입 오류" << std::endl;
-					while (1);
-					break;
-				}
+				if (server->getID() == NULL && n.compare("Player2") == 0)
+					server->setID(playerSock[1]);
 			}
+
+			//if (playerSock[0])				// 클라 본인의 캐릭터가 할당되었을 때
+			//{
+			//	switch (type)				// 클라 본인이 호스트인가 게스트인가?
+			//	{
+			//	case 0:
+			//		// 아직 방 생성 전
+			//		break;
+			//	case 1:						// 호스트
+			//		if (server->getID() == NULL && n.compare("Player1") == 0)
+			//			server->setID(playerSock[0]);
+			//		break;
+			//	case 2:						// 게스트
+			//		if (server->getID() == NULL && n.compare("Player2") == 0)
+			//		{
+			//			server->setID(playerSock[0]);
+			//		}
+			//		break;
+			//	default:
+			//		std::cout << "클라이언트 주인의 캐릭터 타입 오류" << std::endl;
+			//		while (1);
+			//		break;
+			//	}
+			//}
+			//if (playerSock[1])				// 상대편의 클라가 할당되었을 때
+			//{
+			//	switch (type)				// 클라 본인이 호스트인가 게스트인가?
+			//	{
+			//	case 1:						// 클라 본인이 호스트이므로, 상대편 클라는 게스트로 할당
+			//		if (server->getID() == NULL && n.compare("Player2") == 0)
+			//			server->setID(playerSock[1]);
+			//		break;
+			//	case 2:						// 클라 본인이 게스트이므로, 상대편 클라는 호스트로 할당
+			//		if (server->getID() == NULL && n.compare("Player1") == 0)
+			//		{
+			//			server->setID(playerSock[1]);
+			//		}
+			//		break;
+			//	default:
+			//		std::cout << "클라이언트 주인의 캐릭터 타입 오류" << std::endl;
+			//		while (1);
+			//		break;
+			//	}
+			//}
 			// client의 1P, 2P 소켓 아이디 적용
 
 			auto id = server->getID();
