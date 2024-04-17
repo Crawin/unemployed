@@ -170,6 +170,7 @@ public:
 	SOCKET sock = NULL;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 speed;
 };
 
 class Game
@@ -185,7 +186,7 @@ public:
 	void setPlayerRot(const unsigned int&, cs_packet_position*&);
 	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
-	void broadcast();
+	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
 };
 
 class IOCP_SERVER_MANAGER

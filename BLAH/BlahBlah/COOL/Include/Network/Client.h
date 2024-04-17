@@ -37,15 +37,18 @@ class GameCharacters
 {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 speed;
 public:
 	GameCharacters() 
 	{
 		position = DirectX::XMFLOAT3(0, 0, 0);
 		rotation = DirectX::XMFLOAT3(0, 0, 0);
+		speed = DirectX::XMFLOAT3(0, 0, 0);
 	};
-	void setPosRot(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot) { position = pos; rotation = rot;}
+	void setPosRotSpeed(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot, const DirectX::XMFLOAT3 sp) { position = pos; rotation = rot; speed = sp; }
 	const DirectX::XMFLOAT3 getPos() { return position; }
 	const DirectX::XMFLOAT3 getRot() { return rotation; }
+	const DirectX::XMFLOAT3 getSpeed() { return speed; }
 };
 
 
@@ -66,6 +69,7 @@ private:
 	char buf[BUFSIZE];
 	SOCKET playerSock[2];
 	unsigned int roomNum = NULL;
+	short characterType = NULL;
 public:
 	std::list<char> over_buf;
 	char* overbuf;
@@ -73,7 +77,7 @@ public:
 
 	void Recv_Start();
 	char* Get_Buf();
-	void Send_Pos(const DirectX::XMFLOAT3& , const DirectX::XMFLOAT3&);
+	void Send_Pos(const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&);
 	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
 	void setPSock(const SOCKET&);
@@ -81,6 +85,8 @@ public:
 	const SOCKET* getPSock() { return playerSock; }
 	void setRoomNum(const unsigned int n) { roomNum = n; }
 	const unsigned int getRoomNum() { return roomNum; }
+	const short getCharType() { return characterType; }
+	void setCharType(const short& type) { characterType = type; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

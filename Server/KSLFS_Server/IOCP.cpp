@@ -125,7 +125,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			}
 
 			// 충돌 이후 좌표 패킷을 만든 후
-			sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id));
+			sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id),gameRoom.getPlayerSp(id));
 			
 			// 게임 방 내의 플레이어들 모두에게 패킷 전송
 			Player* players = Games[position->getNum()].getPlayers();
@@ -138,7 +138,6 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				}
 			}
 
-			//Games[position->getNum()].world_collision(position);
 			DirectX::XMFLOAT3 pos = position->getPosition();
 			DirectX::XMFLOAT3 rot = position->getRotation();
 			std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
@@ -254,6 +253,8 @@ void Game::setPlayerPR(const unsigned int& id, cs_packet_position*& packet)
 		{
 			player.position = packet->getPosition();
 			player.rotation = packet->getRotation();
+			player.speed = packet->getSpeed();
+			break;
 		}
 	}
 }
@@ -265,6 +266,8 @@ void Game::setPlayerRot(const unsigned int& id, cs_packet_position*& packet)
 		if (player.id == id)
 		{
 			player.rotation = packet->getRotation();
+			player.speed = DirectX::XMFLOAT3(0, 0, 0);
+			break;
 		}
 	}
 }
@@ -276,6 +279,17 @@ const DirectX::XMFLOAT3 Game::getPlayerRot(const unsigned int& id)
 		if (player.id == id)
 		{
 			return player.rotation;
+		}
+	}
+}
+
+const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
+			return player.speed;
 		}
 	}
 }

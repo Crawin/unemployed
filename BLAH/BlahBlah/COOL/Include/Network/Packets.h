@@ -35,14 +35,16 @@ class sc_packet_position : public packet_base
 	SOCKET player;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 speed;
 public:
-	sc_packet_position(const SOCKET s, const DirectX::XMFLOAT3 p, const DirectX::XMFLOAT3 r) : player(s), position(p), rotation(r) {
+	sc_packet_position(const SOCKET& s, const DirectX::XMFLOAT3& p, const DirectX::XMFLOAT3& r, const DirectX::XMFLOAT3& sp) : player(s), position(p), rotation(r), speed(sp) {
 		size = sizeof(sc_packet_position);
 		type = pPOSITION;
 	}
 	const SOCKET getPlayer() { return player; }
 	const DirectX::XMFLOAT3 getPos() { return position; }
 	const DirectX::XMFLOAT3 getRot() { return rotation; }
+	const DirectX::XMFLOAT3 getSpeed() { return speed; }
 };
 
 class sc_packet_login : public packet_base
@@ -107,8 +109,10 @@ private:
 	unsigned int roomNum;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
+	DirectX::XMFLOAT3 speed;
 public:
-	cs_packet_position(const unsigned int& n, const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot) :roomNum(n), position(pos), rotation(rot)
+	cs_packet_position(const unsigned int& n, const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot, const DirectX::XMFLOAT3& sp)
+		:roomNum(n), position(pos), rotation(rot), speed(sp)
 	{
 		size = sizeof(cs_packet_position);
 		type = pPOSITION;
@@ -116,6 +120,7 @@ public:
 	const unsigned int getNum() { return roomNum; }
 	const DirectX::XMFLOAT3 getPosition() { return position; }
 	const DirectX::XMFLOAT3 getRotation() { return rotation; }
+	const DirectX::XMFLOAT3 getSpeed() { return speed; }
 };
 
 class cs_packet_make_room : public packet_base

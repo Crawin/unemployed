@@ -40,9 +40,9 @@ char* Client::Get_Buf()
 	return buf;
 }
 
-void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot)
+void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot, const DirectX::XMFLOAT3& sp)
 {
-	cs_packet_position temp(roomNum, pos, rot);
+	cs_packet_position temp(roomNum, pos, rot, sp);
 	wsabuf[0].buf = reinterpret_cast<char*>(&temp);
 	wsabuf[0].len = sizeof(cs_packet_position);
 
@@ -181,7 +181,7 @@ void process_packet(packet_base*& base)
 	case 0:									// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-		client.characters[buf->getPlayer()].setPosRot(buf->getPos(), buf->getRot());
+		client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
 		break;
 	}
 	case 1:									// LOGIN
@@ -196,6 +196,7 @@ void process_packet(packet_base*& base)
 		sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
 		client.setRoomNum(buf->getGameNum());
+		client.setCharType(1);
 		//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
 		//vivox.detach();
 		break;
@@ -208,9 +209,10 @@ void process_packet(packet_base*& base)
 			std::cout << buf->getGameNum() << "방 입장 완료" << std::endl;
 			client.setRoomNum(buf->getGameNum());
 			SOCKET playerSock = buf->getPlayer();
-			std::cout << "참가한 소켓은" << playerSock << "입니다." << std::endl;
+			//std::cout << "참가한 소켓은" << playerSock << "입니다." << std::endl;
 			client.characters.try_emplace(playerSock);
 			client.setPSock(playerSock);
+			client.setCharType(2);
 			//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
 			//vivox.detach();
 		}
