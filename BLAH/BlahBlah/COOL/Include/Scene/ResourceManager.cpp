@@ -37,12 +37,14 @@ ResourceManager::~ResourceManager()
 		delete bon;
 
 	// sharedptr
-	m_Animations.clear();
 	//for (auto& ani : m_Animations)
 	//	delete ani;
-	for (auto& cmp : m_Components)
-		delete cmp;
+	// esc매니저에서 하기 때문에 상관 없다
+	//for (auto& cmp : m_Components)
+	//	delete cmp;
 	
+	m_Animations.clear();
+
 	//sharedptr
 	m_Shaders.clear();
 
@@ -417,7 +419,6 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 	// set animation executer
 	for (auto& animExe : m_ToLoadAnimExe) {
 		std::string name = animExe.m_AnimSetName;
-
 		auto it = std::find_if(m_AnimationPlayer.begin(), m_AnimationPlayer.end(), [&name](AnimationPlayer* player) { return player->GetName() == name; });
 
 		// failed to find;
@@ -427,6 +428,30 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 		}
 
 		animExe.m_Executor->SetPlayer(*it);
+	}
+
+	for (auto& att : m_ToLoadAttach) {
+		std::string name = att.m_AnimSetName;
+		auto it = std::find_if(m_AnimationPlayer.begin(), m_AnimationPlayer.end(), [&name](AnimationPlayer* player) { return player->GetName() == name; });
+
+		// failed to find;
+		if (it == m_AnimationPlayer.end()) {
+			DebugPrint(std::format("Can't find animation set!! name: {}", name));
+			return false;
+		}
+
+		att.m_Attach->SetPlayer(*it);
+
+		// find bone;
+		std::string boneName = att.boneName;
+		auto bone = std::find_if(m_Bones.begin(), m_Bones.end(), [&boneName](Bone* bone) { return bone->GetName() == boneName; });
+
+		if (bone == m_Bones.end()) {
+			DebugPrint(std::format("Can't find BONE!!, name: {}", boneName));
+			return false;
+		}
+
+		att.m_Attach->SetBone((*bone)->m_Bones[att.idx]);
 	}
 
 	return true;
@@ -851,6 +876,11 @@ void ResourceManager::AddLateLoadAnimController(const std::string& fileName, com
 void ResourceManager::AddLateLoadAnimExecutor(const std::string& fileName, component::AnimationExecutor* executor)
 {
 	m_ToLoadAnimExe.emplace_back(fileName, executor);
+}
+
+void ResourceManager::AddLateLoadAttach(const std::string& fileName, component::Attach* executor, const std::string& bone, int idx)
+{
+	m_ToLoadAttach.emplace_back(fileName, executor, bone, idx);
 }
 
 void ResourceManager::AddLightData()

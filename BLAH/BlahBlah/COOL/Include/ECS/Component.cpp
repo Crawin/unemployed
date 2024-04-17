@@ -93,8 +93,6 @@ namespace component
 
 	void AnimationExecutor::Create(Json::Value& v, ResourceManager* rm)
 	{
-		//  todo
-		// resource mamager에게 toLoad 뭐시기를 추가해야 한다.
 		Json::Value anim = v["AnimationExecutor"];
 
 		rm->AddLateLoadAnimExecutor(anim["Player"].asString(), this);
@@ -144,6 +142,27 @@ namespace component
 		m_Scale.y = trans["Scale"][1].asFloat();
 		m_Scale.z = trans["Scale"][2].asFloat();
 	}
+
+	void Attach::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value att = v["Attach"];
+
+		m_BoneIndex = att["BoneIDX"].asInt();
+
+		rm->AddLateLoadAttach(att["Player"].asString(), this, att["Mesh"].asString(), m_BoneIndex);
+	}
+
+	void Attach::ShowYourself() const
+	{
+		DebugPrint(std::format("Attach Comp"));
+	}
+
+	XMMATRIX& Attach::GetAnimatedBone()
+	{
+		XMMATRIX t = XMMatrixTranspose(XMLoadFloat4x4(&m_Bone));
+		return m_AnimationPlayer->GetAnimatedBone(t, m_BoneIndex);
+	}
+
 
 	void Transform::ShowYourself() const
 	{

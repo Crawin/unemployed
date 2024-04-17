@@ -44,6 +44,9 @@ public:
 
 	void SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager) const;
 
+	// for attach pos
+	XMMATRIX& GetAnimatedBone(XMMATRIX& bone, int boneIdx) const;
+
 public:
 	float GetCurrentPlayTime() const { return m_CurrentAnimation.m_CurPlayTime; }
 	float GetCurrentPlayEndTime() const { return m_CurrentAnimation.m_MaxTime; }

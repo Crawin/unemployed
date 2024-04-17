@@ -316,6 +316,43 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
+	// Attach component
+	// 뼈를 따라간다
+	// 
+	class Attach : public ComponentBase<Attach>
+	{
+		const AnimationPlayer* m_AnimationPlayer = nullptr;
+		
+		XMFLOAT4X4 m_Bone = Matrix4x4::Identity();
+
+		XMFLOAT3 m_OriginalPosition = { 0.0f, 0.0f, 0.0f };
+		XMFLOAT3 m_OriginalRotate = { 0.0f, 0.0f, 0.0f };
+		XMFLOAT3 m_OriginalScale = { 0.0f, 0.0f, 0.0f };
+
+		int m_BoneIndex = -1;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void SetBone(const XMFLOAT4X4& bone) { m_Bone = bone; }
+		void SetPlayer(AnimationPlayer* animPlayer) { m_AnimationPlayer = animPlayer; }
+
+		const AnimationPlayer* GetPlayer() const { return m_AnimationPlayer; }
+
+		const XMFLOAT4X4& GetBone() const { return m_Bone; }
+		XMMATRIX& GetAnimatedBone();
+
+		void SetOriginalPosition(const XMFLOAT3& pos) { m_OriginalPosition = pos; }
+		void SetOriginalRotation(const XMFLOAT3& rot) { m_OriginalRotate = rot; }
+		void SetOriginalScale(const XMFLOAT3& sca) { m_OriginalScale = sca; }
+
+		const XMFLOAT3& GetOriginalPosition() const { return m_OriginalPosition; }
+		const XMFLOAT3& GetOriginalRotation() const { return m_OriginalRotate; }
+		const XMFLOAT3& GetOriginalScale() const { return m_OriginalScale; }
+	};
+
+	/////////////////////////////////////////////////////////
 	// camera component
 	// 카메라 정보
 	//

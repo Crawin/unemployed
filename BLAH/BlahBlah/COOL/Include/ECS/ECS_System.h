@@ -36,6 +36,7 @@ namespace ECSsystem {
 	class SyncWithTransform : public System {
 
 	public:
+		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 

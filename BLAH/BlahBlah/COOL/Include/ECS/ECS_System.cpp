@@ -64,6 +64,18 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
+	void SyncWithTransform::OnInit(ECSManager* manager)
+	{
+		std::function<void(component::Transform*, component::Attach*)> func = [manager](component::Transform* tr, component::Attach* at) {
+			at->SetOriginalPosition(tr->GetPosition());
+			at->SetOriginalRotation(tr->GetRotation());
+			at->SetOriginalScale(tr->GetScale());
+
+			};
+
+		manager->Execute(func);
+	}
+
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync with camera
@@ -72,16 +84,12 @@ namespace ECSsystem {
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
 
 			};
-
-		manager->Execute(func1);
-
+		
 		// sync with renderer world matrix
 		std::function<void(component::Transform*, component::Renderer*)> func2 = [](component::Transform* tr, component::Renderer* ren) {
 			ren->SetWorldMatrix(tr->GetWorldTransform());
 
 			};
-
-		manager->Execute(func2);
 
 		// sync with Light
 		std::function<void(component::Transform*, component::Light*)> func3 = [manager](component::Transform* tr, component::Light* li) {
@@ -100,8 +108,34 @@ namespace ECSsystem {
 			XMStoreFloat3(&light.m_Direction, XMVector3Normalize(XMVector3Transform(XMLoadFloat3(&direction), rot)));
 			light.m_Position = tr->GetPosition();
 			};
+		
+		// sync with Attach
+		std::function<void(component::Transform*, component::Attach*)> func4 = [manager](component::Transform* tr, component::Attach* at) {
+			//XMMATRIX boneInv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&at->GetBone()));
+			XMMATRIX attachedMat = (at->GetAnimatedBone());
+			XMFLOAT3 res;
+			XMVECTOR vec;
 
+			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalPosition()), attachedMat);
+			XMStoreFloat3(&res, vec);
+			tr->SetPosition(res);
+
+			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalRotation()), attachedMat);
+			XMStoreFloat3(&res, vec);
+			tr->SetRotation(res);
+			
+			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalScale()), attachedMat);
+			XMStoreFloat3(&res, vec);
+			//tr->SetScale(res);
+
+			tr->ShowYourself();
+			};
+
+		
+		manager->Execute(func1);
+		manager->Execute(func2);
 		manager->Execute(func3);
+		manager->Execute(func4);
 
 	}
 
@@ -252,7 +286,7 @@ namespace ECSsystem {
 		// send
 		std::function<void(Transform*, Input*, Speed*)> send = [](Transform* tr, Input* in, Speed* sp) {
 
-			if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+			if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag()) 
 				Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation());
 			};
 		manager->Execute(inputFunc);

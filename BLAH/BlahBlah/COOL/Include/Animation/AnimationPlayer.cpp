@@ -76,3 +76,31 @@ void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> command
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &firstAnimIdx, static_cast<int>(ANIM_ROOTCONST::ANI_1_INDEX));
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &secondAnimIdx, static_cast<int>(ANIM_ROOTCONST::ANI_2_INDEX));
 }
+
+XMMATRIX& AnimationPlayer::GetAnimatedBone(XMMATRIX& bone, int boneIdx) const
+{
+	float firstAnimPlayTime = min(m_CurrentAnimation.m_CurPlayTime, m_CurrentAnimation.m_MaxTime - 1.0f / 24.0f);
+	int firstAnimFrame = m_CurrentAnimation.m_Anim->GetEndFrame() + 1;
+	int idx1 = boneIdx * firstAnimFrame + floor(firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame());
+	float anim1InterpolWegith = ceil(firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame()) - firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame();
+	auto curAnim = m_CurrentAnimation.m_Anim;
+
+	XMMATRIX anim1 = XMMatrixTranspose(anim1InterpolWegith * XMLoadFloat4x4(&(curAnim->GetBone(idx1 + 1))) + (1 - anim1InterpolWegith) * XMLoadFloat4x4(&(curAnim->GetBone(idx1))));
+
+	if (m_BeforeAnimWeight > 0) {
+		float secondAnimPlayTime = min(m_BeforeAnimation.m_CurPlayTime, m_BeforeAnimation.m_MaxTime - 1.0f / 24.0f);
+		int secondAnimFrame = m_BeforeAnimation.m_Anim->GetEndFrame() + 1;
+		int idx2 = boneIdx * secondAnimFrame + floor(secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame());
+		float anim2InterpolWegith = ceil(secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame()) - secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame();
+		auto befAnim = m_BeforeAnimation.m_Anim;
+
+		XMMATRIX anim2 = XMMatrixTranspose(anim2InterpolWegith * XMLoadFloat4x4(&(befAnim->GetBone(idx2 + 1))) + (1 - anim2InterpolWegith) * XMLoadFloat4x4(&(befAnim->GetBone(idx2))));
+
+		anim1 =
+			m_BeforeAnimWeight *		anim2 +
+			(1 - m_BeforeAnimWeight) *	anim1;
+	}
+
+
+	return anim1;
+}
