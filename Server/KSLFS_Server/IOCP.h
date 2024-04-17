@@ -182,6 +182,7 @@ public:
 	void init(const unsigned int& i, const SOCKET& s);
 	Player* getPlayers() { return p; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
+	void setPlayerRot(const unsigned int&, cs_packet_position*&);
 	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	void broadcast();

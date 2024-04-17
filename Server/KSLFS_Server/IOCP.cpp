@@ -121,6 +121,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			else
 			{
 				std::cout << "[" << id << ", " << login_players[id].getSock() << "] 충돌" << std::endl;
+				gameRoom.setPlayerRot(id, position);
 			}
 
 			// 충돌 이후 좌표 패킷을 만든 후
@@ -252,6 +253,17 @@ void Game::setPlayerPR(const unsigned int& id, cs_packet_position*& packet)
 		if (player.id == id)
 		{
 			player.position = packet->getPosition();
+			player.rotation = packet->getRotation();
+		}
+	}
+}
+
+void Game::setPlayerRot(const unsigned int& id, cs_packet_position*& packet)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
 			player.rotation = packet->getRotation();
 		}
 	}
