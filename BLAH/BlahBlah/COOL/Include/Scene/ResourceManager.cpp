@@ -40,8 +40,8 @@ ResourceManager::~ResourceManager()
 	m_Animations.clear();
 	//for (auto& ani : m_Animations)
 	//	delete ani;
-	//for (auto& cmp : m_Components)
-	//	delete cmp;
+	for (auto& cmp : m_Components)
+		delete cmp;
 	
 	//sharedptr
 	m_Shaders.clear();
@@ -156,7 +156,13 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 		ent->AddBit(cmp->GetBitset());
 
 		DebugPrint(std::format("add {}", cmp->GetBitset().to_string()));
-		//m_Components.push_back(cmp);
+
+		// 동적할당 했으면 지워줘야 한다.
+		// memcpy 이후 지우지 않고
+		// 소멸 이후 지운다.
+		// std::string, std::map과 같은 것들은 memcpy 후 모두 같은 것을 가리키고 있기 때문에
+		// 
+		m_Components.push_back(cmp);
 	}
 	DebugPrint("");
 
@@ -394,7 +400,7 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 
 			if (anim < 0) ERROR_QUIT("Failed To Load Animation");
 
-			player->m_AnimationMap[ConvertStringToAnimationSet(key)] = m_Animations[anim];
+			player->m_AnimationMap[ConvertStringToAnimationState(key)] = m_Animations[anim];
 
 			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
 			// 나중에 꼭 꼭 고쳐야한다
@@ -629,8 +635,8 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// set default animation to anim executor;
 	for (auto& player : m_AnimationPlayer) {
-		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_SET::IDLE]);
-		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_SET::IDLE]);
+		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_STATE::IDLE]);
+		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_STATE::IDLE]);
 	};
 
 	// Make shader for animation stream out

@@ -12,7 +12,7 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
-		std::function<void(Name*, Transform*, Children*)> func = [&func, &manager](Name* name, Transform* trans, Children* childComp) {
+		std::function<void(/*Name*, */Transform*, Children*)> func = [&func, &manager](/*Name* name, */Transform* trans, Children* childComp) {
 			Entity* ent = childComp->GetEntity();
 
 			const std::vector<Entity*>& children = ent->GetChildren();
@@ -69,21 +69,6 @@ namespace ECSsystem {
 		// sync with camera
 		// first person cam
 		std::function<void(component::Transform*, component::Camera*)> func1 = [](component::Transform* tr, component::Camera* cam) {
-
-			//XMFLOAT3 rotate = tr->GetRotation();
-			//XMFLOAT3 rad;
-			//rad.x = XMConvertToRadians(rotate.x);
-			//rad.y = XMConvertToRadians(rotate.y);
-			//rad.z = XMConvertToRadians(rotate.z);
-
-			//XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
-			//XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
-
-			//XMFLOAT3 pos = tr->GetPosition();
-			//DebugPrint(std::format("cam: {}, {}, {}", pos.x, pos.y, pos.z));
-
-			//cam->SetPosition(tr->GetPosition());
-			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
 
 			};
@@ -265,15 +250,66 @@ namespace ECSsystem {
 
 
 		// send
-		std::function<void(Transform*, Input*, Speed*)> send = [deltaTime](Transform* tr, Input* in, Speed* sp) {
+		std::function<void(Transform*, Input*, Speed*)> send = [](Transform* tr, Input* in, Speed* sp) {
 
-			if(sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+			if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
 				Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation());
 			};
 		manager->Execute(inputFunc);
 		manager->Execute(inputFunc2);
 		manager->Execute(move);
 		manager->Execute(send);
+	}
+
+	void ChangeAnimationTest::OnInit(ECSManager* manager)
+	{
+		// do init (make state machine)
+		
+		using namespace component;
+
+		std::function<void(AnimationController*, DiaAnimationControl*)> buildGraph =
+			[](AnimationController* ctrl, DiaAnimationControl* dia) {
+			
+			using COND = std::function<bool(void*)>;
+
+			// make conditions
+			COND idle = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp < 10.0f;
+				};
+
+			COND walk = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp >= 10.0f;
+			};
+
+			COND hit = [](void* data) {
+				return GetAsyncKeyState(VK_END) & 0x8000;
+				};
+
+			COND falldown = [ctrl](void* data) {
+				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
+				};
+
+			COND getup = [ctrl](void* data) {
+				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
+				};
+
+			// insert transition (graph)
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+			ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
+
+			// set start animation
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+
+			};
+
+		manager->Execute(buildGraph);
+
 	}
 
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
@@ -283,24 +319,7 @@ namespace ECSsystem {
 
 			float speed = sp->GetCurrentVelocityLen();
 
-			if (dia->m_BefSpeed > 10.0f) {
-				if (speed <= 10.0f)
-				animCtrl->ChangeAnimationTo(ANIMATION_SET::IDLE);
-			}
-			else {
-				if (speed >= 10.0f)
-				animCtrl->ChangeAnimationTo(ANIMATION_SET::WALK);
-			}
-
-			if (GetAsyncKeyState(VK_END) & 0x0001) {
-				animCtrl->ChangeAnimationTo(ANIMATION_SET::FALLINGDOWN);
-				animCtrl->ChangeAnimationTo(ANIMATION_SET::GETUP);
-				animCtrl->ChangeAnimationTo(ANIMATION_SET::IDLE);
-			}
-
-
-			dia->m_BefSpeed = speed;
-
+			animCtrl->CheckTransition(&speed);
 			};
 
 		manager->Execute(func1);

@@ -80,6 +80,7 @@ public:
 
 	void InsertSystem(ECSsystem::System* system) { m_Systems.push_back(system); }
 
+	void InitSystem();
 	void UpdateSystem(float deltaTime);
 
 	template<class ...COMPONENTS>

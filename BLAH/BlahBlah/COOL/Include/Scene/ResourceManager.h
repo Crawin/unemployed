@@ -248,7 +248,7 @@ private:
 	//std::vector<Entity*> m_RootEntities;
 
 	// component
-	//std::vector<component::Component*> m_Components;
+	std::vector<component::Component*> m_Components;
 
 	// ECS System
 	std::shared_ptr<ECSManager> m_ECSManager = nullptr;

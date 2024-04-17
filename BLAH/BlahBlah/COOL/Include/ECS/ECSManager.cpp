@@ -168,6 +168,13 @@ void ECSManager::AddToRoot(Entity* entity)
 	m_RootEntities.push_back(entity);
 }
 
+void ECSManager::InitSystem()
+{
+	for (auto& system : m_Systems) {
+		system->OnInit(this);
+	}
+}
+
 void ECSManager::UpdateSystem(float deltaTime)
 {
 	for (auto& system : m_Systems) {

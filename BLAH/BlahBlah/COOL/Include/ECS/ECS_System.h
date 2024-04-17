@@ -10,7 +10,7 @@ namespace ECSsystem {
 	class System
 	{
 	public:
-
+		virtual void OnInit(ECSManager* manager) {}
 		virtual void Update(ECSManager* manager, float deltaTime) = 0;
 	};
 
@@ -67,6 +67,7 @@ namespace ECSsystem {
 	class ChangeAnimationTest : public System {
 
 	public:
+		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 

@@ -215,6 +215,15 @@ namespace component {
 	class AnimationController : public ComponentBase<AnimationController> {
 		AnimationPlayer* m_AnimationPlayer = nullptr;
 
+		ANIMATION_STATE m_CurrentState = ANIMATION_STATE::IDLE;
+
+		// for fsm
+		std::map<ANIMATION_STATE, std::function<void(void)>> m_OnEnter;
+		std::map<std::pair<ANIMATION_STATE, ANIMATION_STATE>, std::function<bool(void*)>> m_ChangeCondition;
+		std::map<ANIMATION_STATE, std::vector<ANIMATION_STATE>> m_TransitionGraph;
+
+		void InsertTransition(ANIMATION_STATE from, ANIMATION_STATE to) { m_TransitionGraph[from].push_back(to); }
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -222,9 +231,17 @@ namespace component {
 
 		void UpdateTime(float deltaTime);
 
-		void ChangeAnimationTo(ANIMATION_SET animSet);
+		void CheckTransition(void* data);
+
+		void ChangeAnimationTo(ANIMATION_STATE animSet);
+
+		float GetCurrentPlayTime() const;
+		float GetCurrentPlayEndTime() const;
 
 		void SetPlayer(AnimationPlayer* player) { m_AnimationPlayer = player; }
+
+		void InsertOnEnter(ANIMATION_STATE st, std::function<void(void)> cond) { m_OnEnter[st] = cond; }
+		void InsertCondition(ANIMATION_STATE from, ANIMATION_STATE to, std::function<bool(void*)> cond) { InsertTransition(from, to); m_ChangeCondition[std::pair(from, to)] = cond; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -245,26 +262,6 @@ namespace component {
 		// no data change
 		const AnimationPlayer* m_AnimationPlayer = nullptr;
 
-		//int m_CurAnimationIdx = -1;
-		//int m_BefAnimationIdx = -1;
-
-		//float m_BefAniWeight = 0;
-
-		//float m_CurAniPlayTime = 0.0f;
-		//float m_BefAniPlayTime = 0.0f;
-
-		//// 하드코딩하였다...
-		//float m_CurAniMaxPlayTime = 0.0f;
-		//float m_BefAniMaxPlayTime = 0.0f;
-
-		// self.idle, self.walk, self.run, self.blabal ...
-		// 전부 만들어 둘까?
-		// 아니면 데이터만 가지고 있고
-		// 다른애가 set 해주게 만들까
-		// ex) GuardAnimationPlayer라는 컴포넌트가 있음, system에서 GuardAnimPlayer & Speed, AnimationController을 해서 speed에 따라서 currentAnim을 바꿈
-		// 구조를 보면 이게 맞을지도?
-		// 생각해보자
-
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -280,24 +277,6 @@ namespace component {
 		void SetPlayer(AnimationPlayer* player) { m_AnimationPlayer = player; }
 
 		void SetData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager);
-
-		//int GetCurrentAnimation() const { return m_CurAnimationIdx; }
-		//int GetBeforeAnimation() const { return m_BefAnimationIdx; }
-		//float GetBeforeAnimationWeight() const { return m_BefAniWeight; }
-		//float GetCurrentAnimationPlayTime() const { return m_CurAniPlayTime; }
-		//float GetBeforeAnimationPlayTime() const { return m_BefAniPlayTime; }
-		//float GetCurrentAnimationMaxTime() const { return m_CurAniMaxPlayTime; }
-		//float GetBeforeAnimationMaxTime() const { return m_BefAniMaxPlayTime; }
-
-		//void SetCurrentAnimation(int idx) { m_CurAnimationIdx = idx; }
-		//void SetBeforeAnimation(int idx) { m_BefAnimationIdx = idx; }
-		//void SetBeforeAnimationWeight(float weight) { m_BefAniWeight = weight; }
-		//void SetCurrentAnimationPlayTime(float time) { m_CurAniPlayTime = time; }
-		//void SetBeforeAnimationPlayTime(float time) { m_BefAniPlayTime = time; }
-		//void SetCurrentAnimationMaxTime(float time) { m_CurAniMaxPlayTime = time; }
-		//void SetBeforeAnimationMaxTime(float time) { m_BefAniMaxPlayTime = time; }
-
-		//void ChangeAnimation(int toAnimIdx) { m_BefAnimationIdx = m_CurAnimationIdx; m_CurAnimationIdx = toAnimIdx; }		// todo 
 
 		// 하드코딩 되어있다,
 		UINT64* m_StreamSize = 0;
