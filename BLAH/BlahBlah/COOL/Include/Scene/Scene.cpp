@@ -35,6 +35,8 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	
 	CHECK_CREATE_FAILED(LoadSceneExtra(commandList), std::format("Can't Load Scene Extra, name: {}", sceneName));
 
+	m_ECSManager->InitSystem();
+
 	return true;
 }
 

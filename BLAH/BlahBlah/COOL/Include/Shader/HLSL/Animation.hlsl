@@ -31,10 +31,9 @@ cbuffer MaterialAnim : register(b0)
 
 	int anim1Idx;
 	int anim2Idx;
-	int boneIdx;
+	int boneDataIdx;
 };
 
-#define MAX_BONE_LEN 64
 #define ANIMATION_FPS 24.0f
 
 //StructuredBuffer<matrix> Bone : register(t1, space8);
@@ -51,11 +50,11 @@ VS_OUTPUT vs(VS_INPUT input)
 	output.tangent = float3(0.0f, 0.0f, 0.0f);
 	output.uv = input.uv;
 	
-	StructuredBuffer<matrix> Bone = BonAnimDataList[boneIdx];
+	StructuredBuffer<matrix> Bone = BonAnimDataList[boneDataIdx];
 	StructuredBuffer<matrix> Animation_cur = BonAnimDataList[anim1Idx];
 	StructuredBuffer<matrix> Animation_bef = BonAnimDataList[anim2Idx];
 
-	matrix boneToWorld;
+	matrix boneToWorld = 0;
 	matrix animByFrame;
 
 	float anim1InterpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
@@ -80,16 +79,18 @@ VS_OUTPUT vs(VS_INPUT input)
 
 		if (animBlend > 0){
 			matrix anim2 = mul(Bone[boneIdx], lerp(Animation_bef[idx2 + 1], Animation_bef[idx2], anim2InterpolWegith));
-			boneToWorld = lerp(anim1, anim2, animBlend);
+			boneToWorld += weight * lerp(anim1, anim2, animBlend);
 		}
 		else
-			boneToWorld = anim1;
+			boneToWorld += weight * anim1;	
 		//boneToWorld = Bone[boneIdx];	
 		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
-		output.position += weight * mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
-		output.normal += weight * mul(mul(mul(input.normal, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
-		output.tangent += weight * mul(mul(mul(input.tangent, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
 	}
+
+	output.position = mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
+	output.normal = mul(mul(mul(input.normal, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
+	output.tangent = mul(mul(mul(input.tangent, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
+
 
 	//output.position = mul(mul(float4(input.position, 1.0f), localMatrix), inverseMatrix).xyz;
 	//output.normal = input.normal;

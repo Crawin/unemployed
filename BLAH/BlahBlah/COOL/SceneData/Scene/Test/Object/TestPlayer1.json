@@ -17,8 +17,8 @@
 
 	"Speed": 
 	{
-		"MaxVelocity": 300.0,
-		"Acceleration" : [300.0, 300.0, 300.0]
+		"MaxVelocity": 200.0,
+		"Acceleration" : [1200.0, 1200.0, 1200.0]
 	},
 
 	"Input": {},
@@ -28,6 +28,7 @@
 	"Children": 
 	[
 		{
+			"Name": "PlayerCamera",
 			"Transform": 
 			{
 				"Position": [0.0, 75.0, -100.0],
