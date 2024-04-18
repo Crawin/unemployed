@@ -183,7 +183,9 @@ public:
 	void init(const unsigned int& i, const SOCKET& s);
 	Player* getPlayers() { return p; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
+	void setPlayerPR_v2(const unsigned int&, cs_packet_position*&, const DirectX::XMFLOAT3&);
 	void setPlayerRot(const unsigned int&, cs_packet_position*&);
+	void setPlayerRotSpeed(const unsigned int&, cs_packet_position*&, DirectX::XMFLOAT3&);
 	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
@@ -202,4 +204,5 @@ public:
 	void start();
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	bool world_collision(cs_packet_position*&);
+	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
 };

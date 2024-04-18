@@ -33,4 +33,6 @@ public:
 	DirectX::XMFLOAT3 GetCenter();
 	DirectX::XMFLOAT3 GetExtents();
 	bool collision(const DirectX::BoundingOrientedBox&);
+	bool collision_v2(const DirectX::BoundingOrientedBox&,DirectX::XMFLOAT3&, DirectX::XMFLOAT3*);
+	void planeNum_intersects_direction_vector(const DirectX::BoundingOrientedBox&,DirectX::XMFLOAT3&, DirectX::XMFLOAT3*);
 };

@@ -175,8 +175,6 @@ namespace ECSsystem {
 
 			float speed = sp->GetCurrentVelocityLen();
 
-			auto& client = Client::GetInstance();
-
 			// update speed if key down
 			if (move) {
 				XMVECTOR vec = XMLoadFloat3(&tempMove);

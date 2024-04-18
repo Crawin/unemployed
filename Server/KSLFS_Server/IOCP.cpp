@@ -116,12 +116,22 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			cs_packet_position* position = reinterpret_cast<cs_packet_position*>(base);
 			auto& gameRoom = Games[position->getNum()];
-			if (!world_collision(position))
-				gameRoom.setPlayerPR(id, position);
+			//if (!world_collision(position))
+			//	gameRoom.setPlayerPR(id, position);
+			//else
+			//{
+			//	std::cout << "[" << id << ", " << login_players[id].getSock() << "] 충돌" << std::endl;
+			//	gameRoom.setPlayerRot(id, position);
+			//}
+
+			DirectX::XMFLOAT3 newSpeed = { 0,0,0 };
+			if (!world_collision_v2(position, &newSpeed))
+				gameRoom.setPlayerPR_v2(id, position, newSpeed);
 			else
 			{
 				std::cout << "[" << id << ", " << login_players[id].getSock() << "] 충돌" << std::endl;
-				gameRoom.setPlayerRot(id, position);
+				std::cout << "("<<position->getSpeed().x <<","<<position->getSpeed().y<<","<<position->getSpeed().z<<") -> (" << newSpeed.x << "," << newSpeed.y << "," << newSpeed.z << ")" << std::endl;
+				gameRoom.setPlayerRotSpeed(id, position, newSpeed);
 			}
 
 			// 충돌 이후 좌표 패킷을 만든 후
@@ -220,6 +230,43 @@ bool IOCP_SERVER_MANAGER::world_collision(cs_packet_position*& player)
 	return false;
 }
 
+bool IOCP_SERVER_MANAGER::world_collision_v2(cs_packet_position*& player, DirectX::XMFLOAT3* newSpeed)
+{
+	DirectX::XMFLOAT3 pos = player->getPosition();
+	DirectX::XMFLOAT3 rot = player->getRotation();
+	DirectX::XMFLOAT3 spd = player->getSpeed();
+	*newSpeed = spd;
+
+	float randianX = DirectX::XMConvertToRadians(rot.x);
+	float randianY = DirectX::XMConvertToRadians(rot.y);
+	DirectX::XMVECTOR quaternionX = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1, 0, 0, 0), randianX);
+	DirectX::XMVECTOR quaternionY = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), randianY);
+
+	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionX, quaternionY);
+
+	DirectX::XMFLOAT4 quaternionValues;
+	DirectX::XMStoreFloat4(&quaternionValues, quaternion);
+
+	DirectX::XMFLOAT3 temp_extents = { 1,1,1 };
+	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
+
+
+
+	for (auto& world : m_vMeshes)
+	{
+		if (world->collision_v2(pOBB, spd, newSpeed))
+		{
+			//std::cout << "충돌" << std::endl;
+			//바닥 충돌
+			if (pos.y <= 0) newSpeed->y = 0;
+			return true;
+		}
+	}
+	//바닥 충돌
+	if (pos.y <= 0) newSpeed->y = 0;
+	return false;
+}
+
 void Game::init(const unsigned int& i, const SOCKET& s)
 {
 	if (p[0].id == NULL)
@@ -267,6 +314,51 @@ void Game::setPlayerRot(const unsigned int& id, cs_packet_position*& packet)
 		{
 			player.rotation = packet->getRotation();
 			player.speed = DirectX::XMFLOAT3(0, 0, 0);
+			break;
+		}
+	}
+}
+
+void Game::setPlayerPR_v2(const unsigned int& id, cs_packet_position*& packet, const DirectX::XMFLOAT3& newSpeed)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
+			player.position = packet->getPosition();
+			if (player.position.y < 0) player.position.y = 0;
+			player.rotation = packet->getRotation();
+			player.speed = newSpeed;
+			break;
+		}
+	}
+}
+
+void Game::setPlayerRotSpeed(const unsigned int& id, cs_packet_position*& packet, DirectX::XMFLOAT3& newSpeed)
+{
+	for (auto& player : p)
+	{
+		if (player.id == id)
+		{
+			player.rotation = packet->getRotation();
+			player.speed = newSpeed;
+			DirectX::XMFLOAT3 pos = packet->getPosition();
+			if (newSpeed.x == 0)
+			{
+				player.position.y = pos.y;
+				player.position.z = pos.z;
+			}
+			else if (newSpeed.y == 0)
+			{
+				player.position.x = pos.x;
+				player.position.z = pos.z;
+			}
+			else if (newSpeed.z == 0)
+			{
+				player.position.x = pos.x;
+				player.position.y = pos.y;
+			}
+			if (player.position.y < 0) player.position.y = 0;
 			break;
 		}
 	}
