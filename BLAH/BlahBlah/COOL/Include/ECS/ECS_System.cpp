@@ -128,7 +128,7 @@ namespace ECSsystem {
 			XMStoreFloat3(&res, vec);
 			//tr->SetScale(res);
 
-			tr->ShowYourself();
+			//tr->ShowYourself();
 			};
 
 		
@@ -143,7 +143,7 @@ namespace ECSsystem {
 	{
 		using namespace component;
 		std::function<void(Speed*)> func = [deltaTime](Speed* sp) {
-			const float friction = 200.0f;
+			const float friction = 900.0f;
 			// if moving
 			float speed = sp->GetCurrentVelocityLen();// sp->GetCurrentVelocity();
 

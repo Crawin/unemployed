@@ -79,28 +79,93 @@ void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> command
 
 XMMATRIX& AnimationPlayer::GetAnimatedBone(XMMATRIX& bone, int boneIdx) const
 {
-	float firstAnimPlayTime = min(m_CurrentAnimation.m_CurPlayTime, m_CurrentAnimation.m_MaxTime - 1.0f / 24.0f);
-	int firstAnimFrame = m_CurrentAnimation.m_Anim->GetEndFrame() + 1;
-	int idx1 = boneIdx * firstAnimFrame + floor(firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame());
-	float anim1InterpolWegith = ceil(firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame()) - firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame();
-	auto curAnim = m_CurrentAnimation.m_Anim;
+	XMMATRIX animRes;
 
-	XMMATRIX anim1 = XMMatrixTranspose(anim1InterpolWegith * XMLoadFloat4x4(&(curAnim->GetBone(idx1 + 1))) + (1 - anim1InterpolWegith) * XMLoadFloat4x4(&(curAnim->GetBone(idx1))));
+	// get current anim frame
+	auto& anim1 = m_CurrentAnimation.m_Anim;
 
-	if (m_BeforeAnimWeight > 0) {
-		float secondAnimPlayTime = min(m_BeforeAnimation.m_CurPlayTime, m_BeforeAnimation.m_MaxTime - 1.0f / 24.0f);
-		int secondAnimFrame = m_BeforeAnimation.m_Anim->GetEndFrame() + 1;
-		int idx2 = boneIdx * secondAnimFrame + floor(secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame());
-		float anim2InterpolWegith = ceil(secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame()) - secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame();
-		auto befAnim = m_BeforeAnimation.m_Anim;
+	float anim1PlayTime = m_CurrentAnimation.m_CurPlayTime;// min(m_CurrentAnimation.m_CurPlayTime, m_CurrentAnimation.m_MaxTime);// -1.0f / anim1->GetFrame());
+	int anim1EndFrame = anim1->GetEndFrame();
+	int anim1CurFrame = floor(anim1PlayTime * anim1->GetFrame());
 
-		XMMATRIX anim2 = XMMatrixTranspose(anim2InterpolWegith * XMLoadFloat4x4(&(befAnim->GetBone(idx2 + 1))) + (1 - anim2InterpolWegith) * XMLoadFloat4x4(&(befAnim->GetBone(idx2))));
-
-		anim1 =
-			m_BeforeAnimWeight *		anim2 +
-			(1 - m_BeforeAnimWeight) *	anim1;
+	if (anim1PlayTime > m_CurrentAnimation.m_MaxTime) {
+		anim1PlayTime = m_CurrentAnimation.m_MaxTime;
+		anim1CurFrame = anim1->GetEndFrame() - 1;
 	}
 
 
-	return anim1;
+	XMMATRIX boneInv = XMMatrixInverse(nullptr, bone);
+
+	// get current actual bone idx
+	int idx1 = anim1->GetEndFrame() * boneIdx + anim1CurFrame;
+	int idx2 = idx1 + 1;
+
+	// if over
+	if (anim1CurFrame >= anim1EndFrame - 1) {
+		if (m_CurrentAnimation.m_Loop) 
+			idx2 = anim1->GetEndFrame() * boneIdx;
+		else idx2 = idx1;
+	}
+
+	float anim1InterpolWegith = ceil(anim1PlayTime * anim1->GetFrame()) - anim1PlayTime * anim1->GetFrame();
+
+	//if (anim1CurFrame == 28)
+	//DebugPrint(std::format("frame: {}, idx1: {} idx2: {}\t weight: {}", anim1CurFrame, idx1, idx2, anim1InterpolWegith));
+	printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", anim1CurFrame, idx1, idx2, anim1InterpolWegith);
+
+	animRes = XMMatrixTranspose((1 - anim1InterpolWegith) * XMLoadFloat4x4(&(anim1->GetBone(idx2))) + anim1InterpolWegith * XMLoadFloat4x4(&(anim1->GetBone(idx1))));// *bone;
+	animRes = XMMatrixTranspose(XMLoadFloat4x4(&(anim1->GetBone(idx1))));
+
+	// blending
+	if (m_BeforeAnimWeight > 0) {
+		auto& anim2 = m_BeforeAnimation.m_Anim;
+
+		float anim2PlayTime = min(m_BeforeAnimation.m_CurPlayTime, m_BeforeAnimation.m_MaxTime - 1.0f / anim2->GetFrame());
+		int anim2EndFrame = anim2->GetEndFrame();
+		int anim2CurFrame = floor(anim2PlayTime * anim2->GetFrame());
+
+		int idx3 = anim2->GetEndFrame() * boneIdx + anim2CurFrame;
+		int idx4 = idx3 + 1;
+
+		// if over
+		if (anim2CurFrame + 1 >= anim2EndFrame) {
+			if (m_BeforeAnimation.m_Loop) idx4 = anim2->GetEndFrame() * boneIdx;
+			else idx4 = idx3;
+		}
+
+		float anim2InterpolWegith = ceil(anim1PlayTime * anim1->GetFrame()) - anim1PlayTime * anim1->GetFrame();
+
+		XMMATRIX animRes2 = XMMatrixTranspose((1 - anim2InterpolWegith) * XMLoadFloat4x4(&(anim2->GetBone(idx4))) + anim2InterpolWegith * XMLoadFloat4x4(&(anim2->GetBone(idx3))));// *bone;
+
+		animRes = (1 - m_BeforeAnimWeight) * animRes + m_BeforeAnimWeight * animRes2;
+	}
+
+	//float firstAnimPlayTime = min(m_CurrentAnimation.m_CurPlayTime, m_CurrentAnimation.m_MaxTime - 1.0f / 24.0f);
+	//int firstAnimFrame = m_CurrentAnimation.m_Anim->GetEndFrame();
+	//int idx1 = boneIdx * firstAnimFrame + floor(firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame());
+	//float anim1InterpolWegith = ceil(firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame()) - firstAnimPlayTime * m_CurrentAnimation.m_Anim->GetFrame();
+	//auto curAnim = m_CurrentAnimation.m_Anim;
+
+	//XMMATRIX boneInv = bone;
+	//return bone;
+	////XMMATRIX boneInv = XMMatrixInverse(nullptr, bone);
+
+	//XMMATRIX anim1 = XMMatrixTranspose(anim1InterpolWegith * XMLoadFloat4x4(&(curAnim->GetBone(idx1 + 1))) + (1 - anim1InterpolWegith) * XMLoadFloat4x4(&(curAnim->GetBone(idx1)))) * boneInv;
+
+	//if (m_BeforeAnimWeight > 0) {
+	//	float secondAnimPlayTime = min(m_BeforeAnimation.m_CurPlayTime, m_BeforeAnimation.m_MaxTime - 1.0f / 24.0f);
+	//	int secondAnimFrame = m_BeforeAnimation.m_Anim->GetEndFrame();
+	//	int idx2 = boneIdx * secondAnimFrame + floor(secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame());
+	//	float anim2InterpolWegith = ceil(secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame()) - secondAnimPlayTime * m_BeforeAnimation.m_Anim->GetFrame();
+	//	auto befAnim = m_BeforeAnimation.m_Anim;
+
+	//	XMMATRIX anim2 = XMMatrixTranspose(anim2InterpolWegith * XMLoadFloat4x4(&(befAnim->GetBone(idx2 + 1))) + (1 - anim2InterpolWegith) * XMLoadFloat4x4(&(befAnim->GetBone(idx2)))) * boneInv;
+
+	//	anim1 =
+	//		m_BeforeAnimWeight *		anim2 +
+	//		(1 - m_BeforeAnimWeight) *	anim1;
+	//}
+
+
+	return animRes;
 }

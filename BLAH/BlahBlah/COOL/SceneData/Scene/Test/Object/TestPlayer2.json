@@ -17,8 +17,8 @@
 
 	"Speed": 
 	{
-		"MaxVelocity": 300.0,
-		"Acceleration" : [300.0, 300.0, 300.0]
+		"MaxVelocity": 200.0,
+		"Acceleration" : [1200.0, 1200.0, 1200.0]
 	},
 
 	"TestInput": {},
@@ -43,7 +43,30 @@
 			"AnimationExecutor": 
 			{
 				"Player": "Dia2"
-			}
+			},
+			"Children":
+			[
+				{
+					"Name": "RightHandSocket",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Attach":
+					{
+						"Mesh": "test_rigging",
+						"BoneIDX": 32,
+						"Player": "Dia2"
+					},
+					"Renderer": {
+						"Mesh": "test_rigging.satodia_Hair_testrig",
+						"Material": "NoMaterial"
+					}
+					
+				}
+			]
 		},
 
 		{

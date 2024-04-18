@@ -12,6 +12,7 @@ class Animation
 
 	int m_AnimationDataIdx = -1;
 	unsigned int m_TotalPlayFrame = 500;
+	unsigned int m_BoneLen = 500;
 
 	std::vector<XMFLOAT4X4> m_AnimData;
 
@@ -31,6 +32,7 @@ public:
 	int GetEndFrame() const { return m_TotalPlayFrame;  }
 	int GetDataIdx() const { return m_AnimationDataIdx; }
 	bool GetLoop() const { return m_Loop; }
+	unsigned int GetBoneLen() const { return m_BoneLen; }
 
 	const XMFLOAT4X4& GetBone(int idx) { return m_AnimData[idx]; }
 };
