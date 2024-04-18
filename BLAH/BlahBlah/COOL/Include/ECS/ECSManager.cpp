@@ -220,6 +220,23 @@ void ECSManager::ExecuteRoot(std::function<void(COMPONENTS*...)>& func)//, Entit
 }
 
 template<class ...COMPONENTS>
+void ECSManager::ExecuteSquare(std::function<void(COMPONENTS*...)>& func)
+{
+	// find bitset first
+	std::bitset<COMPONENT_COUNT> bitset = GetBitset<COMPONENTS...>();
+
+	// structured binding
+	for (auto& [key, compSet] : m_ComponentSets) {
+		// not match => dont
+		if ((bitset & key) != bitset) continue;
+
+		compSet.Execute(func);
+	}
+
+
+}
+
+template<class ...COMPONENTS>
 void ECSManager::ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func)
 {
 	std::bitset<COMPONENT_COUNT> funcBitset = GetBitset<COMPONENTS...>();
@@ -236,6 +253,12 @@ T* ECSManager::GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId)
 	}
 
 	return nullptr;
+}
+
+template<class ...COMPONENTS>
+void ECSManager::Squared(std::function<void(COMPONENTS*...)>& func, ComponentSetMap::iterator& setIter, ComponentContainerMap::iterator& contItert)
+{
+
 }
 
 template<class ...COMPONENTS>
