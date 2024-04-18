@@ -29,6 +29,7 @@ namespace component {
 	class Camera;
 	class AnimationController;
 	class AnimationExecutor;
+	class Attach;
 	class Light;
 }
 
@@ -46,6 +47,13 @@ struct ToLoadAnimControllerInfo {
 struct ToLoadAnimExecutorInfo {
 	std::string m_AnimSetName;
 	component::AnimationExecutor* m_Executor;
+};
+
+struct ToLoadAttachInfo {
+	std::string m_AnimSetName;
+	component::Attach* m_Attach;
+	std::string boneName;
+	int idx;
 };
 
 //struct ToLoadLightDataInfo {
@@ -180,6 +188,9 @@ public:
 
 	// for late init anim executor
 	void AddLateLoadAnimExecutor(const std::string& fileName, component::AnimationExecutor* executor);
+	
+	// for late init anim executor
+	void AddLateLoadAttach(const std::string& fileName, component::Attach* executor, const std::string& bone, int idx);
 
 	// for light components
 	void AddLightData();
@@ -248,7 +259,7 @@ private:
 	//std::vector<Entity*> m_RootEntities;
 
 	// component
-	//std::vector<component::Component*> m_Components;
+	std::vector<component::Component*> m_Components;
 
 	// ECS System
 	std::shared_ptr<ECSManager> m_ECSManager = nullptr;
@@ -325,6 +336,7 @@ private:
 	//
 	std::vector<ToLoadAnimControllerInfo> m_ToLoadAnimCont;
 	std::vector<ToLoadAnimExecutorInfo> m_ToLoadAnimExe;
+	std::vector<ToLoadAttachInfo> m_ToLoadAttach;
 
 
 	//std::vector<Entity*> m_Cameras;

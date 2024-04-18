@@ -12,7 +12,7 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
-		std::function<void(Name*, Transform*, Children*)> func = [&func, &manager](Name* name, Transform* trans, Children* childComp) {
+		std::function<void(/*Name*, */Transform*, Children*)> func = [&func, &manager](/*Name* name, */Transform* trans, Children* childComp) {
 			Entity* ent = childComp->GetEntity();
 
 			const std::vector<Entity*>& children = ent->GetChildren();
@@ -64,39 +64,32 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
+	void SyncWithTransform::OnInit(ECSManager* manager)
+	{
+		std::function<void(component::Transform*, component::Attach*)> func = [manager](component::Transform* tr, component::Attach* at) {
+			at->SetOriginalPosition(tr->GetPosition());
+			at->SetOriginalRotation(tr->GetRotation());
+			at->SetOriginalScale(tr->GetScale());
+
+			};
+
+		manager->Execute(func);
+	}
+
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync with camera
 		// first person cam
 		std::function<void(component::Transform*, component::Camera*)> func1 = [](component::Transform* tr, component::Camera* cam) {
-
-			//XMFLOAT3 rotate = tr->GetRotation();
-			//XMFLOAT3 rad;
-			//rad.x = XMConvertToRadians(rotate.x);
-			//rad.y = XMConvertToRadians(rotate.y);
-			//rad.z = XMConvertToRadians(rotate.z);
-
-			//XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
-			//XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&(tr->GetPosition())));
-
-			//XMFLOAT3 pos = tr->GetPosition();
-			//DebugPrint(std::format("cam: {}, {}, {}", pos.x, pos.y, pos.z));
-
-			//cam->SetPosition(tr->GetPosition());
-			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, rot * trs));
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
 
 			};
-
-		manager->Execute(func1);
-
+		
 		// sync with renderer world matrix
 		std::function<void(component::Transform*, component::Renderer*)> func2 = [](component::Transform* tr, component::Renderer* ren) {
 			ren->SetWorldMatrix(tr->GetWorldTransform());
 
 			};
-
-		manager->Execute(func2);
 
 		// sync with Light
 		std::function<void(component::Transform*, component::Light*)> func3 = [manager](component::Transform* tr, component::Light* li) {
@@ -115,8 +108,34 @@ namespace ECSsystem {
 			XMStoreFloat3(&light.m_Direction, XMVector3Normalize(XMVector3Transform(XMLoadFloat3(&direction), rot)));
 			light.m_Position = tr->GetPosition();
 			};
+		
+		// sync with Attach
+		std::function<void(component::Transform*, component::Attach*)> func4 = [manager](component::Transform* tr, component::Attach* at) {
+			//XMMATRIX boneInv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&at->GetBone()));
+			XMMATRIX attachedMat = (at->GetAnimatedBone());
+			XMFLOAT3 res;
+			XMVECTOR vec;
 
+			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalPosition()), attachedMat);
+			XMStoreFloat3(&res, vec);
+			tr->SetPosition(res);
+
+			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalRotation()), attachedMat);
+			XMStoreFloat3(&res, vec);
+			tr->SetRotation(res);
+			
+			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalScale()), attachedMat);
+			XMStoreFloat3(&res, vec);
+			//tr->SetScale(res);
+
+			//tr->ShowYourself();
+			};
+
+		
+		manager->Execute(func1);
+		manager->Execute(func2);
 		manager->Execute(func3);
+		manager->Execute(func4);
 
 	}
 
@@ -124,7 +143,7 @@ namespace ECSsystem {
 	{
 		using namespace component;
 		std::function<void(Speed*)> func = [deltaTime](Speed* sp) {
-			const float friction = 200.0f;
+			const float friction = 900.0f;
 			// if moving
 			float speed = sp->GetCurrentVelocityLen();// sp->GetCurrentVelocity();
 
@@ -277,6 +296,57 @@ namespace ECSsystem {
 		manager->Execute(send);
 	}
 
+	void ChangeAnimationTest::OnInit(ECSManager* manager)
+	{
+		// do init (make state machine)
+		
+		using namespace component;
+
+		std::function<void(AnimationController*, DiaAnimationControl*)> buildGraph =
+			[](AnimationController* ctrl, DiaAnimationControl* dia) {
+			
+			using COND = std::function<bool(void*)>;
+
+			// make conditions
+			COND idle = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp < 10.0f;
+				};
+
+			COND walk = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp >= 10.0f;
+			};
+
+			COND hit = [](void* data) {
+				return GetAsyncKeyState(VK_END) & 0x8000;
+				};
+
+			COND falldown = [ctrl](void* data) {
+				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
+				};
+
+			COND getup = [ctrl](void* data) {
+				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
+				};
+
+			// insert transition (graph)
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+			ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
+
+			// set start animation
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+
+			};
+
+		manager->Execute(buildGraph);
+
+	}
+
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
 	{
 		std::function<void(component::Speed*, component::AnimationController*, component::DiaAnimationControl*)> func1 = 
@@ -284,24 +354,7 @@ namespace ECSsystem {
 
 			float speed = sp->GetCurrentVelocityLen();
 
-			if (dia->m_BefSpeed > 10.0f) {
-				if (speed <= 10.0f)
-				animCtrl->ChangeAnimationTo("Idle");
-			}
-			else {
-				if (speed >= 10.0f)
-				animCtrl->ChangeAnimationTo("Walk");
-			}
-
-			if (GetAsyncKeyState(VK_END) & 0x0001) {
-				animCtrl->ChangeAnimationTo("FallingDown");
-				animCtrl->ChangeAnimationTo("GetUp");
-				animCtrl->ChangeAnimationTo("Idle");
-			}
-
-
-			dia->m_BefSpeed = speed;
-
+			animCtrl->CheckTransition(&speed);
 			};
 
 		manager->Execute(func1);

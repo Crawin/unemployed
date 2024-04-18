@@ -27,12 +27,13 @@ public:
 
 };
 
+using ComponentContainerMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentContainer>;
 
 // ComponentContainer들을 가짐
 class ComponentSet {
 
 	// Component를 각각 저장하는 container
-	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentContainer> m_Set;
+	ComponentContainerMap m_Set;
 
 	int m_EntitySize = 0;
 
@@ -58,6 +59,7 @@ private:
 
 };
 
+using ComponentSetMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet>;
 
 class ECSManager
 {
@@ -66,7 +68,7 @@ class ECSManager
 	std::vector<Entity*> m_RootEntities;
 
 	// ComponentSet을 저장
-	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet> m_ComponentSets;
+	ComponentSetMap m_ComponentSets;
 
 	// system
 	std::vector<ECSsystem::System*> m_Systems;
@@ -80,6 +82,7 @@ public:
 
 	void InsertSystem(ECSsystem::System* system) { m_Systems.push_back(system); }
 
+	void InitSystem();
 	void UpdateSystem(float deltaTime);
 
 	template<class ...COMPONENTS>
@@ -89,12 +92,19 @@ public:
 	void ExecuteRoot(std::function<void(COMPONENTS*...)>& func);//, Entity* ent);
 
 	template<class ...COMPONENTS>
+	void ExecuteSquare(std::function<void(COMPONENTS*...)>& func);
+
+	template<class ...COMPONENTS>
 	void ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func);
 
 	// 사용을 자제하자
 	template<class T>
 	T* GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId);
 private:
+
+	// for
+	template<class ...COMPONENTS>
+	void Squared(std::function<void(COMPONENTS*...)>& func, ComponentSetMap::iterator& setIter, ComponentContainerMap::iterator& contItert);
 
 	template<class ...COMPONENTS>
 	std::bitset<COMPONENT_COUNT> GetBitset();

@@ -22,6 +22,21 @@ enum class MATERIAL_TYPES {
 	MATERIAL_END
 };
 
+enum class ANIMATION_STATE {
+	WAITEND = 0,
+	IDLE,
+	WALK,
+	FALLINGDOWN,
+	GETUP,
+	DANCE,
+	NULLANIM
+};
+
+
+
+ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
+const std::string& ConvertAnimationStateToString(ANIMATION_STATE anim);
+
 // struct
 //struct PS_MRT_OUTPUT
 //{

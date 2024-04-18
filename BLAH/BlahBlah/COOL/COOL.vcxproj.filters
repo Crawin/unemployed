@@ -254,6 +254,9 @@
     <ClCompile Include="External\Include\VIVOX\VIVOX.cpp">
       <Filter>소스 파일\Network</Filter>
     </ClCompile>
+    <ClCompile Include="Include\Enums.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Include\대충정리좀하자.txt">

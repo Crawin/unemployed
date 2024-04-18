@@ -51,15 +51,48 @@ namespace component
 		m_AnimationPlayer->Update(deltaTime);
 	}
 
-	void AnimationController::ChangeAnimationTo(const std::string& animDef)
+	void AnimationController::CheckTransition(void* data)
 	{
-		m_AnimationPlayer->ChangeToAnimation(animDef);
+		auto& possiblity = m_TransitionGraph[m_CurrentState];
+
+		// check condition in every possiblity
+		for (auto toState : possiblity) {
+			if (m_ChangeCondition[std::pair(m_CurrentState, toState)](data) == true) {
+				// success
+				//m_OnEnter[toState]();
+
+				ChangeAnimationTo(toState);
+
+				m_CurrentState = toState;
+
+				return;
+			}
+		}
 	}
+
+	void AnimationController::ChangeAnimationTo(ANIMATION_STATE animSet)
+	{
+		m_CurrentState = animSet;
+		m_AnimationPlayer->ChangeToAnimation(animSet);
+	}
+
+	float AnimationController::GetCurrentPlayTime() const
+	{
+		return m_AnimationPlayer->GetCurrentPlayTime();
+	}
+
+	float AnimationController::GetCurrentPlayEndTime() const
+	{
+		return m_AnimationPlayer->GetCurrentPlayEndTime();
+	}
+
+	//void AnimationController::WaitFor(float waitTime)
+	//{
+	//	m_AnimationPlayer->AddWaitQueue(waitTime);
+	//}
 
 	void AnimationExecutor::Create(Json::Value& v, ResourceManager* rm)
 	{
-		//  todo
-		// resource mamager에게 toLoad 뭐시기를 추가해야 한다.
 		Json::Value anim = v["AnimationExecutor"];
 
 		rm->AddLateLoadAnimExecutor(anim["Player"].asString(), this);
@@ -109,6 +142,27 @@ namespace component
 		m_Scale.y = trans["Scale"][1].asFloat();
 		m_Scale.z = trans["Scale"][2].asFloat();
 	}
+
+	void Attach::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value att = v["Attach"];
+
+		m_BoneIndex = att["BoneIDX"].asInt();
+
+		rm->AddLateLoadAttach(att["Player"].asString(), this, att["Mesh"].asString(), m_BoneIndex);
+	}
+
+	void Attach::ShowYourself() const
+	{
+		DebugPrint(std::format("Attach Comp"));
+	}
+
+	XMMATRIX& Attach::GetAnimatedBone()
+	{
+		XMMATRIX t = XMMatrixTranspose(XMLoadFloat4x4(&m_Bone));
+		return m_AnimationPlayer->GetAnimatedBone(t, m_BoneIndex);
+	}
+
 
 	void Transform::ShowYourself() const
 	{
