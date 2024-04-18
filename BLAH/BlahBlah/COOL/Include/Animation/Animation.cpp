@@ -10,7 +10,8 @@ void Animation::LoadAnimation(ComPtr<ID3D12GraphicsCommandList> commandList, std
 	// bone length
 	file.read((char*)(&m_BoneLen), sizeof(m_BoneLen));
 
-	m_AnimData.resize(m_BoneLen * m_TotalPlayFrame);
+	// bone play frame == zero base
+	m_AnimData.resize(m_BoneLen * (m_TotalPlayFrame + 1));
 	//std::vector<XMFLOAT4X4> data(boneLen * m_TotalPlayFrame);
 	file.read((char*)(&m_AnimData[0]), sizeof(XMFLOAT4X4) * m_AnimData.size());
 

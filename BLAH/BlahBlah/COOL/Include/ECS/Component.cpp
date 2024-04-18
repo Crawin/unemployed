@@ -159,8 +159,7 @@ namespace component
 
 	XMMATRIX& Attach::GetAnimatedBone()
 	{
-		XMMATRIX t = XMMatrixTranspose(XMLoadFloat4x4(&m_Bone));
-		return m_AnimationPlayer->GetAnimatedBone(t, m_BoneIndex);
+		return m_AnimationPlayer->GetAnimatedBone(m_BoneIndex);
 	}
 
 

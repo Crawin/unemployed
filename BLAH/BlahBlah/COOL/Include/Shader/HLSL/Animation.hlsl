@@ -83,8 +83,6 @@ VS_OUTPUT vs(VS_INPUT input)
 		}
 		else
 			boneToWorld += weight * anim1;	
-		//boneToWorld = Bone[boneIdx];	
-		//boneToWorld = Animation[20 * floor(anim1PlayTime * 24.0f)];
 	}
 
 	output.position = mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
