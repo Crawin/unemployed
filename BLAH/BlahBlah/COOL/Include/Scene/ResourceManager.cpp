@@ -450,8 +450,6 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 			DebugPrint(std::format("Can't find BONE!!, name: {}", boneName));
 			return false;
 		}
-
-		att.m_Attach->SetBone((*bone)->m_Bones[att.idx]);
 	}
 
 	return true;

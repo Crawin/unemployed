@@ -323,8 +323,6 @@ namespace component {
 	{
 		const AnimationPlayer* m_AnimationPlayer = nullptr;
 		
-		XMFLOAT4X4 m_Bone = Matrix4x4::Identity();
-
 		XMFLOAT3 m_OriginalPosition = { 0.0f, 0.0f, 0.0f };
 		XMFLOAT3 m_OriginalRotate = { 0.0f, 0.0f, 0.0f };
 		XMFLOAT3 m_OriginalScale = { 0.0f, 0.0f, 0.0f };
@@ -335,12 +333,10 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		void SetBone(const XMFLOAT4X4& bone) { m_Bone = bone; }
 		void SetPlayer(AnimationPlayer* animPlayer) { m_AnimationPlayer = animPlayer; }
 
 		const AnimationPlayer* GetPlayer() const { return m_AnimationPlayer; }
 
-		const XMFLOAT4X4& GetBone() const { return m_Bone; }
 		XMMATRIX& GetAnimatedBone();
 
 		void SetOriginalPosition(const XMFLOAT3& pos) { m_OriginalPosition = pos; }

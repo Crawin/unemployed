@@ -57,12 +57,12 @@
 					"Attach":
 					{
 						"Mesh": "test_rigging",
-						"BoneIDX": 32,
+						"BoneIDX": 28,
 						"Player": "Dia2"
 					},
 					"Renderer": {
-						"Mesh": "test_rigging.satodia_Hair_testrig",
-						"Material": "NoMaterial"
+						"Mesh": "test_rigging.satodia_Body_testrig",
+						"Material": "SatoBody"
 					}
 					
 				}

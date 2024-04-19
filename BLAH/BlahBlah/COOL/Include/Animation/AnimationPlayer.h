@@ -10,6 +10,8 @@ struct AnimationPlayQueueData {
 	bool m_Loop = false;
 
 	void Update(float deltaTime);
+
+	XMMATRIX GetAnimatedBoneMat(int boneIdx) const;
 };
 
 class AnimationPlayer
@@ -45,7 +47,7 @@ public:
 	void SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager) const;
 
 	// for attach pos
-	XMMATRIX& GetAnimatedBone(XMMATRIX& bone, int boneIdx) const;
+	XMMATRIX& GetAnimatedBone(int boneIdx) const;
 
 public:
 	float GetCurrentPlayTime() const { return m_CurrentAnimation.m_CurPlayTime; }

@@ -51,7 +51,20 @@ namespace ECSsystem {
 
 		manager->ExecuteRoot(func);
 
-		//DebugPrint(std::format("entities: {}", temp));
+		// sync with Attach
+		std::function<void(component::Transform*, component::Attach*)> attacheSync = [manager](component::Transform* tr, component::Attach* at) {
+			//XMMATRIX boneInv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&at->GetBone()));
+			XMMATRIX attachedMat = (at->GetAnimatedBone());
+			XMMATRIX parent = XMLoadFloat4x4(&tr->GetParentTransfrom());
+			parent = attachedMat * parent;
+
+			XMFLOAT4X4 temp;
+			XMStoreFloat4x4(&temp, parent);
+
+			tr->SetParentTransform(temp);
+			};
+
+		manager->Execute(attacheSync);
 
 	}
 
@@ -109,33 +122,12 @@ namespace ECSsystem {
 			light.m_Position = tr->GetPosition();
 			};
 		
-		// sync with Attach
-		std::function<void(component::Transform*, component::Attach*)> func4 = [manager](component::Transform* tr, component::Attach* at) {
-			//XMMATRIX boneInv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&at->GetBone()));
-			XMMATRIX attachedMat = (at->GetAnimatedBone());
-			XMFLOAT3 res;
-			XMVECTOR vec;
 
-			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalPosition()), attachedMat);
-			XMStoreFloat3(&res, vec);
-			tr->SetPosition(res);
-
-			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalRotation()), attachedMat);
-			XMStoreFloat3(&res, vec);
-			tr->SetRotation(res);
-			
-			vec = XMVector3Transform(XMLoadFloat3(&at->GetOriginalScale()), attachedMat);
-			XMStoreFloat3(&res, vec);
-			//tr->SetScale(res);
-
-			//tr->ShowYourself();
-			};
 
 		
 		manager->Execute(func1);
 		manager->Execute(func2);
 		manager->Execute(func3);
-		manager->Execute(func4);
 
 	}
 
