@@ -111,7 +111,7 @@ XMMATRIX& AnimationPlayer::GetAnimatedBone(XMMATRIX& bone, int boneIdx) const
 
 	//if (anim1CurFrame == 28)
 	//DebugPrint(std::format("frame: {}, idx1: {} idx2: {}\t weight: {}", anim1CurFrame, idx1, idx2, anim1InterpolWegith));
-	printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", anim1CurFrame, idx1, idx2, anim1InterpolWegith);
+	//printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", anim1CurFrame, idx1, idx2, anim1InterpolWegith);
 
 	animRes = XMMatrixTranspose((1 - anim1InterpolWegith) * XMLoadFloat4x4(&(anim1->GetBone(idx2))) + anim1InterpolWegith * XMLoadFloat4x4(&(anim1->GetBone(idx1))));// *bone;
 	animRes = XMMatrixTranspose(XMLoadFloat4x4(&(anim1->GetBone(idx1))));
