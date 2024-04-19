@@ -145,17 +145,18 @@ struct NormalMesh : public MeshBase {
 
 	virtual void ConvertToLeftHanded()
 	{
+		//return;
 		// swap x
-		for (int i = 0; i < vertices.size(); ++i) {
-			ConvertToLH(vertices[i].position);
-			ConvertToLH(vertices[i].normal);
-			ConvertToLH(vertices[i].tangent);
-		}
+		//for (int i = 0; i < vertices.size(); ++i) {
+		//	ConvertToLH(vertices[i].position);
+		//	ConvertToLH(vertices[i].normal);
+		//	ConvertToLH(vertices[i].tangent);
+		//}
 
 		// matrix
 		XMFLOAT4X4 left =
 		{
-			1,0,0,0,
+			-1,0,0,0,
 			0,1,0,0,
 			0,0,1,0,
 			0,0,0,1
@@ -198,11 +199,18 @@ struct SkinnedMesh : public MeshBase {
 #endif
 	virtual void ConvertToLeftHanded()
 	{
+		// swap x
+		//for (auto& vtx : vertices) {
+		//	ConvertToLH(vtx.position);
+		//	ConvertToLH(vtx.normal);
+		//	ConvertToLH(vtx.tangent);
+		//}
+
 		// todo 더 해야함
 		// matrix
 		XMFLOAT4X4 left =
 		{
-			1,0,0,0,
+			-1,0,0,0,
 			0,1,0,0,
 			0,0,1,0,
 			0,0,0,1
@@ -216,13 +224,6 @@ struct SkinnedMesh : public MeshBase {
 		min.x *= -1;
 		max.x *= -1;
 		center.x *= -1;
-
-		// swap x
-		for (auto& vtx : vertices) {
-			ConvertToLH(vtx.position);
-			ConvertToLH(vtx.normal);
-			ConvertToLH(vtx.tangent);
-		}
 
 		// for winding order
 		for (int i = 0; i < vertices.size(); i += 3) {
@@ -297,6 +298,7 @@ int main(int argc, char* argv[])
 		FbxImporter* importer = FbxImporter::Create(fbxManager, "");
 
 		//const char* fileName = "test_rigging.fbx";
+		//const char* fileName = "classified_map.fbx";
 		//const char* fileName = "x-35_fbx.fbx";
 		const char* fileName = argv[i];
 
