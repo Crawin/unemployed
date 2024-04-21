@@ -108,6 +108,9 @@ public:
 	template<class T>
 	T* GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId);
 
+	template<class T>
+	T* GetComponent(Entity* entity);
+
 private:
 	template<class ...COMPONENTS>
 	std::bitset<COMPONENT_COUNT> GetBitset();

@@ -59,6 +59,9 @@ bool Scene::AddSystem()
 
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
 
+	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+
+
 	return true;
 }
 
@@ -152,15 +155,23 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 	OnPreRender(commandList, resultDsv);
 
 
+	BoundingFrustum& cameraFustum = camVec[0]->GetBoundingFrustum();
 	BoundingOrientedBox tempOBB;
 
 	// make function
-	std::function<void(component::Renderer*)> func = [&commandList, &res](component::Renderer* renderComponent) {
+	std::function<void(component::Renderer*)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent) {
 		int materialIdx = renderComponent->GetMaterial();
 		int meshIdx = renderComponent->GetMesh();
 
 		Material* material = res->GetMaterial(materialIdx);
 		Mesh* mesh = res->GetMesh(meshIdx);
+
+		const BoundingOrientedBox& meshOBB = mesh->GetBoundingBox();
+		meshOBB.Transform(tempOBB, XMLoadFloat4x4(&renderComponent->GetWorldMatrix()));
+
+		// frustum culling
+		if (cameraFustum.Intersects(tempOBB) == false) return;
+
 
 		material->GetShader()->SetPipelineState(commandList);
 		material->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
@@ -336,8 +347,8 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	std::function<void(component::Renderer*)> render = [commandList, res, &cameraFustum, &tempOBB](component::Renderer* rend) {
 		Mesh* mesh = res->GetMesh(rend->GetMesh());
 
-		BoundingOrientedBox* meshOBB = mesh->GetBoundingBox();
-		meshOBB->Transform(tempOBB, XMLoadFloat4x4(&rend->GetWorldMatrix()));
+		const BoundingOrientedBox& meshOBB = mesh->GetBoundingBox();
+		meshOBB.Transform(tempOBB, XMLoadFloat4x4(&rend->GetWorldMatrix()));
 
 		// frustum culling
 		if (cameraFustum->Intersects(tempOBB) == false) return;

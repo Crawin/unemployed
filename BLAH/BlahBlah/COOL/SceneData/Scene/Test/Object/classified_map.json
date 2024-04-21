@@ -13,8 +13,12 @@
 			"Name": "_1stfloor",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stfloor",
@@ -25,8 +29,12 @@
 			"Name": "_1stLeftPillar",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftPillar",
@@ -37,8 +45,12 @@
 			"Name": "_1stLeftToiletwall1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall1",
@@ -49,8 +61,12 @@
 			"Name": "_1stLeftToiletwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall2",
@@ -61,8 +77,12 @@
 			"Name": "_1stLeftToiletwall3",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall3",
@@ -73,8 +93,12 @@
 			"Name": "_1stLeftToiletwall4",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall4",
@@ -85,8 +109,12 @@
 			"Name": "_1stLeftToiletwall5",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall5",
@@ -97,8 +125,12 @@
 			"Name": "_1stLeftToiletwall6",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall6",
@@ -109,8 +141,12 @@
 			"Name": "_1stLeftToiletwall7",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall7",
@@ -121,8 +157,12 @@
 			"Name": "_1stLeftToiletwall8",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stLeftToiletwall8",
@@ -133,8 +173,12 @@
 			"Name": "_1stRightPillar",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map._1stRightPillar",
@@ -145,8 +189,12 @@
 			"Name": "AuditoriumAcrossPillar1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.AuditoriumAcrossPillar1",
@@ -157,8 +205,12 @@
 			"Name": "AuditoriumAcrossPillar2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.AuditoriumAcrossPillar2",
@@ -169,8 +221,12 @@
 			"Name": "AuditoriumFrontwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.AuditoriumFrontwall",
@@ -181,8 +237,12 @@
 			"Name": "AuditoriumLeftwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.AuditoriumLeftwall",
@@ -193,8 +253,12 @@
 			"Name": "AuditoriumRightwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.AuditoriumRightwall",
@@ -205,8 +269,12 @@
 			"Name": "CenterBasementStairs1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterBasementStairs1",
@@ -217,8 +285,12 @@
 			"Name": "CenterBenchCeiling",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterBenchCeiling",
@@ -229,8 +301,12 @@
 			"Name": "CenterBenchPillar1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterBenchPillar1",
@@ -241,8 +317,12 @@
 			"Name": "CenterBenchPillar2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterBenchPillar2",
@@ -253,8 +333,12 @@
 			"Name": "CenterBenchPillar3",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterBenchPillar3",
@@ -265,8 +349,12 @@
 			"Name": "CenterBenchPillar4",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterBenchPillar4",
@@ -277,8 +365,12 @@
 			"Name": "CenterLeftwall1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall1",
@@ -289,8 +381,12 @@
 			"Name": "CenterLeftwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall2",
@@ -301,8 +397,12 @@
 			"Name": "CenterLeftwall3",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall3",
@@ -313,8 +413,12 @@
 			"Name": "CenterLeftwall4",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall4",
@@ -325,8 +429,12 @@
 			"Name": "CenterLeftwall5",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall5",
@@ -337,8 +445,12 @@
 			"Name": "CenterLeftwall6",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall6",
@@ -349,8 +461,12 @@
 			"Name": "CenterLeftwall4Ceiling",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterLeftwall4Ceiling",
@@ -361,8 +477,12 @@
 			"Name": "CenterRightCeiling",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightCeiling",
@@ -373,8 +493,12 @@
 			"Name": "CenterRightManToilet",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightManToilet",
@@ -385,8 +509,12 @@
 			"Name": "CenterRightwall1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall1",
@@ -397,8 +525,12 @@
 			"Name": "CenterRightwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall2",
@@ -409,8 +541,12 @@
 			"Name": "CenterRightwall3",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall3",
@@ -421,8 +557,12 @@
 			"Name": "CenterRightwall4",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall4",
@@ -433,8 +573,12 @@
 			"Name": "CenterRightwall5",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall5",
@@ -445,8 +589,12 @@
 			"Name": "CenterRightwall6",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall6",
@@ -457,8 +605,12 @@
 			"Name": "CenterRightwall7",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightwall7",
@@ -469,8 +621,12 @@
 			"Name": "CenterRightWomanToilet",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterRightWomanToilet",
@@ -481,8 +637,12 @@
 			"Name": "CenterStairLeftThickwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterStairLeftThickwall",
@@ -493,8 +653,12 @@
 			"Name": "CenterStairLeftwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterStairLeftwall",
@@ -505,8 +669,12 @@
 			"Name": "CenterStairRightThickwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.CenterStairRightThickwall",
@@ -517,8 +685,12 @@
 			"Name": "ElevatorDoor",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.ElevatorDoor",
@@ -529,8 +701,12 @@
 			"Name": "FrontDoorLeftwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.FrontDoorLeftwall",
@@ -541,8 +717,12 @@
 			"Name": "FrontDoorLeftwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.FrontDoorLeftwall2",
@@ -553,8 +733,12 @@
 			"Name": "FrontDoorRightwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.FrontDoorRightwall",
@@ -565,8 +749,12 @@
 			"Name": "LeftDoorCeiling",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.LeftDoorCeiling",
@@ -577,8 +765,12 @@
 			"Name": "LeftDoorLeftwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.LeftDoorLeftwall",
@@ -589,8 +781,12 @@
 			"Name": "LeftDoorRightwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.LeftDoorRightwall",
@@ -601,8 +797,12 @@
 			"Name": "LeftDoorRightwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.LeftDoorRightwall2",
@@ -613,8 +813,12 @@
 			"Name": "OutBetweenLeftwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.OutBetweenLeftwall",
@@ -625,8 +829,12 @@
 			"Name": "OutLeft1stwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.OutLeft1stwall",
@@ -637,8 +845,12 @@
 			"Name": "OutLeftInsetwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.OutLeftInsetwall",
@@ -649,8 +861,12 @@
 			"Name": "TriangleWindow1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindow1",
@@ -661,8 +877,12 @@
 			"Name": "TriangleWindow2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindow2",
@@ -673,8 +893,12 @@
 			"Name": "TriangleWindow3",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindow3",
@@ -685,8 +909,12 @@
 			"Name": "TriangleWindow4",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindow4",
@@ -697,8 +925,12 @@
 			"Name": "TriangleWindow5",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindow5",
@@ -709,8 +941,12 @@
 			"Name": "TriangleWindow6",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindow6",
@@ -721,8 +957,12 @@
 			"Name": "TriangleWindowwall1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall1",
@@ -733,8 +973,12 @@
 			"Name": "TriangleWindowwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall2",
@@ -745,8 +989,12 @@
 			"Name": "TriangleWindowwall3",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall3",
@@ -757,8 +1005,12 @@
 			"Name": "TriangleWindowwall4",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall4",
@@ -769,8 +1021,12 @@
 			"Name": "TriangleWindowwall5",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall5",
@@ -781,8 +1037,12 @@
 			"Name": "TriangleWindowwall6",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall6",
@@ -793,8 +1053,12 @@
 			"Name": "TriangleWindowwall7",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall7",
@@ -805,8 +1069,12 @@
 			"Name": "TriangleWindowwall8",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.TriangleWindowwall8",
@@ -817,8 +1085,12 @@
 			"Name": "UWindowwall",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.UWindowwall",
@@ -829,8 +1101,12 @@
 			"Name": "UWindowwall1",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.UWindowwall1",
@@ -841,8 +1117,12 @@
 			"Name": "UWindowwall2",
 			"Transform": {
 				"Position": [ 0.0, 0.0, 0.0 ],
-				"Rotate": [ 0.0, 0.0, 0.0, 1.0 ],
+				"Rotate": [ 0.0, 0.0, 0.0 ],
 				"Scale": [ 1.0, 1.0, 1.0 ]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
 			},
 			"Renderer": {
 				"Mesh": "classified_map.UWindowwall2",

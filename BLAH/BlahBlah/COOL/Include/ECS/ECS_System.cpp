@@ -29,10 +29,6 @@ namespace ECSsystem {
 				auto bit = child->GetBitset();
 				int innerId = child->GetInnerID();
 
-				// todo 지우자
-				Name* childName = manager->GetComponent<Name>(bit, innerId);
-				//DebugPrint(std::format("\tchild: {}", childName->getName()));
-
 				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
 				if (childTrans != nullptr) {
 					XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
@@ -479,6 +475,63 @@ namespace ECSsystem {
 		};
 
 		manager->Execute(func); 
+	}
+
+	void CollideHandle::OnInit(ECSManager* manager)
+	{
+		// set collider bounding box here
+		//std::function<void(component::Collider*, component::SelfEntity*)> setBox = [manager](component::Collider* coll, component::SelfEntity* self) {
+		//	Entity* ent = self->GetEntity();
+
+		//	// auto init by renderer
+		//	if (coll->m_Collided) {
+		//		coll->m_Collided = false;
+		//		component::Renderer* rend = manager->GetComponent<component::Renderer>(ent);
+
+		//		if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
+		//		// do st
+		//	}
+		//	};
+
+		//manager->Execute(setBox);
+
+	}
+
+	void CollideHandle::Update(ECSManager* manager, float deltaTime)
+	{
+		// sync first
+		std::function<void(component::Transform*, component::Collider*)> sync = [](component::Transform* tr, component::Collider* col) {
+			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
+
+			col->UpdateBoundingBox(trans);
+			};
+		manager->Execute(sync);
+
+		// check
+		std::function<void(component::Collider*, component::Name*, component::Collider*, component::Name*)> collideCheck = 
+			[](component::Collider* a, component::Name* an, component::Collider* b, component::Name* bn) {
+
+			// if both static, skip
+			if (a->IsStaticObject() && b->IsStaticObject()) return;
+
+			auto& boxA = a->GetBoundingBox();
+			auto& boxB = b->GetBoundingBox();
+
+			XMVECTOR acualLen = XMVector3Length(XMLoadFloat3(&boxA.Center) - XMLoadFloat3(&boxB.Center));
+			XMVECTOR maximumLen = XMVector3Length(XMLoadFloat3(&boxA.Extents) - XMLoadFloat3(&boxB.Extents));
+			//if (abs(XMVectorGetX(acualLen) > abs(XMVectorGetX(maximumLen)))) return;
+
+			if (boxA.Intersects(boxB))
+			{
+				DebugPrint("HIT");
+				DebugPrint(std::format("\ta: {}", an->getName()));
+				DebugPrint(std::format("\tb: {}", bn->getName()));
+			}
+
+			};
+
+		manager->ExecuteSquare<component::Collider, component::Name>(collideCheck);
+
 	}
 
 	//void SendToServer::Update(ECSManager* manager, float deltaTime)

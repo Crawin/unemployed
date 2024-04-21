@@ -25,6 +25,16 @@
 
 	"DiaAnimationControl": {},
 
+	"Collider": 
+	{
+		"Static": false,
+		"AutoMesh": false,
+		"Center": [0.0, 85, 0],
+		"Extent": [50, 85, 50]
+	},
+
+	"Physics": {},
+
 	"Children": 
 	[
 		{

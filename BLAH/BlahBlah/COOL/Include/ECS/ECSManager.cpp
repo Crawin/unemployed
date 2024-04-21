@@ -262,6 +262,20 @@ T* ECSManager::GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId)
 	return nullptr;
 }
 
+template<class T>
+T* ECSManager::GetComponent(Entity* entity)
+{
+	std::bitset<COMPONENT_COUNT> entBit = entity->GetBitset();
+
+	int innerId = entity->GetInnerID();
+
+	if (m_ComponentSets.contains(entBit)) {
+		return m_ComponentSets[entBit].GetComponent<T>(innerId);
+	}
+
+	return nullptr;
+}
+
 template<class ...COMPONENTS>
 std::bitset<COMPONENT_COUNT> ECSManager::GetBitset()
 {

@@ -4,6 +4,7 @@
 namespace Json { class Value; }
 namespace ECSsystem { 
 	class AnimationPlayTimeAdd;
+	class CollideHandle;
 }
 class ResourceManager;
 class Entity;
@@ -314,6 +315,22 @@ namespace component {
 		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
 		Entity* GetEntity() const { return m_SelfEntity; }
 	};
+	/////////////////////////////////////////////////////////
+	// SelfEntity component
+	// 본인을 가리키는거 사용할진 모름)
+	//
+	class SelfEntity : public ComponentBase<SelfEntity>
+	{
+		Entity* m_SelfEntity = nullptr;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
+		Entity* GetEntity() const { return m_SelfEntity; }
+	};
+
 
 	/////////////////////////////////////////////////////////
 	// Attach component
@@ -374,6 +391,7 @@ namespace component {
 
 		// for culling
 		BoundingFrustum m_BoundingFrustum{};
+		BoundingFrustum m_BoundingOriginFrustum{};
 
 		// root signature
 		CameraDataShader* m_ShaderData = nullptr;
@@ -397,6 +415,8 @@ namespace component {
 
 		const XMFLOAT4X4& GetViewMat() const { return m_ViewMatrix; }
 		const XMFLOAT4X4& GetProjMat() const { return m_ProjMatrix; }
+
+		BoundingFrustum& GetBoundingFrustum() { return m_BoundingFrustum; }
 
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -536,6 +556,10 @@ namespace component {
 		int m_Clouds = 1000;
 	};
 
+	/////////////////////////////////////////////////////////
+	// server component
+	// 서버와 위치 동기화가 필요한 엔티티를 위한 컴포넌트
+	//
 	class Server : public ComponentBase<Server> {
 		unsigned int m_id;
 	public:
@@ -545,6 +569,36 @@ namespace component {
 
 		const unsigned int getID() { return m_id; }
 		void setID(const unsigned int&);
+	};
+
+	/////////////////////////////////////////////////////////
+	// Collider component
+	// 충돌체크
+	//
+	class Collider : public ComponentBase<Collider> {
+		BoundingOrientedBox m_BoundingBoxOriginal;
+		BoundingOrientedBox m_CurrentBox;
+		bool m_StaticObject = false;
+		bool m_Collided = false;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		bool GetCollided() const { return m_Collided; }
+		bool IsStaticObject() const { return m_StaticObject; }
+
+		void SetCollided(bool col) { m_Collided = col; }
+
+		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
+		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
+
+		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
+		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
+
+		void UpdateBoundingBox(const XMMATRIX& transMat);
+
 	};
 }
 

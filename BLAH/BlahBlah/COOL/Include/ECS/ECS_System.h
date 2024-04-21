@@ -31,7 +31,7 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// transform to renderer / camera
+	// transform to renderer / camera / light
 	//
 	class SyncWithTransform : public System {
 
@@ -48,6 +48,9 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
+	/////////////////////////////////////////////////////////
+	// sync position from server data
+	//
 	class SyncPosition : public System {
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
@@ -77,6 +80,15 @@ namespace ECSsystem {
 	//
 	class DayLight : public System {
 	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
+	/////////////////////////////////////////////////////////
+	// collide check and handle
+	//
+	class CollideHandle : public System {
+	public:
+		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
