@@ -344,9 +344,9 @@ namespace component
 		DebugPrint("Input Comp, nothing");
 	}
 
-	void Speed::Create(Json::Value& v, ResourceManager* rm)
+	void Physics::Create(Json::Value& v, ResourceManager* rm)
 	{
-		Json::Value s = v["Speed"];
+		Json::Value s = v["Physics"];
 
 		m_MaxVelocity = s["MaxVelocity"].asFloat();
 		//m_Acceleration = s["Acceleration"].asFloat();
@@ -358,14 +358,14 @@ namespace component
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
-	void Speed::ShowYourself() const
+	void Physics::ShowYourself() const
 	{
 		DebugPrint("Speed Comp");
 		DebugPrint(std::format("\tcur speed: ({}, {}, {}), max speed: {}, acc : {}", m_Velocity.x, m_Velocity.y, m_Velocity.z, m_MaxVelocity, m_Acceleration.x));
 
 	}
 
-	void Speed::AddVelocity(const XMFLOAT3& direction, float deltaTime)
+	void Physics::AddVelocity(const XMFLOAT3& direction, float deltaTime)
 	{
 		// add direction * deltatime * acceleration
 

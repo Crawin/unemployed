@@ -445,10 +445,10 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// speed component
+	// Physics component
 	// 최고속도, 가속도, 등등
 	//
-	class Speed : public ComponentBase<Speed> {
+	class Physics : public ComponentBase<Physics> {
 		float m_MaxVelocity = 300.0f;
 
 		XMFLOAT3 m_Velocity = { 0,0,0 };

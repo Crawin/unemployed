@@ -4,6 +4,9 @@ class ECSManager;
 
 namespace ECSsystem {
 
+	// system class's member variable == global setting
+	// todo json으로 system 넣기
+
 	/////////////////////////////////////////////////////////
 	// bass component system
 	//
@@ -41,14 +44,6 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// simple physics (friction on air?)
-	//
-	class Friction : public System {
-	public:
-		virtual void Update(ECSManager* manager, float deltaTime);
-	};
-
-	/////////////////////////////////////////////////////////
 	// sync position from server data
 	//
 	class SyncPosition : public System {
@@ -57,13 +52,24 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// move by input
+	// input to update physics
 	//
-	class MoveByInput : public System {
+	class UpdateInput : public System {
 
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
+
+	/////////////////////////////////////////////////////////
+	// move by physics
+	//
+	class SimulatePhysics : public System {
+		float m_friction = 200.0f;
+		float m_Gravity = 9.6f;
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
 
 	/////////////////////////////////////////////////////////
 	// anim set by speed
@@ -84,11 +90,10 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// collide check and handle
+	// collide check only
 	//
-	class CollideHandle : public System {
+	class CollideCkeck : public System {
 	public:
-		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 

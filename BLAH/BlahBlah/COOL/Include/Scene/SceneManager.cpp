@@ -22,7 +22,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Light, "Light");
 	REGISTER_COMPONENT(component::Input, "Input");
-	REGISTER_COMPONENT(component::Speed, "Speed");
+	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::TestInput, "TestInput");

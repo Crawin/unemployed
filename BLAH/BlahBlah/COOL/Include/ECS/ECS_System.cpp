@@ -127,49 +127,12 @@ namespace ECSsystem {
 
 	}
 
-	void Friction::Update(ECSManager* manager, float deltaTime)
-	{
-		using namespace component;
-		std::function<void(Speed*)> func = [deltaTime](Speed* sp) {
-			const float friction = 900.0f;
-			// if moving
-			float speed = sp->GetCurrentVelocityLen();// sp->GetCurrentVelocity();
-
-			if (speed > 0) {
-				// do friction here
-				XMVECTOR vel = XMLoadFloat3(&sp->GetVelocity());
-				XMVECTOR nor = XMVector3Normalize(vel);
-				XMVECTOR res = vel - nor * friction * deltaTime;
-
-				XMFLOAT3 temp;
-				XMStoreFloat3(&temp, res);
-
-				// 부호가 바뀜
-				if (XMVectorGetX(vel) * XMVectorGetX(res) < 0) temp.x = 0;
-				if (XMVectorGetY(vel) * XMVectorGetY(res) < 0) temp.y = 0;
-				if (XMVectorGetZ(vel) * XMVectorGetZ(res) < 0) temp.z = 0;
-
-				// update
-				sp->SetVelocity(temp);
-				speed = sp->GetCurrentVelocityLen();
-
-				if (abs(speed) < 0.01f) {
-					sp->SetVelocity({ 0,0,0 });
-				}
-			}
-
-
-			};
-
-		manager->Execute(func);
-	}
-
-	void MoveByInput::Update(ECSManager* manager, float deltaTime)
+	void UpdateInput::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
 
-		// input으로 speed 업데이트
-		std::function<void(Transform*, Input*, Speed*)> inputFunc = [deltaTime](Transform* tr, Input* in, Speed* sp) {
+		// input으로 pysics 업데이트
+		std::function<void(Transform*, Input*, Physics*)> inputFunc = [deltaTime](Transform* tr, Input* in, Physics* sp) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
@@ -209,7 +172,7 @@ namespace ECSsystem {
 
 			};
 
-		std::function<void(Transform*, TestInput*, Speed*)> inputFunc2 = [deltaTime](Transform* tr, TestInput* in, Speed* sp) {
+		std::function<void(Transform*, TestInput*, Physics*)> inputFunc2 = [deltaTime](Transform* tr, TestInput* in, Physics* sp) {
 			// keyboard input
 			bool move = false;
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
@@ -256,32 +219,10 @@ namespace ECSsystem {
 			};
 		// mouse
 
-		// move by speed
-		std::function<void(Transform*, Speed*)> move = [deltaTime](Transform* tr, Speed* sp) {
-			XMVECTOR pos = XMLoadFloat3(&tr->GetPosition());
-			XMVECTOR vel= XMLoadFloat3(&sp->GetVelocity());
 
-			XMFLOAT3 temp;
-			pos += vel * deltaTime;
-			XMStoreFloat3(&temp, pos);
-
-			tr->SetPosition(temp);
-			};
-
-
-		// send
-		std::function<void(Transform*, Input*, Speed*)> send = [deltaTime](Transform* tr, Input* in, Speed* sp) {
-			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
-			{
-				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
-					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity());
-			}
-			};
 		manager->Execute(inputFunc);
 		manager->Execute(inputFunc2);
-		manager->Execute(move);
-		manager->Execute(send);
+
 	}
 
 	void ChangeAnimationTest::OnInit(ECSManager* manager)
@@ -337,8 +278,8 @@ namespace ECSsystem {
 
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Speed*, component::AnimationController*, component::DiaAnimationControl*)> func1 = 
-			[](component::Speed* sp, component::AnimationController* animCtrl, component::DiaAnimationControl* dia) {
+		std::function<void(component::Physics*, component::AnimationController*, component::DiaAnimationControl*)> func1 =
+			[](component::Physics* sp, component::AnimationController* animCtrl, component::DiaAnimationControl* dia) {
 
 			float speed = sp->GetCurrentVelocityLen();
 
@@ -402,8 +343,8 @@ namespace ECSsystem {
 
 	void SyncPosition::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Server*, component::Name*, component::Transform*, component::Speed*)> func = []
-		(component::Server* server, component::Name* name, component::Transform* tr, component::Speed* sp) {
+		std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
+		(component::Server* server, component::Name* name, component::Transform* tr, component::Physics* sp) {
 			auto& client = Client::GetInstance();
 			const SOCKET* playerSock = client.getPSock();
 			short type = client.getCharType();
@@ -477,27 +418,7 @@ namespace ECSsystem {
 		manager->Execute(func); 
 	}
 
-	void CollideHandle::OnInit(ECSManager* manager)
-	{
-		// set collider bounding box here
-		//std::function<void(component::Collider*, component::SelfEntity*)> setBox = [manager](component::Collider* coll, component::SelfEntity* self) {
-		//	Entity* ent = self->GetEntity();
-
-		//	// auto init by renderer
-		//	if (coll->m_Collided) {
-		//		coll->m_Collided = false;
-		//		component::Renderer* rend = manager->GetComponent<component::Renderer>(ent);
-
-		//		if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
-		//		// do st
-		//	}
-		//	};
-
-		//manager->Execute(setBox);
-
-	}
-
-	void CollideHandle::Update(ECSManager* manager, float deltaTime)
+	void CollideCkeck::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync first
 		std::function<void(component::Transform*, component::Collider*)> sync = [](component::Transform* tr, component::Collider* col) {
@@ -523,15 +444,90 @@ namespace ECSsystem {
 
 			if (boxA.Intersects(boxB))
 			{
-				DebugPrint("HIT");
-				DebugPrint(std::format("\ta: {}", an->getName()));
-				DebugPrint(std::format("\tb: {}", bn->getName()));
+				a->SetCollided(true);
+				b->SetCollided(true);
+				//DebugPrint("HIT");
+				//DebugPrint(std::format("\ta: {}", an->getName()));
+				//DebugPrint(std::format("\tb: {}", bn->getName()));
 			}
 
 			};
 
 		manager->ExecuteSquare<component::Collider, component::Name>(collideCheck);
+	}
 
+	void SimulatePhysics::Update(ECSManager* manager, float deltaTime)
+	{
+		// friction
+		using namespace component;
+		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
+			const float friction = 900.0f;
+			// if moving
+			float speed = sp->GetCurrentVelocityLen();// sp->GetCurrentVelocity();
+
+			if (speed > 0) {
+				// do friction here
+				XMVECTOR vel = XMLoadFloat3(&sp->GetVelocity());
+				XMVECTOR nor = XMVector3Normalize(vel);
+				XMVECTOR res = vel - nor * friction * deltaTime;
+
+				XMFLOAT3 temp;
+				XMStoreFloat3(&temp, res);
+
+				// 부호가 바뀜
+				if (XMVectorGetX(vel) * XMVectorGetX(res) < 0) temp.x = 0;
+				if (XMVectorGetY(vel) * XMVectorGetY(res) < 0) temp.y = 0;
+				if (XMVectorGetZ(vel) * XMVectorGetZ(res) < 0) temp.z = 0;
+
+				// update
+				sp->SetVelocity(temp);
+				speed = sp->GetCurrentVelocityLen();
+
+				if (abs(speed) < 0.01f) {
+					sp->SetVelocity({ 0,0,0 });
+				}
+			}
+
+
+			};
+
+		std::function<void(component::Collider*, component::Physics*)> collideHandle = [](component::Collider* col, component::Physics* sp) {
+			// if coll?
+			if (col->GetCollided()) {
+				col->SetCollided(false);
+
+
+			}
+
+			};
+
+
+		// move by speed
+		std::function<void(Transform*, Physics*)> move = [deltaTime](Transform* tr, Physics* sp) {
+			XMVECTOR pos = XMLoadFloat3(&tr->GetPosition());
+			XMVECTOR vel = XMLoadFloat3(&sp->GetVelocity());
+
+			XMFLOAT3 temp;
+			pos += vel * deltaTime;
+			XMStoreFloat3(&temp, pos);
+
+			tr->SetPosition(temp);
+			};
+
+		// send
+		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+			auto& client = Client::GetInstance();
+			if (client.getRoomNum())
+			{
+				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity());
+			}
+			};
+
+		manager->Execute(friction);
+		manager->Execute(collideHandle);
+		manager->Execute(move);
+		manager->Execute(send);
 	}
 
 	//void SendToServer::Update(ECSManager* manager, float deltaTime)
