@@ -59,7 +59,7 @@ bool Scene::AddSystem()
 
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
 
-	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+	m_ECSManager->InsertSystem(new ECSsystem::CollideCkeck);
 
 
 	return true;

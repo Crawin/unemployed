@@ -4,7 +4,6 @@
 namespace Json { class Value; }
 namespace ECSsystem { 
 	class AnimationPlayTimeAdd;
-	class CollideHandle;
 }
 class ResourceManager;
 class Entity;
