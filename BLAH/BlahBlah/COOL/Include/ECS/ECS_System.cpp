@@ -469,11 +469,19 @@ namespace ECSsystem {
 			// client의 1P, 2P 소켓 아이디 적용
 
 			auto id = server->getID();
-			if(id)
+			if (id && client.characters[id].IsUpdated())
 			{
+				XMFLOAT3 pos = tr->GetPosition();
+				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
+
+				client.characters[id].SetUpdate(false);
 				tr->SetPosition(client.characters[id].getPos());
 				//tr->SetRotation(client.characters[id].getRot());
 				sp->SetVelocity(client.characters[id].getSpeed());
+
+				XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
+				XMStoreFloat3(&pos, dif);
+				DebugPrint(std::format("diff: {}, {}, {}", pos.x, pos.y, pos.z));
 			}
 
 		};

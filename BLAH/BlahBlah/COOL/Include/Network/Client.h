@@ -56,6 +56,8 @@ public:
 	const DirectX::XMFLOAT3 getPos() { return position; }
 	const DirectX::XMFLOAT3 getRot() { return rotation; }
 	const DirectX::XMFLOAT3 getSpeed() { return speed; }
+	bool IsUpdated() const { return updated; }
+	void SetUpdate(bool bo) { updated = bo; }
 };
 
 
@@ -80,7 +82,7 @@ private:
 
 	float m_SendTimeElapsed = 0.0f;
 	// 1초에 24번 보냄
-	const float m_SendFrame = 1.0f / 24.0f;
+	const float m_SendFrame = 1.0f / 10.0f;
 
 public:
 	std::list<char> over_buf;
