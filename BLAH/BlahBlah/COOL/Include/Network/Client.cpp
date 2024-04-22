@@ -187,7 +187,13 @@ void process_packet(packet_base*& base)
 	case 0:									// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-		client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
+		if (buf->getPlayer() == client.getPSock()[0]) {
+			client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), client.characters[buf->getPlayer()].getRot(), buf->getSpeed());	// 수정 필요
+		}
+		else
+		{
+			client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
+		}
 		break;
 	}
 	case 1:									// LOGIN

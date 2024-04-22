@@ -39,14 +39,20 @@ class GameCharacters
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 speed;
+	bool updated;
 public:
 	GameCharacters() 
 	{
 		position = DirectX::XMFLOAT3(0, 0, 0);
 		rotation = DirectX::XMFLOAT3(0, 0, 0);
 		speed = DirectX::XMFLOAT3(0, 0, 0);
+		updated = false;
 	};
-	void setPosRotSpeed(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot, const DirectX::XMFLOAT3 sp) { position = pos; rotation = rot; speed = sp; }
+	void setPosRotSpeed(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3 rot, const DirectX::XMFLOAT3 sp) 
+	{
+		position = pos; rotation = rot; speed = sp;
+		updated = true;
+	}
 	const DirectX::XMFLOAT3 getPos() { return position; }
 	const DirectX::XMFLOAT3 getRot() { return rotation; }
 	const DirectX::XMFLOAT3 getSpeed() { return speed; }
