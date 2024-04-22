@@ -168,9 +168,9 @@ class Player
 public:
 	unsigned int id = NULL;
 	SOCKET sock = NULL;
-	DirectX::XMFLOAT3 position;
-	DirectX::XMFLOAT3 rotation;
-	DirectX::XMFLOAT3 speed;
+	DirectX::XMFLOAT3 position = { 0,0,0 };
+	DirectX::XMFLOAT3 rotation = { 0,0,0 };
+	DirectX::XMFLOAT3 speed = { 0,0,0 };
 };
 
 class Game
@@ -184,6 +184,7 @@ public:
 	Player* getPlayers() { return p; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
 	void setPlayerPR_v2(const unsigned int&, cs_packet_position*&, const DirectX::XMFLOAT3&);
+	void setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot);
 	void setPlayerRot(const unsigned int&, cs_packet_position*&);
 	void setPlayerRotSpeed(const unsigned int&, cs_packet_position*&, DirectX::XMFLOAT3&);
 	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
@@ -205,4 +206,5 @@ public:
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	bool world_collision(cs_packet_position*&);
 	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
+	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, std::chrono::nanoseconds& ping);
 };

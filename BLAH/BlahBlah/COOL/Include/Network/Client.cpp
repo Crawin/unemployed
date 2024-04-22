@@ -47,6 +47,7 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 	wsabuf[0].len = sizeof(cs_packet_position);
 
 	ZeroMemory(&wsaover, sizeof(wsaover));
+	temp.sendTime = std::chrono::high_resolution_clock::now();
 	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
 }
 

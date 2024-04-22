@@ -110,6 +110,7 @@ private:
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 speed;
+
 public:
 	cs_packet_position(const unsigned int& n, const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot, const DirectX::XMFLOAT3& sp)
 		:roomNum(n), position(pos), rotation(rot), speed(sp)
@@ -121,6 +122,7 @@ public:
 	const DirectX::XMFLOAT3 getPosition() { return position; }
 	const DirectX::XMFLOAT3 getRotation() { return rotation; }
 	const DirectX::XMFLOAT3 getSpeed() { return speed; }
+	std::chrono::steady_clock::time_point sendTime;
 };
 
 class cs_packet_make_room : public packet_base
