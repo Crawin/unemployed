@@ -71,6 +71,11 @@ private:
 	SOCKET playerSock[2];
 	unsigned int roomNum = NULL;
 	short characterType = NULL;
+
+	float m_SendTimeElapsed = 0.0f;
+	// 1초에 24번 보냄
+	const float m_SendFrame = 1.0f / 24.0f;
+
 public:
 	std::list<char> over_buf;
 	char* overbuf;
@@ -78,7 +83,7 @@ public:
 
 	void Recv_Start();
 	char* Get_Buf();
-	void Send_Pos(const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&);
+	void Send_Pos(const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, float deltaTime);
 	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
 	void setPSock(const SOCKET&);

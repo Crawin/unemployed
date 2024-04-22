@@ -40,15 +40,20 @@ char* Client::Get_Buf()
 	return buf;
 }
 
-void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot, const DirectX::XMFLOAT3& sp)
+void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot, const DirectX::XMFLOAT3& sp, float deltaTime)
 {
-	cs_packet_position temp(roomNum, pos, rot, sp);
-	wsabuf[0].buf = reinterpret_cast<char*>(&temp);
-	wsabuf[0].len = sizeof(cs_packet_position);
+	m_SendTimeElapsed += deltaTime;
+	if (m_SendTimeElapsed >= m_SendFrame) {
+		m_SendTimeElapsed = 0.0f;
 
-	ZeroMemory(&wsaover, sizeof(wsaover));
-	temp.sendTime = std::chrono::high_resolution_clock::now();
-	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
+		cs_packet_position temp(roomNum, pos, rot, sp);
+		wsabuf[0].buf = reinterpret_cast<char*>(&temp);
+		wsabuf[0].len = sizeof(cs_packet_position);
+
+		ZeroMemory(&wsaover, sizeof(wsaover));
+		temp.sendTime = std::chrono::high_resolution_clock::now();
+		WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
+	}
 }
 
 void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)

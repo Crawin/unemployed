@@ -279,7 +279,7 @@ namespace ECSsystem {
 			if (client.getRoomNum())
 			{
 				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
-					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity());
+					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
 			}
 			};
 		manager->Execute(inputFunc);
@@ -472,7 +472,7 @@ namespace ECSsystem {
 			if(id)
 			{
 				tr->SetPosition(client.characters[id].getPos());
-				tr->SetRotation(client.characters[id].getRot());
+				//tr->SetRotation(client.characters[id].getRot());
 				sp->SetVelocity(client.characters[id].getSpeed());
 			}
 
