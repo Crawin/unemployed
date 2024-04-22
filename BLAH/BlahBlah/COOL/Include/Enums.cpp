@@ -15,6 +15,7 @@ ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 	if (str == "Wait")				return ANIMATION_STATE::WAITEND;
 	if (str == "Idle")				return ANIMATION_STATE::IDLE;
 	if (str == "Walk")				return ANIMATION_STATE::WALK;
+	if (str == "Run")				return ANIMATION_STATE::RUN;
 	if (str == "FallingDown")		return ANIMATION_STATE::FALLINGDOWN;
 	if (str == "GetUp")				return ANIMATION_STATE::GETUP;
 	if (str == "Dance")				return ANIMATION_STATE::DANCE;
@@ -22,14 +23,15 @@ ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 	return ANIMATION_STATE::NULLANIM;
 }
 
-const std::string& ConvertAnimationStateToString(ANIMATION_STATE anim)
+std::string ConvertAnimationStateToString(ANIMATION_STATE anim)
 {
 	switch (anim) {
-	case ANIMATION_STATE::WAITEND:				return "Wait";
-	case ANIMATION_STATE::IDLE:				return "Idle";
-	case ANIMATION_STATE::WALK:				return "Walk";
-	case ANIMATION_STATE::FALLINGDOWN:		return "FallingDown";
-	case ANIMATION_STATE::GETUP:				return "GetUp";
-	case ANIMATION_STATE::DANCE:				return "Dance";
+	case ANIMATION_STATE::WAITEND:				return std::string("Wait");
+	case ANIMATION_STATE::IDLE:					return std::string("Idle");
+	case ANIMATION_STATE::WALK:					return std::string("Walk");
+	case ANIMATION_STATE::RUN:					return std::string("RUN");
+	case ANIMATION_STATE::FALLINGDOWN:			return std::string("FallingDown");
+	case ANIMATION_STATE::GETUP:				return std::string("GetUp");
+	case ANIMATION_STATE::DANCE:				return std::string("Dance");
 	}
 }

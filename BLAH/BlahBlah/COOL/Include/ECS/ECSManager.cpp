@@ -110,10 +110,6 @@ COMP* ComponentSet::GetComponent(int idx)
 		return m_Set[COMP::GetBit()].GetData<COMP>(idx);
 
 	return nullptr;
-	//container[];
-	//COMP* temp = container[idx];
-	//return temp;
-	//return nullptr;
 }
 
 
@@ -157,8 +153,6 @@ inline void ECSManager::AddEntity(Entity* entity)
 	entity->m_Bitset = bitset;
 
 	m_Entities.push_back(entity);
-
-	//entity->m_Bitset = bitset;
 
 
 }
@@ -220,29 +214,42 @@ void ECSManager::ExecuteRoot(std::function<void(COMPONENTS*...)>& func)//, Entit
 }
 
 template<class ...COMPONENTS>
-void ECSManager::ExecuteSquare(std::function<void(COMPONENTS*...)>& func)
-{
-	// find bitset first
-	std::bitset<COMPONENT_COUNT> bitset = GetBitset<COMPONENTS...>();
-
-	// structured binding
-	for (auto& [key, compSet] : m_ComponentSets) {
-		// not match => dont
-		if ((bitset & key) != bitset) continue;
-
-		compSet.Execute(func);
-	}
-
-
-}
-
-template<class ...COMPONENTS>
 void ECSManager::ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func)
 {
 	std::bitset<COMPONENT_COUNT> funcBitset = GetBitset<COMPONENTS...>();
 
 	if ((funcBitset & bit) == funcBitset)
 		m_ComponentSets[bit].Execute(innerID, func);
+}
+
+template<class ...COMPONENTS>
+void ECSManager::ExecuteSquare(std::function<void(COMPONENTS*..., COMPONENTS*...)>& func)
+{
+	// find bitset first
+	std::bitset<COMPONENT_COUNT> bitset = GetBitset<COMPONENTS...>();
+
+	for (auto outIter = m_ComponentSets.begin(); outIter != m_ComponentSets.end(); ++outIter) {
+		if ((bitset & outIter->first) != bitset) continue;
+
+		ComponentSet& out = outIter->second;
+		int outEntitySize = out.GetEntitySize();
+
+		for (int i = 0; i < outEntitySize; ++i) {
+			// inner loop from here
+			for (auto inIter = outIter; inIter != m_ComponentSets.end(); ++inIter) {
+				if ((bitset & inIter->first) != bitset) continue;
+
+				ComponentSet& in = inIter->second;
+				int inEntitySize = in.GetEntitySize();
+
+				for (int j = (inIter == outIter) ? (i + 1) : 0 ; j < inEntitySize; ++j) {
+					// do something
+					//out.ExecuteWithOtherComps(func, in.GetComponent<COMPONENTS>(j)...);
+					func(out.GetComponent<COMPONENTS>(i)..., in.GetComponent<COMPONENTS>(j)...);
+				}
+			}
+		}
+	}
 }
 
 template<class T>
@@ -255,10 +262,18 @@ T* ECSManager::GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId)
 	return nullptr;
 }
 
-template<class ...COMPONENTS>
-void ECSManager::Squared(std::function<void(COMPONENTS*...)>& func, ComponentSetMap::iterator& setIter, ComponentContainerMap::iterator& contItert)
+template<class T>
+T* ECSManager::GetComponent(Entity* entity)
 {
+	std::bitset<COMPONENT_COUNT> entBit = entity->GetBitset();
 
+	int innerId = entity->GetInnerID();
+
+	if (m_ComponentSets.contains(entBit)) {
+		return m_ComponentSets[entBit].GetComponent<T>(innerId);
+	}
+
+	return nullptr;
 }
 
 template<class ...COMPONENTS>

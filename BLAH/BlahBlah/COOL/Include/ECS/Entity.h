@@ -7,6 +7,7 @@ namespace component { class Component; }
 // entity
 class Entity
 {
+	friend class ResourceManager;
 	friend class ECSManager;
 	friend class ComponentSet;
 
@@ -19,12 +20,14 @@ public:
 		//	delete child;
 	}
 
+private:
 	void AddComponent(component::Component* component) { m_Components.push_back(component); }
 	void AddChild(Entity* entity) { m_Children.push_back(entity); }
 	void AddBit(const std::bitset<COMPONENT_COUNT>& bit) { 
 		m_Bitset |= bit;
 	}
 
+public:
 	const std::vector<Entity*>& GetChildren() const { return m_Children; }
 
 	std::bitset<COMPONENT_COUNT> GetBitset() const { return m_Bitset; }

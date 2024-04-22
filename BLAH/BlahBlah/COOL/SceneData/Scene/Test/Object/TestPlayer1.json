@@ -5,17 +5,17 @@
 
 	"Transform": 
 	{
-		"Position": [0.0, 0.0, 0.0],
+		"Position": [0.0, 20.0, 1000.0],
 		"Rotate": [0.0, 180.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
 
 	"AnimationController":
 	{
-		"Player": "Dia1"
+		"Player": "Player1"
 	},
 
-	"Speed": 
+	"Physics": 
 	{
 		"MaxVelocity": 200.0,
 		"Acceleration" : [1200.0, 1200.0, 1200.0]
@@ -23,7 +23,16 @@
 
 	"Input": {},
 
-	"DiaAnimationControl": {},
+	"PlayerAnimControll": {},
+
+	"Collider": 
+	{
+		"Static": false,
+		"AutoMesh": false,
+		"IsCapsule": true,
+		"Center": [0.0, 85, 0],
+		"Extent": [25, 85, 25]
+	},
 
 	"Children": 
 	[
@@ -31,7 +40,7 @@
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 75.0, -100.0],
+				"Position": [0.0, 70.0, -100.0],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
@@ -41,7 +50,7 @@
 				"Right": 	[1.0, 0.0, 0.0],
 				"Up": 		[0.0, 1.0, 0.0],
 				"Look": 	[0.0, 0.0, 1.0],
-				"Position": [0.0, 75.0, -100.0],
+				"Position": [0.0, 70.0, 5.5],
 		
 				"Fov": 90.0,
 				"Aspect": 1.777,
@@ -51,7 +60,7 @@
 		},
 
 		{
-			"Name": "Satono_Diamond_01_Body",
+			"Name": "Player1_hands",
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
@@ -60,97 +69,110 @@
 			},
 			"Renderer":
 			{
-				"Mesh": "test_rigging.satodia_Body_testrig",
-				"Material": "SatoBody"
+				"Mesh": "Player_01.hands",
+				"Material": "Player_Hands"
 			},
 			"AnimationExecutor": 
 			{
-				"Player": "Dia1"
+				"Player": "Player1"
 			}
 		},
 
 		{
-			"Name": "Satono_Diamond_01_HairRoot",
+			"Name": "Player1_Hat1",
 			"Transform": 
 			{
-				"Position": [0.0, 0, 0.0],
+				"Position": [0.0, 0.0, 0.0],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
+			"Renderer":
+			{
+				"Mesh": "Player_01.Hat1",
+				"Material": "Player_Hat1_Black"
+			},
+			"AnimationExecutor": 
+			{
+				"Player": "Player1"
+			}
+		},
 
+		{
+			"Name": "Player1_Head1",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "Player_01.Head1",
+				"Material": "Player_Head1"
+			},
+			"AnimationExecutor": 
+			{
+				"Player": "Player1"
+			}
+		},
 
-			"Children":
-			[
-				{
-					"Name" : "Satono_Diamond_01_Hair",
-					"Transform": 
-					{
-						"Position": [0.0, 0.0, 0.0],
-						"Rotate": [0.0, 0.0, 0.0],
-						"Scale": [1.0, 1.0, 1.0]
-					},
-					"Renderer":
-					{
-						"Mesh": "test_rigging.satodia_Hair_testrig",
-						"Material": "SatoHair"
-					},
-					"AnimationExecutor": 
-					{
-						"Player": "Dia1"
-					}
-				},
-				{
-					"Name" : "Satono_Diamond_01_FaceRoot",
-					"Transform": 
-					{
-						"Position": [0.0, 0.0, 0.0],
-						"Rotate": [0.0, 0.0, 0.0],
-						"Scale": [1.0, 1.0, 1.0]
-					},
+		{
+			"Name": "Player1_Hoodie1",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "Player_01.Hoodie1",
+				"Material": "Player_Hoodie_Black"
+			},
+			"AnimationExecutor": 
+			{
+				"Player": "Player1"
+			}
+		},
 
-					"Children":
-					[
-						{
-							"Name" : "Satono_Diamond_01_Eyes",
-							"Transform": 
-							{
-								"Position": [0.0, 0.0, 0.0],
-								"Rotate": [0.0, 0.0, 0.0],
-								"Scale": [1.0, 1.0, 1.0]
-							},
-							"Renderer" : 
-							{
-								"Mesh": "test_rigging.satodia_Eyes_testrig",
-								"Material": "NoMaterial"
-							},
-							"AnimationExecutor": 
-							{
-								"Player": "Dia1"
-							}
+		{
+			"Name": "Player1_pants1",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "Player_01.pants1",
+				"Material": "Player_Pants_Black"
+			},
+			"AnimationExecutor": 
+			{
+				"Player": "Player1"
+			}
+		},
 
-						},
-						{
-							"Name" : "Satono_Diamond_01_Face",
-							"Transform": 
-							{
-								"Position": [0.0, 0.0, 0.0],
-								"Rotate": [0.0, 0.0, 0.0],
-								"Scale": [1.0, 1.0, 1.0]
-							},
-							"Renderer" : 
-							{
-								"Mesh": "test_rigging.satodia_Face_testrig",
-								"Material": "NoMaterial"
-							},
-							"AnimationExecutor": 
-							{
-								"Player": "Dia1"
-							}
-						}
-					]
-				}
-			]
+		{
+			"Name": "Player1_Sneakers1",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "Player_01.Sneakers1",
+				"Material": "Player_Sneakers_Black"
+			},
+			"AnimationExecutor": 
+			{
+				"Player": "Player1"
+			}
 		}
+
 	]
 
 

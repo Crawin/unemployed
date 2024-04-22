@@ -64,10 +64,23 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	file.read((char*)&min, sizeof(XMFLOAT3));
 	file.read((char*)&max, sizeof(XMFLOAT3));
 	file.read((char*)&m_AABBCenter, sizeof(XMFLOAT3));
-	m_AABBExtents = XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
+	//min.x *= -1;
+	//max.x *= -1;
+	//m_AABBCenter.x *= -1;
 
+	XMVECTOR ext = (XMLoadFloat3(&max) - XMLoadFloat3(&min)) / 2.0f;
+	XMStoreFloat3(&m_AABBExtents, ext);
+	//m_AABBExtents = XMFLOAT3((max.x - min.x) * 0.5f, (max.y - min.y) * 0.5f, (max.z - min.z) * 0.5f);
+	//m_AABBCenter = XMFLOAT3((max.x + min.x) * 0.5f, (max.y + min.y) * 0.5f, (max.z + min.z) * 0.5f);
 	// 4. 부모 상대 변환 행렬		// float4x4
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
+
+	// bounding box
+	m_AABBExtents.x *= -1;
+	m_ModelBoundingBox = BoundingOrientedBox(m_AABBCenter, m_AABBExtents, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+	// global로 뽑아왔기 때문에 필요 없다.
+	//m_ModelBoundingBox.Transform(m_ModelBoundingBox, XMLoadFloat4x4(&m_LocalTransform));
 
 	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
 	unsigned int vtxType;
@@ -97,6 +110,10 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 
 
 		m_VertexNum = vertexLen;
+	}
+
+	for (int i = 0; i < m_VertexNum; ++i) {
+
 	}
 
 #else

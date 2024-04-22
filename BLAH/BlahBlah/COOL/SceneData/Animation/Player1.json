@@ -1,0 +1,7 @@
+{
+	"Idle": "PlayerIdle",
+	"Walk": "PlayerWalk",
+	"Run": "PlayerRun",
+	"FallingDown": "PlayerFall",
+	"GetUp": "PlayerGetUp"
+}

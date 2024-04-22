@@ -168,6 +168,12 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 	}
 	DebugPrint("");
 
+	// self entity
+	component::SelfEntity* cmp = new component::SelfEntity;
+	cmp->SetEntity(ent);
+	ent->AddComponent(cmp);
+	ent->AddBit(cmp->GetBitset());
+
 	// if Children
 	if (root[CHILDREN].isNull() == false) {
 		for (auto& val : root[CHILDREN]) 
@@ -327,10 +333,6 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 			// check first
 			if (GetMesh(meshFileName) != -1) {
 				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
-				DebugPrint("Get All Mesh Name");
-				for (const auto& meshs : m_Meshes) {
-					DebugPrint(std::format("name: {}", meshs->GetName()));
-				}
 				return false;
 			}
 
@@ -342,10 +344,6 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 
 		if (res == -1) {
 			DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
-			DebugPrint("Get All Mesh Name");
-			for (const auto& meshs : m_Meshes) {
-				DebugPrint(std::format("name: {}", meshs->GetName()));
-			}
 			return false;
 		}
 
@@ -406,7 +404,8 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 
 			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
 			// 나중에 꼭 꼭 고쳐야한다
-			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up") {
+			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up" ||
+				m_Animations[anim]->m_Name == "PlayerFall" || m_Animations[anim]->m_Name == "PlayerGetUp") {
 				m_Animations[anim]->m_Loop = false;
 			}
 		}
@@ -655,6 +654,28 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		};
 
 	m_ECSManager->Execute(setSO);
+	
+	// make bounding box here
+	std::function<void(component::Collider*, component::SelfEntity*)> setBox =
+		[this](component::Collider* coll, component::SelfEntity* self) {
+		Entity* ent = self->GetEntity();
+
+		// auto init by renderer
+		if (coll->GetCollided()) {
+			coll->SetCollided(false);
+			component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
+
+			if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
+			
+			// do st
+			Mesh* mesh = m_Meshes[rend->GetMesh()];
+
+			coll->SetOriginBox(mesh->GetBoundingBox());
+		}
+		};
+
+	m_ECSManager->Execute(setBox);
+
 
 	// set default animation to anim executor;
 	for (auto& player : m_AnimationPlayer) {

@@ -26,6 +26,7 @@ enum class ANIMATION_STATE {
 	WAITEND = 0,
 	IDLE,
 	WALK,
+	RUN,
 	FALLINGDOWN,
 	GETUP,
 	DANCE,
@@ -35,7 +36,7 @@ enum class ANIMATION_STATE {
 
 
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
-const std::string& ConvertAnimationStateToString(ANIMATION_STATE anim);
+std::string ConvertAnimationStateToString(ANIMATION_STATE anim);
 
 // struct
 //struct PS_MRT_OUTPUT

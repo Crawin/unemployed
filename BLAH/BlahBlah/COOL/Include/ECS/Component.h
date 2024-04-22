@@ -314,6 +314,22 @@ namespace component {
 		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
 		Entity* GetEntity() const { return m_SelfEntity; }
 	};
+	/////////////////////////////////////////////////////////
+	// SelfEntity component
+	// 본인을 가리키는거 사용할진 모름)
+	//
+	class SelfEntity : public ComponentBase<SelfEntity>
+	{
+		Entity* m_SelfEntity = nullptr;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
+		Entity* GetEntity() const { return m_SelfEntity; }
+	};
+
 
 	/////////////////////////////////////////////////////////
 	// Attach component
@@ -374,6 +390,7 @@ namespace component {
 
 		// for culling
 		BoundingFrustum m_BoundingFrustum{};
+		BoundingFrustum m_BoundingOriginFrustum{};
 
 		// root signature
 		CameraDataShader* m_ShaderData = nullptr;
@@ -397,6 +414,8 @@ namespace component {
 
 		const XMFLOAT4X4& GetViewMat() const { return m_ViewMatrix; }
 		const XMFLOAT4X4& GetProjMat() const { return m_ProjMatrix; }
+
+		BoundingFrustum& GetBoundingFrustum() { return m_BoundingFrustum; }
 
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -425,11 +444,13 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// speed component
+	// Physics component
 	// 최고속도, 가속도, 등등
 	//
-	class Speed : public ComponentBase<Speed> {
+	class Physics : public ComponentBase<Physics> {
 		float m_MaxVelocity = 300.0f;
+
+		float m_Elasticity = 1.1f;
 
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
@@ -450,6 +471,8 @@ namespace component {
 		void SetAcceleration(const XMFLOAT3& acc) { m_Acceleration = acc; }
 
 		void AddVelocity(const XMFLOAT3& direction, float deltaTime);
+
+		float GetElasticity() const { return m_Elasticity; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -487,6 +510,21 @@ namespace component {
 	// Dia를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
 	//
 	class DiaAnimationControl : public ComponentBase<DiaAnimationControl> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float m_BefSpeed = 0;
+
+		bool m_BefKeyDown = false;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Player Animation Controll component
+	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
+	//
+	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -536,6 +574,10 @@ namespace component {
 		int m_Clouds = 1000;
 	};
 
+	/////////////////////////////////////////////////////////
+	// server component
+	// 서버와 위치 동기화가 필요한 엔티티를 위한 컴포넌트
+	//
 	class Server : public ComponentBase<Server> {
 		unsigned int m_id;
 	public:
@@ -545,6 +587,47 @@ namespace component {
 
 		const unsigned int getID() { return m_id; }
 		void setID(const unsigned int&);
+	};
+
+	/////////////////////////////////////////////////////////
+	// Collider component
+	// 충돌체크
+	//
+	class Collider : public ComponentBase<Collider> {
+		BoundingOrientedBox m_BoundingBoxOriginal;
+		BoundingOrientedBox m_CurrentBox;
+		bool m_StaticObject = false;
+		bool m_IsCapsule = false;
+		bool m_Collided = false;
+
+		std::vector<Collider*> m_CollidedComps;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		bool GetCollided() const { return m_Collided; }
+		bool IsStaticObject() const { return m_StaticObject; }
+
+		void SetCollided(bool col) { m_Collided = col; }
+
+		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
+		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
+
+		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
+		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
+
+		void UpdateBoundingBox(const XMMATRIX& transMat);
+
+		void InsertCollidedComp(Collider* col) { m_CollidedComps.push_back(col); }
+
+		const std::vector<Collider*>& GetCollidedVector() const { return m_CollidedComps; }
+
+		void ClearCollidedVector() { m_CollidedComps.clear(); }
+
+		bool IsCapsule() const { return m_IsCapsule; }
+
 	};
 }
 

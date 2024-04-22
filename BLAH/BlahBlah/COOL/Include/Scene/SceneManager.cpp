@@ -17,15 +17,19 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Attach, "Attach");
 	REGISTER_COMPONENT(component::Root, "Root");
 	REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
+	REGISTER_COMPONENT(component::SelfEntity, "_MANUAL_01_SELFENTITY");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Light, "Light");
 	REGISTER_COMPONENT(component::Input, "Input");
-	REGISTER_COMPONENT(component::Speed, "Speed");
+	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
-	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
 	REGISTER_COMPONENT(component::Server, "Server");
+	REGISTER_COMPONENT(component::Collider, "Collider");
+	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
+	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
+
 
 	//PRINT_ALL_BITSET;
 }

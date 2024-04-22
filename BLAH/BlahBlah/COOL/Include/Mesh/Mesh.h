@@ -108,5 +108,5 @@ public:
 
 	int GetVertexNum() const { return m_VertexNum; }
 
-	BoundingOrientedBox* GetBoundingBox() {	return &m_ModelBoundingBox; }
+	const BoundingOrientedBox& GetBoundingBox() const { return m_ModelBoundingBox; }
 };

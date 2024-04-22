@@ -32,6 +32,7 @@ using ComponentContainerMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, C
 // ComponentContainer들을 가짐
 class ComponentSet {
 
+	//friend class ECSManager;
 	// Component를 각각 저장하는 container
 	ComponentContainerMap m_Set;
 
@@ -54,6 +55,8 @@ public:
 	template<class COMP>
 	COMP* GetComponent(int idx);
 
+	int GetEntitySize() const { return m_EntitySize; }
+
 private:
 	void InsertComponent(component::Component* comp);
 
@@ -68,7 +71,7 @@ class ECSManager
 	std::vector<Entity*> m_RootEntities;
 
 	// ComponentSet을 저장
-	ComponentSetMap m_ComponentSets;
+	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet> m_ComponentSets;
 
 	// system
 	std::vector<ECSsystem::System*> m_Systems;
@@ -85,27 +88,30 @@ public:
 	void InitSystem();
 	void UpdateSystem(float deltaTime);
 
+	// execute normal O(n)
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func);
 
+	// execute from root (for sync transform)
 	template<class ...COMPONENTS>
 	void ExecuteRoot(std::function<void(COMPONENTS*...)>& func);//, Entity* ent);
 
-	template<class ...COMPONENTS>
-	void ExecuteSquare(std::function<void(COMPONENTS*...)>& func);
-
+	// execute exact entity(bit, innerID)
 	template<class ...COMPONENTS>
 	void ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func);
+
+	// execute O(n^2)
+	template<class ...COMPONENTS>
+	void ExecuteSquare(std::function<void(COMPONENTS*..., COMPONENTS*...)>& func);
 
 	// 사용을 자제하자
 	template<class T>
 	T* GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId);
+
+	template<class T>
+	T* GetComponent(Entity* entity);
+
 private:
-
-	// for
-	template<class ...COMPONENTS>
-	void Squared(std::function<void(COMPONENTS*...)>& func, ComponentSetMap::iterator& setIter, ComponentContainerMap::iterator& contItert);
-
 	template<class ...COMPONENTS>
 	std::bitset<COMPONENT_COUNT> GetBitset();
 

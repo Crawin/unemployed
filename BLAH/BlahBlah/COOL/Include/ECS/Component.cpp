@@ -269,7 +269,7 @@ namespace component
 
 		UpdateShaderData();
 
-		BoundingFrustum::CreateFromMatrix(m_BoundingFrustum, XMLoadFloat4x4(&m_ProjMatrix));
+		BoundingFrustum::CreateFromMatrix(m_BoundingOriginFrustum, XMLoadFloat4x4(&m_ProjMatrix));
 	}
 
 	void Camera::ShowYourself() const
@@ -328,6 +328,11 @@ namespace component
 		memcpy(&m_ShaderData->m_ViewMatrix, &view, sizeof(XMFLOAT4X4));
 		memcpy(&m_ShaderData->m_ProjMatrix, &proj, sizeof(XMFLOAT4X4));
 		memcpy(&m_ShaderData->m_CameraPosition, &m_Position, sizeof(XMFLOAT3));
+
+
+		XMFLOAT4X4 inverseView = Matrix4x4::Inverse(m_ViewMatrix);
+		m_BoundingOriginFrustum.Transform(m_BoundingFrustum, XMLoadFloat4x4(&inverseView));
+
 	}
 
 	void Input::Create(Json::Value& v, ResourceManager* rm)
@@ -339,9 +344,9 @@ namespace component
 		DebugPrint("Input Comp, nothing");
 	}
 
-	void Speed::Create(Json::Value& v, ResourceManager* rm)
+	void Physics::Create(Json::Value& v, ResourceManager* rm)
 	{
-		Json::Value s = v["Speed"];
+		Json::Value s = v["Physics"];
 
 		m_MaxVelocity = s["MaxVelocity"].asFloat();
 		//m_Acceleration = s["Acceleration"].asFloat();
@@ -353,14 +358,14 @@ namespace component
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
-	void Speed::ShowYourself() const
+	void Physics::ShowYourself() const
 	{
 		DebugPrint("Speed Comp");
 		DebugPrint(std::format("\tcur speed: ({}, {}, {}), max speed: {}, acc : {}", m_Velocity.x, m_Velocity.y, m_Velocity.z, m_MaxVelocity, m_Acceleration.x));
 
 	}
 
-	void Speed::AddVelocity(const XMFLOAT3& direction, float deltaTime)
+	void Physics::AddVelocity(const XMFLOAT3& direction, float deltaTime)
 	{
 		// add direction * deltatime * acceleration
 
@@ -461,6 +466,63 @@ namespace component
 	void Server::setID(const unsigned int& id)
 	{
 		m_id = id;
+	}
+
+	void SelfEntity::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void SelfEntity::ShowYourself() const
+	{
+		DebugPrint("SelfEntity Comp");
+	}
+
+	void Collider::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value col = v["Collider"];
+
+		m_StaticObject = col["Static"].asBool();
+
+		// if true on create, load collider by its mesh
+		// else create here
+		m_Collided = col["AutoMesh"].asBool();
+
+		if (m_Collided == false) {
+			XMFLOAT3 center;
+			center.x = col["Center"][0].asFloat();
+			center.y = col["Center"][1].asFloat();
+			center.z = col["Center"][2].asFloat();
+
+			XMFLOAT3 extent;
+			extent.x = col["Extent"][0].asFloat();
+			extent.y = col["Extent"][1].asFloat();
+			extent.z = col["Extent"][2].asFloat();
+
+			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+			// if capsue, check dist
+			m_IsCapsule = col["IsCapsule"].asBool();
+		}
+
+	}
+
+	void Collider::ShowYourself() const
+	{
+		DebugPrint("Collider Comp");
+	}
+
+	void Collider::UpdateBoundingBox(const XMMATRIX& transMat)
+	{
+		m_BoundingBoxOriginal.Transform(m_CurrentBox, transMat);
+	}
+
+	void PlayerAnimControll::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void PlayerAnimControll::ShowYourself() const
+	{
+		DebugPrint("PlayerAnimControll Comp");
 	}
 
 }
