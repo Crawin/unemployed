@@ -200,14 +200,13 @@ namespace component
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
 		rotRad.y = XMConvertToRadians(m_Rotate.y);
 		rotRad.z = XMConvertToRadians(m_Rotate.z);
-		XMMATRIX mat = XMMatrixMultiply(
-			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
-			XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
-				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
-
+		XMMATRIX mat =
+			XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) *
+			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad))*
+			XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
 		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
-		XMStoreFloat4x4(&worldMat, XMMatrixMultiply(mat, XMLoadFloat4x4(&m_ParentTransform)));
+		XMStoreFloat4x4(&worldMat, mat * XMLoadFloat4x4(&m_ParentTransform));
 
 		return worldMat;
 	}

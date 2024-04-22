@@ -31,12 +31,12 @@ namespace ECSsystem {
 
 				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
 				if (childTrans != nullptr) {
-					XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
-					XMStoreFloat4x4(&temp, XMLoadFloat4x4(&myTransform) * XMLoadFloat4x4(&parentMatrix));
+					//XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
+					//XMStoreFloat4x4(&temp, XMLoadFloat4x4(&myTransform) * XMLoadFloat4x4(&parentMatrix));
 
 					// do st trans to child
 					// make world transform from this trans
-					childTrans->SetParentTransform(temp);
+					childTrans->SetParentTransform(parentMatrix);
 
 					// execute this func to child
 					manager->ExecuteFromEntity(bit, innerId, func);
@@ -48,7 +48,7 @@ namespace ECSsystem {
 		manager->ExecuteRoot(func);
 
 		// sync with Attach
-		std::function<void(component::Transform*, component::Attach*)> attacheSync = [manager](component::Transform* tr, component::Attach* at) {
+		std::function<void(component::Transform*, component::Attach*, component::SelfEntity*)> attacheSync = [&func, manager](component::Transform* tr, component::Attach* at, SelfEntity* self) {
 			//XMMATRIX boneInv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&at->GetBone()));
 			XMMATRIX attachedMat = (at->GetAnimatedBone());
 			XMMATRIX parent = XMLoadFloat4x4(&tr->GetParentTransfrom());
@@ -58,6 +58,30 @@ namespace ECSsystem {
 			XMStoreFloat4x4(&temp, parent);
 
 			tr->SetParentTransform(temp);
+			
+			Entity* ent = self->GetEntity();
+
+			const std::vector<Entity*>& children = ent->GetChildren();
+
+			for (Entity* child : children) {
+				auto bit = child->GetBitset();
+				int innerId = child->GetInnerID();
+
+				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
+				if (childTrans != nullptr) {
+					XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
+					XMStoreFloat4x4(&temp, XMLoadFloat4x4(&myTransform) * parent);
+
+					// do st trans to child
+					// make world transform from this trans
+					childTrans->SetParentTransform(temp);
+
+					// execute this func to child
+					manager->ExecuteFromEntity(bit, innerId, func);
+				}
+				else DebugPrint("ERROR!! no transform ");
+			}
+
 			};
 
 		manager->Execute(attacheSync);
@@ -306,12 +330,12 @@ namespace ECSsystem {
 
 			COND walkToRun = [](void* data) {
 				float* sp = reinterpret_cast<float*>(data);
-				return *sp >= 150.0f;
+				return *sp >= 400.0f;
 				};
 
 			COND runToWalk = [](void* data) {
 				float* sp = reinterpret_cast<float*>(data);
-				return *sp < 150.0f;
+				return *sp < 400.0f;
 				};
 
 			COND hit = [](void* data) {
