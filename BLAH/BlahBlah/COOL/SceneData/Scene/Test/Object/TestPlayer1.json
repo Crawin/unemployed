@@ -40,7 +40,7 @@
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 70.0, -100.0],
+				"Position": [0.0, 170.0, -150.0],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
@@ -57,6 +57,81 @@
 				"Near": 0.1,
 				"Far": 10000.0
 			}
+		},
+
+		{
+			"Name": "Phone",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [-19.813, -0.107, 153.383] ,
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Attach":
+			{
+				"Mesh": "Player_01",
+				"BoneIDX": 32,
+				"Player": "Player1"
+			},
+			"Children":
+			[
+				{
+					"Name": "Phone_Cube",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "Phone.Phone_Cube",
+						"Material": "NoMaterial"
+					}
+				},
+				{
+					"Name": "Phone_Cylinder",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "Phone.Phone_Cylinder",
+						"Material": "NoMaterial"
+					}
+				},
+				{
+					"Name": "Phone_Cylinder_001",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "Phone.Phone_Cylinder_001",
+						"Material": "NoMaterial"
+					}
+				},
+				{
+					"Name": "Phone_Emission",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Renderer":
+					{
+						"Mesh": "Phone.Phone_Emission",
+						"Material": "NoMaterial"
+					}
+				}
+			]
 		},
 
 		{
