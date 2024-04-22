@@ -450,6 +450,8 @@ namespace component {
 	class Physics : public ComponentBase<Physics> {
 		float m_MaxVelocity = 300.0f;
 
+		float m_Elasticity = 1.1f;
+
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
 
@@ -469,6 +471,8 @@ namespace component {
 		void SetAcceleration(const XMFLOAT3& acc) { m_Acceleration = acc; }
 
 		void AddVelocity(const XMFLOAT3& direction, float deltaTime);
+
+		float GetElasticity() const { return m_Elasticity; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -578,7 +582,10 @@ namespace component {
 		BoundingOrientedBox m_BoundingBoxOriginal;
 		BoundingOrientedBox m_CurrentBox;
 		bool m_StaticObject = false;
+		bool m_IsCapsule = false;
 		bool m_Collided = false;
+
+		std::vector<Collider*> m_CollidedComps;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -597,6 +604,14 @@ namespace component {
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
+
+		void InsertCollidedComp(Collider* col) { m_CollidedComps.push_back(col); }
+
+		const std::vector<Collider*>& GetCollidedVector() const { return m_CollidedComps; }
+
+		void ClearCollidedVector() { m_CollidedComps.clear(); }
+
+		bool IsCapsule() const { return m_IsCapsule; }
 
 	};
 }

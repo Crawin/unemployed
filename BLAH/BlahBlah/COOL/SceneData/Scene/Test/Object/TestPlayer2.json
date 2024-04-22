@@ -15,11 +15,7 @@
 		"Player": "Dia2"
 	},
 
-	"Physics": 
-	{
-		"MaxVelocity": 200.0,
-		"Acceleration" : [1200.0, 1200.0, 1200.0]
-	},
+
 
 	"TestInput": {},
 
@@ -29,8 +25,9 @@
 	{
 		"Static": false,
 		"AutoMesh": false,
+		"IsCapsule": true,
 		"Center": [0.0, 85, 0],
-		"Extent": [50, 85, 50]
+		"Extent": [25, 85, 25]
 	},
 
 	"Children": 

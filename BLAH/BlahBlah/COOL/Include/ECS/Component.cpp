@@ -499,6 +499,9 @@ namespace component
 			extent.z = col["Extent"][2].asFloat();
 
 			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+			// if capsue, check dist
+			m_IsCapsule = col["IsCapsule"].asBool();
 		}
 
 	}

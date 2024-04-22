@@ -142,6 +142,7 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('D') & 0x8000) { tempMove.x += 1.0f; move = true; }
 			if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
 			if (GetAsyncKeyState('E') & 0x8000) { tempMove.y += 1.0f; move = true; }
+			if (GetAsyncKeyState(VK_SPACE) & 0x0001) { sp->AddVelocity(XMFLOAT3(0.0f, 12.93f, 0.0f), 1); }//XMFLOAT3 temp = sp->GetVelocity(); sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 313.0f, temp.z));  }
 
 			float speed = sp->GetCurrentVelocityLen();
 
@@ -166,7 +167,7 @@ namespace ECSsystem {
 				XMFLOAT3 rot = tr->GetRotation();
 				const float rootSpeed = 10.0f;
 				rot.y += (mouseMove.x / rootSpeed);
-				rot.x += (mouseMove.y / rootSpeed);
+				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
 			}
 
@@ -217,11 +218,24 @@ namespace ECSsystem {
 			//	tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
 
 			};
+		
 		// mouse
+		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime](Transform* tr, Camera* cam) {
+			if (cam->m_IsMainCamera == false) return;
 
+			// todo rotate must not be orbit
+
+			const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
+			XMFLOAT3 rot = tr->GetRotation();
+			const float rootSpeed = 10.0f;
+			//rot.y += (mouseMove.x / rootSpeed);
+			rot.x += (mouseMove.y / rootSpeed);
+			tr->SetRotation(rot);
+			};
 
 		manager->Execute(inputFunc);
 		manager->Execute(inputFunc2);
+		manager->Execute(mouseInput);
 
 	}
 
@@ -239,12 +253,12 @@ namespace ECSsystem {
 			// make conditions
 			COND idle = [](void* data) {
 				float* sp = reinterpret_cast<float*>(data);
-				return *sp < 10.0f;
+				return *sp < 30.0f;
 				};
 
 			COND walk = [](void* data) {
 				float* sp = reinterpret_cast<float*>(data);
-				return *sp >= 10.0f;
+				return *sp >= 30.0f;
 			};
 
 			COND hit = [](void* data) {
@@ -418,19 +432,23 @@ namespace ECSsystem {
 		manager->Execute(func); 
 	}
 
-	void CollideCkeck::Update(ECSManager* manager, float deltaTime)
+	void CollideHandle::Update(ECSManager* manager, float deltaTime)
 	{
-		// sync first
-		std::function<void(component::Transform*, component::Collider*)> sync = [](component::Transform* tr, component::Collider* col) {
+		using namespace component;
+
+		// sync box first
+		std::function<void(Transform*, Collider*)> sync = [](Transform* tr, Collider* col) {
 			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
 
 			col->UpdateBoundingBox(trans);
 			};
 		manager->Execute(sync);
 
-		// check
-		std::function<void(component::Collider*, component::Name*, component::Collider*, component::Name*)> collideCheck = 
-			[](component::Collider* a, component::Name* an, component::Collider* b, component::Name* bn) {
+		auto circleBoxCol = CheckCollisionRectCircle;
+
+		// collide check
+		std::function<void(Collider*, Collider*)> collideCheck = 
+			[circleBoxCol](Collider* a, Collider* b) {
 
 			// if both static, skip
 			if (a->IsStaticObject() && b->IsStaticObject()) return;
@@ -440,26 +458,151 @@ namespace ECSsystem {
 
 			XMVECTOR acualLen = XMVector3Length(XMLoadFloat3(&boxA.Center) - XMLoadFloat3(&boxB.Center));
 			XMVECTOR maximumLen = XMVector3Length(XMLoadFloat3(&boxA.Extents) - XMLoadFloat3(&boxB.Extents));
-			//if (abs(XMVectorGetX(acualLen) > abs(XMVectorGetX(maximumLen)))) return;
 
 			if (boxA.Intersects(boxB))
 			{
+				// if capsule, check
+				if (a->IsCapsule()) {
+					XMVECTOR circleCenter = XMVector3Transform(
+						XMLoadFloat3(&boxA.Center), 
+						XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxB.Orientation))));
+
+					if (false == circleBoxCol(
+						XMFLOAT2(boxB.Center.x, boxB.Center.z),
+						XMFLOAT2(boxB.Extents.x, boxB.Extents.z), 
+						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)), 
+						boxA.Extents.x)) return;
+				}
+				if (b->IsCapsule()) {
+					XMVECTOR circleCenter = XMVector3Transform(
+						XMLoadFloat3(&boxB.Center),
+						XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxA.Orientation))));
+
+					if (false == circleBoxCol(
+						XMFLOAT2(boxA.Center.x, boxA.Center.z),
+						XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
+						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
+						boxB.Extents.x)) return;
+
+					DebugPrint(std::format("Pass"));
+					DebugPrint(std::format("\tbox Center: {}, {}", boxA.Center.x, boxA.Center.z));
+					DebugPrint(std::format("\tbox Extent: {}, {}", boxA.Extents.x, boxA.Extents.z));
+					DebugPrint(std::format("\tCir Center: {}, {}", XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)));
+					DebugPrint(std::format("\tCir Radius: {}", boxB.Extents.x));
+				}
+					
+					//&& boxA.Extents.x < XMVectorGetX(acualLen)) return;
+				//if (b->IsCapsule() && boxB.Extents.x < XMVectorGetX(acualLen)) return;
+
+				// if collided, add to coll vector, handle later
+				if (a->IsStaticObject() == false)
+					a->InsertCollidedComp(b);
+				if (b->IsStaticObject() == false) 
+					b->InsertCollidedComp(a);
+
 				a->SetCollided(true);
 				b->SetCollided(true);
-				//DebugPrint("HIT");
-				//DebugPrint(std::format("\ta: {}", an->getName()));
-				//DebugPrint(std::format("\tb: {}", bn->getName()));
 			}
 
 			};
 
-		manager->ExecuteSquare<component::Collider, component::Name>(collideCheck);
+		XMVECTOR faces[6] = {
+			{ 1.0f, 0.0f, 0.0f },
+			{ 0.0f, 1.0f, 0.0f },
+			{ 0.0f, 0.0f, 1.0f },
+			{ -1.0f, 0.0f, 0.0f },
+			{ 0.0f, -1.0f, 0.0f },
+			{ 0.0f, 0.0f, -1.0f },
+		};
+
+		// do specific collide
+		// ex) player -> door? active interaction;
+
+		// handle collide
+		std::function<void(Collider*, Physics*, Transform*)> collideHandle =
+			[&faces, deltaTime](Collider* col, Physics* sp, Transform* tr) {
+			if (col->GetCollided()) {
+				col->SetCollided(false);
+
+				col->GetCollided();
+
+				auto& colVec = col->GetCollidedVector();
+				auto& myBox = col->GetBoundingBox();
+				// 
+				XMVECTOR boxCenter = XMLoadFloat3(&myBox.Center);
+				for (auto other : colVec) {
+					auto& otherBox = other->GetBoundingBox();
+
+					XMMATRIX rot = XMMatrixRotationQuaternion(XMLoadFloat4(&otherBox.Orientation));
+
+					XMVECTOR hitFace;
+					float max = -10.0f;
+					int idx = 0;
+
+					for (int i = 0; i < _countof(faces); ++i) {
+						XMVECTOR faceNormal = XMVector3Transform(faces[i], rot);
+						XMVECTOR faceCenterPos = faces[i] * XMLoadFloat3(&otherBox.Extents) + XMLoadFloat3(&otherBox.Center);
+						XMVECTOR lay = XMVector3Normalize(boxCenter - faceCenterPos);
+
+						// dot and max is hit face
+						float dot = XMVectorGetX(XMVector3Dot(faceNormal, lay));
+						if (dot > max) {
+							max = dot;
+							hitFace = faceNormal;
+							idx = i;
+						}
+
+						//int dot = XMVectorGetX(XMVector3Dot(normal, lay));
+
+						//if (dot > max) {
+						//	idx = i;
+						//	max = dot;
+						//	minNormal = normal;
+						//}
+						//XMMATRIX trans = XMMatrixTranslationFromVector(faces[i] * XMLoadFloat3(&box.Extents) + XMLoadFloat3(&box.Center));
+					}
+
+					// reduce velocity here
+					XMVECTOR velocity = XMLoadFloat3(&sp->GetVelocity());
+					XMVECTOR result = velocity - velocity * hitFace * sp->GetElasticity();
+
+					XMFLOAT3 res;
+					XMStoreFloat3(&res, result);
+					sp->SetVelocity(res);
+
+					// move back before hit
+					XMVECTOR back = (velocity * hitFace) * deltaTime;
+					XMVECTOR newPos = XMLoadFloat3(&tr->GetPosition()) - back;
+
+					XMFLOAT3 backedPos;
+					XMStoreFloat3(&backedPos, newPos);
+					tr->SetPosition(backedPos);
+					//sp-
+
+
+
+					//DebugPrint(std::format("hit face: {}", idx));
+					//DebugPrint(std::format("\t{}, {}, {}", XMVectorGetX(hitFace), XMVectorGetY(hitFace), XMVectorGetZ(hitFace)));
+					//DebugPrint(std::format("\tvelocity: {}, {}, {}", XMVectorGetX(velocity), XMVectorGetY(velocity), XMVectorGetZ(velocity)));
+					//DebugPrint(std::format("\tafterhit: {}, {}, {}", XMVectorGetX(result), XMVectorGetY(result), XMVectorGetZ(result)));
+				}
+			}
+
+			// reset collider;
+			col->ClearCollidedVector();
+			};
+
+
+		manager->ExecuteSquare<component::Collider>(collideCheck);
+		manager->Execute(collideHandle);
 	}
 
 	void SimulatePhysics::Update(ECSManager* manager, float deltaTime)
 	{
-		// friction
 		using namespace component;
+
+
+		// friction
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
 			const float friction = 900.0f;
 			// if moving
@@ -491,16 +634,29 @@ namespace ECSsystem {
 
 			};
 
-		std::function<void(component::Collider*, component::Physics*)> collideHandle = [](component::Collider* col, component::Physics* sp) {
-			// if coll?
-			if (col->GetCollided()) {
-				col->SetCollided(false);
+		// gravity
+		std::function<void(Physics*)> gravity = [deltaTime](Physics* py) {
+			// todo
+			// if is not static
+			XMVECTOR gravity = { 0.0, -9.8f, 0.0f };
+			gravity *= deltaTime;
 
+			XMVECTOR vel = XMLoadFloat3(&py->GetVelocity()) + gravity;
+			XMFLOAT3 temp;
 
-			}
+			XMStoreFloat3(&temp, vel);
 
+			py->SetVelocity(temp);
 			};
 
+		manager->Execute(friction);
+		manager->Execute(gravity);
+
+	}
+
+	void MoveByPhysics::Update(ECSManager* manager, float deltaTime)
+	{
+		using namespace component;
 
 		// move by speed
 		std::function<void(Transform*, Physics*)> move = [deltaTime](Transform* tr, Physics* sp) {
@@ -524,8 +680,6 @@ namespace ECSsystem {
 			}
 			};
 
-		manager->Execute(friction);
-		manager->Execute(collideHandle);
 		manager->Execute(move);
 		manager->Execute(send);
 	}

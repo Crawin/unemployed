@@ -92,7 +92,61 @@ namespace ECSsystem {
 	/////////////////////////////////////////////////////////
 	// collide check only
 	//
-	class CollideCkeck : public System {
+	class CollideHandle : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+
+		static bool CheckCollisionRectCircle(const XMFLOAT2& rectCenter, const XMFLOAT2& rectSize, const XMFLOAT2& circleCenter, float circleRadius) {
+			// 반지름으로 사각형 확장
+			XMFLOAT2 newSize = { rectSize.x + circleRadius, rectSize.y + circleRadius };
+
+			float radPow = circleRadius * circleRadius;
+
+			float left = rectCenter.x - newSize.x;
+			float top = rectCenter.y + newSize.y;
+			float right = rectCenter.x + newSize.x;
+			float bottom = rectCenter.y - newSize.y;
+
+			// is in expend area?
+			if ((left < circleCenter.x && circleCenter.x < right &&
+				bottom < circleCenter.y && circleCenter.y < top) == false) return false;
+
+			// 대각선 영역
+			left = rectCenter.x - rectSize.x;
+			top = rectCenter.y + rectSize.y;
+			right = rectCenter.x + rectSize.x;
+			bottom = rectCenter.y - rectSize.y;
+			
+			// if in left top
+			if (circleCenter.x < left && circleCenter.y > top &&
+				pow(circleCenter.x - left, 2) + pow(circleCenter.y - top, 2) > radPow)
+				return false;
+
+			// right top
+			if (circleCenter.x > right && circleCenter.y > top &&
+				pow(circleCenter.x - right, 2) + pow(circleCenter.y - top, 2) > radPow)
+				return false;
+
+			// left bottom
+			if (circleCenter.x < left && circleCenter.y < bottom &&
+				pow(circleCenter.x - left, 2) + pow(circleCenter.y - bottom, 2) > radPow)
+				return false;
+
+			// right bottom
+			if (circleCenter.x > right && circleCenter.y < bottom &&
+				pow(circleCenter.x - right, 2) + pow(circleCenter.y - bottom, 2) > radPow)
+				return false;
+
+
+			return true;
+		}
+
+	};
+
+	/////////////////////////////////////////////////////////
+	// move y physics, end on last
+	//
+	class MoveByPhysics : public System {
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};

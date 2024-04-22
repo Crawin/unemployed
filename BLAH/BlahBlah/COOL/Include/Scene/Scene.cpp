@@ -48,18 +48,26 @@ bool Scene::AddSystem()
 	// 1. 각 객체들의 transform을 바꾸는 system
 	// 998. todo 충돌처리
 	// 999. 부모에 따라 transform을 바꾸는 system(LocalToWorldTransform)
+	
+	// sync position by server
 	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
-	m_ECSManager->InsertSystem(new ECSsystem::AnimationPlayTimeAdd);
-	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
-	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
-	m_ECSManager->InsertSystem(new ECSsystem::UpdateInput);
-	m_ECSManager->InsertSystem(new ECSsystem::SimulatePhysics);
 	//m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
-	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
+	
+	// move collide check, handle simulate, move and send
+	m_ECSManager->InsertSystem(new ECSsystem::UpdateInput);
+	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+	m_ECSManager->InsertSystem(new ECSsystem::SimulatePhysics);
+	m_ECSManager->InsertSystem(new ECSsystem::MoveByPhysics);
 
+	// transform sync
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
+	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
 
-	m_ECSManager->InsertSystem(new ECSsystem::CollideCkeck);
+
+	// 나중에 해도 상관 없는 것들
+	m_ECSManager->InsertSystem(new ECSsystem::AnimationPlayTimeAdd);
+	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
+	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
 
 
 	return true;
