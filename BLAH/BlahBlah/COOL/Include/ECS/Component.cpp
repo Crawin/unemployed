@@ -516,4 +516,13 @@ namespace component
 		m_BoundingBoxOriginal.Transform(m_CurrentBox, transMat);
 	}
 
+	void PlayerAnimControll::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void PlayerAnimControll::ShowYourself() const
+	{
+		DebugPrint("PlayerAnimControll Comp");
+	}
+
 }

@@ -333,10 +333,6 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 			// check first
 			if (GetMesh(meshFileName) != -1) {
 				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
-				DebugPrint("Get All Mesh Name");
-				for (const auto& meshs : m_Meshes) {
-					DebugPrint(std::format("name: {}", meshs->GetName()));
-				}
 				return false;
 			}
 
@@ -348,10 +344,6 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 
 		if (res == -1) {
 			DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
-			DebugPrint("Get All Mesh Name");
-			for (const auto& meshs : m_Meshes) {
-				DebugPrint(std::format("name: {}", meshs->GetName()));
-			}
 			return false;
 		}
 
@@ -412,7 +404,8 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 
 			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
 			// 나중에 꼭 꼭 고쳐야한다
-			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up") {
+			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up" ||
+				m_Animations[anim]->m_Name == "PlayerFall" || m_Animations[anim]->m_Name == "PlayerGetUp") {
 				m_Animations[anim]->m_Loop = false;
 			}
 		}

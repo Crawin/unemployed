@@ -24,11 +24,12 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Input, "Input");
 	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
-	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
 	REGISTER_COMPONENT(component::Server, "Server");
 	REGISTER_COMPONENT(component::Collider, "Collider");
-	
+	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
+	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
+
 
 	//PRINT_ALL_BITSET;
 }

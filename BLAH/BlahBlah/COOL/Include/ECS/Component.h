@@ -521,6 +521,21 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
+	// Player Animation Controll component
+	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
+	//
+	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float m_BefSpeed = 0;
+
+		bool m_BefKeyDown = false;
+	};
+
+	/////////////////////////////////////////////////////////
 	// Day Light component
 	// 시간에 따라 Directional Light가 회전되기 위한 컴포넌트
 	//

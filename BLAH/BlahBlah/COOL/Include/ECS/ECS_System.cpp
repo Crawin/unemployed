@@ -245,7 +245,8 @@ namespace ECSsystem {
 		
 		using namespace component;
 
-		std::function<void(AnimationController*, DiaAnimationControl*)> buildGraph =
+		// dia
+		std::function<void(AnimationController*, DiaAnimationControl*)> diaBuildGraph =
 			[](AnimationController* ctrl, DiaAnimationControl* dia) {
 			
 			using COND = std::function<bool(void*)>;
@@ -286,7 +287,64 @@ namespace ECSsystem {
 
 			};
 
-		manager->Execute(buildGraph);
+		// PlayerAnimControll
+		std::function<void(AnimationController*, PlayerAnimControll*)> playerbuildGraph =
+			[](AnimationController* ctrl, PlayerAnimControll* ply) {
+
+			using COND = std::function<bool(void*)>;
+
+			// make conditions
+			COND idle = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp < 30.0f;
+				};
+
+			COND idleToWalk = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp >= 30.0f;
+				};
+
+			COND walkToRun = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp >= 100.0f;
+				};
+
+			COND runToWalk = [](void* data) {
+				float* sp = reinterpret_cast<float*>(data);
+				return *sp < 100.0f;
+				};
+
+			COND hit = [](void* data) {
+				return GetAsyncKeyState(VK_END) & 0x8000;
+				};
+
+			COND falldown = [ctrl](void* data) {
+				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
+				};
+
+			COND getup = [ctrl](void* data) {
+				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
+				};
+
+			// insert transition (graph)
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
+			ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
+			ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::FALLINGDOWN, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+			ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
+
+			// set start animation
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+
+			};
+
+		manager->Execute(diaBuildGraph);
+		manager->Execute(playerbuildGraph);
 
 	}
 
@@ -300,7 +358,16 @@ namespace ECSsystem {
 			animCtrl->CheckTransition(&speed);
 			};
 
+		std::function<void(component::Physics*, component::AnimationController*, component::PlayerAnimControll*)> func2 =
+			[](component::Physics* sp, component::AnimationController* animCtrl, component::PlayerAnimControll* play) {
+
+			float speed = sp->GetCurrentVelocityLen();
+
+			animCtrl->CheckTransition(&speed);
+			};
+
 		manager->Execute(func1);
+		manager->Execute(func2);
 
 	}
 

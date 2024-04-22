@@ -1,0 +1,9 @@
+{
+	"name": "NoMaterial",
+	"BaseColor": "Mat_Hat_Base_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
