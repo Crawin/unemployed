@@ -16,6 +16,7 @@ public:
 	WSABUF wsabuf[1];
 	char buf[BUFSIZE];
 	C_OP	c_op;
+	SOCKET sock;
 
 	EXP_OVER()
 	{
@@ -192,17 +193,26 @@ public:
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
 };
 
+class ServerDetails
+{
+public:
+	bool m_bServerState = false;
+	HANDLE m_hIOCP;
+	std::atomic<unsigned int> id = 1;
+};
+
 class IOCP_SERVER_MANAGER
 {
 private:
 	std::unordered_map<unsigned int, SESSION> login_players;
 	unsigned int currentRoom = 10000;
 	std::unordered_map<unsigned int, Game> Games;
-	std::unordered_map<std::string, Mesh*> m_umMeshes;
 	std::vector<Mesh*> m_vMeshes;
+	ServerDetails detail;
 public:
 	IOCP_SERVER_MANAGER() {}
 	void start();
+	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	bool world_collision(cs_packet_position*&);
 	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);

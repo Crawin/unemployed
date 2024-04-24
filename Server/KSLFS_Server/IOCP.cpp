@@ -26,7 +26,7 @@ void IOCP_SERVER_MANAGER::start()
 	WSADATA WSAData;
 	WSAStartup(MAKEWORD(2, 2), &WSAData);
 
-	HANDLE h_iocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
+	detail.m_hIOCP = CreateIoCompletionPort(INVALID_HANDLE_VALUE, 0, 0, 0);
 	SOCKET server_s = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 	SOCKADDR_IN server_a;
 	server_a.sin_family = AF_INET;
@@ -35,27 +35,47 @@ void IOCP_SERVER_MANAGER::start()
 	bind(server_s, reinterpret_cast<sockaddr*>(&server_a), sizeof(server_a));
 	listen(server_s, SOMAXCONN);
 	int addr_size = sizeof(server_a);
-	unsigned int id = 1;
+
 
 	SOCKET client_s = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
 	EXP_OVER accept_over;
 	ZeroMemory(&accept_over.over, sizeof(accept_over.over));
 	accept_over.c_op = C_ACCEPT;
-	CreateIoCompletionPort(reinterpret_cast<HANDLE>(server_s), h_iocp, -1, 0);
+	accept_over.sock = client_s;
+	CreateIoCompletionPort(reinterpret_cast<HANDLE>(server_s), detail.m_hIOCP, -1, 0);
 	AcceptEx(server_s, client_s, accept_over.buf, 0, addr_size + 16, addr_size + 16, nullptr, &accept_over.over);
-	
-	bool server_on = true;
 
-	std::thread command(command_thread, &server_on);
+	//std::thread command(command_thread, &server_on);
 
+	detail.m_bServerState = true;
 	std::cout << "서버 실행" << std::endl;
 	//lobby = new Lobby;
-	while (server_on)
+	worker(server_s);
+
+	int num_threads = std::thread::hardware_concurrency() - 1;					// 1개 쓰레드는 AI를 돌리기 위한 쓰레드
+	std::vector<std::thread> worker_threads;
+	for (int i = 0; i < num_threads; ++i)
+	{
+		worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
+	}
+
+	for (auto& w : worker_threads)
+		w.join();
+
+	//delete lobby;
+	closesocket(server_s);
+	WSACleanup();
+	//command.join();
+}
+
+void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
+{
+	while (detail.m_bServerState)
 	{
 		DWORD rw_byte;
 		ULONG_PTR key;
 		WSAOVERLAPPED* over;
-		BOOL ret = GetQueuedCompletionStatus(h_iocp, &rw_byte, &key, &over, INFINITE);
+		BOOL ret = GetQueuedCompletionStatus(detail.m_hIOCP, &rw_byte, &key, &over, INFINITE);
 		if (FALSE == ret) {
 			print_error("GQCS", WSAGetLastError());
 			//exit(-1);
@@ -63,48 +83,47 @@ void IOCP_SERVER_MANAGER::start()
 		EXP_OVER* e_over = reinterpret_cast<EXP_OVER*>(over);
 		switch (e_over->c_op)
 		{
-			case C_ACCEPT: 
-			{
-				CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_s), h_iocp, id, 0);
-				login_players.try_emplace(id, id, client_s, PS_LOBBY);
-				login_players[id].do_recv();
-				
-				sc_packet_login login(client_s);
-				login_players[id++].send_packet(reinterpret_cast<packet_base*>(&login));
-				std::cout << "[" << id-1 << "," << client_s << "] Login" << std::endl;
+		case C_ACCEPT:
+		{
+			SOCKET client_s = e_over->sock;
+			CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_s), detail.m_hIOCP, detail.id, 0);
+			login_players.try_emplace(detail.id, detail.id, client_s, PS_LOBBY);
+			login_players[detail.id].do_recv();
 
-				client_s = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
-				ZeroMemory(&accept_over.over, sizeof(accept_over.over));
-				AcceptEx(server_s, client_s, accept_over.buf, 0, addr_size + 16, addr_size + 16, nullptr, &accept_over.over);
-			}
-				break;
-			case C_RECV: 
-			{
-				unsigned int my_id = static_cast<unsigned int>(key);
-				if (0 == rw_byte) {
-					SOCKET playerSock = login_players[my_id].getSock();
-					std::cout << "[" << my_id << "," << playerSock << "] 이 연결을 종료했습니다." << std::endl;
-					login_players.erase(my_id);
-					continue;
-				}
+			sc_packet_login login(client_s);
+			login_players[detail.id++].send_packet(reinterpret_cast<packet_base*>(&login));
+			std::cout << "[" << detail.id - 1 << "," << client_s << "] Login" << std::endl;
 
-				process_packet(my_id, e_over);
-				//login_players[my_id].print_message(rw_byte);
-				//login_players[my_id].broadcast(rw_byte);
-				login_players[my_id].do_recv();
+			client_s = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+			e_over->sock = client_s;
+			ZeroMemory(&e_over->over, sizeof(e_over->over));
+			int addr_size = sizeof(SOCKADDR_IN);
+			AcceptEx(server_s, client_s, e_over->buf, 0, addr_size + 16, addr_size + 16, nullptr, &e_over->over);
+		}
+		break;
+		case C_RECV:
+		{
+			unsigned int my_id = static_cast<unsigned int>(key);
+			if (0 == rw_byte) {
+				SOCKET playerSock = login_players[my_id].getSock();
+				std::cout << "[" << my_id << "," << playerSock << "] 이 연결을 종료했습니다." << std::endl;
+				login_players.erase(my_id);
+				continue;
 			}
-				break;
-			case C_SEND: 
-			{
-				delete e_over;
-			}
-				break;
+
+			process_packet(my_id, e_over);
+			//login_players[my_id].print_message(rw_byte);
+			//login_players[my_id].broadcast(rw_byte);
+			login_players[my_id].do_recv();
+		}
+		break;
+		case C_SEND:
+		{
+			delete e_over;
+		}
+		break;
 		}
 	}
-	//delete lobby;
-	closesocket(server_s);
-	WSACleanup();
-	command.join();
 }
 
 void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over)
