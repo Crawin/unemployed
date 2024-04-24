@@ -518,7 +518,8 @@ namespace ECSsystem {
 
 				client.characters[id].SetUpdate(false);
 				tr->SetPosition(client.characters[id].getPos());
-				//tr->SetRotation(client.characters[id].getRot());
+				if (id != playerSock[0])	// 상대방 플레이어면 회전값 적용
+					tr->SetRotation(client.characters[id].getRot());
 				sp->SetVelocity(client.characters[id].getSpeed());
 
 				XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
@@ -782,16 +783,4 @@ namespace ECSsystem {
 		manager->Execute(move);
 		manager->Execute(send);
 	}
-
-	//void SendToServer::Update(ECSManager* manager, float deltaTime)
-	//{
-	//	std::function<void(component::Transform*, component::Speed*)> func = [](component::Transform* tr, component::Speed* sp) {
-	//		auto& client = Client::GetInstance();
-	//		if (client.getRoomNum())
-	//		{
-	//			
-	//		}
-	//	};
-	//	manager->Execute(func);
-	//}
 }
