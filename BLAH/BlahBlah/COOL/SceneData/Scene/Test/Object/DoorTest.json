@@ -1,0 +1,49 @@
+{
+	"Name": "DoorTest",
+
+	"Transform": 
+	{
+		"Position": [-300.0, 0.0, -100.0],
+		"Rotate": [0.0, 0.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Door": 
+	{
+		"MaxAngle": 120.0,
+		"Locked": true
+	},
+
+	"Collider": 
+	{
+		"Static": true,
+		"IsTrigger": true,
+		"AutoMesh": false,
+		"Center": [-50.0, 120, 0],
+		"Extent": [50.0, 100, 50]
+	},
+
+	"Children":[
+		{
+			"Name": "DoorRender",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "DoorTest.Door",
+				"Material": "NoMaterial"
+			},
+			"Collider": 
+			{
+				"Static": true,
+				"AutoMesh": true
+			}
+		}
+	]
+
+
+}

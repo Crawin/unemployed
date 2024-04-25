@@ -540,6 +540,10 @@ namespace ECSsystem {
 		std::function<void(Transform*, Collider*)> sync = [](Transform* tr, Collider* col) {
 			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
 
+			// reset collider;
+			col->ClearCollidedVector();
+			col->SetCollided(false);
+
 			col->UpdateBoundingBox(trans);
 			};
 		manager->Execute(sync);
@@ -547,8 +551,8 @@ namespace ECSsystem {
 		auto circleBoxCol = CheckCollisionRectCircle;
 
 		// collide check
-		std::function<void(Collider*, Collider*)> collideCheck = 
-			[circleBoxCol](Collider* a, Collider* b) {
+		std::function<void(Collider*, SelfEntity*, Collider*, SelfEntity*)> collideCheck =
+			[circleBoxCol](Collider* a, SelfEntity* aEnt, Collider* b, SelfEntity* bEnt) {
 
 			// if both static, skip
 			if (a->IsStaticObject() && b->IsStaticObject()) return;
@@ -596,9 +600,9 @@ namespace ECSsystem {
 
 				// if collided, add to coll vector, handle later
 				if (a->IsStaticObject() == false)
-					a->InsertCollidedComp(b);
+					a->InsertCollidedEntity(bEnt->GetEntity());
 				if (b->IsStaticObject() == false) 
-					b->InsertCollidedComp(a);
+					b->InsertCollidedEntity(aEnt->GetEntity());
 
 				a->SetCollided(true);
 				b->SetCollided(true);
@@ -617,83 +621,91 @@ namespace ECSsystem {
 
 		// do specific collide
 		// ex) player -> door? active interaction;
+		
+		// todo
+		// 지금은 player를 Input으로 표현하지만 추후에 ControlPlayer같은게 생기면 대체해야한다.
+		std::function<void(Collider*, Input*)> playerHandle = [manager](Collider* col, Input* input) {
+			if (col->GetCollided() == false) return;
 
-		// handle collide
-		std::function<void(Collider*, Physics*, Transform*)> collideHandle =
-			[&faces, deltaTime](Collider* col, Physics* sp, Transform* tr) {
-			if (col->GetCollided()) {
-				col->SetCollided(false);
-
-				col->GetCollided();
-
-				auto& colVec = col->GetCollidedVector();
-				auto& myBox = col->GetBoundingBox();
-				// 
-				XMVECTOR boxCenter = XMLoadFloat3(&myBox.Center);
-				for (auto other : colVec) {
-					auto& otherBox = other->GetBoundingBox();
-
-					XMMATRIX rot = XMMatrixRotationQuaternion(XMLoadFloat4(&otherBox.Orientation));
-
-					XMVECTOR hitFace;
-					float max = -10.0f;
-					int idx = 0;
-
-					for (int i = 0; i < _countof(faces); ++i) {
-						XMVECTOR faceNormal = XMVector3Transform(faces[i], rot);
-						XMVECTOR faceCenterPos = faces[i] * XMLoadFloat3(&otherBox.Extents) + XMLoadFloat3(&otherBox.Center);
-						XMVECTOR lay = XMVector3Normalize(boxCenter - faceCenterPos);
-
-						// dot and max is hit face
-						float dot = XMVectorGetX(XMVector3Dot(faceNormal, lay));
-						if (dot > max) {
-							max = dot;
-							hitFace = faceNormal;
-							idx = i;
-						}
-
-						//int dot = XMVectorGetX(XMVector3Dot(normal, lay));
-
-						//if (dot > max) {
-						//	idx = i;
-						//	max = dot;
-						//	minNormal = normal;
-						//}
-						//XMMATRIX trans = XMMatrixTranslationFromVector(faces[i] * XMLoadFloat3(&box.Extents) + XMLoadFloat3(&box.Center));
-					}
-
-					// reduce velocity here
-					XMVECTOR velocity = XMLoadFloat3(&sp->GetVelocity());
-					XMVECTOR result = velocity - velocity * hitFace * sp->GetElasticity();
-
-					XMFLOAT3 res;
-					XMStoreFloat3(&res, result);
-					sp->SetVelocity(res);
-
-					// move back before hit
-					XMVECTOR back = (velocity * hitFace) * deltaTime;
-					XMVECTOR newPos = XMLoadFloat3(&tr->GetPosition()) - back;
-
-					XMFLOAT3 backedPos;
-					XMStoreFloat3(&backedPos, newPos);
-					tr->SetPosition(backedPos);
-					//sp-
-
-
-
-					//DebugPrint(std::format("hit face: {}", idx));
-					//DebugPrint(std::format("\t{}, {}, {}", XMVectorGetX(hitFace), XMVectorGetY(hitFace), XMVectorGetZ(hitFace)));
-					//DebugPrint(std::format("\tvelocity: {}, {}, {}", XMVectorGetX(velocity), XMVectorGetY(velocity), XMVectorGetZ(velocity)));
-					//DebugPrint(std::format("\tafterhit: {}, {}, {}", XMVectorGetX(result), XMVectorGetY(result), XMVectorGetZ(result)));
+			for (auto otherEntity : col->GetCollidedVector()) {
+				DoorControl* doorCtrl = manager->GetComponent<DoorControl>(otherEntity);
+				if (doorCtrl != nullptr) {
+					// do st for player - door collision
+					DebugPrint("asdfasdfa");
 				}
+
 			}
 
-			// reset collider;
-			col->ClearCollidedVector();
 			};
 
 
-		manager->ExecuteSquare<component::Collider>(collideCheck);
+
+		// handle collide (move back, reduce speed)
+		std::function<void(Collider*, Physics*, Transform*)> collideHandle =
+			[&faces, deltaTime, manager](Collider* col, Physics* sp, Transform* tr) {
+			if (col->GetCollided() == false || col->IsTrigger()) return;
+
+			auto& colVec = col->GetCollidedVector();
+			auto& myBox = col->GetBoundingBox();
+			// 
+			XMVECTOR boxCenter = XMLoadFloat3(&myBox.Center);
+			for (auto otherEntity : colVec) {
+				Collider* other = manager->GetComponent<Collider>(otherEntity);
+				if (other == nullptr) {
+					DebugPrint("ERROR!! no collider found");
+					continue;
+				}
+				
+				if (other->IsTrigger()) continue;
+
+				auto& otherBox = other->GetBoundingBox();
+
+				XMMATRIX rot = XMMatrixRotationQuaternion(XMLoadFloat4(&otherBox.Orientation));
+
+				XMVECTOR hitFace;
+				float max = -10.0f;
+				int idx = 0;
+
+				for (int i = 0; i < _countof(faces); ++i) {
+					XMVECTOR faceNormal = XMVector3Transform(faces[i], rot);
+					XMVECTOR faceCenterPos = faces[i] * XMLoadFloat3(&otherBox.Extents) + XMLoadFloat3(&otherBox.Center);
+					XMVECTOR lay = XMVector3Normalize(boxCenter - faceCenterPos);
+
+					// dot and max is hit face
+					float dot = XMVectorGetX(XMVector3Dot(faceNormal, lay));
+					if (dot > max) {
+						max = dot;
+						hitFace = faceNormal;
+						idx = i;
+					}
+				}
+
+				// reduce velocity here
+				XMVECTOR velocity = XMLoadFloat3(&sp->GetVelocity());
+				XMVECTOR result = velocity - velocity * hitFace * sp->GetElasticity();
+
+				XMFLOAT3 res;
+				XMStoreFloat3(&res, result);
+				sp->SetVelocity(res);
+
+				// move back before hit
+				XMVECTOR back = (velocity * hitFace) * deltaTime;
+				XMVECTOR newPos = XMLoadFloat3(&tr->GetPosition()) - back;
+
+				XMFLOAT3 backedPos;
+				XMStoreFloat3(&backedPos, newPos);
+				tr->SetPosition(backedPos);
+
+				//DebugPrint(std::format("hit face: {}", idx));
+				//DebugPrint(std::format("\t{}, {}, {}", XMVectorGetX(hitFace), XMVectorGetY(hitFace), XMVectorGetZ(hitFace)));
+				//DebugPrint(std::format("\tvelocity: {}, {}, {}", XMVectorGetX(velocity), XMVectorGetY(velocity), XMVectorGetZ(velocity)));
+				//DebugPrint(std::format("\tafterhit: {}, {}, {}", XMVectorGetX(result), XMVectorGetY(result), XMVectorGetZ(result)));
+			}
+			};
+
+
+		manager->ExecuteSquare<component::Collider, component::SelfEntity>(collideCheck);
+		manager->Execute(playerHandle);
 		manager->Execute(collideHandle);
 	}
 

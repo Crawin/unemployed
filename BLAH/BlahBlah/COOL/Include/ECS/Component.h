@@ -506,36 +506,6 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// Dia Animation Controll component
-	// Dia를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
-	//
-	class DiaAnimationControl : public ComponentBase<DiaAnimationControl> {
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
-
-		virtual void ShowYourself() const;
-
-		float m_BefSpeed = 0;
-
-		bool m_BefKeyDown = false;
-	};
-
-	/////////////////////////////////////////////////////////
-	// Player Animation Controll component
-	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
-	//
-	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
-
-		virtual void ShowYourself() const;
-
-		float m_BefSpeed = 0;
-
-		bool m_BefKeyDown = false;
-	};
-
-	/////////////////////////////////////////////////////////
 	// Day Light component
 	// 시간에 따라 Directional Light가 회전되기 위한 컴포넌트
 	//
@@ -597,10 +567,12 @@ namespace component {
 		BoundingOrientedBox m_BoundingBoxOriginal;
 		BoundingOrientedBox m_CurrentBox;
 		bool m_StaticObject = false;
+		bool m_Trigger = false;
 		bool m_IsCapsule = false;
 		bool m_Collided = false;
 
-		std::vector<Collider*> m_CollidedComps;
+
+		std::vector<Entity*> m_CollidedComps;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -620,15 +592,68 @@ namespace component {
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 
-		void InsertCollidedComp(Collider* col) { m_CollidedComps.push_back(col); }
+		//void InsertCollidedComp(Collider* col) { m_CollidedComps.push_back(col); }
+		void InsertCollidedEntity(Entity* ent) { m_CollidedComps.push_back(ent); }
 
-		const std::vector<Collider*>& GetCollidedVector() const { return m_CollidedComps; }
+		const std::vector<Entity*>& GetCollidedVector() const { return m_CollidedComps; }
 
 		void ClearCollidedVector() { m_CollidedComps.clear(); }
 
 		bool IsCapsule() const { return m_IsCapsule; }
 
+		bool IsTrigger() const { return m_Trigger; }
+
 	};
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 컨텐츠 관련 컴포넌트들
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/////////////////////////////////////////////////////////
+	// Door Component
+	// 문짝 컴포넌트, 잠금해제상태라면 플레이어가 직접 열 수 있다.
+	//
+	class DoorControl : public ComponentBase<DoorControl> {
+		float m_MaxAngle = 120.0f;
+		bool m_Locked = true;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Player Animation Controll component
+	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
+	//
+	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float m_BefSpeed = 0;
+
+		bool m_BefKeyDown = false;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Dia Animation Controll component
+	// Dia를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
+	//
+	class DiaAnimationControl : public ComponentBase<DiaAnimationControl> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		float m_BefSpeed = 0;
+
+		bool m_BefKeyDown = false;
+	};
+
 }
 
 

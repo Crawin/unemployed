@@ -64,7 +64,7 @@ namespace ECSsystem {
 	// move by physics
 	//
 	class SimulatePhysics : public System {
-		float m_friction = 200.0f;
+		float m_friction = 600.0f;
 		float m_Gravity = 9.6f;
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);

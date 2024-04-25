@@ -17,7 +17,7 @@
 
 	"Physics": 
 	{
-		"MaxVelocity": 200.0,
+		"MaxVelocity": 600.0,
 		"Acceleration" : [1200.0, 1200.0, 1200.0]
 	},
 

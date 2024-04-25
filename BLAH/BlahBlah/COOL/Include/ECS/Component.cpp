@@ -481,6 +481,7 @@ namespace component
 		Json::Value col = v["Collider"];
 
 		m_StaticObject = col["Static"].asBool();
+		m_Trigger = col["IsTrigger"].asBool();
 
 		// if true on create, load collider by its mesh
 		// else create here
@@ -522,6 +523,15 @@ namespace component
 	void PlayerAnimControll::ShowYourself() const
 	{
 		DebugPrint("PlayerAnimControll Comp");
+	}
+
+	void DoorControl::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value door = v["Door"];
+	}
+
+	void DoorControl::ShowYourself() const
+	{
 	}
 
 }
