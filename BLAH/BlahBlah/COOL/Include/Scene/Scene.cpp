@@ -426,7 +426,6 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 
 	commandList->DrawInstanced(6, 1, 0, 0);
 
-
 #ifdef _DEBUG
 	// test code
 	// todo 적절한 위치로 옮기도록 하자

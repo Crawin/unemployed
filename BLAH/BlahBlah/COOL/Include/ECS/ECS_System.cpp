@@ -631,7 +631,7 @@ namespace ECSsystem {
 				DoorControl* doorCtrl = manager->GetComponent<DoorControl>(otherEntity);
 				if (doorCtrl != nullptr) {
 					// do st for player - door collision
-					DebugPrint("asdfasdfa");
+					//DebugPrint("asdfasdfa");
 				}
 
 			}
@@ -659,7 +659,6 @@ namespace ECSsystem {
 				if (other->IsTrigger()) continue;
 
 				auto& otherBox = other->GetBoundingBox();
-
 				XMMATRIX rot = XMMatrixRotationQuaternion(XMLoadFloat4(&otherBox.Orientation));
 
 				XMVECTOR hitFace;
@@ -682,15 +681,16 @@ namespace ECSsystem {
 
 				// reduce velocity here
 				XMVECTOR velocity = XMLoadFloat3(&sp->GetVelocity());
-				XMVECTOR result = velocity - velocity * hitFace * sp->GetElasticity();
+				XMVECTOR velocityBack = XMVector3Dot(velocity, hitFace) * hitFace;// *sp->GetElasticity();
+				XMVECTOR result = velocity - velocityBack;
 
 				XMFLOAT3 res;
 				XMStoreFloat3(&res, result);
 				sp->SetVelocity(res);
 
 				// move back before hit
-				XMVECTOR back = (velocity * hitFace) * deltaTime;
-				XMVECTOR newPos = XMLoadFloat3(&tr->GetPosition()) - back;
+				XMVECTOR posBack = velocityBack * deltaTime * 2.0f;
+				XMVECTOR newPos = XMLoadFloat3(&tr->GetPosition()) - posBack;
 
 				XMFLOAT3 backedPos;
 				XMStoreFloat3(&backedPos, newPos);
