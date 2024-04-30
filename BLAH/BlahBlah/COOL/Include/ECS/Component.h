@@ -463,11 +463,14 @@ namespace component {
 		float GetMaxVelocity() const { return m_MaxVelocity; }
 
 		float GetCurrentVelocityLen() const { return Vector3::Length(m_Velocity); }
+		float GetCurrentVelocityLenOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return Vector3::Length(temp); }
 		const XMFLOAT3& GetVelocity() const { return m_Velocity; }
+		const XMFLOAT3& GetVelocityOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return temp; }
 		const XMFLOAT3 GetAcceleration() const { return m_Acceleration; }
 
 		void SetMaxSpeed(float maxSpeed) { m_MaxVelocity = maxSpeed; }
 		void SetVelocity(const XMFLOAT3& vel) { m_Velocity = vel; }
+		void SetVelocityOnXZ(const XMFLOAT3& vel) { m_Velocity.x = vel.x; m_Velocity.z = vel.z; }
 		void SetAcceleration(const XMFLOAT3& acc) { m_Acceleration = acc; }
 
 		void AddVelocity(const XMFLOAT3& direction, float deltaTime);

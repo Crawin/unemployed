@@ -166,9 +166,17 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('D') & 0x8000) { tempMove.x += 1.0f; move = true; }
 			if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
 			if (GetAsyncKeyState('E') & 0x8000) { tempMove.y += 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_SPACE) & 0x0001) { sp->AddVelocity(XMFLOAT3(0.0f, 12.93f, 0.0f), 1); }//XMFLOAT3 temp = sp->GetVelocity(); sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 313.0f, temp.z));  }
+			if (GetAsyncKeyState(VK_SPACE) & 0x0001) 
+			{ 
+				XMFLOAT3 temp = sp->GetVelocity();
+				sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
+			}
 
-			float speed = sp->GetCurrentVelocityLen();
+			float maxSpeed = 200.0f;
+			if (GetAsyncKeyState(VK_SHIFT) * 0x8000) maxSpeed += 400.0f;
+			sp->SetMaxSpeed(maxSpeed);
+
+			float speed = sp->GetCurrentVelocityLenOnXZ();
 
 			// update speed if key down
 			if (move) {
@@ -206,7 +214,7 @@ namespace ECSsystem {
 			if (GetAsyncKeyState(VK_LEFT) & 0x8000)		{ tempMove.x -= 1.0f; move = true; }
 			if (GetAsyncKeyState(VK_RIGHT) & 0x8000)	{ tempMove.x += 1.0f; move = true; }
 
-			float speed = sp->GetCurrentVelocityLen();
+			float speed = sp->GetCurrentVelocityLenOnXZ();
 
 			// update speed if key down
 			if (move) {
@@ -330,12 +338,12 @@ namespace ECSsystem {
 
 			COND walkToRun = [](void* data) {
 				float* sp = reinterpret_cast<float*>(data);
-				return *sp >= 400.0f;
+				return *sp >= 300.0f;
 				};
 
 			COND runToWalk = [](void* data) {
 				float* sp = reinterpret_cast<float*>(data);
-				return *sp < 400.0f;
+				return *sp < 300.0f;
 				};
 
 			COND hit = [](void* data) {
@@ -377,7 +385,7 @@ namespace ECSsystem {
 		std::function<void(component::Physics*, component::AnimationController*, component::DiaAnimationControl*)> func1 =
 			[](component::Physics* sp, component::AnimationController* animCtrl, component::DiaAnimationControl* dia) {
 
-			float speed = sp->GetCurrentVelocityLen();
+			float speed = sp->GetCurrentVelocityLenOnXZ();
 
 			animCtrl->CheckTransition(&speed);
 			};
@@ -385,7 +393,7 @@ namespace ECSsystem {
 		std::function<void(component::Physics*, component::AnimationController*, component::PlayerAnimControll*)> func2 =
 			[](component::Physics* sp, component::AnimationController* animCtrl, component::PlayerAnimControll* play) {
 
-			float speed = sp->GetCurrentVelocityLen();
+			float speed = sp->GetCurrentVelocityLenOnXZ();
 
 			animCtrl->CheckTransition(&speed);
 			};
@@ -679,9 +687,12 @@ namespace ECSsystem {
 					}
 				}
 
-				// reduce velocity here
 				XMVECTOR velocity = XMLoadFloat3(&sp->GetVelocity());
-				XMVECTOR velocityBack = XMVector3Dot(velocity, hitFace) * hitFace;// *sp->GetElasticity();
+				float dot = XMVectorGetX(XMVector3Dot(velocity, hitFace));
+				if (dot > 0) continue;
+
+				// reduce velocity here
+				XMVECTOR velocityBack = dot * hitFace;// *sp->GetElasticity();
 				XMVECTOR result = velocity - velocityBack;
 
 				XMFLOAT3 res;
@@ -695,6 +706,7 @@ namespace ECSsystem {
 				XMFLOAT3 backedPos;
 				XMStoreFloat3(&backedPos, newPos);
 				tr->SetPosition(backedPos);
+
 
 				//DebugPrint(std::format("hit face: {}", idx));
 				//DebugPrint(std::format("\t{}, {}, {}", XMVectorGetX(hitFace), XMVectorGetY(hitFace), XMVectorGetZ(hitFace)));
@@ -713,16 +725,34 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
+		// limit max speed
+		std::function<void(Physics*)> spLimit = [](Physics* py) {
+			XMVECTOR vel = XMLoadFloat3(&py->GetVelocityOnXZ());
 
-		// friction
+			float maxSpeed = py->GetMaxVelocity();
+			float curSpeed = XMVectorGetX(XMVector3Length(vel));
+
+			if (curSpeed > maxSpeed)
+			{
+				vel *= maxSpeed / curSpeed;
+				XMFLOAT3 t;
+				XMStoreFloat3(&t, vel);
+				py->SetVelocityOnXZ(t);
+			}
+
+			};
+
+
+		// friction on xz
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
-			const float friction = 900.0f;
+			const float friction = 1100.0f;
 			// if moving
-			float speed = sp->GetCurrentVelocityLen();// sp->GetCurrentVelocity();
+			float speed = sp->GetCurrentVelocityLenOnXZ();// sp->GetCurrentVelocity();
 
 			if (speed > 0) {
 				// do friction here
-				XMVECTOR vel = XMLoadFloat3(&sp->GetVelocity());
+				XMFLOAT3 velocity = sp->GetVelocityOnXZ();
+				XMVECTOR vel = XMLoadFloat3(&velocity);
 				XMVECTOR nor = XMVector3Normalize(vel);
 				XMVECTOR res = vel - nor * friction * deltaTime;
 
@@ -731,15 +761,15 @@ namespace ECSsystem {
 
 				// 부호가 바뀜
 				if (XMVectorGetX(vel) * XMVectorGetX(res) < 0) temp.x = 0;
-				if (XMVectorGetY(vel) * XMVectorGetY(res) < 0) temp.y = 0;
+				//if (XMVectorGetY(vel) * XMVectorGetY(res) < 0) temp.y = 0;
 				if (XMVectorGetZ(vel) * XMVectorGetZ(res) < 0) temp.z = 0;
 
 				// update
-				sp->SetVelocity(temp);
-				speed = sp->GetCurrentVelocityLen();
+				sp->SetVelocityOnXZ(temp);
+				speed = sp->GetCurrentVelocityLenOnXZ();
 
 				if (abs(speed) < 0.01f) {
-					sp->SetVelocity({ 0,0,0 });
+					sp->SetVelocityOnXZ({ 0,0,0 });
 				}
 			}
 
@@ -750,7 +780,7 @@ namespace ECSsystem {
 		std::function<void(Physics*)> gravity = [deltaTime](Physics* py) {
 			// todo
 			// if is not static
-			XMVECTOR gravity = { 0.0, -9.8f, 0.0f };
+			XMVECTOR gravity = { 0.0, -980.0f, 0.0f };
 			gravity *= deltaTime;
 
 			XMVECTOR vel = XMLoadFloat3(&py->GetVelocity()) + gravity;
@@ -761,6 +791,7 @@ namespace ECSsystem {
 			py->SetVelocity(temp);
 			};
 
+		manager->Execute(spLimit);
 		manager->Execute(friction);
 		manager->Execute(gravity);
 
@@ -774,7 +805,7 @@ namespace ECSsystem {
 		std::function<void(Transform*, Physics*)> move = [deltaTime](Transform* tr, Physics* sp) {
 			XMVECTOR pos = XMLoadFloat3(&tr->GetPosition());
 			XMVECTOR vel = XMLoadFloat3(&sp->GetVelocity());
-
+			
 			XMFLOAT3 temp;
 			pos += vel * deltaTime;
 			XMStoreFloat3(&temp, pos);
