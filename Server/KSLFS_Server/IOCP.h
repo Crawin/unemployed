@@ -7,7 +7,7 @@ class sc_packet_position;
 class sc_packet_login;
 class Mesh;
 
-enum C_OP { C_RECV, C_SEND, C_ACCEPT };
+enum C_OP { C_RECV, C_SEND, C_ACCEPT, C_SHUTDOWN };
 
 class EXP_OVER
 {
@@ -217,4 +217,5 @@ public:
 	bool world_collision(cs_packet_position*&);
 	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
 	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, std::chrono::nanoseconds& ping);
+	void command_thread();
 };

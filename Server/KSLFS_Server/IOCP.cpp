@@ -45,14 +45,14 @@ void IOCP_SERVER_MANAGER::start()
 	CreateIoCompletionPort(reinterpret_cast<HANDLE>(server_s), detail.m_hIOCP, -1, 0);
 	AcceptEx(server_s, client_s, accept_over.buf, 0, addr_size + 16, addr_size + 16, nullptr, &accept_over.over);
 
-	//std::thread command(command_thread, &server_on);
+	std::thread command(&IOCP_SERVER_MANAGER::command_thread,this);
 
 	detail.m_bServerState = true;
 	std::cout << "서버 실행" << std::endl;
 	//lobby = new Lobby;
-	worker(server_s);
+	//worker(server_s);
 
-	int num_threads = std::thread::hardware_concurrency() - 1;					// 1개 쓰레드는 AI를 돌리기 위한 쓰레드
+	int num_threads = std::thread::hardware_concurrency();
 	std::vector<std::thread> worker_threads;
 	for (int i = 0; i < num_threads; ++i)
 	{
@@ -65,7 +65,7 @@ void IOCP_SERVER_MANAGER::start()
 	//delete lobby;
 	closesocket(server_s);
 	WSACleanup();
-	//command.join();
+	command.join();
 }
 
 void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
@@ -112,8 +112,6 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			}
 
 			process_packet(my_id, e_over);
-			//login_players[my_id].print_message(rw_byte);
-			//login_players[my_id].broadcast(rw_byte);
 			login_players[my_id].do_recv();
 		}
 		break;
@@ -122,6 +120,9 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			delete e_over;
 		}
 		break;
+		case C_SHUTDOWN:
+			std::cout << "서버 종료 명령으로 인한 쓰레드 종료" << std::endl;
+			break;
 		}
 	}
 }
@@ -328,6 +329,33 @@ bool IOCP_SERVER_MANAGER::world_collision_v3(cs_packet_position*& player, Direct
 	return false;
 }
 
+void IOCP_SERVER_MANAGER::command_thread()
+{
+	std::string input;
+	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
+		{"/STOP",[this]() {
+			detail.m_bServerState = false;
+			EXP_OVER over;
+			over.c_op = C_SHUTDOWN;
+			int num_threads = std::thread::hardware_concurrency();
+			for (int i = 0; i < num_threads; ++i)
+				PostQueuedCompletionStatus(detail.m_hIOCP, 1, -1, reinterpret_cast<OVERLAPPED*>(&over));
+		}},
+	};
+
+	while (detail.m_bServerState)
+	{
+		std::string input;
+		std::cin >> input;
+
+		if (commands.find(input) == commands.end())
+		{
+			std::cout << "해당 명령어가 존재하지 않습니다." << std::endl;
+		}
+		else commands[input]();
+	}
+}
+
 void Game::init(const unsigned int& i, const SOCKET& s)
 {
 	if (p[0].id == NULL)
@@ -458,27 +486,5 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 		{
 			return player.speed;
 		}
-	}
-}
-
-void command_thread(bool* state)
-{
-	std::string input;
-	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
-		{"/STOP",[&state]() {
-			*state = false;
-		}},
-	};
-
-	while (*state)
-	{
-		std::string input;
-		std::cin >> input;
-
-		if (commands.find(input) == commands.end())
-		{
-			std::cout << "해당 명령어가 존재하지 않습니다." << std::endl;
-		}
-		else commands[input]();
 	}
 }
