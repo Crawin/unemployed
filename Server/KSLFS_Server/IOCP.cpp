@@ -2,8 +2,6 @@
 #include "Mesh.h"
 #include "IOCP.h"
 
-void command_thread(bool*);
-
 void IOCP_SERVER_MANAGER::start()
 {
 	std::cout << "장애물 로드 시작" << std::endl;
@@ -159,8 +157,9 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			DirectX::XMFLOAT3 newSpeed = position->getSpeed();
 			DirectX::XMFLOAT3 rot = position->getRotation();
 
-			world_collision_v3(position, &newPosition, &newSpeed, ping);
-			gameRoom.setPlayerPR_v3(id, newPosition, newSpeed, rot);
+			unsigned short floor;
+			world_collision_v3(position, &newPosition, &newSpeed, &floor, ping);
+			gameRoom.setPlayerPR_v3(id, newPosition, newSpeed, rot, floor);
 
 
 			// 충돌 이후 좌표 패킷을 만든 후
@@ -295,7 +294,7 @@ bool IOCP_SERVER_MANAGER::world_collision_v2(cs_packet_position*& player, Direct
 	return false;
 }
 
-bool IOCP_SERVER_MANAGER::world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, std::chrono::nanoseconds& ping)
+bool IOCP_SERVER_MANAGER::world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* ptrFloor, std::chrono::nanoseconds& ping)
 {
 	DirectX::XMFLOAT3 pos = player->getPosition();
 	pos.y += 50;
@@ -318,7 +317,7 @@ bool IOCP_SERVER_MANAGER::world_collision_v3(cs_packet_position*& player, Direct
 
 	for (auto& world : m_vMeshes)
 	{
-		if (world->collision_v3(pOBB, newPosition, spd, newSpeed, sendTime, ping))
+		if (world->collision_v3(pOBB, newPosition, spd, newSpeed, ptrFloor, sendTime, ping))
 		{
 			return true;
 		}
@@ -410,7 +409,7 @@ void Game::setPlayerPR_v2(const unsigned int& id, cs_packet_position*& packet, c
 	}
 }
 
-void Game::setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot)
+void Game::setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot, const unsigned short& floor)
 {
 	for (auto& player : p)
 	{
@@ -419,6 +418,7 @@ void Game::setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPo
 			player.position = newPosition;
 			player.rotation = rot;
 			player.speed = newSpeed;
+			player.m_floor = floor;
 			break;
 		}
 	}
@@ -487,4 +487,91 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 			return player.speed;
 		}
 	}
+}
+
+void Game::update()
+{
+	guard.update(p);
+}
+
+void NPC::update(Player* p)
+{
+	if (this->state == 0)				// 두리번 두리번 상태
+	{
+		if (set_destination(p))			// 두리번 거리다가 뭔갈 발견했으면, 목적지 조정하고 이동
+		{
+			this->state = 1;
+		}
+		else
+		{	// 위치를 못찾았으면
+			int duribun_duribun = 5;
+			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
+			if (duration > duribun_duribun)		// 5초 넘게 두리번 거렸는데 위치를 못찾았으면
+			{
+				this->destination; // 랜덤한 목적지 설정
+				this->state = 1;
+			}
+		}
+	}
+	else if (this->state == 1)	// 목적지로 이동하는 중
+	{
+		set_destination(p);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
+	}
+
+}
+
+bool NPC::can_see(Player& p)
+{
+	for (auto& mesh : m_vMeshes)
+	{
+		if (mesh->can_see(p.position, position, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
+			return true;
+	}
+	return false;
+}
+
+bool NPC::can_hear(Player& p)
+{
+	const unsigned short can_hear_distance = 100;
+	bool playerSound = p.sound.load();
+	if (playerSound && distance(p) < can_hear_distance * can_hear_distance)		// 플레이어가 소리를 내고 있으며, 플레이어와의 거리가 들을 수 있는 거리 이내이면
+		return true;
+	return false;
+}
+
+float NPC::distance(Player& p)
+{
+	return (position.x - p.position.x) * (position.x - p.position.x) + (position.y - p.position.y) * (position.y - p.position.y) + (position.z - p.position.z) * (position.z - p.position.z);
+}
+
+bool NPC::compare_position(DirectX::XMFLOAT3& pos)
+{
+	float error_value = 1;
+	if (this->position.x >= pos.x - error_value && this->position.x <= pos.x + 1)
+		if (this->position.y >= pos.y - error_value && this->position.y <= pos.y + 1)
+			if (this->position.z >= pos.z - error_value && this->position.z <= pos.z + 1)
+				return true;
+	return false;
+}
+
+bool NPC::set_destination(Player*& p)
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		if (can_see(p[i]))
+		{
+			this->destination = p[i].position;
+			return true;
+		}
+		else if (can_hear(p[i]))
+		{
+			this->destination = p[i].position;
+			return true;
+		}
+	}
+
+	// 플레이어를 찾지도, 듣지도 못했다면
+	if (compare_position(this->destination))		// 목적지에 도달하였으면
+		arrive_time = std::chrono::high_resolution_clock::now();	// 도달한 시각 기록
+	return false;
 }
