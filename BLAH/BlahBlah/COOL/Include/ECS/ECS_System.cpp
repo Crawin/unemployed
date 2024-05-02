@@ -165,8 +165,8 @@ namespace ECSsystem {
 			if (GetAsyncKeyState('S') & 0x8000) { tempMove.z -= 1.0f; move = true; }
 			if (GetAsyncKeyState('A') & 0x8000) { tempMove.x -= 1.0f; move = true; }
 			if (GetAsyncKeyState('D') & 0x8000) { tempMove.x += 1.0f; move = true; }
-			if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
-			if (GetAsyncKeyState('E') & 0x8000) { tempMove.y += 1.0f; move = true; }
+			//if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
+
 			if (GetAsyncKeyState(VK_SPACE) & 0x0001) 
 			{ 
 				XMFLOAT3 temp = sp->GetVelocity();
@@ -266,10 +266,20 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
+		// interaction
+		std::function<void(Input*)> interactionFunc = [](Input* in) {
+			Entity* interaction = nullptr;
+
+			if (GetAsyncKeyState('E') & 0x0001) interaction = in->GetInteractionEntity();
+			if (interaction == nullptr) return; 
+			
+			DebugPrint("Interaction!!");
+			};
+
 		manager->Execute(inputFunc);
 		manager->Execute(inputFunc2);
 		manager->Execute(mouseInput);
-
+		manager->Execute(interactionFunc);
 	}
 
 	void ChangeAnimationTest::OnInit(ECSManager* manager)
@@ -555,16 +565,22 @@ namespace ECSsystem {
 		// 지금은 player를 Input으로 표현하지만 추후에 ControlPlayer같은게 생기면 대체해야한다.
 
 		// input <-> door
-		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::BEGIN, {
-			DebugPrint("Begin");
+		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::BEGIN, [manager](Entity* self, Entity* other) {
+			auto door = manager->GetComponent<component::DoorControl>(other);
+			auto player = manager->GetComponent<component::Input>(self);
+			if (door && player)
+				player->SetInteractionEntity(other);
 			});
 
-		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::ING, {
-			DebugPrint("ING");
+		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::ING, [manager](Entity* self, Entity* other) {
+			//DebugPrint("ING");
 			});
 
-		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::END, {
-			DebugPrint("End");
+		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::END, [manager](Entity* self, Entity* other) {
+			auto door = manager->GetComponent<component::DoorControl>(other);
+			auto player = manager->GetComponent<component::Input>(self);
+			if (door && player)
+				player->SetInteractionEntity(nullptr);
 			});
 	}
 

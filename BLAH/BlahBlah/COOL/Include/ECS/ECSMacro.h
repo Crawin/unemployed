@@ -5,7 +5,7 @@
 
 #define INSERT_COLLIDE_EVENT(MANAGER, SELF_COMP, OTHER_COMP, TYPE, FUNC)															\
 {																																	\
-	EventFunction eventFunc = [](Entity* self, Entity* other) FUNC;																	\
+	EventFunction eventFunc = FUNC;															\
 	std::function<void(SELF_COMP*, component::Collider*)> insertEvent = [&eventFunc ](SELF_COMP* , component::Collider* col) {		\
 		col->InsertEvent<OTHER_COMP>(eventFunc , TYPE);																				\
 		};																															\

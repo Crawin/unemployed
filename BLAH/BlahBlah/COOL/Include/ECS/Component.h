@@ -457,11 +457,14 @@ namespace component {
 	// 단순히 얘가 인풋을 받는 컴포넌트다 라고 알려주는 컴포넌트, 냉무, 임시, todo
 	//
 	class Input : public ComponentBase<Input> {
-
+		Entity* m_InteractionEntity = nullptr;
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
+
+		void SetInteractionEntity(Entity* ent) { m_InteractionEntity = ent; }
+		Entity* GetInteractionEntity() { return m_InteractionEntity; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -650,6 +653,7 @@ namespace component {
 	//
 	class DoorControl : public ComponentBase<DoorControl> {
 		float m_MaxAngle = 120.0f;
+		float m_CurrentAngle = 0.0f;
 		bool m_Locked = true;
 
 	public:
