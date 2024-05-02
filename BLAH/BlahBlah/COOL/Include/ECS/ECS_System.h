@@ -90,10 +90,11 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
-	// collide check only
+	// collide check, handle, and event
 	//
 	class CollideHandle : public System {
 	public:
+		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 
 		static bool CheckCollisionRectCircle(const XMFLOAT2& rectCenter, const XMFLOAT2& rectSize, const XMFLOAT2& circleCenter, float circleRadius) {

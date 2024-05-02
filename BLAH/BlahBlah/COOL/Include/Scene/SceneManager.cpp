@@ -30,9 +30,6 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
 	REGISTER_COMPONENT(component::DoorControl, "Door");
-
-
-	//PRINT_ALL_BITSET;
 }
 
 SceneManager::SceneManager()

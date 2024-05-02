@@ -516,6 +516,43 @@ namespace component
 		m_BoundingBoxOriginal.Transform(m_CurrentBox, transMat);
 	}
 
+	void Collider::InsertCollidedEntity(Entity* ent)
+	{
+		auto iter = find_if(m_CollidedEntities.begin(), m_CollidedEntities.end(), [ent](const CollidedEntity& col) { return col.m_Entity == ent; });
+
+		if (iter == m_CollidedEntities.end())
+			m_CollidedEntities.emplace_back(COLLIDE_EVENT_TYPE::BEGIN, ent);
+		else
+			iter->m_Type = COLLIDE_EVENT_TYPE::ING;
+	}
+
+	void Collider::UpdateCollidedList()
+	{
+		for (auto iter = m_CollidedEntities.begin(); iter != m_CollidedEntities.end();) {
+			switch (iter->m_Type) {
+			case COLLIDE_EVENT_TYPE::BEGIN:
+			case COLLIDE_EVENT_TYPE::ING:
+				iter->m_Type = COLLIDE_EVENT_TYPE::END;
+				++iter;
+				break;
+
+			case COLLIDE_EVENT_TYPE::END:
+				iter = m_CollidedEntities.erase(iter);
+				break;
+			}
+		}
+
+	}
+
+	const EventFunctionMap& Collider::GetEventMap(COLLIDE_EVENT_TYPE type) const
+	{
+		switch (type) {
+		case COLLIDE_EVENT_TYPE::BEGIN:		return m_EventFunctions.m_OnBeginOverlap;
+		case COLLIDE_EVENT_TYPE::ING:		return m_EventFunctions.m_OnOverlapping;
+		case COLLIDE_EVENT_TYPE::END:		return m_EventFunctions.m_OnEndOverlap;
+		}
+	}
+
 	void PlayerAnimControll::Create(Json::Value& v, ResourceManager* rm)
 	{
 	}

@@ -5,6 +5,7 @@
 #include "ECSManager.h"
 #include "App/InputManager.h"
 #include "Network/Client.h"
+#include "ECSMacro.h"
 
 namespace ECSsystem {
 
@@ -540,6 +541,33 @@ namespace ECSsystem {
 		manager->Execute(func); 
 	}
 
+	void CollideHandle::OnInit(ECSManager* manager)
+	{
+		std::function<void(component::Collider*)> func = [](component::Collider* col) {
+			col->ResetList();
+			};
+
+		manager->Execute(func);
+
+		// make collide events here!!
+
+		// todo
+		// 지금은 player를 Input으로 표현하지만 추후에 ControlPlayer같은게 생기면 대체해야한다.
+
+		// input <-> door
+		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::BEGIN, {
+			DebugPrint("Begin");
+			});
+
+		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::ING, {
+			DebugPrint("ING");
+			});
+
+		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::END, {
+			DebugPrint("End");
+			});
+	}
+
 	void CollideHandle::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
@@ -549,12 +577,12 @@ namespace ECSsystem {
 			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
 
 			// reset collider;
-			col->ClearCollidedVector();
+			col->UpdateCollidedList();
 			col->SetCollided(false);
 
 			col->UpdateBoundingBox(trans);
 			};
-		manager->Execute(sync);
+
 
 		auto circleBoxCol = CheckCollisionRectCircle;
 
@@ -569,9 +597,11 @@ namespace ECSsystem {
 			auto& boxB = b->GetBoundingBox();
 
 			XMVECTOR acualLen = XMVector3Length(XMLoadFloat3(&boxA.Center) - XMLoadFloat3(&boxB.Center));
-			XMVECTOR maximumLen = XMVector3Length(XMLoadFloat3(&boxA.Extents) - XMLoadFloat3(&boxB.Extents));
+			XMVECTOR maximumLen = XMVector3Length(XMLoadFloat3(&boxA.Extents) + XMLoadFloat3(&boxB.Extents));
 
-			if (boxA.Intersects(boxB))
+			float dist = XMVectorGetX(maximumLen - acualLen);
+
+			if (dist > 0 && boxA.Intersects(boxB))
 			{
 				// if capsule, check
 				if (a->IsCapsule()) {
@@ -595,18 +625,9 @@ namespace ECSsystem {
 						XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
 						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
 						boxB.Extents.x)) return;
-
-					//DebugPrint(std::format("Pass"));
-					//DebugPrint(std::format("\tbox Center: {}, {}", boxA.Center.x, boxA.Center.z));
-					//DebugPrint(std::format("\tbox Extent: {}, {}", boxA.Extents.x, boxA.Extents.z));
-					//DebugPrint(std::format("\tCir Center: {}, {}", XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)));
-					//DebugPrint(std::format("\tCir Radius: {}", boxB.Extents.x));
 				}
-					
-					//&& boxA.Extents.x < XMVectorGetX(acualLen)) return;
-				//if (b->IsCapsule() && boxB.Extents.x < XMVectorGetX(acualLen)) return;
 
-				// if collided, add to coll vector, handle later
+				// if collided, add to coll list, handle later
 				if (a->IsStaticObject() == false)
 					a->InsertCollidedEntity(bEnt->GetEntity());
 				if (b->IsStaticObject() == false) 
@@ -627,38 +648,33 @@ namespace ECSsystem {
 			{ 0.0f, 0.0f, -1.0f },
 		};
 
-		// do specific collide
-		// ex) player -> door? active interaction;
-		
-		// todo
-		// 지금은 player를 Input으로 표현하지만 추후에 ControlPlayer같은게 생기면 대체해야한다.
-		std::function<void(Collider*, Input*)> playerHandle = [manager](Collider* col, Input* input) {
-			if (col->GetCollided() == false) return;
+		// collision events
+		std::function<void(Collider*, SelfEntity*)> handleEvent = [](Collider* col, SelfEntity* self) {
+			auto& colVec = col->GetCollidedEntitiesList();
 
-			for (auto otherEntity : col->GetCollidedVector()) {
-				DoorControl* doorCtrl = manager->GetComponent<DoorControl>(otherEntity);
-				if (doorCtrl != nullptr) {
-					// do st for player - door collision
-					//DebugPrint("asdfasdfa");
-				}
+			for (auto& otherEntity : colVec) {
+				Entity* other = otherEntity.m_Entity;
+				auto eventType = otherEntity.m_Type;
 
+				auto& eventMap = col->GetEventMap(eventType);
+
+				// execute event function here
+				for (const auto& [bitset, func] : eventMap) 
+					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
-
 			};
-
-
 
 		// handle collide (move back, reduce speed)
 		std::function<void(Collider*, Physics*, Transform*)> collideHandle =
 			[&faces, deltaTime, manager](Collider* col, Physics* sp, Transform* tr) {
 			if (col->GetCollided() == false || col->IsTrigger()) return;
 
-			auto& colVec = col->GetCollidedVector();
+			auto& colVec = col->GetCollidedEntitiesList();
 			auto& myBox = col->GetBoundingBox();
 			// 
 			XMVECTOR boxCenter = XMLoadFloat3(&myBox.Center);
-			for (auto otherEntity : colVec) {
-				Collider* other = manager->GetComponent<Collider>(otherEntity);
+			for (auto& otherEntity : colVec) {
+				Collider* other = manager->GetComponent<Collider>(otherEntity.m_Entity);
 				if (other == nullptr) {
 					DebugPrint("ERROR!! no collider found");
 					continue;
@@ -715,9 +731,9 @@ namespace ECSsystem {
 			}
 			};
 
-
+		manager->Execute(sync);
 		manager->ExecuteSquare<component::Collider, component::SelfEntity>(collideCheck);
-		manager->Execute(playerHandle);
+		manager->Execute(handleEvent);
 		manager->Execute(collideHandle);
 	}
 

@@ -4,13 +4,34 @@
 namespace Json { class Value; }
 namespace ECSsystem { 
 	class AnimationPlayTimeAdd;
+	class CollideHandle;
 }
 class ResourceManager;
 class Entity;
 class AnimationPlayer;
 
+// unordered_map <- 80 bytes
+// map <- 24 bytes
 
+using EventFunction = std::function<void(Entity*, Entity*)>;
+using EventFunctionMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, EventFunction>;
 
+enum COLLIDE_EVENT_TYPE {
+	BEGIN,
+	ING,
+	END
+};
+
+struct CollideEvents {
+	EventFunctionMap m_OnBeginOverlap;
+	EventFunctionMap m_OnOverlapping;
+	EventFunctionMap m_OnEndOverlap;
+};
+
+struct CollidedEntity {
+	COLLIDE_EVENT_TYPE m_Type;
+	Entity* m_Entity;
+};
 
 namespace component {
 
@@ -574,37 +595,47 @@ namespace component {
 		bool m_IsCapsule = false;
 		bool m_Collided = false;
 
+		CollideEvents m_EventFunctions;
 
-		std::vector<Entity*> m_CollidedComps;
+		std::list<CollidedEntity> m_CollidedEntities;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
+		void SetCollided(bool col) { m_Collided = col; }
+		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
+		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
+		
+		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
+		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
 		bool GetCollided() const { return m_Collided; }
 		bool IsStaticObject() const { return m_StaticObject; }
-
-		void SetCollided(bool col) { m_Collided = col; }
-
-		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
-		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
-
-		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
-		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
+		bool IsCapsule() const { return m_IsCapsule; }
+		bool IsTrigger() const { return m_Trigger; }
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 
-		//void InsertCollidedComp(Collider* col) { m_CollidedComps.push_back(col); }
-		void InsertCollidedEntity(Entity* ent) { m_CollidedComps.push_back(ent); }
+		const std::list<CollidedEntity>& GetCollidedEntitiesList() const { return m_CollidedEntities; }
+		void InsertCollidedEntity(Entity* ent);
+		void UpdateCollidedList();
+		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
+		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
-		const std::vector<Entity*>& GetCollidedVector() const { return m_CollidedComps; }
+		template<class COMP>
+		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
+		{
+			std::bitset<COMPONENT_COUNT> bit = COMP::GetBit();
 
-		void ClearCollidedVector() { m_CollidedComps.clear(); }
-
-		bool IsCapsule() const { return m_IsCapsule; }
-
-		bool IsTrigger() const { return m_Trigger; }
+			switch (type) {
+			case COLLIDE_EVENT_TYPE::BEGIN:	m_EventFunctions.m_OnBeginOverlap[bit] = eventFunc;		break;
+			case COLLIDE_EVENT_TYPE::ING:	m_EventFunctions.m_OnOverlapping[bit] = eventFunc;		break;
+			case COLLIDE_EVENT_TYPE::END:	m_EventFunctions.m_OnEndOverlap[bit] = eventFunc;		break;
+			default:
+				DebugPrint("ERROR!! no event type");
+			};
+		}
 
 	};
 

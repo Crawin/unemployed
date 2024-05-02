@@ -167,6 +167,7 @@
     <ClInclude Include="Include\App\Timer.h" />
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\ECS\Component.h" />
+    <ClInclude Include="Include\ECS\ECSMacro.h" />
     <ClInclude Include="Include\ECS\ECSManager.h" />
     <ClInclude Include="Include\ECS\Entity.h" />
     <ClInclude Include="Include\ECS\ECS_System.h" />
