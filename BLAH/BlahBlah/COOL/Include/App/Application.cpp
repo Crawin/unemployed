@@ -59,6 +59,21 @@ bool Application::InitWindow()
 	return true;
 }
 
+void Application::Tick()
+{
+	// 게임 루프
+	m_Timer->Update();
+	m_SceneManager->Update(m_Timer->GetDeltaTime());
+	Renderer::GetInstance().Render();
+
+
+#ifdef _DEBUG
+	TCHAR szTitle[30];
+	swprintf(szTitle, L"FPS : %.1f", 1 / m_Timer->GetDeltaTime());
+	SetConsoleTitle(szTitle);
+#endif // DEBUG
+}
+
 bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 {
 	m_hInst = hInst;
@@ -100,18 +115,9 @@ int Application::StartProgram()
 			TranslateMessage(&Message);
 			DispatchMessage(&Message);
 		}
-		else {
-			// 게임 루프
-			m_Timer->Update();
-			m_SceneManager->Update(m_Timer->GetDeltaTime());
-			Renderer::GetInstance().Render();
-			
-#ifdef _DEBUG
-			TCHAR szTitle[30];
-			swprintf(szTitle, L"FPS : %.1f", 1 / m_Timer->GetDeltaTime());
-			SetConsoleTitle(szTitle);
-#endif // DEBUG
-
+		else 
+		{
+			Tick();
 		}
 		SleepEx(0, true);
 	}
@@ -127,17 +133,17 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		Application::GetInstance().m_GameLoop = false;
 		break;
-	//case WM_INPUT:
-	//{
-	//	InputManager::GetInstance().MouseInputUpdate((HRAWINPUT)lParam);
-	//	break;
-	//}
-	//case WM_LBUTTONDOWN:
-	//	InputManager::GetInstance().SetDragging(true);
-	//	break;
-	//case WM_LBUTTONUP:
-	//	InputManager::GetInstance().SetDragging(false);
-	//	break;
+
+	case WM_WINDOWPOSCHANGING:
+	//case WM_WINDOWPOSCHANGED:
+		//case WM_NCLBUTTONDOWN:
+		if (Application::GetInstance().m_SceneManager)
+			Application::GetInstance().Tick();
+		break;
+
+	case WM_SYSKEYDOWN:
+		break;
+
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONUP:
@@ -148,7 +154,10 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYDOWN:
 		InputManager::GetInstance().HandleKeyboardInput(hWnd, msg, wParam, lParam);
 		break;
+
+	default:
+		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	return DefWindowProc(hWnd, msg, wParam, lParam);
+	return 0;
 }

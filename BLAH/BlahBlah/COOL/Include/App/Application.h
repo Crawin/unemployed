@@ -20,6 +20,8 @@ private:
 
 	bool InitWindow();
 
+	void Tick();
+
 public:
 	SIZE GetSize() const { return m_windowSize; }
 	HWND GethWnd() const { return m_hWnd; }
