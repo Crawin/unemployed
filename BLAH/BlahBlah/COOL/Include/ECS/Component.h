@@ -13,6 +13,8 @@ class AnimationPlayer;
 // unordered_map <- 80 bytes
 // map <- 24 bytes
 
+using InteractionFuncion = std::function<void(Entity*, Entity*)>;
+
 using EventFunction = std::function<void(Entity*, Entity*)>;
 using EventFunctionMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, EventFunction>;
 
@@ -602,6 +604,8 @@ namespace component {
 
 		std::list<CollidedEntity> m_CollidedEntities;
 
+		InteractionFuncion m_InteractionFunction = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -610,13 +614,15 @@ namespace component {
 		void SetCollided(bool col) { m_Collided = col; }
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
-		
+		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
+
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
 		bool GetCollided() const { return m_Collided; }
 		bool IsStaticObject() const { return m_StaticObject; }
 		bool IsCapsule() const { return m_IsCapsule; }
 		bool IsTrigger() const { return m_Trigger; }
+		const InteractionFuncion& GetInteractionFunction() const { return m_InteractionFunction; }
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 
@@ -625,6 +631,7 @@ namespace component {
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
 		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
+
 
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)

@@ -68,6 +68,7 @@ bool Scene::AddSystem()
 	m_ECSManager->InsertSystem(new ECSsystem::AnimationPlayTimeAdd);
 	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
 	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
+	m_ECSManager->InsertSystem(new ECSsystem::HandleInteraction);
 
 
 	return true;

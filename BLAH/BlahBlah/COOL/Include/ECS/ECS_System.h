@@ -152,6 +152,15 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
+	/////////////////////////////////////////////////////////
+	// interaction
+	// 
+	class HandleInteraction : public System {
+	public:
+		virtual void OnInit(ECSManager* manager);
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+	
 	//class SendToServer : public System {
 	//public:
 	//	virtual void Update(ECSManager* manager, float deltaTime);

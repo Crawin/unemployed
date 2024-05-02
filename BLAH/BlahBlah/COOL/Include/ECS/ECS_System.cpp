@@ -266,20 +266,9 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
-		// interaction
-		std::function<void(Input*)> interactionFunc = [](Input* in) {
-			Entity* interaction = nullptr;
-
-			if (GetAsyncKeyState('E') & 0x0001) interaction = in->GetInteractionEntity();
-			if (interaction == nullptr) return; 
-			
-			DebugPrint("Interaction!!");
-			};
-
 		manager->Execute(inputFunc);
 		manager->Execute(inputFunc2);
 		manager->Execute(mouseInput);
-		manager->Execute(interactionFunc);
 	}
 
 	void ChangeAnimationTest::OnInit(ECSManager* manager)
@@ -857,5 +846,41 @@ namespace ECSsystem {
 
 		manager->Execute(move);
 		manager->Execute(send);
+	}
+
+	void HandleInteraction::OnInit(ECSManager* manager)
+	{
+		// build interaction function
+		InteractionFuncion withDoor = [](Entity* player, Entity* door) {
+			DebugPrint("Interaction, DOOR!!");
+			};
+
+		SET_INTERACTION_EVENT(manager, component::DoorControl, withDoor);
+
+
+	}
+
+	void HandleInteraction::Update(ECSManager* manager, float deltaTime)
+	{
+		using namespace component;
+
+		// interaction
+		std::function<void(Input*, SelfEntity*)> interactionFunc = [manager](Input* in, SelfEntity* self) {
+			Entity* interactionEntity = nullptr;
+
+			if (GetAsyncKeyState('E') & 0x0001) interactionEntity = in->GetInteractionEntity();
+			if (interactionEntity == nullptr) return;
+
+			Collider* col = manager->GetComponent<Collider>(interactionEntity);
+			if (col == nullptr) return;
+
+			auto& interactionFunc = col->GetInteractionFunction();
+			if (interactionFunc == nullptr) return;
+
+			interactionFunc(self->GetEntity(), interactionEntity);
+			};
+
+		manager->Execute(interactionFunc);
+
 	}
 }
