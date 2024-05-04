@@ -2,8 +2,6 @@
 #include "Renderer/COOLResource.h"
 #include "Renderer/Renderer.h"
 #include "ResourceManager.h"
-#include "ECS/Entity.h"
-#include "ECS/Component.h"
 #include "ECS/ECSManager.h"
 #include "Lighting/ShadowMap.h"
 #include <json/json.h>

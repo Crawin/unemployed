@@ -44,7 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableUnitySupport>true</EnableUnitySupport>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -167,10 +167,13 @@
     <ClInclude Include="Include\App\Timer.h" />
     <ClInclude Include="Include\DXMath.h" />
     <ClInclude Include="Include\ECS\Component.h" />
+    <ClInclude Include="Include\ECS\ContentComponents.h" />
     <ClInclude Include="Include\ECS\ECSMacro.h" />
     <ClInclude Include="Include\ECS\ECSManager.h" />
     <ClInclude Include="Include\ECS\Entity.h" />
     <ClInclude Include="Include\ECS\ECS_System.h" />
+    <ClInclude Include="Include\ECS\EssentialComponents.h" />
+    <ClInclude Include="Include\ECS\UIComponents.h" />
     <ClInclude Include="Include\Enums.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Light.h" />
@@ -200,9 +203,12 @@
     <ClCompile Include="Include\App\InputManager.cpp" />
     <ClCompile Include="Include\App\Timer.cpp" />
     <ClCompile Include="Include\ECS\Component.cpp" />
+    <ClCompile Include="Include\ECS\ContentComponents.cpp" />
     <ClCompile Include="Include\ECS\ECSManager.cpp" />
     <ClCompile Include="Include\ECS\Entity.cpp" />
     <ClCompile Include="Include\ECS\ECS_System.cpp" />
+    <ClCompile Include="Include\ECS\EssentialComponents.cpp" />
+    <ClCompile Include="Include\ECS\UIComponents.cpp" />
     <ClCompile Include="Include\Enums.cpp" />
     <ClCompile Include="Include\framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

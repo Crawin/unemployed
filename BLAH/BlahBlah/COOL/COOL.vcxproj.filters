@@ -82,6 +82,15 @@
     <Filter Include="소스 파일\Scene\SceneData\Lighting">
       <UniqueIdentifier>{c3d45ae8-73d7-4e8f-b8ce-ba2407ecf4e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ECS\Component\Essential">
+      <UniqueIdentifier>{c787eddf-2ca0-486c-af0b-dacd7974b2f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\Component\UI">
+      <UniqueIdentifier>{71b06c68-de75-461e-a2ce-2ea25e6a2b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\ECS\Component\Content">
+      <UniqueIdentifier>{ce03ce17-fbc7-478c-9b50-eb8148db7911}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -177,6 +186,15 @@
     <ClInclude Include="Include\ECS\ECSMacro.h">
       <Filter>소스 파일\ECS\System</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\EssentialComponents.h">
+      <Filter>소스 파일\ECS\Component\Essential</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\UIComponents.h">
+      <Filter>소스 파일\ECS\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\ContentComponents.h">
+      <Filter>소스 파일\ECS\Component\Content</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -259,6 +277,15 @@
     </ClCompile>
     <ClCompile Include="Include\Enums.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\EssentialComponents.cpp">
+      <Filter>소스 파일\ECS\Component\Essential</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\UIComponents.cpp">
+      <Filter>소스 파일\ECS\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\ContentComponents.cpp">
+      <Filter>소스 파일\ECS\Component\Content</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

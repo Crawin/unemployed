@@ -1,5 +1,5 @@
 ﻿#pragma once
-
+#include "COOLResource.h"
 class Shader;
 class COOLResource;
 class Mesh;

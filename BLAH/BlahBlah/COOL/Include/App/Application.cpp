@@ -135,8 +135,6 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_WINDOWPOSCHANGING:
-	//case WM_WINDOWPOSCHANGED:
-		//case WM_NCLBUTTONDOWN:
 		if (Application::GetInstance().m_SceneManager)
 			Application::GetInstance().Tick();
 		break;

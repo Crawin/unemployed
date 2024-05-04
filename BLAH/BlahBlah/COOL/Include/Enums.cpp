@@ -1,4 +1,5 @@
-﻿#include "Enums.h"
+﻿#include "framework.h"
+#include "Enums.h"
 #include <string>
 
 //enum class ANIMATION_STATE {

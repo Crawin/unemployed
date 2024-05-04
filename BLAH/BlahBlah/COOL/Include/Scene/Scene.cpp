@@ -1,10 +1,8 @@
-﻿#include "Scene.h"
-//#include "Renderer/Renderer.h"
+﻿//#include "Renderer/Renderer.h"
 #include "framework.h"
+#include "Scene.h"
 #include "ECS/ECSManager.h"
 #include "ResourceManager.h"
-#include "ECS/Component.h"
-#include "ECS/ECS_System.h"
 #include "Shader/Shader.h"
 
 #ifdef _DEBUG

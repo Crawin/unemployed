@@ -1,10 +1,12 @@
 ﻿#pragma once
+#include "Renderer/Renderer.h"
 #include "Material/Material.h"
 #include "Light.h"
 #include "Mesh/Mesh.h"
 #include "Mesh/Bone.h"
 #include "Animation/Animation.h"
 #include "Animation/AnimationPlayer.h"
+#include "Lighting/ShadowMap.h"
 //#include "Object/ObjectBase.h"
 
 class Renderer;

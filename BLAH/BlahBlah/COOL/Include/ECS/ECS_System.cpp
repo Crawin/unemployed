@@ -21,11 +21,6 @@ namespace ECSsystem {
 			// build world matrix for child
 			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
 
-			XMFLOAT4X4 temp;
-
-			//DebugPrint(std::format("parent: {}", name->getName()));
-
-
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();
 				int innerId = child->GetInnerID();

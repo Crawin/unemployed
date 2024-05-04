@@ -352,7 +352,7 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 
 	if (false == reader.parse(file, root)) {
 		DebugPrint(std::format("Failed to open shader json file!! fileName: {}", fileName));
-		DebugPrint(reader.getFormatedErrorMessages());
+		DebugPrint(reader.getFormattedErrorMessages());
 		return false;
 	};
 
