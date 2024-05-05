@@ -448,6 +448,58 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 #endif
 }
 
+void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
+{
+	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+	auto& ecsManager = m_ECSManager;
+	auto& resManager = m_ResourceManager;
+
+	// set screen size
+	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 2, &Renderer::GetInstance().GetScreenSize(), static_cast<int>(UI_ROOT_CONST::SCREEN_SIZE));
+
+	std::function<void(component::UIRenderer*, component::UITransform*)> renderUI = [commandList, resManager](component::UIRenderer* rend, component::UITransform* trans) {
+		Material* material = resManager->GetMaterial(rend->GetMaterial());
+		//mat.Set
+		int textureIdx = material->GetTexture(0);
+
+		material->GetShader()->SetPipelineState(commandList);
+
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &textureIdx, static_cast<int>(UI_ROOT_CONST::TEXTURE_IDX));
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 2, &rend->GetSpriteSize(), static_cast<int>(UI_ROOT_CONST::SPRITE_SIZE));
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &rend->GetCurSprite(), static_cast<int>(UI_ROOT_CONST::CUR_SPRITE));
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 2, &trans->GetCenter(), static_cast<int>(UI_ROOT_CONST::UI_CENTER));
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 2, &trans->GetSize(), static_cast<int>(UI_ROOT_CONST::UI_SIZE));
+
+		commandList->DrawInstanced(6, 1, 0, 0);
+		};
+
+	using namespace component;
+
+	std::function<void(UICanvas*, Children*)> forAllUICanvas = [&ecsManager, &renderUI](UICanvas* canvas, Children* cild) {
+		if (canvas->IsActive()) {
+			Entity* ent = cild->GetEntity();
+			const std::vector<Entity*>& children = ent->GetChildren();
+
+			for (Entity* child : children) {
+				auto bit = child->GetBitset();
+				int innerId = child->GetInnerID();
+
+				ecsManager->ExecuteFromEntity(bit, innerId, renderUI);
+
+				//// get ui trans and 
+				//UITransform* childTrans = ecsManager->GetComponent<UITransform>(bit, innerId);
+				//UIRenderer* childRender = ecsManager->GetComponent<UIRenderer>(bit, innerId);
+				//if (childTrans != nullptr && childRender != nullptr);
+
+			}
+		}
+		};
+
+	m_ECSManager->Execute(forAllUICanvas);
+
+}
+
 bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	if (LoadScene(commandList, m_SceneName) == false)
@@ -480,4 +532,6 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 	// post processing
 	PostProcessing(commandLists[0], resultRtv, resultDsv);
+
+	DrawUI(commandLists[0], resultRtv, resultDsv);
 }

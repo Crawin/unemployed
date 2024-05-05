@@ -846,8 +846,16 @@ namespace ECSsystem {
 	void HandleInteraction::OnInit(ECSManager* manager)
 	{
 		// build interaction function
-		InteractionFuncion withDoor = [](Entity* player, Entity* door) {
+		InteractionFuncion withDoor = [manager](Entity* player, Entity* door) {
 			DebugPrint("Interaction, DOOR!!");
+
+			std::function<void(component::UICanvas*)> openUI = [](component::UICanvas* can) { 
+				DebugPrint("UI SHOW!!");
+				can->ShowUI();
+				};
+			
+			manager->Execute(openUI);
+
 			};
 
 		SET_INTERACTION_EVENT(manager, component::DoorControl, withDoor);

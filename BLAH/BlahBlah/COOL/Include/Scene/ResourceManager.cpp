@@ -364,6 +364,21 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 
 	}
 
+	for (const auto& uiRendererInfo : m_ToLoadUIDatas) {
+		// load material
+		std::string materialFileName = uiRendererInfo.m_MaterialName;
+		int res = GetMaterial(materialFileName, commandList);
+
+		if (res == -1) {
+			DebugPrint(std::format(
+				"ERROR!!, no such material, name: {}\nSet to uv_checker",
+				materialFileName));
+			res = GetMaterial(materialFileName, commandList);
+		}
+
+		uiRendererInfo.m_Renderer->SetMaterial(res);
+	}
+
 	return true;
 }
 
@@ -685,6 +700,13 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
 	CHECK_CREATE_FAILED(m_AnimationShader, "Shader Making Failed!!");
 
+	// clear all LateLoad
+	m_ToLoadRenderDatas.clear();
+	m_ToLoadUIDatas.clear();
+	m_ToLoadAnimCont.clear();
+	m_ToLoadAnimExe.clear();
+	m_ToLoadAttach.clear();
+	
 	return true;
 }
 
@@ -883,6 +905,15 @@ void ResourceManager::AddLateLoad(const std::string& mesh, const std::string& ma
 	info.m_Renderer = renderer;
 
 	m_ToLoadRenderDatas.push_back(info);
+}
+
+void ResourceManager::AddLateLoadUI(const std::string& material, component::UIRenderer* renderer)
+{
+	ToLoadUIRendererInfo info;
+	info.m_MaterialName = material;
+	info.m_Renderer = renderer;
+
+	m_ToLoadUIDatas.push_back(info);
 }
 
 void ResourceManager::AddLateLoadAnimController(const std::string& fileName, component::AnimationController* controller)

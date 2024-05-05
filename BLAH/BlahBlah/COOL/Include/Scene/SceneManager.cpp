@@ -24,9 +24,20 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Input, "Input");
 	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
-	REGISTER_COMPONENT(component::TestInput, "TestInput");
 	REGISTER_COMPONENT(component::Server, "Server");
 	REGISTER_COMPONENT(component::Collider, "Collider");
+
+	// temp
+	REGISTER_COMPONENT(component::TestInput, "TestInput");
+
+	// ui
+	REGISTER_COMPONENT(component::UICanvas, "UICanvas");
+	REGISTER_COMPONENT(component::UITransform, "UITransform");
+	REGISTER_COMPONENT(component::Button, "Button");
+	REGISTER_COMPONENT(component::UIRenderer, "UIRenderer");
+
+
+	// content
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
 	REGISTER_COMPONENT(component::DoorControl, "Door");
