@@ -7,7 +7,9 @@ class sc_packet_position;
 class sc_packet_login;
 class Mesh;
 
-enum C_OP { C_RECV, C_SEND, C_ACCEPT };
+extern std::vector<Mesh*> m_vMeshes;
+
+enum C_OP { C_RECV, C_SEND, C_ACCEPT, C_SHUTDOWN, C_TIMER };
 
 class EXP_OVER
 {
@@ -169,15 +171,41 @@ class Player
 public:
 	unsigned int id = NULL;
 	SOCKET sock = NULL;
+	unsigned short m_floor = 0;
+	std::atomic_bool sound;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
+};
+
+class PATH;
+
+class NPC
+{
+public:
+	short state = 0;				// 0: idle, 1: ¿Ãµø¡ﬂ
+	unsigned int id = NULL;
+	unsigned short m_floor = 0;
+	DirectX::XMFLOAT3 position = { 0,0,0 };
+	DirectX::XMFLOAT3 rotation = { 0,0,0 };
+	float speed = 0.016;
+	DirectX::XMFLOAT3 destination = { 0,0,0 };
+	std::chrono::steady_clock::time_point arrive_time;
+	PATH* path = nullptr;
+	void state_machine(Player*);
+	bool can_see(Player&);
+	bool can_hear(Player&);
+	float distance(Player&);
+	bool compare_position(DirectX::XMFLOAT3&);
+	bool set_destination(Player*&);
+	void move();
 };
 
 class Game
 {
 	unsigned int GameNum;
 	Player p[2];
+	NPC guard;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n) {}
@@ -185,12 +213,13 @@ public:
 	Player* getPlayers() { return p; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
 	void setPlayerPR_v2(const unsigned int&, cs_packet_position*&, const DirectX::XMFLOAT3&);
-	void setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot);
+	void setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot, const unsigned short& floor);
 	void setPlayerRot(const unsigned int&, cs_packet_position*&);
 	void setPlayerRotSpeed(const unsigned int&, cs_packet_position*&, DirectX::XMFLOAT3&);
 	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
+	void update();
 };
 
 class ServerDetails
@@ -207,7 +236,7 @@ private:
 	std::unordered_map<unsigned int, SESSION> login_players;
 	unsigned int currentRoom = 10000;
 	std::unordered_map<unsigned int, Game> Games;
-	std::vector<Mesh*> m_vMeshes;
+
 	ServerDetails detail;
 public:
 	IOCP_SERVER_MANAGER() {}
@@ -216,5 +245,7 @@ public:
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	bool world_collision(cs_packet_position*&);
 	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
-	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, std::chrono::nanoseconds& ping);
+	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* floor, std::chrono::nanoseconds& ping);
+	void command_thread();
+	void ai_thread();
 };
