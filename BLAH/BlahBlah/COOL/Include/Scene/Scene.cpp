@@ -67,6 +67,7 @@ bool Scene::AddSystem()
 	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
 	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
 	m_ECSManager->InsertSystem(new ECSsystem::HandleInteraction);
+	m_ECSManager->InsertSystem(new ECSsystem::HandleUIComponent);
 
 
 	return true;

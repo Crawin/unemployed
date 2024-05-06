@@ -187,6 +187,7 @@
     <ClInclude Include="Include\OnDebug.h" />
     <ClInclude Include="Include\Renderer\COOLResource.h" />
     <ClInclude Include="Include\Renderer\Renderer.h" />
+    <ClInclude Include="Include\Scene\GameState.h" />
     <ClInclude Include="Include\Scene\ResourceManager.h" />
     <ClInclude Include="Include\Scene\Scene.h" />
     <ClInclude Include="Include\Scene\SceneManager.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="Include\Network\Client.cpp" />
     <ClCompile Include="Include\Renderer\COOLResource.cpp" />
     <ClCompile Include="Include\Renderer\Renderer.cpp" />
+    <ClCompile Include="Include\Scene\GameState.cpp" />
     <ClCompile Include="Include\Scene\ResourceManager.cpp" />
     <ClCompile Include="Include\Scene\Scene.cpp" />
     <ClCompile Include="Include\Scene\SceneManager.cpp" />

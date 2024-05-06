@@ -129,3 +129,10 @@ enum class UI_ROOT_CONST {
 	//SCREEN_WIDTH,
 	//SCREEN_HEIGHT
 };
+
+
+
+enum class GAME_STATE {
+	MAIN_STATE,
+	UI_TOP_STATE
+};

@@ -79,6 +79,7 @@ namespace component {
 	//
 	class Button : public ComponentBase<Button> {
 		ButtonEventFunction m_OnButtonClicked = nullptr;
+
 		bool m_Pressing = false;
 		bool m_On = false;
 
@@ -86,6 +87,9 @@ namespace component {
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
+
+		const ButtonEventFunction& GetButtonEvent() const { return m_OnButtonClicked; }
+		void SetButtonEvent(const ButtonEventFunction& e) { m_OnButtonClicked = e; }
 	};
 
 

@@ -3,9 +3,11 @@
 
 	"UICanvas": {},
 
+	"UIKeypad": {},
+
 	"Children": 
 	[
-		{	"Name": "UITestButton",
+		{	"Name": "Check",
 
 			"UITransform":
 			{
