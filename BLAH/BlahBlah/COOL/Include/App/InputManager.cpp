@@ -13,24 +13,30 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 	switch (msg) {
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-		SetCapture(hWnd);
+		if (m_MouseCapture) SetCapture(hWnd);
+		GetCursorPos(&m_CurMouse);
 		GetCursorPos(&m_BefMouse);
 
+		m_LButtonState = true;
 		m_Dragging = true;
+		
 		break;
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
 		ReleaseCapture();
+		GetCursorPos(&m_CurMouse);
 		m_MouseDif = { 0,0 };
+
+		m_LButtonState = false;
 		m_Dragging = false;
+
 		break;
 	case WM_MOUSEMOVE:
 	{
-		if (m_Dragging) {
-			POINT curPos;
-			GetCursorPos(&curPos);
-			m_MouseDif.x = curPos.x - m_BefMouse.x;
-			m_MouseDif.y = curPos.y - m_BefMouse.y;
+		GetCursorPos(&m_CurMouse);
+		if (m_Dragging && m_MouseCapture) {
+			m_MouseDif.x = m_CurMouse.x - m_BefMouse.x;
+			m_MouseDif.y = m_CurMouse.y - m_BefMouse.y;
 			SetCursorPos(m_BefMouse.x, m_BefMouse.y);
 		}
 		//m_BefMouse = curPos;

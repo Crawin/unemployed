@@ -414,15 +414,6 @@ namespace component {
 		DebugPrint("TestInput Comp");
 	}
 
-	void DiaAnimationControl::Create(Json::Value& v, ResourceManager* rm)
-	{
-	}
-
-	void DiaAnimationControl::ShowYourself() const
-	{
-		DebugPrint("DiaAnimationControl Comp");
-	}
-
 	void DayLight::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value d = v["DayLight"];

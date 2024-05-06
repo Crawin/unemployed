@@ -1,0 +1,31 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UIKeypad": {},
+
+	"Children": 
+	[
+		{	"Name": "Check",
+
+			"UITransform":
+			{
+				"Center": [640, 360],
+				"Size": [300, 150]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UITempMaterial",
+				"IsSprite": false
+			}
+
+
+		}
+
+	]
+
+}

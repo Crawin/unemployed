@@ -73,11 +73,14 @@ protected:
 	// post render on mrt
 	virtual void OnPostRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv) {}
 
-	// render seq final - 1
+	// render seq final - 2
 	void UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
-	// render seq final
+	// render seq final - 1
 	void PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+
+	// render seq final
+	void DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
 public:
 

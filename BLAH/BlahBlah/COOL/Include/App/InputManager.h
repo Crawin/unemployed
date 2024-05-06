@@ -20,16 +20,25 @@ public:
 	void HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	const POINT& GetMouseMove() const { return m_MouseDif; }
+	const POINT& GetMouseCurrentPosition() const { return m_CurMouse; }
+
 	bool GetDrag() const { return m_Dragging; }
 
 	bool GetDebugMode() const { return m_DebugMode; }
+
+	bool IsMouseLeftDown() const { return m_LButtonState; }
 private:
 	// mosue input
 	BYTE lpb[sizeof(RAWINPUT)] = { 0, };
 
 	POINT m_BefMouse = { 0,0 };
+	POINT m_CurMouse = { 0,0 };
 	POINT m_MouseDif = { 0,0 };
+
 	bool m_Dragging = false;
+	bool m_MouseCapture = true;
+
+	bool m_LButtonState = false;
 
 	bool m_DebugMode = false;
 

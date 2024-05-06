@@ -98,7 +98,7 @@ D3D12_STREAM_OUTPUT_DESC Shader::GetStreamOutputDesc(int presetID)
 D3D12_BLEND_DESC Shader::GetBlendDesc(int presetID)
 {
 	D3D12_BLEND_DESC desc = {};
-	desc.AlphaToCoverageEnable = false;
+	desc.AlphaToCoverageEnable = false;			// cut off
 	desc.IndependentBlendEnable = false;		// 끄면 mrt에서도 rt0을 기준으로 한다
 	desc.RenderTarget[0].BlendEnable = false;
 	desc.RenderTarget[0].LogicOpEnable = false;
@@ -115,6 +115,11 @@ D3D12_BLEND_DESC Shader::GetBlendDesc(int presetID)
 	case 0:
 	default:
 		// default : no alpha blend
+		return desc;
+
+	case 1:
+		// alpha cut off
+		desc.AlphaToCoverageEnable = true;
 		return desc;
 	}
 

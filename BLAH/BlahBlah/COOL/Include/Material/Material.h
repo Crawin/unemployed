@@ -30,6 +30,8 @@ public:
 
 	std::shared_ptr<Shader> GetShader() { return m_Shader; }
 
+	int GetTexture(int idx) const { return m_TextureIndex[idx]; }
+
 private:
 	UINT m_TextureIndex[16] = {};
 

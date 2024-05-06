@@ -1,0 +1,17 @@
+{
+	"name": "UIBaseShader",
+	"NumRenderTargets": 1,
+	"RenderTargetFormat_0": 0,
+	"PrimitiveTopologyType": 3,
+	"PrimitiveTopology": 4,
+	"VS": "UIBaseShader.hlsl",
+	"HS": null,
+	"DS": null,
+	"GS": null,
+	"PS": "UIBaseShader.hlsl",
+	"StreamOutput": 0,
+	"BlendState": 1,
+	"RasterizerState": 0,
+	"DepthStencilState": 0,
+	"InputLayout": 0
+}

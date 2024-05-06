@@ -6,6 +6,7 @@
 #include "App/InputManager.h"
 #include "Network/Client.h"
 #include "ECSMacro.h"
+#include "App/Application.h"
 
 namespace ECSsystem {
 
@@ -846,12 +847,41 @@ namespace ECSsystem {
 	void HandleInteraction::OnInit(ECSManager* manager)
 	{
 		// build interaction function
-		InteractionFuncion withDoor = [](Entity* player, Entity* door) {
+		InteractionFuncion withDoor = [manager](Entity* player, Entity* door) {
 			DebugPrint("Interaction, DOOR!!");
+
+			// if opened
+			component::DoorControl* doorCtrl = manager->GetComponent<component::DoorControl>(door);
+			auto trans = manager->GetComponent<component::Transform>(door);
+			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
+				auto rot = trans->GetRotation();
+				rot.y -= 90.0f;
+				trans->SetRotation(rot);
+			}
+			else {
+				// todo
+				// door에 연결된 미니게임이 무엇인지 정보를 찾고
+				// 키패드인지 패턴인지 등등을 확인한 후
+				// 정답에 대한 정보를 넣어준다. set answer
+				// 정답에 대한 정보는 door가 가지고 있다. set door
+				// KeyPadUI는 확인 버튼이 눌렸을 시 전달받은 정보를 토대로 통과 여부를 판단
+
+				std::function<void(component::UICanvas*, component::UIKeypad*)> openUI = [door](component::UICanvas* can, component::UIKeypad* kpd) {
+					DebugPrint("UI SHOW!!");
+
+					// test
+					kpd->SetAnswer(123);
+					kpd->SetDoor(door);
+
+					can->ShowUI();
+					};
+
+				manager->Execute(openUI);
+			}
 			};
 
 		SET_INTERACTION_EVENT(manager, component::DoorControl, withDoor);
-
+		
 
 	}
 
@@ -876,6 +906,93 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(interactionFunc);
+
+
+
+
+	}
+
+	void HandleUIComponent::OnInit(ECSManager* manager)
+	{
+		using namespace component;
+		std::function<void(UICanvas*, UIKeypad*, Children*)> setUIButtonCallbackFunc = [manager](UICanvas* can, UIKeypad* kpd, Children* childComp) {
+			Entity* self = childComp->GetEntity();
+			auto& children = self->GetChildren();
+
+			for (Entity* child : children) {
+				Name* childName = manager->GetComponent<Name>(child);
+				// 확인 버튼
+				if (childName != nullptr) {
+					std::string name = childName->getName();
+
+					if (name == "Check") {
+						Button* button = manager->GetComponent<Button>(child);
+						ButtonEventFunction check = [can, kpd, manager](Entity* ent) {
+							// hide ui;
+							can->HideUI();
+
+							// open door
+							Entity* door = kpd->GetDoor();
+							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+							doorCtrl->SetLock(false);
+
+							};
+						button->SetButtonEvent(check);
+					}
+				}
+			}
+
+			};
+
+		manager->Execute(setUIButtonCallbackFunc);
+	}
+
+	void HandleUIComponent::Update(ECSManager* manager, float deltaTime)
+	{
+		// check the button is clicked!
+
+		using namespace component;
+
+		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [](Button* but, UITransform* trans, SelfEntity* self) {
+			POINT mousePos =  InputManager::GetInstance().GetMouseCurrentPosition();
+			ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
+
+
+			SIZE center = trans->GetCenter();
+			SIZE size = trans->GetSize();
+
+			RECT rect = {
+				center.cx - size.cx / 2,
+				center.cy - size.cy / 2,
+				center.cx + size.cx / 2,
+				center.cy + size.cy / 2,
+			};
+
+			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftDown()) {
+
+				const ButtonEventFunction& butEvent = but->GetButtonEvent();
+				if (butEvent != nullptr) {
+					butEvent(self->GetEntity());
+					DebugPrint("Button Hit!!");
+
+
+				}
+			}
+
+			};
+
+		std::function<void(UICanvas*, Children*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, Children* childComp) {
+			if (canvas->IsActive() == false) return;
+
+			Entity* self = childComp->GetEntity();
+			auto& children = self->GetChildren();
+
+			for (Entity* child : children) 
+				manager->ExecuteFromEntity(child->GetBitset(), child->GetInnerID(), checkButtonPos);
+
+			};
+
+		manager->Execute(forAliveCanvas);
 
 	}
 }

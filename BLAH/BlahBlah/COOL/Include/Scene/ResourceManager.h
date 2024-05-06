@@ -28,6 +28,7 @@ namespace Json { class Value; }
 namespace component { 
 	class Component;
 	class Renderer;
+	class UIRenderer;
 	class Camera;
 	class AnimationController;
 	class AnimationExecutor;
@@ -39,6 +40,11 @@ struct ToLoadRendererInfo {
 	std::string m_MeshName;
 	std::string m_MaterialName;
 	component::Renderer* m_Renderer = nullptr;
+};
+
+struct ToLoadUIRendererInfo {
+	std::string m_MaterialName;
+	component::UIRenderer* m_Renderer = nullptr;
 };
 
 struct ToLoadAnimControllerInfo {
@@ -184,6 +190,7 @@ public:
 
 	// for late init
 	void AddLateLoad(const std::string& mesh, const std::string& material, component::Renderer* renderer);
+	void AddLateLoadUI(const std::string& material, component::UIRenderer* renderer);
 	
 	// for late init anim controller
 	void AddLateLoadAnimController(const std::string& fileName, component::AnimationController* controller);
@@ -330,7 +337,7 @@ private:
 	// 
 	// 
 	std::vector<ToLoadRendererInfo> m_ToLoadRenderDatas;
-	std::vector<std::string> m_ToLoadMaterials;
+	std::vector<ToLoadUIRendererInfo> m_ToLoadUIDatas;
 
 	// ToLoadRenderer의 Animation판
 	// 최초 컴포넌트 생성시에 여기에다 넣어두고
