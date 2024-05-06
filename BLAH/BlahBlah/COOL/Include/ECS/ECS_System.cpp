@@ -717,7 +717,7 @@ namespace ECSsystem {
 				sp->SetVelocity(res);
 
 				// move back before hit
-				XMVECTOR posBack = velocityBack * deltaTime * 2.0f;
+				XMVECTOR posBack = velocityBack * deltaTime;// *2.0f;
 				XMVECTOR newPos = XMLoadFloat3(&tr->GetPosition()) - posBack;
 
 				XMFLOAT3 backedPos;

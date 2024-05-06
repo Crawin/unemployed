@@ -1,0 +1,4722 @@
+{
+	"Name": "1st",
+	"Transform": {
+		"Position": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale": [
+			1.0,
+			1.0,
+			1.0
+		]
+	},
+	"Children": [
+		{
+			"Name": "_1_5Centerfloor",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1_5Centerfloor",
+				"Material": "map_Floor"
+			}
+		},
+		{
+			"Name": "_1fCenterLeftStair",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterLeftStair",
+				"Material": "map_Floor"
+			}
+		},
+		{
+			"Name": "_1fCenterLeftStairRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterLeftStairRail",
+				"Material": "map_StariRail"
+			}
+		},
+		{
+			"Name": "_1fCenterRightStair",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterRightStair",
+				"Material": "map_StariRail"
+			}
+		},
+		{
+			"Name": "_1fCenterRightStairRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterRightStairRail",
+				"Material": "map_StariRail"
+			}
+		},
+		{
+			"Name": "_1fCenterStair",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterStair",
+				"Material": "map_Floor"
+			}
+		},
+		{
+			"Name": "_1fCenterStairLeftRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterStairLeftRail",
+				"Material": "map_StariRail"
+			}
+		},
+		{
+			"Name": "_1fCenterStairRightRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1fCenterStairRightRail",
+				"Material": "map_StariRail"
+			}
+		},
+		{
+			"Name": "_1sSideStairDoorCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1sSideStairDoorCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1sSideStairDoorCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1sSideStairDoorCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stfloor",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stfloor",
+				"Material": "map_Floor"
+			}
+		},
+		{
+			"Name": "_1stLeftPillar",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftPillar",
+				"Material": "map_Ceiling"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall7",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall7",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stLeftToiletwall8",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stLeftToiletwall8",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stRail",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_1stRightPillar",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._1stRightPillar",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "_2ndOutRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3._2ndOutRail",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumAcrossPillar1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumAcrossPillar1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumAcrossPillar2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumAcrossPillar2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontDoorCeiling1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontDoorCeiling1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontDoorCeiling2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontDoorCeiling2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontDoorCeiling3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontDoorCeiling3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontDoorCeiling4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontDoorCeiling4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall7",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall7",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall8",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall8",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall9",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall9",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall10",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall10",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall11",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall11",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall12",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall12",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall13",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall13",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumFrontwall14",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumFrontwall14",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumLeftwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumLeftwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "AuditoriumRightwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.AuditoriumRightwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1floor1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1floor1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1floor2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1floor2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1floor3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1floor3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1floor4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1floor4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1Stair1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1Stair1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1Stair2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1Stair2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1Stair3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1Stair3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1Stair4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1Stair4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1wall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1wall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1wall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1wall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1wall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1wall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1wall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1wall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1wall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1wall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "B1wall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.B1wall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterBasementStairs1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterBasementStairs1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterBenchCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterBenchCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterBenchPillar1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterBenchPillar1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterBenchPillar2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterBenchPillar2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterBenchPillar3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterBenchPillar3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterBenchPillar4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterBenchPillar4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall4Ceiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall4Ceiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterLeftwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterLeftwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightManToilet",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightManToilet",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightManToiletCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightManToiletCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightwall7",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightwall7",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightWomanToilet",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightWomanToilet",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterRightWomanToiletCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterRightWomanToiletCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairLeftThickwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairLeftThickwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairLeftwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairLeftwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairLeftwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairLeftwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairRightThickwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairRightThickwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairRightwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairRightwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairRightwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairRightwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "CenterStairwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.CenterStairwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "Dummy",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.Dummy",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "Elevator",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.Elevator",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "ElevatorDoor",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.ElevatorDoor",
+				"Material": "map_ElevatorDoor"
+			}
+		},
+		{
+			"Name": "FlowerBed",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBed",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBed2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBed2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBed3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBed3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedAcrosswall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedAcrosswall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedDiagonalwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedDiagonalwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedDiagonalwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedDiagonalwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedDownhill",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedDownhill",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedDownhill2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedDownhill2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedFloor",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedFloor",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedPillar",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedPillar",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FlowerBedRightwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FlowerBedRightwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FrontDoorLeftwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FrontDoorLeftwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FrontDoorLeftwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FrontDoorLeftwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "FrontDoorRightwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.FrontDoorRightwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "LeftDoorCeiling",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.LeftDoorCeiling",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "LeftDoorLeftwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.LeftDoorLeftwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "LeftDoorRightwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.LeftDoorRightwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "LeftDoorRightwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.LeftDoorRightwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "Out1stStair",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.Out1stStair",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "Out1stStairRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.Out1stStairRail",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutBetweenLeftwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutBetweenLeftwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutCenterLeftRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutCenterLeftRail",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutCenterStair",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutCenterStair",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutDiagonal2ndlink",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutDiagonal2ndlink",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutDiagonalMiddleRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutDiagonalMiddleRail",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutDiagonalRail",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutDiagonalRail",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutDiagonalwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutDiagonalwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutFrontRightwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutFrontRightwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutLeft1stwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutLeft1stwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutLeftInsetwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutLeftInsetwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutMiddleStair",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutMiddleStair",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutStair1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutStair1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "OutStair2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.OutStair2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairDiagoanlwall",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairDiagoanlwall",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "SideStairwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.SideStairwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow1_1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow1_1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow2_1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow2_1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow3_1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow3_1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow4_1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow4_1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow5_1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow5_1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindow6_1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindow6_1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall7",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall7",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "TriangleWindowwall8",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.TriangleWindowwall8",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall1",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall1",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall2",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall2",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall3",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall3",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall4",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall4",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall5",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall5",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall6",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall6",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall7",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall7",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall8",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall8",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall9",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall9",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall10",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall10",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall11",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall11",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall12",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall12",
+				"Material": "NoMaterial"
+			}
+		},
+		{
+			"Name": "UWindowwall13",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": {
+				"Static": true,
+				"AutoMesh": true
+			},
+			"Renderer": {
+				"Mesh": "map-E(main)3.UWindowwall13",
+				"Material": "NoMaterial"
+			}
+		}
+	]
+}
