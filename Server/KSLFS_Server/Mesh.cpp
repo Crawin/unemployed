@@ -345,9 +345,11 @@ bool Mesh::ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray)
 	{
 		DirectX::BoundingOrientedBox obb(wall.m_AABBCenter, wall.m_AABBExtents_Divide, orient);
 		float dist = 0;
-		if (obb.Intersects(DirectX::XMLoadFloat3(&startPos), ray, dist))
-		{
-			return false;
+		if (DirectX::XMVectorGetX(DirectX::XMVector3Length(ray)) > 0) {
+			if (obb.Intersects(DirectX::XMLoadFloat3(&startPos),DirectX::XMVector3Normalize(ray), dist))
+			{
+				return false;
+			}
 		}
 	}
 	return true;

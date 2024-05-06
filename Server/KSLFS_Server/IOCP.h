@@ -7,9 +7,9 @@ class sc_packet_position;
 class sc_packet_login;
 class Mesh;
 
-std::vector<Mesh*> m_vMeshes;
+extern std::vector<Mesh*> m_vMeshes;
 
-enum C_OP { C_RECV, C_SEND, C_ACCEPT, C_SHUTDOWN };
+enum C_OP { C_RECV, C_SEND, C_ACCEPT, C_SHUTDOWN, C_TIMER };
 
 class EXP_OVER
 {
@@ -178,6 +178,8 @@ public:
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
 };
 
+class PATH;
+
 class NPC
 {
 public:
@@ -186,15 +188,17 @@ public:
 	unsigned short m_floor = 0;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
-	DirectX::XMFLOAT3 speed = { 0,0,0 };
+	float speed = 0.016;
 	DirectX::XMFLOAT3 destination = { 0,0,0 };
 	std::chrono::steady_clock::time_point arrive_time;
-	void update(Player*);
+	PATH* path = nullptr;
+	void state_machine(Player*);
 	bool can_see(Player&);
 	bool can_hear(Player&);
 	float distance(Player&);
 	bool compare_position(DirectX::XMFLOAT3&);
 	bool set_destination(Player*&);
+	void move();
 };
 
 class Game
@@ -243,4 +247,5 @@ public:
 	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
 	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* floor, std::chrono::nanoseconds& ping);
 	void command_thread();
+	void ai_thread();
 };

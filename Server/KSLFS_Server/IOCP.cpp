@@ -1,6 +1,9 @@
 #include "IOCP_Common.h"
 #include "Mesh.h"
 #include "IOCP.h"
+#include "aStar.h"
+std::vector<Mesh*> m_vMeshes;
+std::unordered_map<int, NODE*> g_um_graph;
 
 void IOCP_SERVER_MANAGER::start()
 {
@@ -14,13 +17,19 @@ void IOCP_SERVER_MANAGER::start()
 		}
 		Mesh* temp = new Mesh;
 		temp->LoadMeshData(meshFile);
-		//m_umMeshes.emplace(fileName.string(), temp);
 		m_vMeshes.emplace_back(temp);
 	}
 	std::cout << "장애물 로드 완료" << std::endl;
 
-	std::wcout.imbue(std::locale("korean"));
+	std::cout << "NAVI NODE 로드 시작" << std::endl;
+	MakeGraph();
+	for (auto& node : g_um_graph)
+	{
+		std::cout << node.first << " 노드 생성 완료" << std::endl;
+	}
+	std::cout << "NAVI NODE 로드 완료" << std::endl;
 
+	std::wcout.imbue(std::locale("korean"));
 	WSADATA WSAData;
 	WSAStartup(MAKEWORD(2, 2), &WSAData);
 
@@ -49,21 +58,30 @@ void IOCP_SERVER_MANAGER::start()
 	std::cout << "서버 실행" << std::endl;
 	//lobby = new Lobby;
 	//worker(server_s);
+	
+	std::thread ai_thread{ &IOCP_SERVER_MANAGER::ai_thread,this };
 
-	int num_threads = std::thread::hardware_concurrency();
-	std::vector<std::thread> worker_threads;
-	for (int i = 0; i < num_threads; ++i)
-	{
-		worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
-	}
+	//int num_threads = std::thread::hardware_concurrency();
+	//std::vector<std::thread> worker_threads;
+	//for (int i = 0; i < num_threads; ++i)
+	//{
+	//	worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
+	//}
 
-	for (auto& w : worker_threads)
-		w.join();
+	//for (auto& w : worker_threads)
+	//	w.join();
+	worker(server_s);
 
 	//delete lobby;
 	closesocket(server_s);
 	WSACleanup();
 	command.join();
+	ai_thread.join();
+
+	for (auto& mesh : m_vMeshes)
+		delete mesh;
+	for (auto& navi : g_um_graph)
+		delete navi.second;
 }
 
 void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
@@ -120,6 +138,13 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		break;
 		case C_SHUTDOWN:
 			std::cout << "서버 종료 명령으로 인한 쓰레드 종료" << std::endl;
+			break;
+		case C_TIMER:
+			//std::cout << "ai 실행" << std::endl;
+			for (auto& game : Games)
+			{
+				game.second.update();
+			}
 			break;
 		}
 	}
@@ -222,6 +247,9 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
 			}
 		}
+			break;
+		case 4:
+			std::cout << "오류: 게임에 들어가있는 멤버들을 전송하는 패킷이 서버로 들어왔습니다." << std::endl;
 			break;
 	}
 }
@@ -352,6 +380,22 @@ void IOCP_SERVER_MANAGER::command_thread()
 			std::cout << "해당 명령어가 존재하지 않습니다." << std::endl;
 		}
 		else commands[input]();
+	}
+}
+
+void IOCP_SERVER_MANAGER::ai_thread()
+{
+	using namespace std::chrono;
+	while (true)
+	{
+		auto start_t = system_clock::now();
+		EXP_OVER* over = new EXP_OVER;
+		over->c_op = C_TIMER;
+		PostQueuedCompletionStatus(detail.m_hIOCP, 1, 0, &over->over);
+		auto end_t = system_clock::now();
+		auto hb_time = end_t - start_t;
+		if (hb_time < 0.016s)
+			std::this_thread::sleep_for(0.016s - hb_time);
 	}
 }
 
@@ -491,10 +535,11 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 
 void Game::update()
 {
-	guard.update(p);
+	std::cout << GameNum << ": update" << std::endl;
+	guard.state_machine(p);
 }
 
-void NPC::update(Player* p)
+void NPC::state_machine(Player* p)
 {
 	if (this->state == 0)				// 두리번 두리번 상태
 	{
@@ -508,7 +553,8 @@ void NPC::update(Player* p)
 			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
 			if (duration > duribun_duribun)		// 5초 넘게 두리번 거렸는데 위치를 못찾았으면
 			{
-				this->destination; // 랜덤한 목적지 설정
+				this->destination = g_um_graph[rand() % g_um_graph.size()]->pos; // 랜덤한 목적지 설정
+				this->path = aStarSearch(position, destination);
 				this->state = 1;
 			}
 		}
@@ -518,6 +564,7 @@ void NPC::update(Player* p)
 		set_destination(p);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
 	}
 
+	move();
 }
 
 bool NPC::can_see(Player& p)
@@ -561,17 +608,45 @@ bool NPC::set_destination(Player*& p)
 		if (can_see(p[i]))
 		{
 			this->destination = p[i].position;
-			return true;
+			path = aStarSearch(position, destination);
+			if (nullptr != path)
+				return true;
 		}
 		else if (can_hear(p[i]))
 		{
 			this->destination = p[i].position;
-			return true;
+			path = aStarSearch(position, destination);
+			if(nullptr != path)
+				return true;
 		}
 	}
 
 	// 플레이어를 찾지도, 듣지도 못했다면
 	if (compare_position(this->destination))		// 목적지에 도달하였으면
-		arrive_time = std::chrono::high_resolution_clock::now();	// 도달한 시각 기록
+	{
+		if (this->path->next == nullptr)			// 더 이상의 목적지가 없으면 두리번 상태로 변경
+		{
+			if (this->state != 0)
+			{
+				arrive_time = std::chrono::high_resolution_clock::now();	// 도달한 시각 기록
+				this->state = 0;
+			}
+		}
+		else
+		{
+			path = path->next;
+			destination = path->pos;
+		}
+
+	}
 	return false;
+}
+
+void NPC::move()
+{
+	DirectX::XMVECTOR ActorPos = DirectX::XMLoadFloat3(&position);
+	DirectX::XMVECTOR DestPos = DirectX::XMLoadFloat3(&destination);
+	DirectX::XMVECTOR direction = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(DestPos, ActorPos));
+	DirectX::XMVECTOR movement = DirectX::XMVectorScale(direction, speed);
+	DirectX::XMStoreFloat3(&position, DirectX::XMVectorAdd(ActorPos, movement));
 }
