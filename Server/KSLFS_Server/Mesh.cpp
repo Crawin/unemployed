@@ -350,6 +350,7 @@ bool Mesh::ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray)
 			{
 				return false;
 			}
+			//std::cout << "dist : "<<dist << std::endl;
 		}
 	}
 	return true;
@@ -380,7 +381,7 @@ const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, Dire
 			{
 				newPosition->y = floor.m_AABBCenter.y + floor.m_AABBExtents_Divide.y;
 				//newSpeed->y = 0;
-				std::cout << i << "Ãþ¿¡ ´êÀ½" << std::endl;
+				//std::cout << i << "Ãþ¿¡ ´êÀ½" << std::endl;
 				*ptrFloor = i;
 				return i;
 			}
@@ -392,7 +393,7 @@ const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, Dire
 	{
 		if (player.Center.y >= m_Childs[i].m_AABBCenter.y && player.Center.y < m_Childs[i + 1].m_AABBCenter.y)
 		{
-			std::cout << i + 1 << "°ú " << i + 2 << "Ãþ »çÀÌ¿¡ ÀÖÀ½" << std::endl;
+			//std::cout << i + 1 << "°ú " << i + 2 << "Ãþ »çÀÌ¿¡ ÀÖÀ½" << std::endl;
 			*ptrFloor = i+1;
 			newPosition->y = player.Center.y - player.Extents.y;
 			return i + 1;
@@ -412,7 +413,7 @@ bool Mesh::map_collision(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3
 		player.Center.z += playerSpeed.z * deltaTime;
 		if (player.Intersects(obb))
 		{
-			std::cout << wall.m_Name << "°ú Ãæµ¹" << std::endl;
+			//std::cout << wall.m_Name << "°ú Ãæµ¹" << std::endl;
 			planeNum_intersects_direction_vector_v3(player, wall, playerSpeed, newSpeed, newPosition,sendTime, ping);
 			return true;
 		}

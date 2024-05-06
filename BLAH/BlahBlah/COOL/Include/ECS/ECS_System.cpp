@@ -467,6 +467,8 @@ namespace ECSsystem {
 				if (server->getID() == NULL && n.compare("Player2") == 0)
 					server->setID(playerSock[1]);
 			}
+			if (n.compare("Satono_Diamond_01") == 0 && server->getID() == NULL)
+				server->setID(1);
 
 			//if (playerSock[0])				// 클라 본인의 캐릭터가 할당되었을 때
 			//{

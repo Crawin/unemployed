@@ -4,6 +4,8 @@
 #include "aStar.h"
 std::vector<Mesh*> m_vMeshes;
 std::unordered_map<int, NODE*> g_um_graph;
+//concurrency::concurrent_unordered_map<int, std::atomic<std::shared_ptr>
+std::unordered_map<unsigned int, SESSION> login_players;
 
 void IOCP_SERVER_MANAGER::start()
 {
@@ -141,6 +143,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			break;
 		case C_TIMER:
 			//std::cout << "ai 실행" << std::endl;
+			delete e_over;
 			for (auto& game : Games)
 			{
 				game.second.update();
@@ -411,6 +414,8 @@ void Game::init(const unsigned int& i, const SOCKET& s)
 		p[1].id = i;
 		p[1].sock = s;
 	}
+	if (guard.id == NULL)
+		guard.id = 1;
 }
 
 const DirectX::XMFLOAT3 Game::getPlayerPos(const unsigned int& id)
@@ -535,12 +540,40 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 
 void Game::update()
 {
-	std::cout << GameNum << ": update" << std::endl;
+	//std::cout << GameNum << ": update" << std::endl;
 	guard.state_machine(p);
+	DirectX::XMFLOAT3 sending_position = guard.position;
+	sending_position.x *= 100;
+	sending_position.y *= 100;
+	sending_position.z *= 100;
+	DirectX::XMFLOAT3 sending_speed = guard.speed;
+	sending_speed.x *= 100;
+	sending_speed.y *= 100;
+	sending_speed.z *= 100;
+	sc_packet_position npc(guard.id, sending_position, guard.rotation, sending_speed);
+	for (auto& player : p)
+	{
+		if (player.sock != NULL)
+		{
+			if (login_players.end() != login_players.find(player.id))
+				login_players[player.id].send_packet(reinterpret_cast<packet_base*>(&npc));
+			else
+				player.sock = NULL;
+		}
+	}
+	
 }
 
 void NPC::state_machine(Player* p)
 {
+	for (auto& node : g_um_graph)
+		node.second->init();
+	DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
+	obb.Center.y *= 100;
+	DirectX::XMFLOAT3 temp;
+	for (auto& mesh : m_vMeshes)
+		mesh->m_Childs[0].m_Childs[0].floor_collision(obb, &temp, &temp, &this->m_floor);
+
 	if (this->state == 0)				// 두리번 두리번 상태
 	{
 		if (set_destination(p))			// 두리번 거리다가 뭔갈 발견했으면, 목적지 조정하고 이동
@@ -555,6 +588,7 @@ void NPC::state_machine(Player* p)
 			{
 				this->destination = g_um_graph[rand() % g_um_graph.size()]->pos; // 랜덤한 목적지 설정
 				this->path = aStarSearch(position, destination);
+				this->destination = path->pos;
 				this->state = 1;
 			}
 		}
@@ -603,28 +637,32 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 
 bool NPC::set_destination(Player*& p)
 {
-	for (int i = 0; i < 2; ++i)
-	{
-		if (can_see(p[i]))
-		{
-			this->destination = p[i].position;
-			path = aStarSearch(position, destination);
-			if (nullptr != path)
-				return true;
-		}
-		else if (can_hear(p[i]))
-		{
-			this->destination = p[i].position;
-			path = aStarSearch(position, destination);
-			if(nullptr != path)
-				return true;
-		}
-	}
+	//for (int i = 0; i < 2; ++i)
+	//{
+	//	if (can_see(p[i]))
+	//	{
+	//		this->destination = p[i].position;
+	//		path = aStarSearch(position, destination);
+	//		if (nullptr != path)
+	//			return true;
+	//		else
+	//			this->destination = path->pos;
+	//	}
+	//	else if (can_hear(p[i]))
+	//	{
+	//		this->destination = p[i].position;
+	//		path = aStarSearch(position, destination);
+	//		if(nullptr != path)
+	//			return true;
+	//		else
+	//			this->destination = path->pos;
+	//	}
+	//}
 
 	// 플레이어를 찾지도, 듣지도 못했다면
 	if (compare_position(this->destination))		// 목적지에 도달하였으면
 	{
-		if (this->path->next == nullptr)			// 더 이상의 목적지가 없으면 두리번 상태로 변경
+		if (this->path == nullptr || this->path->next == nullptr)			// 더 이상의 목적지가 없으면 두리번 상태로 변경
 		{
 			if (this->state != 0)
 			{
@@ -647,6 +685,8 @@ void NPC::move()
 	DirectX::XMVECTOR ActorPos = DirectX::XMLoadFloat3(&position);
 	DirectX::XMVECTOR DestPos = DirectX::XMLoadFloat3(&destination);
 	DirectX::XMVECTOR direction = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(DestPos, ActorPos));
-	DirectX::XMVECTOR movement = DirectX::XMVectorScale(direction, speed);
+	DirectX::XMVECTOR movement = DirectX::XMVectorScale(direction, 0.016*4);
 	DirectX::XMStoreFloat3(&position, DirectX::XMVectorAdd(ActorPos, movement));
+	//std::cout << "경비 위치 " << position.x * 100 << ", " << position.y * 100 << ", " << position.z * 100 << std::endl;
+	DirectX::XMStoreFloat3(&speed, movement);
 }

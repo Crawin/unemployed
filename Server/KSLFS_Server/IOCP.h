@@ -162,6 +162,8 @@ public:
 	void setState(const PlayerState& ps) { state = ps; }
 };
 
+extern std::unordered_map<unsigned int, SESSION> login_players;
+
 class Lobby
 {
 };
@@ -186,9 +188,9 @@ public:
 	short state = 0;				// 0: idle, 1: ¿Ãµø¡ﬂ
 	unsigned int id = NULL;
 	unsigned short m_floor = 0;
-	DirectX::XMFLOAT3 position = { 0,0,0 };
+	DirectX::XMFLOAT3 position = { 31.18,0,-8.53 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
-	float speed = 0.016;
+	DirectX::XMFLOAT3 speed = { 0,0,0 };
 	DirectX::XMFLOAT3 destination = { 0,0,0 };
 	std::chrono::steady_clock::time_point arrive_time;
 	PATH* path = nullptr;
@@ -227,14 +229,13 @@ class ServerDetails
 public:
 	bool m_bServerState = false;
 	HANDLE m_hIOCP;
-	std::atomic<unsigned int> id = 1;
+	std::atomic_int id = 1;
 };
 
 class IOCP_SERVER_MANAGER
 {
 private:
-	std::unordered_map<unsigned int, SESSION> login_players;
-	unsigned int currentRoom = 10000;
+	std::atomic_int currentRoom = 10000;
 	std::unordered_map<unsigned int, Game> Games;
 
 	ServerDetails detail;

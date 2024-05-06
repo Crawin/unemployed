@@ -11,5 +11,8 @@
 #include <fstream>
 #include <DirectXCollision.h>
 #include <functional>
+#include <concurrent_unordered_map.h>
+#include <atomic>
+#include <memory>
 
 void print_error(const char* msg, int err_no);
