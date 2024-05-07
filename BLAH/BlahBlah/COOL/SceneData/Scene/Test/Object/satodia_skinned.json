@@ -21,6 +21,15 @@
 		"Acceleration" : [1200.0, 1200.0, 1200.0]
 	},
 
+	"DynamicCollider": 
+	{
+		"Static": false,
+		"AutoMesh": false,
+		"IsCapsule": true,
+		"Center": [0.0, 85, 0],
+		"Extent": [25, 85, 25]
+	},
+
 	"TestInput": {},
 
 	"DiaAnimationControl": {},

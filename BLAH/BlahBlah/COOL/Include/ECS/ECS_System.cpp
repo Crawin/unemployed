@@ -544,24 +544,31 @@ namespace ECSsystem {
 
 		manager->Execute(func);
 
+		std::function<void(component::DynamicCollider*)> func2 = [](component::DynamicCollider* col) {
+			col->ResetList();
+			};
+
+		manager->Execute(func2);
+
+
 		// make collide events here!!
 
 		// todo
 		// 지금은 player를 Input으로 표현하지만 추후에 ControlPlayer같은게 생기면 대체해야한다.
 
 		// input <-> door
-		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::BEGIN, [manager](Entity* self, Entity* other) {
+		INSERT_COLLIDE_EVENT_FOR_DYNAMIC(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::BEGIN, [manager](Entity* self, Entity* other) {
 			auto door = manager->GetComponent<component::DoorControl>(other);
 			auto player = manager->GetComponent<component::Input>(self);
 			if (door && player)
 				player->SetInteractionEntity(other);
 			});
 
-		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::ING, [manager](Entity* self, Entity* other) {
+		INSERT_COLLIDE_EVENT_FOR_DYNAMIC(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::ING, [manager](Entity* self, Entity* other) {
 			//DebugPrint("ING");
 			});
 
-		INSERT_COLLIDE_EVENT(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::END, [manager](Entity* self, Entity* other) {
+		INSERT_COLLIDE_EVENT_FOR_DYNAMIC(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::END, [manager](Entity* self, Entity* other) {
 			auto door = manager->GetComponent<component::DoorControl>(other);
 			auto player = manager->GetComponent<component::Input>(self);
 			if (door && player)
@@ -574,7 +581,17 @@ namespace ECSsystem {
 		using namespace component;
 
 		// sync box first
-		std::function<void(Transform*, Collider*)> sync = [](Transform* tr, Collider* col) {
+		std::function<void(Transform*, Collider*)> syncStatic = [](Transform* tr, Collider* col) {
+			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
+
+			// reset collider;
+			col->UpdateCollidedList();
+			col->SetCollided(false);
+
+			col->UpdateBoundingBox(trans);
+			};
+
+		std::function<void(Transform*, DynamicCollider*)> syncDynamic = [](Transform* tr, DynamicCollider* col) {
 			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
 
 			// reset collider;
@@ -587,9 +604,58 @@ namespace ECSsystem {
 
 		auto circleBoxCol = CheckCollisionRectCircle;
 
+
 		// collide check
-		std::function<void(Collider*, SelfEntity*, Collider*, SelfEntity*)> collideCheck =
-			[circleBoxCol](Collider* a, SelfEntity* aEnt, Collider* b, SelfEntity* bEnt) {
+		std::function<void(DynamicCollider*, SelfEntity*)> dynamicWithStatic =
+			[&circleBoxCol, manager](DynamicCollider* a, SelfEntity* aEnt) {
+			auto& boxA = a->GetBoundingBox();
+
+			std::function<void(Collider*, SelfEntity*)> check = [a, boxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
+				auto& boxB = b->GetBoundingBox();
+
+				// check and insert box
+				if (boxA.Intersects(boxB)) {
+					// if capsule, check
+					if (a->IsCapsule()) {
+						XMVECTOR circleCenter = XMVector3Transform(
+							XMLoadFloat3(&boxA.Center),
+							XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxB.Orientation))));
+
+						if (false == circleBoxCol(
+							XMFLOAT2(boxB.Center.x, boxB.Center.z),
+							XMFLOAT2(boxB.Extents.x, boxB.Extents.z),
+							XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
+							boxA.Extents.x)) return;
+					}
+					if (b->IsCapsule()) {
+						XMVECTOR circleCenter = XMVector3Transform(
+							XMLoadFloat3(&boxB.Center),
+							XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxA.Orientation))));
+
+						if (false == circleBoxCol(
+							XMFLOAT2(boxA.Center.x, boxA.Center.z),
+							XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
+							XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
+							boxB.Extents.x)) return;
+					}
+
+					// if collided, add to coll list, handle later
+					if (a->IsStaticObject() == false)
+						a->InsertCollidedEntity(bEnt->GetEntity());
+					if (b->IsStaticObject() == false)
+						b->InsertCollidedEntity(aEnt->GetEntity());
+
+					a->SetCollided(true);
+					b->SetCollided(true);
+				}
+
+				};
+
+			manager->Execute(check);
+			};
+
+		std::function<void(DynamicCollider*, SelfEntity*, DynamicCollider*, SelfEntity*)> dynamicWithDynamic =
+			[&circleBoxCol](DynamicCollider* a, SelfEntity* aEnt, DynamicCollider* b, SelfEntity* bEnt) {
 
 			// if both static, skip
 			if (a->IsStaticObject() && b->IsStaticObject()) return;
@@ -650,7 +716,7 @@ namespace ECSsystem {
 		};
 
 		// collision events
-		std::function<void(Collider*, SelfEntity*)> handleEvent = [](Collider* col, SelfEntity* self) {
+		std::function<void(Collider*, SelfEntity*)> handleEventStatic = [](Collider* col, SelfEntity* self) {
 			auto& colVec = col->GetCollidedEntitiesList();
 
 			for (auto& otherEntity : colVec) {
@@ -665,9 +731,24 @@ namespace ECSsystem {
 			}
 			};
 
+		std::function<void(DynamicCollider*, SelfEntity*)> handleEventDynamic = [](DynamicCollider* col, SelfEntity* self) {
+			auto& colVec = col->GetCollidedEntitiesList();
+
+			for (auto& otherEntity : colVec) {
+				Entity* other = otherEntity.m_Entity;
+				auto eventType = otherEntity.m_Type;
+
+				auto& eventMap = col->GetEventMap(eventType);
+
+				// execute event function here
+				for (const auto& [bitset, func] : eventMap)
+					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+			}
+			};
+
 		// handle collide (move back, reduce speed)
-		std::function<void(Collider*, Physics*, Transform*)> collideHandle =
-			[&faces, deltaTime, manager](Collider* col, Physics* sp, Transform* tr) {
+		std::function<void(DynamicCollider*, Physics*, Transform*)> collideHandle =
+			[&faces, deltaTime, manager](DynamicCollider* col, Physics* sp, Transform* tr) {
 			if (col->GetCollided() == false || col->IsTrigger()) return;
 
 			auto& colVec = col->GetCollidedEntitiesList();
@@ -732,9 +813,15 @@ namespace ECSsystem {
 			}
 			};
 
-		manager->Execute(sync);
-		manager->ExecuteSquare<component::Collider, component::SelfEntity>(collideCheck);
-		manager->Execute(handleEvent);
+		manager->Execute(syncStatic);
+		manager->Execute(syncDynamic);
+
+		manager->Execute(dynamicWithStatic);
+		manager->ExecuteSquare<component::DynamicCollider, component::SelfEntity>(dynamicWithDynamic);
+
+		manager->Execute(handleEventStatic);
+		manager->Execute(handleEventDynamic);
+
 		manager->Execute(collideHandle);
 	}
 
@@ -897,17 +984,16 @@ namespace ECSsystem {
 			if (interactionEntity == nullptr) return;
 
 			Collider* col = manager->GetComponent<Collider>(interactionEntity);
-			if (col == nullptr) return;
+			DynamicCollider* colD = manager->GetComponent<DynamicCollider>(interactionEntity);
+			if (col == nullptr && colD == nullptr) return;
 
-			auto& interactionFunc = col->GetInteractionFunction();
+			auto& interactionFunc = col != nullptr ? col->GetInteractionFunction() : colD->GetInteractionFunction();
 			if (interactionFunc == nullptr) return;
 
 			interactionFunc(self->GetEntity(), interactionEntity);
 			};
 
 		manager->Execute(interactionFunc);
-
-
 
 
 	}

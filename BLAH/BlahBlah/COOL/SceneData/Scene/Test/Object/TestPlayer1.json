@@ -25,7 +25,7 @@
 
 	"PlayerAnimControll": {},
 
-	"Collider": 
+	"DynamicCollider": 
 	{
 		"Static": false,
 		"AutoMesh": false,
