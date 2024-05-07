@@ -222,8 +222,9 @@ void process_packet(packet_base*& base)
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
 		client.setRoomNum(buf->getGameNum());
 		client.setCharType(1);
-		//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
-		//vivox.detach();
+		client.characters.try_emplace(1);						/// 경비의 아이디는 1로 고정
+		std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum());
+		vivox.detach();
 		break;
 	}
 	case 3:									// enter_room
@@ -236,10 +237,11 @@ void process_packet(packet_base*& base)
 			SOCKET playerSock = buf->getPlayer();
 			//std::cout << "참가한 소켓은" << playerSock << "입니다." << std::endl;
 			client.characters.try_emplace(playerSock);
+			client.characters.try_emplace(1);						/// 경비의 아이디는 1로 고정
 			client.setPSock(playerSock);
 			client.setCharType(2);
-			//std::thread vivox(Start_Vivox, client.getPSock(), buf->getGameNum());
-			//vivox.detach();
+			std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum());
+			vivox.detach();
 		}
 		else
 		{

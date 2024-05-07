@@ -32,8 +32,10 @@ public:
 			newpath->pos = node->pos;
 			newpath->next = path;
 			path = newpath;
+			std::cout << node->id << " => ";
 			node = node->parent;
 		}
+		std::cout << std::endl;
 		return path;
 	}
 

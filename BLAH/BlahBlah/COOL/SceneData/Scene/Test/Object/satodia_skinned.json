@@ -5,7 +5,7 @@
 
 	"Transform": 
 	{
-		"Position": [200.0, 0.0, 0.0],
+		"Position": [-300.0, 50.0, -50.0],
 		"Rotate": [0.0, 180.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
@@ -19,6 +19,15 @@
 	{
 		"MaxVelocity": 200.0,
 		"Acceleration" : [1200.0, 1200.0, 1200.0]
+	},
+
+		"Collider": 
+	{
+		"Static": false,
+		"AutoMesh": false,
+		"IsCapsule": true,
+		"Center": [0.0, 85, 0],
+		"Extent": [25, 85, 25]
 	},
 
 	"TestInput": {},
