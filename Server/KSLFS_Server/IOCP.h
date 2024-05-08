@@ -55,6 +55,7 @@ class SESSION {
 	SOCKET client_s;
 	PlayerState state;
 	int mi_id;
+	unsigned int gameNum = NULL;
 public:
 	SESSION(int id, SOCKET s, PlayerState ps) :mi_id(id), client_s(s), state(ps) {
 		recv_over.c_op = C_RECV;
@@ -160,6 +161,10 @@ public:
 	const SOCKET getSock() { return client_s; }
 
 	void setState(const PlayerState& ps) { state = ps; }
+
+	const unsigned int getGameNum() { return gameNum; }
+
+	void setGameNum(const unsigned int& gameNum) { this->gameNum = gameNum; }
 };
 
 extern std::unordered_map<unsigned int, SESSION> login_players;
@@ -178,6 +183,17 @@ public:
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
+
+	void reset()
+	{
+		id = NULL;
+		sock = NULL;
+		m_floor = 0;
+		sound = false;
+		position = { 0,0,0 };
+		rotation = { 0,0,0 };
+		speed = { 0,0,0 };
+	}
 };
 
 class PATH;
@@ -221,6 +237,7 @@ public:
 	const DirectX::XMFLOAT3 getPlayerPos(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
+	bool erasePlayer(const unsigned int& id);
 	void update();
 };
 
@@ -242,6 +259,7 @@ private:
 public:
 	IOCP_SERVER_MANAGER() {}
 	void start();
+	void LoadResources();
 	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	bool world_collision(cs_packet_position*&);

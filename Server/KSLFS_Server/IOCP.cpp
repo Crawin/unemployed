@@ -9,27 +9,7 @@ std::unordered_map<unsigned int, SESSION> login_players;
 
 void IOCP_SERVER_MANAGER::start()
 {
-	std::cout << "장애물 로드 시작" << std::endl;
-	for (const auto& file : std::filesystem::directory_iterator("Resource/"))
-	{
-		const auto fileName = file.path();
-		std::ifstream meshFile(fileName, std::ios::binary);
-		if (meshFile.is_open() == false) {
-			std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
-		}
-		Mesh* temp = new Mesh;
-		temp->LoadMeshData(meshFile);
-		m_vMeshes.emplace_back(temp);
-	}
-	std::cout << "장애물 로드 완료" << std::endl;
-
-	std::cout << "NAVI NODE 로드 시작" << std::endl;
-	MakeGraph();
-	for (auto& node : g_um_graph)
-	{
-		std::cout << node.first << " 노드 생성 완료" << std::endl;
-	}
-	std::cout << "NAVI NODE 로드 완료" << std::endl;
+	LoadResources();
 
 	std::wcout.imbue(std::locale("korean"));
 	WSADATA WSAData;
@@ -123,8 +103,9 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		{
 			unsigned int my_id = static_cast<unsigned int>(key);
 			if (0 == rw_byte) {
-				SOCKET playerSock = login_players[my_id].getSock();
-				std::cout << "[" << my_id << "," << playerSock << "] 이 연결을 종료했습니다." << std::endl;
+				unsigned int gameNum = login_players[my_id].getGameNum();
+				if (!Games[gameNum].erasePlayer(my_id))
+					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
 				login_players.erase(my_id);
 				continue;
 			}
@@ -181,18 +162,21 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			//	gameRoom.setPlayerRotSpeed(id, position, newSpeed);
 			//}
 
-			DirectX::XMFLOAT3 newPosition = gameRoom.getPlayerPos(id);
-			DirectX::XMFLOAT3 newSpeed = position->getSpeed();
-			DirectX::XMFLOAT3 rot = position->getRotation();
+			//DirectX::XMFLOAT3 newPosition = gameRoom.getPlayerPos(id);
+			//DirectX::XMFLOAT3 newSpeed = position->getSpeed();
+			//DirectX::XMFLOAT3 rot = position->getRotation();
 
-			unsigned short floor;
-			world_collision_v3(position, &newPosition, &newSpeed, &floor, ping);
-			gameRoom.setPlayerPR_v3(id, newPosition, newSpeed, rot, floor);
+			//unsigned short floor;
+			//world_collision_v3(position, &newPosition, &newSpeed, &floor, ping);
+			//gameRoom.setPlayerPR_v3(id, newPosition, newSpeed, rot, floor);
 
 
-			// 충돌 이후 좌표 패킷을 만든 후
-			sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id),gameRoom.getPlayerSp(id));
+			//// 충돌 이후 좌표 패킷을 만든 후
+			//sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id),gameRoom.getPlayerSp(id));
 			
+			// 충돌체크 하지 않고 위치 전달
+			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
+
 			// 게임 방 내의 플레이어들 모두에게 패킷 전송
 			Player* players = Games[position->getNum()].getPlayers();
 			for (int i = 0; i < 2; ++i)
@@ -200,12 +184,12 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				if (players[i].id)
 				{
 					login_players[players[i].id].send_packet(reinterpret_cast<packet_base*>(&after_pos));
-					//std::cout << players[i].id << "에게 전송 완료" << std::endl;
 				}
 			}
 
 			DirectX::XMFLOAT3 pos = position->getPosition();
-			std::cout << "[" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+			DirectX::XMFLOAT3 rot = position->getRotation();
+			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
 			
 		}
 			break;
@@ -217,6 +201,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			Games.try_emplace(currentRoom, currentRoom);
 			Games[currentRoom].init(id, login_players[id].getSock());
 			login_players[id].setState(PS_GAME);
+			login_players[id].setGameNum(currentRoom);
 			std::cout << "[" << id << ", " << login_players[id].getSock() << "] 이용자가 " << currentRoom << "방을 생성하였습니다." << std::endl;
 
 			sc_packet_make_room make(currentRoom);
@@ -234,6 +219,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				Games[n].init(id, login_players[id].getSock());
 				Player* players = Games[n].getPlayers();
 				login_players[id].setState(PS_GAME);
+				login_players[id].setGameNum(n);
 				// 방 입장 알림 보내기 및  방 게스트에게 호스트 소켓번호 보내주기
 				sc_packet_enter_room sc_enter(n, true, players[0].sock);
 				login_players[id].send_packet(reinterpret_cast<packet_base*>(&sc_enter));
@@ -286,6 +272,31 @@ bool IOCP_SERVER_MANAGER::world_collision(cs_packet_position*& player)
 		}
 	}
 	return false;
+}
+
+void IOCP_SERVER_MANAGER::LoadResources()
+{
+	std::cout << "장애물 로드 시작" << std::endl;
+	for (const auto& file : std::filesystem::directory_iterator("Resource/"))
+	{
+		const auto fileName = file.path();
+		std::ifstream meshFile(fileName, std::ios::binary);
+		if (meshFile.is_open() == false) {
+			std::cout << "Failed to open mesh file!! fileName: " << fileName << std::endl;
+		}
+		Mesh* temp = new Mesh;
+		temp->LoadMeshData(meshFile);
+		m_vMeshes.emplace_back(temp);
+	}
+	std::cout << "장애물 로드 완료" << std::endl;
+	//------------------------------------------------------------------------------------------
+	std::cout << "A* NODE 로드 시작" << std::endl;
+	MakeGraph();
+	for (auto& node : g_um_graph)
+	{
+		std::cout << node.first << " 노드 생성 완료" << std::endl;
+	}
+	std::cout << "A* NODE 로드 완료" << std::endl;
 }
 
 bool IOCP_SERVER_MANAGER::world_collision_v2(cs_packet_position*& player, DirectX::XMFLOAT3* newSpeed)
@@ -562,6 +573,19 @@ void Game::update()
 		}
 	}
 	
+}
+
+bool Game::erasePlayer(const unsigned int& id)
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		if (p[i].id == id)
+		{
+			p[i].reset();
+			return true;
+		}
+	}
+	return false;
 }
 
 void NPC::state_machine(Player* p)
