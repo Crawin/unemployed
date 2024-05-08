@@ -1,6 +1,6 @@
 ﻿#include "framework.h"
-#include "Client.h"
 #include "VIVOX/vivoxheaders.h"
+#include "Client.h"
 #define SERVERPORT 9000
 
 void print_error(const char* msg, int err_no)
@@ -33,9 +33,8 @@ Client::~Client()
 
 void Client::Recv_Start()
 {
-	ZeroMemory(buf, BUFSIZE);
-	wsabuf[0].buf = buf;
-	wsabuf[0].len = BUFSIZE;
+	wsabuf[0].len = BUFSIZE - prev_packet_size;
+	wsabuf[0].buf = buf + prev_packet_size;
 	DWORD recv_flag = 0;
 
 	ZeroMemory(&wsaover, sizeof(wsaover));
@@ -114,6 +113,7 @@ void Client::Connect_Server()
 		print_error("WSAConnect", WSAGetLastError());
 	}
 
+	ZeroMemory(buf, BUFSIZE);
 	Recv_Start();
 }
 
@@ -132,6 +132,11 @@ void Client::swapPSock()
 	playerSock[1] = temp;
 }
 
+void Client::pull_packet(const int& current_size)
+{
+	memcpy(buf, buf + current_size, BUFSIZE - current_size);
+}
+
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
 {
 	if (0 != err)
@@ -148,40 +153,65 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 	{
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
-		if (client.over_buf.size() > 0)
-		{
-			char temp_buf[256];
-			ZeroMemory(temp_buf, 256);
-			int i = 0;
-			for (auto c : client.over_buf)		// 이전에 들어와서 짤려있던 패킷을 temp_buf로 이동
-			{
-				temp_buf[i++] = c;
-			}
-
-			int size = temp_buf[0];
-			while (size > current_size + client.over_buf.size())	// 이전에 들어와있던 패킷에 추후 들어온 패킷 연결
-			{
-				temp_buf[i++] = recv_buf[current_size++];
-			}
-			packet_base* connected_packet = reinterpret_cast<packet_base*>(temp_buf);
-			process_packet(connected_packet);
-			client.over_buf.clear();
-			continue;				// 잘린 패킷 처리 완료
-		}
-
 		int size = base->getSize();
-		if (size == 0) break;									// 왜 서버에선 16바이트 보냈는데 32바이트를 받는거지?
-		
-		if (current_size + size > recv_size)				// 패킷이 짤려서 들어왔으면
-		{
-			while (current_size < recv_size)
-				client.over_buf.emplace_back(reinterpret_cast<char*>(base)[current_size++]);
+		if (size == 0)
 			break;
+
+		if (size + current_size > recv_size)
+		{
+			client.set_prev_packet_size(size);
+			client.pull_packet(current_size);
+			client.Recv_Start();
+			return;
 		}
 		process_packet(base);
 		current_size += size;
 	}
+
+	ZeroMemory(client.Get_Buf(), BUFSIZE);
+	client.set_prev_packet_size(0);
 	client.Recv_Start();
+	//while (current_size < recv_size)
+	//{
+	//	packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
+
+	//	if (client.over_buf.size() > 0)
+	//	{
+	//		char temp_buf[256];
+	//		ZeroMemory(temp_buf, 256);
+	//		int i = 0;
+	//		for (auto c : client.over_buf)        // 이전에 들어와서 짤려있던 패킷을 temp_buf로 이동
+	//		{
+	//			temp_buf[i++] = c;
+	//		}
+
+	//		int size = temp_buf[0];
+	//		while (size > current_size + client.over_buf.size())    // 이전에 들어와있던 패킷에 추후 들어온 패킷 연결
+	//		{
+	//			temp_buf[i++] = recv_buf[current_size++];
+	//		}
+	//		packet_base* connected_packet = reinterpret_cast<packet_base*>(temp_buf);
+	//		process_packet(connected_packet);
+	//		client.over_buf.clear();
+	//		continue;                // 잘린 패킷 처리 완료
+	//	}
+
+	//	int size = base->getSize();
+	//	if (size == 0) break;                                    // 왜 서버에선 16바이트 보냈는데 32바이트를 받는거지?
+
+	//	if (current_size + size > recv_size)                // 패킷이 짤려서 들어왔으면
+	//		if (size + current_size > recv_size)
+	//		{
+	//			while (current_size < recv_size)
+	//				client.over_buf.emplace_back(reinterpret_cast<char*>(base)[current_size++]);
+	//			break;
+	//		}
+	//	process_packet(base);
+	//	current_size += size;
+	//}
+
+	//ZeroMemory(client.Get_Buf(), BUFSIZE);
+	//client.Recv_Start();
 }
 
 void CALLBACK send_callback(DWORD err, DWORD sent_size, LPWSAOVERLAPPED pwsaover, DWORD recv_flag)
@@ -222,8 +252,10 @@ void process_packet(packet_base*& base)
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
 		client.setRoomNum(buf->getGameNum());
 		client.setCharType(1);
-		client.characters.try_emplace(1);						/// 경비의 아이디는 1로 고정
-		std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum());
+		client.characters.try_emplace(PoliceID);
+		client.vivox_state = new VIVOX_STATE;
+		client.vivox_state->game_state = true;
+		std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
 		vivox.detach();
 		break;
 	}
@@ -237,10 +269,12 @@ void process_packet(packet_base*& base)
 			SOCKET playerSock = buf->getPlayer();
 			//std::cout << "참가한 소켓은" << playerSock << "입니다." << std::endl;
 			client.characters.try_emplace(playerSock);
-			client.characters.try_emplace(1);						/// 경비의 아이디는 1로 고정
+			client.characters.try_emplace(PoliceID);
 			client.setPSock(playerSock);
 			client.setCharType(2);
-			std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum());
+			client.vivox_state = new VIVOX_STATE;
+			client.vivox_state->game_state = true;
+			std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
 			vivox.detach();
 		}
 		else

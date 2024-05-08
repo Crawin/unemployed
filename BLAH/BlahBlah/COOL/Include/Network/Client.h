@@ -21,6 +21,7 @@
 #include "Packets.h"
 
 #define BUFSIZE    512
+constexpr int PoliceID = 1;
 
 void print_error(const char* msg, int err_no);
 
@@ -69,15 +70,17 @@ private:
 	SOCKET playerSock[2];
 	unsigned int roomNum = NULL;
 	short characterType = NULL;
+	short prev_packet_size = 0;
 
 	float m_SendTimeElapsed = 0.0f;
 	// 1초에 24번 보냄
 	const float m_SendFrame = 1.0f / 10.0f;
 
 public:
-	std::list<char> over_buf;
-	char* overbuf;
+	//std::list<char> over_buf;
+	//char* overbuf;
 	std::unordered_map<int, GameCharacters> characters;
+	VIVOX_STATE* vivox_state;
 
 	void Recv_Start();
 	char* Get_Buf();
@@ -91,6 +94,8 @@ public:
 	const unsigned int getRoomNum() { return roomNum; }
 	const short getCharType() { return characterType; }
 	void setCharType(const short& type) { characterType = type; }
+	void set_prev_packet_size(const short& size) { prev_packet_size = size; }
+	void pull_packet(const int& current_size);
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
