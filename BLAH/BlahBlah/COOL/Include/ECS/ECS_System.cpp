@@ -530,7 +530,7 @@ namespace ECSsystem {
 
 				XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
 				XMStoreFloat3(&pos, dif);
-				DebugPrint(std::format("diff: {}, {}, {}", pos.x, pos.y, pos.z));
+				//DebugPrint(std::format("diff: {}, {}, {}", pos.x, pos.y, pos.z));
 			}
 
 		};

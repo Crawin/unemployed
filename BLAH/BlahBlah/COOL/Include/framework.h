@@ -74,3 +74,8 @@ using Microsoft::WRL::ComPtr;
 std::string ExtractFileName(const std::string& fullPath);
 
 
+struct VIVOX_STATE
+{
+	bool game_state;
+	bool sound;
+};

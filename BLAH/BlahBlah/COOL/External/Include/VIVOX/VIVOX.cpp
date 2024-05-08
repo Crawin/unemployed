@@ -3,7 +3,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////
 unsigned int sockNum;
 unsigned int gameNum;
-void Start_Vivox(const unsigned int& sock, const unsigned int& game)
+
+void Start_Vivox(const unsigned int& sock, const unsigned int& game, const VIVOX_STATE* gameState)
 {
     vx_sdk_config_t defaultConfig;
     int status = vx_get_default_config3(&defaultConfig, sizeof(defaultConfig));
@@ -25,33 +26,10 @@ void Start_Vivox(const unsigned int& sock, const unsigned int& game)
     vx_req_connector_create* req_connector = nullptr;
     CreateConnector(req_connector);
     
-    std::string command;
     sockNum = sock;
     gameNum = game;
-    while (1)
-    {
-        std::cin >> command;
-        if (command == "login")
-        {
-            std::cout << "소켓 번호를 입력하시오." << std::endl;
-            LogIn(sockNum);
-        }
-        else if (command == "addsession")
-        {
-            std::cout << "방 번호를 입력하시오." << std::endl;
-            std::cin >> gameNum;
-            RequestParticipate(sockNum,gameNum);
-        }
-        else if (command == "exit")
-        {
-            ExitChannel(gameNum);
-        }
-        else if (command == "logout")
-        {
-            LogOut(sockNum);
-            break;
-        }
-    }
+    while (gameState->game_state)
+        Sleep(0);
     // 프로그램 종료 전 uninitialize
     status = vx_uninitialize();
 }

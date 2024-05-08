@@ -19,7 +19,7 @@
 #include <string>
 #include <thread>
 
-void Start_Vivox(const unsigned int& sock, const unsigned int& game);
+void Start_Vivox(const unsigned int& sock, const unsigned int& game, const VIVOX_STATE* gamestate);
 void MyGamesEventHandler(vx_evt_base_t*);
 void MyGamesResponseHandler(vx_resp_base_t*);
 void OnResponseOrEventFromSdk(void*);
