@@ -120,6 +120,7 @@ void MakeGraph()
 	g_um_graph[28] = new NODE(28, 27.72, 5.08, -9.69);
 	g_um_graph[29] = new NODE(29, 20.73, 5.08, -0.77);
 	g_um_graph[30] = new NODE(30, 27.369, 5.08, -0.873);
+	g_um_graph[31] = new NODE(31, 12.9,0, 11.11);
 
 
 	g_um_graph[0]->neighbors.emplace_back(g_um_graph[1]);
@@ -133,7 +134,7 @@ void MakeGraph()
 
 	g_um_graph[3]->neighbors.emplace_back(g_um_graph[1]);
 	g_um_graph[3]->neighbors.emplace_back(g_um_graph[2]);
-	g_um_graph[3]->neighbors.emplace_back(g_um_graph[8]);
+	g_um_graph[3]->neighbors.emplace_back(g_um_graph[31]);
 
 	g_um_graph[4]->neighbors.emplace_back(g_um_graph[2]);
 	g_um_graph[4]->neighbors.emplace_back(g_um_graph[6]);
@@ -147,7 +148,7 @@ void MakeGraph()
 
 	g_um_graph[7]->neighbors.emplace_back(g_um_graph[6]);
 
-	g_um_graph[8]->neighbors.emplace_back(g_um_graph[3]);
+	g_um_graph[8]->neighbors.emplace_back(g_um_graph[31]);
 	g_um_graph[8]->neighbors.emplace_back(g_um_graph[9]);
 
 	g_um_graph[9]->neighbors.emplace_back(g_um_graph[8]);
@@ -227,4 +228,7 @@ void MakeGraph()
 	g_um_graph[29]->neighbors.emplace_back(g_um_graph[30]);
 
 	g_um_graph[30]->neighbors.emplace_back(g_um_graph[29]);
+
+	g_um_graph[31]->neighbors.emplace_back(g_um_graph[3]);
+	g_um_graph[31]->neighbors.emplace_back(g_um_graph[8]);
 }

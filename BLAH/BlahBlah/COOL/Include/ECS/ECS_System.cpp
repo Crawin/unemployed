@@ -468,7 +468,7 @@ namespace ECSsystem {
 				if (server->getID() == NULL && n.compare("Player2") == 0)
 					server->setID(playerSock[1]);
 			}
-			if (n.compare("Satono_Diamond_01") == 0 && server->getID() == NULL)
+			if (n.compare("Guard") == 0 && server->getID() == NULL)
 				server->setID(1);
 
 			//if (playerSock[0])				// 클라 본인의 캐릭터가 할당되었을 때
@@ -519,6 +519,11 @@ namespace ECSsystem {
 			auto id = server->getID();
 			if (id && client.characters[id].IsUpdated())
 			{
+				if (id == 1)
+				{
+					auto speed = client.characters[id].getSpeed();
+					std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
+				}
 				XMFLOAT3 pos = tr->GetPosition();
 				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
 

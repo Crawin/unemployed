@@ -1,0 +1,40 @@
+{
+	"Name": "Guard",
+
+	"Server": {},
+
+	"Transform": {
+		"Position": [ 3160.0, 0.0, -400.0 ],
+		"Rotate": [ 0.0, 0.0, 0.0 ],
+		"Scale": [ 1.0, 1.0, 1.0 ]
+	},
+
+	"AnimationController": {
+		"Player": "Guard"
+	},
+
+	"Physics": {
+		"MaxVelocity": 200.0,
+		"Acceleration": [ 1500.0, 1500.0, 1500.0 ]
+	},
+
+	"PlayerAnimControll": {},
+
+	"Collider": {
+		"Static": false,
+		"AutoMesh": false,
+		"IsCapsule": true,
+		"Center": [ 0.0, 85, 0 ],
+		"Extent": [ 25, 85, 25 ]
+	},
+
+	"Renderer": {
+		"Mesh": "Guard.Ch18",
+		"Material": "Guard_mat"
+	},
+
+	"AnimationExecutor": {
+		"Player": "Guard"
+	}
+
+}

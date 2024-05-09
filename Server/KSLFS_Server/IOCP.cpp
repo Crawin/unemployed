@@ -177,9 +177,11 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			//// 충돌 이후 좌표 패킷을 만든 후
 			//sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id),gameRoom.getPlayerSp(id));
+		
 			
 			// 충돌체크 하지 않고 위치 전달
-			
+			unsigned short floor = floor_collision(position);
+			gameRoom.setFloor(id, floor);
 			gameRoom.setPlayerPR(id, position);
 			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
 
@@ -195,7 +197,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			DirectX::XMFLOAT3 pos = position->getPosition();
 			DirectX::XMFLOAT3 rot = position->getRotation();
-			//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
 			
 		}
 			break;
@@ -421,6 +423,18 @@ void IOCP_SERVER_MANAGER::ai_thread()
 	}
 }
 
+unsigned short IOCP_SERVER_MANAGER::floor_collision(cs_packet_position*& packet)
+{
+	DirectX::XMFLOAT3 pivot = packet->getPosition();
+	DirectX::XMFLOAT3 temp_extents = { 40,50,40 };
+	DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
+	DirectX::BoundingOrientedBox player(pivot, temp_extents, temp_quarta);
+	DirectX::XMFLOAT3 trash;
+	unsigned short floor;
+	m_vMeshes[0]->m_Childs[0].m_Childs[0].floor_collision(player, &trash, &trash, &floor);
+	return floor;
+}
+
 void Game::init(const unsigned int& i, const SOCKET& s)
 {
 	if (player[0].id == NULL)
@@ -559,16 +573,8 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 
 void Game::update()
 {
-	//std::cout << GameNum << ": update" << std::endl;
-	//for (auto& p : player)
-	//{
-	//	if (p.id != 0)
-	//	{
-	//		if (guard.can_see(p))
-	//			std::cout << "보인다... 보여" << std::endl;
-	//	}
-	//}
 	guard.state_machine(player);
+	//std::cout << "npc 회전: " << guard.rotation.y << std::endl;
 	sc_packet_position npc(guard.id, guard.position, guard.rotation, guard.speed);
 	for (auto& p : player)
 	{
@@ -594,6 +600,18 @@ bool Game::erasePlayer(const unsigned int& id)
 		}
 	}
 	return false;
+}
+
+void Game::setFloor(const unsigned int& id, const unsigned short& floor)
+{
+	for (auto& p : player)
+	{
+		if (p.id == id)
+		{
+			p.m_floor = floor;
+			return;
+		}
+	}
 }
 
 void NPC::state_machine(Player* p)
@@ -632,16 +650,26 @@ void NPC::state_machine(Player* p)
 		set_destination(p);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
 	}
 
-	move();
+	if(state == 1)
+		move();
 }
 
 bool NPC::can_see(Player& p)
 {
+	if (p.m_floor != m_floor)
+		return false;
+
+	DirectX::XMFLOAT3 playerPos = p.position;
+	playerPos.y += 50;
 	DirectX::XMFLOAT3 npcPos = position;
+	npcPos.y += 50;
 	for (auto& mesh : m_vMeshes)
 	{
-		if (mesh->can_see(p.position, npcPos, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
+		if (mesh->can_see(playerPos, npcPos, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
+		{
+			//std::cout << "보인다 보여.." << std::endl;
 			return true;
+		}
 	}
 	return false;
 }
@@ -662,40 +690,44 @@ float NPC::distance(Player& p)
 
 bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 {
-	float error_value = 10;
+	float error_value = 5;
 	if (this->position.x >= pos.x - error_value && this->position.x <= pos.x + error_value)
 		if (this->position.y >= pos.y - error_value && this->position.y <= pos.y + error_value)
 			if (this->position.z >= pos.z - error_value && this->position.z <= pos.z + error_value)
 			{
-				std::cout << "목적지 도착" << std::endl;
-				return true;
+				if (state == 1)
+				{
+					std::cout << "목적지 도착" << std::endl;
+					return true;
+				}
 			}
 	return false;
 }
 
 bool NPC::set_destination(Player*& p)
 {
-	//for (int i = 0; i < 2; ++i)
-	//{
-	//	if (can_see(p[i]))
-	//	{
-	//		this->destination = p[i].position;
-	//		path = aStarSearch(position, destination);
-	//		if (nullptr != path)
-	//			return true;
-	//		else
-	//			this->destination = path->pos;
-	//	}
-	//	else if (can_hear(p[i]))
-	//	{
-	//		this->destination = p[i].position;
-	//		path = aStarSearch(position, destination);
-	//		if(nullptr != path)
-	//			return true;
-	//		else
-	//			this->destination = path->pos;
-	//	}
-	//}
+	for (int i = 0; i < 2; ++i)
+	{
+		if (can_see(p[i]))
+		{
+			path = aStarSearch(position, destination);
+			//this->destination = path->pos;
+			this->destination = p->position;
+			if (nullptr != path)
+				return true;
+			else
+				state = 0;
+		}
+		else if (can_hear(p[i]))
+		{
+			this->destination = p[i].position;
+			path = aStarSearch(position, destination);
+			if (nullptr != path)
+				return true;
+			else
+				state = 0;
+		}
+	}
 
 	// 플레이어를 찾지도, 듣지도 못했다면
 	if (compare_position(this->destination))		// 목적지에 도달하였으면
@@ -706,6 +738,8 @@ bool NPC::set_destination(Player*& p)
 			{
 				arrive_time = std::chrono::high_resolution_clock::now();	// 도달한 시각 기록
 				this->state = 0;
+				this->speed = DirectX::XMFLOAT3(0, 0, 0);
+				std::cout << "두리번 상태로 변경" << std::endl;
 			}
 		}
 		else
@@ -720,13 +754,33 @@ bool NPC::set_destination(Player*& p)
 
 void NPC::move()
 {
-	DirectX::XMVECTOR ActorPos = DirectX::XMLoadFloat3(&position);
-	//ActorPos = DirectX::XMVectorScale(ActorPos, 100);
-	DirectX::XMVECTOR DestPos = DirectX::XMLoadFloat3(&destination);
-	//DestPos = DirectX::XMVectorScale(DestPos, 100);
-	DirectX::XMVECTOR direction = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(DestPos, ActorPos));
-	DirectX::XMVECTOR movement = DirectX::XMVectorScale(direction, 10);
-	DirectX::XMStoreFloat3(&position, DirectX::XMVectorAdd(ActorPos, movement));
+	using namespace DirectX;
+	XMVECTOR ActorPos = XMLoadFloat3(&position);
+	XMVECTOR DestPos = XMLoadFloat3(&destination);
+	XMVECTOR direction = XMVector3Normalize(XMVectorSubtract(DestPos, ActorPos));
+	XMVECTOR movement = XMVectorScale(direction, 10);
+	XMStoreFloat3(&position, XMVectorAdd(ActorPos, movement));
 	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
+	
+	XMFLOAT3 temp;
+	XMStoreFloat3(&temp, direction);
+	temp.y = 0;
+	XMVECTOR direction_xz = XMVector3Normalize(XMLoadFloat3(&temp));
+	XMFLOAT3 basic_head(0, 0, 1);
+	XMVECTOR basic = XMLoadFloat3(&basic_head);
+
+	float costheta = XMVectorGetX(XMVector3Dot(basic, direction_xz));
+	float radian = acos(costheta);
+	float theta = XMConvertToDegrees(radian);
+
+	XMVECTOR cross = XMVector3Cross(basic, direction_xz);
+	float wise = XMVectorGetY(cross);
+	if (wise < 0)
+	{
+		theta = -theta;
+	}
+	
+	rotation.y = theta;
+	movement *= 100;
 	DirectX::XMStoreFloat3(&speed, movement);
 }

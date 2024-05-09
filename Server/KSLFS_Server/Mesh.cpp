@@ -341,15 +341,19 @@ bool Mesh::can_see(DirectX::XMFLOAT3& playerPos,DirectX::XMFLOAT3& npcPos,const 
 bool Mesh::ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray)
 {
 	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
+	float ray_length = DirectX::XMVectorGetX(DirectX::XMVector3Length(ray));
 	for (auto& wall : m_Childs)
 	{
 		DirectX::BoundingOrientedBox obb(wall.m_AABBCenter, wall.m_AABBExtents_Divide, orient);
 		float dist = 0;
-		if (DirectX::XMVectorGetX(DirectX::XMVector3Length(ray)) > 0) {
+		if (ray_length > 0) {
 			if (obb.Intersects(DirectX::XMLoadFloat3(&startPos),DirectX::XMVector3Normalize(ray), dist))
 			{
-				std::cout << wall.m_Name << "때문에 안보영" << std::endl;
-				return false;
+				if (dist < ray_length)
+				{
+					//std::cout << wall.m_Name << "때문에 안보영" << std::endl;
+					return false;
+				}
 			}
 			//std::cout << "dist : "<<dist << std::endl;
 		}

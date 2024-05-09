@@ -238,6 +238,7 @@ public:
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
 	bool erasePlayer(const unsigned int& id);
+	void setFloor(const unsigned int& id, const unsigned short& floor);
 	void update();
 };
 
@@ -262,6 +263,7 @@ public:
 	void LoadResources();
 	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
+	unsigned short floor_collision(cs_packet_position*& packet);
 	bool world_collision(cs_packet_position*&);
 	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
 	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* floor, std::chrono::nanoseconds& ping);

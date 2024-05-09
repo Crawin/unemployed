@@ -1,0 +1,9 @@
+{
+	"name": "Guard",
+	"BaseColor": "Guard_Dif",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
