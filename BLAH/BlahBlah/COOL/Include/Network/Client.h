@@ -74,7 +74,7 @@ private:
 
 	float m_SendTimeElapsed = 0.0f;
 	// 1초에 24번 보냄
-	const float m_SendFrame = 1.0f / 10.0f;
+	const float m_SendFrame = 1.0f / 60.0f;
 
 public:
 	//std::list<char> over_buf;

@@ -195,6 +195,9 @@
     <ClInclude Include="Include\ECS\ContentComponents.h">
       <Filter>소스 파일\ECS\Component\Content</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Scene\GameState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -286,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="Include\ECS\ContentComponents.cpp">
       <Filter>소스 파일\ECS\Component\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Scene\GameState.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

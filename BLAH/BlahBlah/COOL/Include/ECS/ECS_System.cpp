@@ -528,9 +528,11 @@ namespace ECSsystem {
 				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
 
 				client.characters[id].SetUpdate(false);
-				tr->SetPosition(client.characters[id].getPos());
-				if (id != playerSock[0])	// 상대방 플레이어면 회전값 적용
+
+				if (id != playerSock[0]) {	// 상대방 플레이어면 회전값 적용
+					tr->SetPosition(client.characters[id].getPos());
 					tr->SetRotation(client.characters[id].getRot());
+				}
 				sp->SetVelocity(client.characters[id].getSpeed());
 
 				XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
