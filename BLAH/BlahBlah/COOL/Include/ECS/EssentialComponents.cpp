@@ -544,4 +544,79 @@ namespace component {
 		}
 	}
 
+	void DynamicCollider::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value col = v["DynamicCollider"];
+
+		m_StaticObject = col["Static"].asBool();
+		m_Trigger = col["IsTrigger"].asBool();
+
+		// if true on create, load collider by its mesh
+		// else create here
+		m_Collided = col["AutoMesh"].asBool();
+
+		if (m_Collided == false) {
+			XMFLOAT3 center;
+			center.x = col["Center"][0].asFloat();
+			center.y = col["Center"][1].asFloat();
+			center.z = col["Center"][2].asFloat();
+
+			XMFLOAT3 extent;
+			extent.x = col["Extent"][0].asFloat();
+			extent.y = col["Extent"][1].asFloat();
+			extent.z = col["Extent"][2].asFloat();
+
+			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+			// if capsue, check dist
+			m_IsCapsule = col["IsCapsule"].asBool();
+		}
+	}
+
+	void DynamicCollider::ShowYourself() const
+	{
+		DebugPrint("Collider Comp");
+	}
+
+	void DynamicCollider::UpdateBoundingBox(const XMMATRIX& transMat)
+	{
+		m_BoundingBoxOriginal.Transform(m_CurrentBox, transMat);
+	}
+
+	void DynamicCollider::InsertCollidedEntity(Entity* ent)
+	{
+		auto iter = find_if(m_CollidedEntities.begin(), m_CollidedEntities.end(), [ent](const CollidedEntity& col) { return col.m_Entity == ent; });
+
+		if (iter == m_CollidedEntities.end())
+			m_CollidedEntities.emplace_back(COLLIDE_EVENT_TYPE::BEGIN, ent);
+		else
+			iter->m_Type = COLLIDE_EVENT_TYPE::ING;
+	}
+
+	void DynamicCollider::UpdateCollidedList()
+	{
+		for (auto iter = m_CollidedEntities.begin(); iter != m_CollidedEntities.end();) {
+			switch (iter->m_Type) {
+			case COLLIDE_EVENT_TYPE::BEGIN:
+			case COLLIDE_EVENT_TYPE::ING:
+				iter->m_Type = COLLIDE_EVENT_TYPE::END;
+				++iter;
+				break;
+
+			case COLLIDE_EVENT_TYPE::END:
+				iter = m_CollidedEntities.erase(iter);
+				break;
+			}
+		}
+	}
+
+	const EventFunctionMap& DynamicCollider::GetEventMap(COLLIDE_EVENT_TYPE type) const
+	{
+		switch (type) {
+		case COLLIDE_EVENT_TYPE::BEGIN:		return m_EventFunctions.m_OnBeginOverlap;
+		case COLLIDE_EVENT_TYPE::ING:		return m_EventFunctions.m_OnOverlapping;
+		case COLLIDE_EVENT_TYPE::END:		return m_EventFunctions.m_OnEndOverlap;
+		}
+	}
+
 }

@@ -12,11 +12,30 @@
 	MANAGER->Execute(insertEvent);																									\
 }
 
+#define INSERT_COLLIDE_EVENT_FOR_DYNAMIC(MANAGER, SELF_COMP, OTHER_COMP, TYPE, FUNC)															\
+{																																				\
+	EventFunction eventFunc = FUNC;																												\
+	std::function<void(SELF_COMP*, component::DynamicCollider*)> insertEvent = [&eventFunc](SELF_COMP* , component::DynamicCollider* col) {		\
+		col->InsertEvent<OTHER_COMP>(eventFunc , TYPE);																							\
+		};																																		\
+	MANAGER->Execute(insertEvent);																												\
+}
+
 #define SET_INTERACTION_EVENT(MANAGER, SELF_COMP, FUNC)																				\
 {																																	\
 	InteractionFuncion eventFunc = FUNC;																							\
 	std::function<void(SELF_COMP*, component::Collider*)> insertEvent = [&eventFunc](SELF_COMP* , component::Collider* col) {		\
 		col->SetInteractionFunction(eventFunc);																						\
 		};																															\
-	MANAGER->Execute(insertEvent);																								\
+	MANAGER->Execute(insertEvent);																									\
 }
+
+#define SET_INTERACTION_EVENT_FOR_DYNAMIC(MANAGER, SELF_COMP, FUNC)																				\
+{																																				\
+	InteractionFuncion eventFunc = FUNC;																										\
+	std::function<void(SELF_COMP*, component::DynamicCollider*)> insertEvent = [&eventFunc](SELF_COMP* , component::DynamicCollider* col) {		\
+		col->SetInteractionFunction(eventFunc);																									\
+		};																																		\
+	MANAGER->Execute(insertEvent);																												\
+}
+

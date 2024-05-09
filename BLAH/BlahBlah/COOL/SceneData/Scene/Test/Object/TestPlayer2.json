@@ -25,7 +25,7 @@
 
 	"DiaAnimationControl": {},
 
-	"Collider": 
+	"DynamiCollider": 
 	{
 		"Static": false,
 		"AutoMesh": false,

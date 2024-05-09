@@ -523,6 +523,65 @@ namespace component {
 
 	};
 
+	/////////////////////////////////////////////////////////
+	// Dynamic Collider component
+	// 일반 콜라이더의 기준으로 루프를 돌지 않기 위해
+	//
+	class DynamicCollider : public ComponentBase<DynamicCollider> {
+		BoundingOrientedBox m_BoundingBoxOriginal;
+		BoundingOrientedBox m_CurrentBox;
+		bool m_StaticObject = false;
+		bool m_Trigger = false;
+		bool m_IsCapsule = false;
+		bool m_Collided = false;
 
+		CollideEvents m_EventFunctions;
+
+		std::list<CollidedEntity> m_CollidedEntities;
+
+		InteractionFuncion m_InteractionFunction = nullptr;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		void SetCollided(bool col) { m_Collided = col; }
+		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
+		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
+		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
+
+		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
+		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
+		bool GetCollided() const { return m_Collided; }
+		bool IsStaticObject() const { return m_StaticObject; }
+		bool IsCapsule() const { return m_IsCapsule; }
+		bool IsTrigger() const { return m_Trigger; }
+		const InteractionFuncion& GetInteractionFunction() const { return m_InteractionFunction; }
+
+		void UpdateBoundingBox(const XMMATRIX& transMat);
+
+		const std::list<CollidedEntity>& GetCollidedEntitiesList() const { return m_CollidedEntities; }
+		void InsertCollidedEntity(Entity* ent);
+		void UpdateCollidedList();
+		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
+		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
+
+
+		template<class COMP>
+		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
+		{
+			std::bitset<COMPONENT_COUNT> bit = COMP::GetBit();
+
+			switch (type) {
+			case COLLIDE_EVENT_TYPE::BEGIN:	m_EventFunctions.m_OnBeginOverlap[bit] = eventFunc;		break;
+			case COLLIDE_EVENT_TYPE::ING:	m_EventFunctions.m_OnOverlapping[bit] = eventFunc;		break;
+			case COLLIDE_EVENT_TYPE::END:	m_EventFunctions.m_OnEndOverlap[bit] = eventFunc;		break;
+			default:
+				DebugPrint("ERROR!! no event type");
+			};
+		}
+
+	};
 
 }
