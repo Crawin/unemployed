@@ -43,6 +43,7 @@ void IOCP_SERVER_MANAGER::start()
 	
 	std::thread ai_thread{ &IOCP_SERVER_MANAGER::ai_thread,this };
 
+	// 멀티쓰레드
 	//int num_threads = std::thread::hardware_concurrency();
 	//std::vector<std::thread> worker_threads;
 	//for (int i = 0; i < num_threads; ++i)
@@ -52,6 +53,9 @@ void IOCP_SERVER_MANAGER::start()
 
 	//for (auto& w : worker_threads)
 	//	w.join();
+
+
+	// 싱글쓰레드 디버그용
 	worker(server_s);
 
 	//delete lobby;
@@ -175,6 +179,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			//sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id),gameRoom.getPlayerSp(id));
 			
 			// 충돌체크 하지 않고 위치 전달
+			
+			gameRoom.setPlayerPR(id, position);
 			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
 
 			// 게임 방 내의 플레이어들 모두에게 패킷 전송
@@ -189,7 +195,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			DirectX::XMFLOAT3 pos = position->getPosition();
 			DirectX::XMFLOAT3 rot = position->getRotation();
-			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+			//std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
 			
 		}
 			break;
@@ -410,20 +416,22 @@ void IOCP_SERVER_MANAGER::ai_thread()
 		auto hb_time = end_t - start_t;
 		if (hb_time < 0.016s)
 			std::this_thread::sleep_for(0.016s - hb_time);
+		//if (hb_time < 3s)
+		//	std::this_thread::sleep_for(3s - hb_time);
 	}
 }
 
 void Game::init(const unsigned int& i, const SOCKET& s)
 {
-	if (p[0].id == NULL)
+	if (player[0].id == NULL)
 	{
-		p[0].id = i;
-		p[0].sock = s;
+		player[0].id = i;
+		player[0].sock = s;
 	}
 	else
 	{
-		p[1].id = i;
-		p[1].sock = s;
+		player[1].id = i;
+		player[1].sock = s;
 	}
 	if (guard.id == NULL)
 		guard.id = 1;
@@ -431,24 +439,24 @@ void Game::init(const unsigned int& i, const SOCKET& s)
 
 const DirectX::XMFLOAT3 Game::getPlayerPos(const unsigned int& id)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			return player.position;
+			return p.position;
 		}
 	}
 }
 
 void Game::setPlayerPR(const unsigned int& id, cs_packet_position*& packet)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			player.position = packet->getPosition();
-			player.rotation = packet->getRotation();
-			player.speed = packet->getSpeed();
+			p.position = packet->getPosition();
+			p.rotation = packet->getRotation();
+			p.speed = packet->getSpeed();
 			break;
 		}
 	}
@@ -456,14 +464,14 @@ void Game::setPlayerPR(const unsigned int& id, cs_packet_position*& packet)
 
 void Game::setPlayerPR_v2(const unsigned int& id, cs_packet_position*& packet, const DirectX::XMFLOAT3& newSpeed)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			player.position = packet->getPosition();
-			if (player.position.y < 0) player.position.y = 0;
-			player.rotation = packet->getRotation();
-			player.speed = newSpeed;
+			p.position = packet->getPosition();
+			if (p.position.y < 0) p.position.y = 0;
+			p.rotation = packet->getRotation();
+			p.speed = newSpeed;
 			break;
 		}
 	}
@@ -471,14 +479,14 @@ void Game::setPlayerPR_v2(const unsigned int& id, cs_packet_position*& packet, c
 
 void Game::setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot, const unsigned short& floor)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			player.position = newPosition;
-			player.rotation = rot;
-			player.speed = newSpeed;
-			player.m_floor = floor;
+			p.position = newPosition;
+			p.rotation = rot;
+			p.speed = newSpeed;
+			p.m_floor = floor;
 			break;
 		}
 	}
@@ -486,12 +494,12 @@ void Game::setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPo
 
 void Game::setPlayerRot(const unsigned int& id, cs_packet_position*& packet)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			player.rotation = packet->getRotation();
-			player.speed = DirectX::XMFLOAT3(0, 0, 0);
+			p.rotation = packet->getRotation();
+			p.speed = DirectX::XMFLOAT3(0, 0, 0);
 			break;
 		}
 	}
@@ -499,29 +507,29 @@ void Game::setPlayerRot(const unsigned int& id, cs_packet_position*& packet)
 
 void Game::setPlayerRotSpeed(const unsigned int& id, cs_packet_position*& packet, DirectX::XMFLOAT3& newSpeed)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			player.rotation = packet->getRotation();
-			player.speed = newSpeed;
+			p.rotation = packet->getRotation();
+			p.speed = newSpeed;
 			DirectX::XMFLOAT3 pos = packet->getPosition();
 			if (newSpeed.x == 0)
 			{
-				player.position.y = pos.y;
-				player.position.z = pos.z;
+				p.position.y = pos.y;
+				p.position.z = pos.z;
 			}
 			else if (newSpeed.y == 0)
 			{
-				player.position.x = pos.x;
-				player.position.z = pos.z;
+				p.position.x = pos.x;
+				p.position.z = pos.z;
 			}
 			else if (newSpeed.z == 0)
 			{
-				player.position.x = pos.x;
-				player.position.y = pos.y;
+				p.position.x = pos.x;
+				p.position.y = pos.y;
 			}
-			if (player.position.y < 0) player.position.y = 0;
+			if (p.position.y < 0) p.position.y = 0;
 			break;
 		}
 	}
@@ -529,18 +537,18 @@ void Game::setPlayerRotSpeed(const unsigned int& id, cs_packet_position*& packet
 
 const DirectX::XMFLOAT3 Game::getPlayerRot(const unsigned int& id)
 {
-	for (auto& player : p)
+	for (auto& p : player)
 	{
-		if (player.id == id)
+		if (p.id == id)
 		{
-			return player.rotation;
+			return p.rotation;
 		}
 	}
 }
 
 const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 {
-	for (auto& player : p)
+	for (auto& player : player)
 	{
 		if (player.id == id)
 		{
@@ -552,24 +560,24 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 void Game::update()
 {
 	//std::cout << GameNum << ": update" << std::endl;
-	guard.state_machine(p);
-	DirectX::XMFLOAT3 sending_position = guard.position;
-	sending_position.x *= 100;
-	sending_position.y *= 100;
-	sending_position.z *= 100;
-	DirectX::XMFLOAT3 sending_speed = guard.speed;
-	sending_speed.x *= 100;
-	sending_speed.y *= 100;
-	sending_speed.z *= 100;
-	sc_packet_position npc(guard.id, sending_position, guard.rotation, sending_speed);
-	for (auto& player : p)
+	//for (auto& p : player)
+	//{
+	//	if (p.id != 0)
+	//	{
+	//		if (guard.can_see(p))
+	//			std::cout << "보인다... 보여" << std::endl;
+	//	}
+	//}
+	guard.state_machine(player);
+	sc_packet_position npc(guard.id, guard.position, guard.rotation, guard.speed);
+	for (auto& p : player)
 	{
-		if (player.sock != NULL)
+		if (p.sock != NULL)
 		{
-			if (login_players.end() != login_players.find(player.id))
-				login_players[player.id].send_packet(reinterpret_cast<packet_base*>(&npc));
+			if (login_players.end() != login_players.find(p.id))
+				login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&npc));
 			else
-				player.sock = NULL;
+				p.sock = NULL;
 		}
 	}
 	
@@ -579,9 +587,9 @@ bool Game::erasePlayer(const unsigned int& id)
 {
 	for (int i = 0; i < 2; ++i)
 	{
-		if (p[i].id == id)
+		if (player[i].id == id)
 		{
-			p[i].reset();
+			player[i].reset();
 			return true;
 		}
 	}
@@ -610,7 +618,9 @@ void NPC::state_machine(Player* p)
 			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
 			if (duration > duribun_duribun)		// 5초 넘게 두리번 거렸는데 위치를 못찾았으면
 			{
-				this->destination = g_um_graph[rand() % g_um_graph.size()]->pos; // 랜덤한 목적지 설정
+				int des = rand() % g_um_graph.size();
+				std::cout << des << "로 목적지 설정" << std::endl;
+				this->destination = g_um_graph[des]->pos; // 랜덤한 목적지 설정
 				this->path = aStarSearch(position, destination);
 				this->destination = path->pos;
 				this->state = 1;
@@ -627,9 +637,10 @@ void NPC::state_machine(Player* p)
 
 bool NPC::can_see(Player& p)
 {
+	DirectX::XMFLOAT3 npcPos = position;
 	for (auto& mesh : m_vMeshes)
 	{
-		if (mesh->can_see(p.position, position, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
+		if (mesh->can_see(p.position, npcPos, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
 			return true;
 	}
 	return false;
@@ -651,11 +662,14 @@ float NPC::distance(Player& p)
 
 bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 {
-	float error_value = 1;
-	if (this->position.x >= pos.x - error_value && this->position.x <= pos.x + 1)
-		if (this->position.y >= pos.y - error_value && this->position.y <= pos.y + 1)
-			if (this->position.z >= pos.z - error_value && this->position.z <= pos.z + 1)
+	float error_value = 10;
+	if (this->position.x >= pos.x - error_value && this->position.x <= pos.x + error_value)
+		if (this->position.y >= pos.y - error_value && this->position.y <= pos.y + error_value)
+			if (this->position.z >= pos.z - error_value && this->position.z <= pos.z + error_value)
+			{
+				std::cout << "목적지 도착" << std::endl;
 				return true;
+			}
 	return false;
 }
 
@@ -707,10 +721,12 @@ bool NPC::set_destination(Player*& p)
 void NPC::move()
 {
 	DirectX::XMVECTOR ActorPos = DirectX::XMLoadFloat3(&position);
+	//ActorPos = DirectX::XMVectorScale(ActorPos, 100);
 	DirectX::XMVECTOR DestPos = DirectX::XMLoadFloat3(&destination);
+	//DestPos = DirectX::XMVectorScale(DestPos, 100);
 	DirectX::XMVECTOR direction = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(DestPos, ActorPos));
-	DirectX::XMVECTOR movement = DirectX::XMVectorScale(direction, 0.016*4);
+	DirectX::XMVECTOR movement = DirectX::XMVectorScale(direction, 10);
 	DirectX::XMStoreFloat3(&position, DirectX::XMVectorAdd(ActorPos, movement));
-	//std::cout << "경비 위치 " << position.x * 100 << ", " << position.y * 100 << ", " << position.z * 100 << std::endl;
+	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
 	DirectX::XMStoreFloat3(&speed, movement);
 }

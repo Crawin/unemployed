@@ -14,7 +14,8 @@ public:
 	double h;							// 현재 노드에서 목표 지점까지 휴리스틱 추정치 (현재 좌표에서 목표 좌표 직선값)
 	double f;							// f = g + h
 	DirectX::XMFLOAT3 pos;							// 좌표
-	NODE(int id, float posX, float posY, float posZ) :id(id), pos(posX,posY,posZ), g(0), h(0), f(0), parent(nullptr) {}
+	NODE(int id, float posX, float posY, float posZ) :id(id), pos(posX*100,posY*100,posZ*100), g(0), h(0), f(0), parent(nullptr) {}
+
 	bool operator<(const NODE* n) const {
 		return this->f > n->f;
 	}
@@ -32,7 +33,7 @@ public:
 			newpath->pos = node->pos;
 			newpath->next = path;
 			path = newpath;
-			std::cout << node->id << " => ";
+			std::cout << "<= " << node->id;
 			node = node->parent;
 		}
 		std::cout << std::endl;

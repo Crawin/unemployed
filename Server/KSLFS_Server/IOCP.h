@@ -203,8 +203,8 @@ class NPC
 public:
 	short state = 0;				// 0: idle, 1: ¿Ãµø¡ﬂ
 	unsigned int id = NULL;
-	unsigned short m_floor = 0;
-	DirectX::XMFLOAT3 position = { 31.18,0,-8.53 };
+	unsigned short m_floor = 1;
+	DirectX::XMFLOAT3 position = { 3160,0,-400 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
 	DirectX::XMFLOAT3 destination = { 0,0,0 };
@@ -222,13 +222,13 @@ public:
 class Game
 {
 	unsigned int GameNum;
-	Player p[2];
+	Player player[2];
 	NPC guard;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n) {}
 	void init(const unsigned int& i, const SOCKET& s);
-	Player* getPlayers() { return p; };
+	Player* getPlayers() { return player; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
 	void setPlayerPR_v2(const unsigned int&, cs_packet_position*&, const DirectX::XMFLOAT3&);
 	void setPlayerPR_v3(const unsigned int& id, const DirectX::XMFLOAT3& newPosition, const DirectX::XMFLOAT3& newSpeed, const DirectX::XMFLOAT3& rot, const unsigned short& floor);

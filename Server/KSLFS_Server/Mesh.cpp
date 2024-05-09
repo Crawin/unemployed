@@ -348,6 +348,7 @@ bool Mesh::ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray)
 		if (DirectX::XMVectorGetX(DirectX::XMVector3Length(ray)) > 0) {
 			if (obb.Intersects(DirectX::XMLoadFloat3(&startPos),DirectX::XMVector3Normalize(ray), dist))
 			{
+				std::cout << wall.m_Name << "때문에 안보영" << std::endl;
 				return false;
 			}
 			//std::cout << "dist : "<<dist << std::endl;
