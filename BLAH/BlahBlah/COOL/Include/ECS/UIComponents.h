@@ -78,7 +78,8 @@ namespace component {
 	// 버튼이 down, released 되면 실행되는 함수를 가짐
 	//
 	class Button : public ComponentBase<Button> {
-		ButtonEventFunction m_OnButtonClicked = nullptr;
+		ButtonEventFunction m_OnButtonDown = nullptr;
+		ButtonEventFunction m_OnButtonRelease = nullptr;
 
 		bool m_Pressing = false;
 		bool m_On = false;
@@ -88,8 +89,11 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		const ButtonEventFunction& GetButtonEvent() const { return m_OnButtonClicked; }
-		void SetButtonEvent(const ButtonEventFunction& e) { m_OnButtonClicked = e; }
+		const ButtonEventFunction& GetButtonDownEvent() const { return m_OnButtonDown; }
+		const ButtonEventFunction& GetButtonReleaseEvent() const { return m_OnButtonRelease; }
+
+		void SetButtonDownEvent(const ButtonEventFunction& e) { m_OnButtonDown = e; }
+		void SetButtonReleaseEvent(const ButtonEventFunction& e) { m_OnButtonRelease = e; }
 	};
 
 

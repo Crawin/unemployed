@@ -487,8 +487,10 @@ namespace component {
 
 		void SetCollided(bool col) { m_Collided = col; }
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
+		void SetOriginBoxCenter(const BoundingOrientedBox& box) { m_BoundingBoxOriginal.Center = box.Center; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
 		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
+		void SetCapsule(bool b) { m_IsCapsule = b; }
 
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
