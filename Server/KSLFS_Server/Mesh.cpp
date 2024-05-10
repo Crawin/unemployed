@@ -333,7 +333,7 @@ void Mesh::planeNum_intersects_direction_vector_v3(const DirectX::BoundingOrient
 bool Mesh::can_see(DirectX::XMFLOAT3& playerPos,DirectX::XMFLOAT3& npcPos,const unsigned short& floor)
 {
 	DirectX::XMVECTOR ray = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&playerPos), DirectX::XMLoadFloat3(&npcPos));	// 경비병 -> 플레이어의 벡터
-	if (m_Childs[0].m_Childs[floor].ray_collision(npcPos, ray))
+	if (m_Childs[0].m_Childs[floor+1].ray_collision(npcPos, ray))
 		return true;
 	return false;
 }
@@ -376,34 +376,39 @@ const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, Dire
 {
 	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
 
-	int i = 1;
-	for (auto& floor : m_Childs)
+	int i = 0;
+	for (auto& level : m_Childs)
 	{
-		DirectX::BoundingOrientedBox obb(floor.m_AABBCenter, floor.m_AABBExtents_Divide, orient);
-		if (player.Intersects(obb))
+		for (auto& floor : level.m_Childs)
 		{
-			if (player.Center.y >= floor.m_AABBCenter.y)
+			DirectX::BoundingOrientedBox obb(floor.m_AABBCenter, floor.m_AABBExtents_Divide, orient);
+			if (player.Intersects(obb))
 			{
-				newPosition->y = floor.m_AABBCenter.y + floor.m_AABBExtents_Divide.y;
-				//newSpeed->y = 0;
-				//std::cout << i << "층에 닿음" << std::endl;
-				*ptrFloor = i;
-				return i;
+				if (player.Center.y >= floor.m_AABBCenter.y)
+				{
+					newPosition->y = floor.m_AABBCenter.y + floor.m_AABBExtents_Divide.y;
+					//newSpeed->y = 0;
+					//std::cout << i << "층에 닿음" << std::endl;
+					*ptrFloor = i;
+					return i;
+				}
 			}
 		}
 		++i;
 	}			// 층의 바닥과 충돌하였는지
+	// 바닥과 충돌하지 않으면
+	return -1;
 
-	for (int i = 0; i < 2; ++i)
-	{
-		if (player.Center.y >= m_Childs[i].m_AABBCenter.y && player.Center.y < m_Childs[i + 1].m_AABBCenter.y)
-		{
-			//std::cout << i + 1 << "과 " << i + 2 << "층 사이에 있음" << std::endl;
-			*ptrFloor = i+1;
-			newPosition->y = player.Center.y - player.Extents.y;
-			return i + 1;
-		}
-	}			// 층과 층 사이에 있는지
+	//for (int i = 0; i < 2; ++i)
+	//{
+	//	if (player.Center.y >= m_Childs[i].m_AABBCenter.y && player.Center.y < m_Childs[i + 1].m_AABBCenter.y)
+	//	{
+	//		//std::cout << i + 1 << "과 " << i + 2 << "층 사이에 있음" << std::endl;
+	//		*ptrFloor = i+1;
+	//		newPosition->y = player.Center.y - player.Extents.y;
+	//		return i + 1;
+	//	}
+	//}			// 층과 층 사이에 있는지
 }
 
 bool Mesh::map_collision(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3& playerSpeed, DirectX::XMFLOAT3* newSpeed, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping)

@@ -181,7 +181,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			
 			// 충돌체크 하지 않고 위치 전달
 			unsigned short floor = floor_collision(position);
-			gameRoom.setFloor(id, floor);
+			if (floor)	gameRoom.setFloor(id, floor);
 			gameRoom.setPlayerPR(id, position);
 			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
 
@@ -189,7 +189,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			Player* players = Games[position->getNum()].getPlayers();
 			for (int i = 0; i < 2; ++i)
 			{
-				if (players[i].id)
+				if (players[i].id && players[i].id != id)
 				{
 					login_players[players[i].id].send_packet(reinterpret_cast<packet_base*>(&after_pos));
 				}
@@ -300,10 +300,10 @@ void IOCP_SERVER_MANAGER::LoadResources()
 	//------------------------------------------------------------------------------------------
 	std::cout << "A* NODE 로드 시작" << std::endl;
 	MakeGraph();
-	for (auto& node : g_um_graph)
-	{
-		std::cout << node.first << " 노드 생성 완료" << std::endl;
-	}
+	//for (auto& node : g_um_graph)
+	//{
+	//	std::cout << node.first << " 노드 생성 완료" << std::endl;
+	//}
 	std::cout << "A* NODE 로드 완료" << std::endl;
 }
 
@@ -710,9 +710,10 @@ bool NPC::set_destination(Player*& p)
 	{
 		if (can_see(p[i]))
 		{
+			std::cout << i << "P 발견" << std::endl;
 			path = aStarSearch(position, destination);
 			//this->destination = path->pos;
-			this->destination = p->position;
+			this->destination = p[i].position;
 			if (nullptr != path)
 				return true;
 			else
