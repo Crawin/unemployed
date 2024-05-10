@@ -363,7 +363,7 @@ bool Mesh::ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray)
 
 bool Mesh::collision_v3(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3& playerSpeed, DirectX::XMFLOAT3* newSpeed ,unsigned short* ptrFloor, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping)
 {
-	int player_floor = m_Childs[0].m_Childs[0].floor_collision(player, newPosition, newSpeed, ptrFloor);	// 층 충돌
+	int player_floor = m_Childs[0].m_Childs[0].floor_collision(player, newPosition, newSpeed,reinterpret_cast<short*>(ptrFloor));	// 층 충돌 기존 unsignd 인걸 short로 변경했기에 오류 발생 가능성이 매우 높음
 
 	if (m_Childs[0].m_Childs[player_floor].map_collision(player, newPosition, playerSpeed, newSpeed,sendTime,ping))				// 해당 층의 벽과 충돌
 	{
@@ -372,7 +372,7 @@ bool Mesh::collision_v3(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3*
 	return false;
 }
 
-const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, unsigned short* ptrFloor)
+const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, short* ptrFloor)
 {
 	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
 
@@ -397,6 +397,7 @@ const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, Dire
 		++i;
 	}			// 층의 바닥과 충돌하였는지
 	// 바닥과 충돌하지 않으면
+	*ptrFloor = -1;
 	return -1;
 
 	//for (int i = 0; i < 2; ++i)

@@ -180,8 +180,12 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		
 			
 			// 충돌체크 하지 않고 위치 전달
-			unsigned short floor = floor_collision(position);
-			if (floor)	gameRoom.setFloor(id, floor);
+			short floor = floor_collision(position);
+			if (floor >= 0)
+			{
+				std::cout << id << "가 " << floor << "층으로 이동" << std::endl;
+				gameRoom.setFloor(id, floor);
+			}
 			gameRoom.setPlayerPR(id, position);
 			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
 
@@ -430,7 +434,7 @@ unsigned short IOCP_SERVER_MANAGER::floor_collision(cs_packet_position*& packet)
 	DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
 	DirectX::BoundingOrientedBox player(pivot, temp_extents, temp_quarta);
 	DirectX::XMFLOAT3 trash;
-	unsigned short floor;
+	short floor;
 	m_vMeshes[0]->m_Childs[0].m_Childs[0].floor_collision(player, &trash, &trash, &floor);
 	return floor;
 }
@@ -621,8 +625,14 @@ void NPC::state_machine(Player* p)
 	DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
 	obb.Center.y *= 100;
 	DirectX::XMFLOAT3 temp;
+	short now_floor = 0;
 	for (auto& mesh : m_vMeshes)
-		mesh->m_Childs[0].m_Childs[0].floor_collision(obb, &temp, &temp, &this->m_floor);
+		mesh->m_Childs[0].m_Childs[0].floor_collision(obb, &temp, &temp, &now_floor);
+	if (now_floor >= 0)
+	{
+		//std::cout << "npc가 " << now_floor << "로 이동" << std::endl;
+		m_floor = now_floor;
+	}
 
 	if (this->state == 0)				// 두리번 두리번 상태
 	{
