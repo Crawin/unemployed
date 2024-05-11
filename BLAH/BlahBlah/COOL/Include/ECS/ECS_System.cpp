@@ -542,7 +542,7 @@ namespace ECSsystem {
 
 		};
 
-		manager->Execute(func); 
+		manager->Execute(func);
 	}
 
 	void CollideHandle::OnInit(ECSManager* manager)
@@ -618,35 +618,31 @@ namespace ECSsystem {
 		std::function<void(DynamicCollider*, SelfEntity*)> dynamicWithStatic =
 			[&circleBoxCol, manager](DynamicCollider* a, SelfEntity* aEnt) {
 			auto& boxA = a->GetBoundingBox();
+			auto& originBoxA = a->GetOriginalBox();
 
-			std::function<void(Collider*, SelfEntity*)> check = [a, boxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
+			std::function<void(Collider*, SelfEntity*)> check = [a, &boxA, &originBoxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
 				auto& boxB = b->GetBoundingBox();
 
 				// check and insert box
 				if (boxA.Intersects(boxB)) {
+
 					// if capsule, check
-					if (a->IsCapsule()) {
-						XMVECTOR circleCenter = XMVector3Transform(
-							XMLoadFloat3(&boxA.Center),
-							XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxB.Orientation))));
+					//if (a->IsCapsule()) {
+					//	auto& originBoxB = b->GetOriginalBox();
+					//	XMFLOAT3 temp;
 
-						if (false == circleBoxCol(
-							XMFLOAT2(boxB.Center.x, boxB.Center.z),
-							XMFLOAT2(boxB.Extents.x, boxB.Extents.z),
-							XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
-							boxA.Extents.x)) return;
-					}
-					if (b->IsCapsule()) {
-						XMVECTOR circleCenter = XMVector3Transform(
-							XMLoadFloat3(&boxB.Center),
-							XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxA.Orientation))));
+					//	XMVECTOR 
 
-						if (false == circleBoxCol(
-							XMFLOAT2(boxA.Center.x, boxA.Center.z),
-							XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
-							XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
-							boxB.Extents.x)) return;
-					}
+					//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxA.Center), -XMLoadFloat4(&boxB.Orientation)));
+
+					//	if (false == circleBoxCol(originBoxB, XMFLOAT2(temp.x, temp.z), boxA.Extents.x)) return;
+					//}
+					//if (b->IsCapsule()) {
+					//	XMFLOAT3 temp;
+					//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxB.Center), -XMLoadFloat4(&boxA.Orientation)));
+
+					//	if (false == circleBoxCol(originBoxA, XMFLOAT2(temp.x, temp.z), boxB.Extents.x)) return;
+					//}
 
 					// if collided, add to coll list, handle later
 					if (a->IsStaticObject() == false)
@@ -680,28 +676,20 @@ namespace ECSsystem {
 			if (dist > 0 && boxA.Intersects(boxB))
 			{
 				// if capsule, check
-				if (a->IsCapsule()) {
-					XMVECTOR circleCenter = XMVector3Transform(
-						XMLoadFloat3(&boxA.Center), 
-						XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxB.Orientation))));
+				//if (a->IsCapsule()) {
+				//	auto& originBoxB = b->GetOriginalBox();
+				//	XMFLOAT3 temp;
+				//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxA.Center), -XMLoadFloat4(&boxB.Orientation)));
 
-					if (false == circleBoxCol(
-						XMFLOAT2(boxB.Center.x, boxB.Center.z),
-						XMFLOAT2(boxB.Extents.x, boxB.Extents.z), 
-						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)), 
-						boxA.Extents.x)) return;
-				}
-				if (b->IsCapsule()) {
-					XMVECTOR circleCenter = XMVector3Transform(
-						XMLoadFloat3(&boxB.Center),
-						XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxA.Orientation))));
+				//	if (false == circleBoxCol(originBoxB, XMFLOAT2(temp.x, temp.z), boxA.Extents.x)) return;
+				//}
+				//if (b->IsCapsule()) {
+				//	auto& originBoxA = a->GetOriginalBox();
+				//	XMFLOAT3 temp;
+				//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxB.Center), -XMLoadFloat4(&boxA.Orientation)));
 
-					if (false == circleBoxCol(
-						XMFLOAT2(boxA.Center.x, boxA.Center.z),
-						XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
-						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
-						boxB.Extents.x)) return;
-				}
+				//	if (false == circleBoxCol(originBoxA, XMFLOAT2(temp.x, temp.z), boxB.Extents.x)) return;
+				//}
 
 				// if collided, add to coll list, handle later
 				if (a->IsStaticObject() == false)
@@ -1032,7 +1020,7 @@ namespace ECSsystem {
 							doorCtrl->SetLock(false);
 
 							};
-						button->SetButtonEvent(check);
+						button->SetButtonDownEvent(check);
 					}
 				}
 			}
@@ -1065,7 +1053,7 @@ namespace ECSsystem {
 
 			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftDown()) {
 
-				const ButtonEventFunction& butEvent = but->GetButtonEvent();
+				const ButtonEventFunction& butEvent = but->GetButtonDownEvent();
 				if (butEvent != nullptr) {
 					butEvent(self->GetEntity());
 					DebugPrint("Button Hit!!");

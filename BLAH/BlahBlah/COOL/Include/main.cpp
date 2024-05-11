@@ -7,7 +7,6 @@
 // PIX 구글 검색 ㄱ
 #include <filesystem>
 #include <shlobj.h>
-#endif
 
 static std::wstring GetLatestWinPixGpuCapturerPath()
 {
@@ -39,6 +38,7 @@ static std::wstring GetLatestWinPixGpuCapturerPath()
 
     return pixInstallationPath / newestVersionFound / L"WinPixGpuCapturer.dll";
 }
+#endif
 
 //
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lpCmdLine, int nCmdShow)

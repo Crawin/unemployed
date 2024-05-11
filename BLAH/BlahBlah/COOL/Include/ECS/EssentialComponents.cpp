@@ -217,11 +217,14 @@ namespace component {
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
 		rotRad.y = XMConvertToRadians(m_Rotate.y);
 		rotRad.z = XMConvertToRadians(m_Rotate.z);
-		XMMATRIX mat = XMMatrixMultiply(
-			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
-			XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
-				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
-
+		//XMMATRIX mat = XMMatrixMultiply(
+		//	XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
+		//	XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
+		//		XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
+		XMMATRIX mat =
+			XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) *
+			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)) *
+			XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
 		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
 		XMStoreFloat4x4(&worldMat, mat);
@@ -495,6 +498,34 @@ namespace component {
 			m_IsCapsule = col["IsCapsule"].asBool();
 		}
 
+		bool isSyncMesh = col["SyncMesh"].asBool();
+
+		if (isSyncMesh) {
+			XMFLOAT3 center;
+			center.x = col["Center"][0].asFloat();
+			center.y = col["Center"][1].asFloat();
+			center.z = col["Center"][2].asFloat();
+
+			XMFLOAT3 extent;
+			extent.x = col["Extent"][0].asFloat();
+			extent.y = col["Extent"][1].asFloat();
+			extent.z = col["Extent"][2].asFloat();
+
+			XMVECTOR rotate = { XMConvertToRadians(col["Rotate"][0].asFloat()), XMConvertToRadians(col["Rotate"][1].asFloat()), XMConvertToRadians(col["Rotate"][2].asFloat()) };
+
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(rotate);
+
+			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+			m_BoundingBoxOriginal.Transform(m_BoundingBoxOriginal, rot);
+
+			// todo
+			// automesh = true, capsule = true
+			m_IsCapsule = true;
+			m_Collided = true;
+		}
+
+
 	}
 
 	void Collider::ShowYourself() const
@@ -505,6 +536,7 @@ namespace component {
 	void Collider::UpdateBoundingBox(const XMMATRIX& transMat)
 	{
 		m_BoundingBoxOriginal.Transform(m_CurrentBox, transMat);
+		XMStoreFloat4(&m_CurrentBox.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_CurrentBox.Orientation)));
 	}
 
 	void Collider::InsertCollidedEntity(Entity* ent)
