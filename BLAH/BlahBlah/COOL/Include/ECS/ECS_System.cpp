@@ -1034,6 +1034,21 @@ namespace ECSsystem {
 							};
 						button->SetButtonEvent(check);
 					}
+
+					if (name == "1Button") {
+						Button* button = manager->GetComponent<Button>(child);
+						ButtonEventFunction check = [can, kpd, manager](Entity* ent) {
+							// hide ui;
+							can->HideUI();
+
+							// open door
+							Entity* door = kpd->GetDoor();
+							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+							doorCtrl->SetLock(false);
+
+							};
+						button->SetButtonEvent(check);
+					}
 				}
 			}
 
