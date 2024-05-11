@@ -44,7 +44,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1floor1",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -72,7 +72,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1floor2",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -100,7 +100,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1floor3",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -128,7 +128,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1floor4",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -156,7 +156,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stfloor",
-					"Material": "NoMaterial"
+					"Material": "1stfloor_Color"
 				}
 			},
 			{
@@ -184,7 +184,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -212,7 +212,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1_5Centerfloor",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -240,7 +240,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1_5Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -268,7 +268,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1_25Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -296,7 +296,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1_75Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -324,7 +324,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutMiddleStair",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -352,11 +352,11 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutDiagonal2ndlink",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
-				"Name": "_2ndfloor",
+				"Name": "_2ndfloor1",
 				"Transform": {
 					"Position": [
 						0.0,
@@ -379,8 +379,92 @@
 					"AutoMesh": true
 				},
 				"Renderer": {
-					"Mesh": "MidtermMap._2ndfloor",
-					"Material": "NoMaterial"
+					"Mesh": "MidtermMap._2ndfloor1",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2ndfloor2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor2",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2ndfloor3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor3",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2ndfloor4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor4",
+					"Material": "2ndfloor_Color"
 				}
 			},
 			{
@@ -408,7 +492,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2_5Centerfloor",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -436,7 +520,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2_5Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -464,7 +548,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2Sidefloor1",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -492,7 +576,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2Sidefloor2",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -520,7 +604,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1Stair1",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -548,7 +632,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1Stair2",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -576,7 +660,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1Stair3",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -604,7 +688,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1Stair4",
-					"Material": "NoMaterial"
+					"Material": "BrushedIron01_4K_BaseColor"
 				}
 			},
 			{
@@ -628,11 +712,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterLeftStair",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -656,11 +744,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterLeftStairRail",
-					"Material": "NoMaterial"
+					"Material": "Wood03_4K_BaseColor"
 				}
 			},
 			{
@@ -684,11 +776,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterRightStair",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -712,11 +808,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterRightStairRail",
-					"Material": "NoMaterial"
+					"Material": "Wood03_4K_BaseColor"
 				}
 			},
 			{
@@ -740,11 +840,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [127.5, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterStair",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -768,11 +872,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterStairLeftRail",
-					"Material": "NoMaterial"
+					"Material": "Wood03_4K_BaseColor"
 				}
 			},
 			{
@@ -796,11 +904,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fCenterStairRightRail",
-					"Material": "NoMaterial"
+					"Material": "Wood03_4K_BaseColor"
 				}
 			},
 			{
@@ -828,7 +940,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fSideStair001",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -856,7 +968,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fSideStair002",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -884,7 +996,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fSideStair003",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -912,7 +1024,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1fSideStair004",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -940,7 +1052,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutStair1",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -968,7 +1080,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutStair2",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -996,7 +1108,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1sSideStairDoorCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1024,7 +1136,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftPillar",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1052,7 +1164,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall1",
-					"Material": "NoMaterial"
+					"Material": "1stLeftToiletwall1_Color"
 				}
 			},
 			{
@@ -1080,7 +1192,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1108,7 +1220,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1136,7 +1248,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1164,7 +1276,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall5",
-					"Material": "NoMaterial"
+					"Material": "1stLeftToiletwall5_Color"
 				}
 			},
 			{
@@ -1192,7 +1304,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1220,7 +1332,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1248,7 +1360,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stLeftToiletwall8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1276,7 +1388,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stRail",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -1304,7 +1416,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._1stRightPillar",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1332,7 +1444,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1360,7 +1472,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1388,7 +1500,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1416,7 +1528,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1444,7 +1556,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1472,7 +1584,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1500,7 +1612,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1528,7 +1640,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1556,7 +1668,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall9",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1584,7 +1696,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall10",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1612,7 +1724,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall11",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1640,7 +1752,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall12",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1668,7 +1780,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.UWindowwall13",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -1696,7 +1808,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow1_Color"
 				}
 			},
 			{
@@ -1724,7 +1836,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow1_1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow1-1_Color"
 				}
 			},
 			{
@@ -1752,7 +1864,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow2",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow2_Color"
 				}
 			},
 			{
@@ -1780,7 +1892,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow2_1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow2-1_Color"
 				}
 			},
 			{
@@ -1808,7 +1920,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow3",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow3_Color"
 				}
 			},
 			{
@@ -1836,7 +1948,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow3_1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow3-1_Color"
 				}
 			},
 			{
@@ -1864,7 +1976,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow4",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow4_Color"
 				}
 			},
 			{
@@ -1892,7 +2004,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow4_1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow4-1_Color"
 				}
 			},
 			{
@@ -1920,7 +2032,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow5",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow5_Color"
 				}
 			},
 			{
@@ -1948,7 +2060,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow5_1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow5-1_Color"
 				}
 			},
 			{
@@ -1976,7 +2088,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow6",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow6_Color"
 				}
 			},
 			{
@@ -2004,7 +2116,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindow6_1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindow6-1_Color"
 				}
 			},
 			{
@@ -2032,7 +2144,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall1",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall1_Color"
 				}
 			},
 			{
@@ -2060,7 +2172,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall2",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall2_Color"
 				}
 			},
 			{
@@ -2088,7 +2200,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall3",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall3_Color"
 				}
 			},
 			{
@@ -2116,7 +2228,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall4",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall4_Color"
 				}
 			},
 			{
@@ -2144,7 +2256,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall5",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall5_Color"
 				}
 			},
 			{
@@ -2172,7 +2284,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall6",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall6_Color"
 				}
 			},
 			{
@@ -2200,7 +2312,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall7",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall7_Color"
 				}
 			},
 			{
@@ -2228,7 +2340,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.TriangleWindowwall8",
-					"Material": "NoMaterial"
+					"Material": "TriangleWindowwall8_Color"
 				}
 			},
 			{
@@ -2256,7 +2368,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterBasementStairs1",
-					"Material": "NoMaterial"
+					"Material": "CenterBasementStairs1_Color"
 				}
 			},
 			{
@@ -2284,7 +2396,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterBenchCeiling",
-					"Material": "NoMaterial"
+					"Material": "Wood03_4K_BaseColor"
 				}
 			},
 			{
@@ -2312,7 +2424,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterBenchPillar1",
-					"Material": "NoMaterial"
+					"Material": "CenterBenchPillar1_Color"
 				}
 			},
 			{
@@ -2340,7 +2452,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterBenchPillar2",
-					"Material": "NoMaterial"
+					"Material": "CenterBenchPillar2_Color"
 				}
 			},
 			{
@@ -2368,7 +2480,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterBenchPillar3",
-					"Material": "NoMaterial"
+					"Material": "CenterBenchPillar3_Color"
 				}
 			},
 			{
@@ -2396,7 +2508,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterBenchPillar4",
-					"Material": "NoMaterial"
+					"Material": "CenterBenchPillar4_Color"
 				}
 			},
 			{
@@ -2424,7 +2536,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2452,7 +2564,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2480,7 +2592,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2508,7 +2620,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall4",
-					"Material": "NoMaterial"
+					"Material": "CenterLeftwall4_Color"
 				}
 			},
 			{
@@ -2536,7 +2648,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall4Ceiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2564,7 +2676,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall5",
-					"Material": "NoMaterial"
+					"Material": "CenterLeftwall5_Color"
 				}
 			},
 			{
@@ -2592,7 +2704,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterLeftwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2620,7 +2732,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2648,7 +2760,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightManToilet",
-					"Material": "NoMaterial"
+					"Material": "CenterRightManToilet_Color"
 				}
 			},
 			{
@@ -2676,7 +2788,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightManToiletCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2704,7 +2816,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2732,7 +2844,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall2",
-					"Material": "NoMaterial"
+					"Material": "CenterRightwall2_Color"
 				}
 			},
 			{
@@ -2760,7 +2872,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall3",
-					"Material": "NoMaterial"
+					"Material": "CenterRightwall3_Color"
 				}
 			},
 			{
@@ -2788,7 +2900,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2816,7 +2928,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2844,7 +2956,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2872,7 +2984,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightwall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2900,7 +3012,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightWomanToilet",
-					"Material": "NoMaterial"
+					"Material": "CenterRightWomanToilet_Color"
 				}
 			},
 			{
@@ -2928,7 +3040,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterRightWomanToiletCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2956,7 +3068,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairLeftThickwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -2984,7 +3096,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairLeftwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -3012,7 +3124,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairLeftwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -3040,7 +3152,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairRightThickwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -3068,7 +3180,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairRightwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -3096,7 +3208,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairRightwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -3124,7 +3236,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.CenterStairwall",
-					"Material": "NoMaterial"
+					"Material": "CenterStairwall_Color"
 				}
 			},
 			{
@@ -3152,7 +3264,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Elevator",
-					"Material": "NoMaterial"
+					"Material": "PolishedConcrete01_4K_BaseColor"
 				}
 			},
 			{
@@ -3180,7 +3292,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.ElevatorDoor",
-					"Material": "NoMaterial"
+					"Material": "ElevatorDoor_Color"
 				}
 			},
 			{
@@ -3208,7 +3320,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBed",
-					"Material": "NoMaterial"
+					"Material": "FlowerBed_Color"
 				}
 			},
 			{
@@ -3236,7 +3348,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBed2",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3264,7 +3376,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBed3",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3292,7 +3404,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedAcrosswall",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3320,7 +3432,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedCeiling",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3348,7 +3460,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedDiagonalwall",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3376,7 +3488,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedDiagonalwall2",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3404,7 +3516,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedDownhill",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -3432,7 +3544,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedDownhill2",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -3460,7 +3572,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedFloor",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -3488,7 +3600,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedPillar",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3516,7 +3628,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FlowerBedRightwall",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -3544,7 +3656,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FrontDoorLeftwall",
-					"Material": "NoMaterial"
+					"Material": "FrontDoorLeftwall_Color"
 				}
 			},
 			{
@@ -3572,7 +3684,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FrontDoorLeftwall2",
-					"Material": "NoMaterial"
+					"Material": "FrontDoorLeftwall2_Color"
 				}
 			},
 			{
@@ -3600,7 +3712,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.FrontDoorRightwall",
-					"Material": "NoMaterial"
+					"Material": "FrontDoorRightwall_Color"
 				}
 			},
 			{
@@ -3628,7 +3740,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumAcrossPillar1",
-					"Material": "NoMaterial"
+					"Material": "AuditoriumAcrossPillar1_Color"
 				}
 			},
 			{
@@ -3656,7 +3768,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumAcrossPillar2",
-					"Material": "NoMaterial"
+					"Material": "AuditoriumAcrossPillar2_Color"
 				}
 			},
 			{
@@ -3684,7 +3796,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling1",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3712,7 +3824,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling2",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3740,7 +3852,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling3",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3768,7 +3880,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling4",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3796,7 +3908,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall1",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3824,7 +3936,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall2",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3852,7 +3964,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall3",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3880,7 +3992,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall4",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3908,7 +4020,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall5",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3936,7 +4048,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall6",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3964,7 +4076,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall7",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -3992,7 +4104,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall8",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4020,7 +4132,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall9",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4048,7 +4160,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall10",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4076,7 +4188,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall11",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4104,7 +4216,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall12",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4132,7 +4244,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall13",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4160,7 +4272,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumFrontwall14",
-					"Material": "NoMaterial"
+					"Material": "wood_table_001_diff_4k"
 				}
 			},
 			{
@@ -4188,7 +4300,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumLeftwall",
-					"Material": "NoMaterial"
+					"Material": "AuditoriumLeftwall_Color"
 				}
 			},
 			{
@@ -4216,7 +4328,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.AuditoriumRightwall",
-					"Material": "NoMaterial"
+					"Material": "AuditoriumRightwall_Color"
 				}
 			},
 			{
@@ -4244,7 +4356,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.LeftDoorCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4272,7 +4384,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.LeftDoorLeftwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4300,7 +4412,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.LeftDoorRightwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4328,7 +4440,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.LeftDoorRightwall2",
-					"Material": "NoMaterial"
+					"Material": "LeftDoorRightwall2_Color"
 				}
 			},
 			{
@@ -4356,7 +4468,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutLeft1stwall",
-					"Material": "NoMaterial"
+					"Material": "OutLeft1stwall_Color"
 				}
 			},
 			{
@@ -4384,7 +4496,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutLeftInsetwall",
-					"Material": "NoMaterial"
+					"Material": "OutLeftInsetwall_Color"
 				}
 			},
 			{
@@ -4412,7 +4524,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutBetweenLeftwall",
-					"Material": "NoMaterial"
+					"Material": "OutBetweenLeftwall_Color"
 				}
 			},
 			{
@@ -4440,7 +4552,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Out1stStair",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -4468,7 +4580,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Out1stStairRail",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -4496,7 +4608,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutCenterLeftRail",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -4524,7 +4636,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutCenterStair",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -4552,7 +4664,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutFrontRightwall",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -4580,7 +4692,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1wall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4608,7 +4720,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1wall5",
-					"Material": "NoMaterial"
+					"Material": "B1wall5_Color"
 				}
 			},
 			{
@@ -4636,7 +4748,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1wall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4664,7 +4776,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1wall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4692,7 +4804,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1wall2",
-					"Material": "NoMaterial"
+					"Material": "B1wall2_Color"
 				}
 			},
 			{
@@ -4720,7 +4832,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.B1wall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4748,7 +4860,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutDiagonalRail",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -4776,7 +4888,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutDiagonalwall",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -4800,11 +4912,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2fCenterLeftStair",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -4828,11 +4944,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2fCenterRightStair",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -4856,11 +4976,15 @@
 				},
 				"Collider": {
 					"Static": true,
-					"AutoMesh": true
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [127.5, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2fCenterStair",
-					"Material": "NoMaterial"
+					"Material": "Tiles043_4K-JPG_Color"
 				}
 			},
 			{
@@ -4888,7 +5012,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndcolumn",
-					"Material": "NoMaterial"
+					"Material": "Bluewall_Color"
 				}
 			},
 			{
@@ -4916,7 +5040,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndElevator",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4944,7 +5068,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -4972,7 +5096,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5000,7 +5124,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5028,7 +5152,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5056,7 +5180,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5084,7 +5208,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5112,7 +5236,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5140,7 +5264,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5168,7 +5292,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling9",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5196,7 +5320,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorCeiling10",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5224,7 +5348,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5252,7 +5376,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5280,7 +5404,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5308,7 +5432,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5336,7 +5460,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5364,7 +5488,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5392,7 +5516,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5420,7 +5544,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5448,7 +5572,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall9",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5476,7 +5600,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall10",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5504,7 +5628,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall11",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5532,7 +5656,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLectureDoorwall12",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5560,7 +5684,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5588,7 +5712,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5616,7 +5740,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5644,7 +5768,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5672,7 +5796,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5700,7 +5824,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5728,7 +5852,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLecturewall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5756,7 +5880,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftDiagonalwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5784,7 +5908,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftDoorwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5812,7 +5936,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftDoorwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5840,7 +5964,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftDoorwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5868,7 +5992,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftDoorwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5896,7 +6020,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftToiletwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5924,7 +6048,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftToiletwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5952,7 +6076,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftToiletwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -5980,7 +6104,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftToiletwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6008,7 +6132,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndLeftToiletwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6036,7 +6160,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndOutRail",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -6064,7 +6188,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6092,7 +6216,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6120,7 +6244,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6148,7 +6272,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6176,7 +6300,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6204,7 +6328,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6232,7 +6356,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6260,7 +6384,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6288,7 +6412,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling9",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6316,7 +6440,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling10",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6344,7 +6468,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling11",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6372,7 +6496,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling12",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6400,7 +6524,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling13",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6428,7 +6552,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling14",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6456,7 +6580,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling15",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6484,7 +6608,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorCeiling16",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6512,7 +6636,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6540,7 +6664,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6568,7 +6692,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6596,7 +6720,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6624,7 +6748,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6652,7 +6776,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6680,7 +6804,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6708,7 +6832,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6736,7 +6860,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall9",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6764,7 +6888,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall10",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6792,7 +6916,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall11",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6820,7 +6944,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall12",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6848,7 +6972,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall13",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6876,7 +7000,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall14",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6904,7 +7028,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall15",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6932,7 +7056,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall16",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6960,7 +7084,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorDoorwall17",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -6988,7 +7112,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7016,7 +7140,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7044,7 +7168,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7072,7 +7196,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7100,7 +7224,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7128,7 +7252,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7156,7 +7280,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall7",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7184,7 +7308,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall8",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7212,7 +7336,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall9",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7240,7 +7364,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall10",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7268,7 +7392,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall11",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7296,7 +7420,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall12",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7324,7 +7448,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall13",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7352,7 +7476,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall14",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7380,7 +7504,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndProfessorwall15",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7408,7 +7532,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioCeiling",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7436,7 +7560,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioDecor",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7464,7 +7588,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioBench",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7492,7 +7616,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioPillar1",
-					"Material": "NoMaterial"
+					"Material": "IstudioPillar1_Color"
 				}
 			},
 			{
@@ -7520,7 +7644,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioPillar2",
-					"Material": "NoMaterial"
+					"Material": "WhiteBrick_Base"
 				}
 			},
 			{
@@ -7548,7 +7672,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioPillar3",
-					"Material": "NoMaterial"
+					"Material": "WhiteBrick_Base"
 				}
 			},
 			{
@@ -7576,7 +7700,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioPillar4",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7604,7 +7728,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioPillar5",
-					"Material": "NoMaterial"
+					"Material": "WhiteBrick_Base"
 				}
 			},
 			{
@@ -7632,7 +7756,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.IstudioPillar6",
-					"Material": "NoMaterial"
+					"Material": "WhiteBrick_Base"
 				}
 			},
 			{
@@ -7660,7 +7784,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall1",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7688,7 +7812,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall2",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7716,7 +7840,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall4",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7744,7 +7868,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall5",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7772,7 +7896,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall6",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7800,7 +7924,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall7",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7828,7 +7952,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Istudiowall8",
-					"Material": "NoMaterial"
+					"Material": "Whitewood_COL"
 				}
 			},
 			{
@@ -7856,7 +7980,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217DoorCeiling1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7884,7 +8008,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217DoorCeiling2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7912,7 +8036,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217wall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7940,7 +8064,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217wall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7968,7 +8092,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217wall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -7996,7 +8120,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217wall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8024,7 +8148,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._217wall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8052,7 +8176,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutDiagonalMiddleRail",
-					"Material": "NoMaterial"
+					"Material": "factory_brick_diff_4k"
 				}
 			},
 			{
@@ -8080,7 +8204,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutGraywall",
-					"Material": "NoMaterial"
+					"Material": "OutGraywall_Color"
 				}
 			},
 			{
@@ -8108,7 +8232,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2fSideStair001",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8136,7 +8260,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2fSideStair002",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8164,7 +8288,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._2ndSideStairDoorCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8192,7 +8316,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._3_5Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8220,7 +8344,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._3fSideStair001",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8248,7 +8372,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._3fSideStair002",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8276,7 +8400,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._3rdSideStairDoorCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8304,7 +8428,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._3Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8332,7 +8456,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._4_5Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8360,7 +8484,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._4fSideStair001",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8388,7 +8512,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._4fSideStair002",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8416,7 +8540,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._4Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8444,7 +8568,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._4thSideStairDoorCeiling",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8472,7 +8596,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap._5Sidefloor",
-					"Material": "NoMaterial"
+					"Material": "Beigetile_COL"
 				}
 			},
 			{
@@ -8496,7 +8620,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.Dummy",
-					"Material": "NoMaterial"
+					"Material": "Dummy_Color"
 				}
 			},
 			{
@@ -8524,7 +8648,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutBackwall",
-					"Material": "NoMaterial"
+					"Material": "OutBackwall_Color"
 				}
 			},
 			{
@@ -8552,7 +8676,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutbetweenBigRightwall",
-					"Material": "NoMaterial"
+					"Material": "OutbetweenBigRightwall_Color"
 				}
 			},
 			{
@@ -8580,7 +8704,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutbetweenRightwall",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -8608,7 +8732,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutRightBackwall",
-					"Material": "NoMaterial"
+					"Material": "OutRightBackwall_Color"
 				}
 			},
 			{
@@ -8636,7 +8760,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutRightInsetwall",
-					"Material": "NoMaterial"
+					"Material": "OutRightInsetwall_Color"
 				}
 			},
 			{
@@ -8664,7 +8788,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.OutRightwall",
-					"Material": "NoMaterial"
+					"Material": "painted_plaster_wall_diff_4k"
 				}
 			},
 			{
@@ -8692,7 +8816,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairDiagoanlwall",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8720,7 +8844,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairwall1",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8748,7 +8872,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairwall2",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8776,7 +8900,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairwall3",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8804,7 +8928,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairwall4",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8832,7 +8956,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairwall5",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			},
 			{
@@ -8860,7 +8984,7 @@
 				},
 				"Renderer": {
 					"Mesh": "MidtermMap.SideStairwall6",
-					"Material": "NoMaterial"
+					"Material": "Plaster002_4K-JPG_Color"
 				}
 			}
 		]

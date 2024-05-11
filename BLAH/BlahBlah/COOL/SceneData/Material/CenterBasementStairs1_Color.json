@@ -1,0 +1,9 @@
+{
+	"name": "CenterBasementStairs1_Color",
+	"BaseColor": "CenterBasementStairs1_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

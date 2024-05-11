@@ -1,0 +1,9 @@
+{
+	"name": "OutLeft1stwall_Color",
+	"BaseColor": "OutLeft1stwall_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

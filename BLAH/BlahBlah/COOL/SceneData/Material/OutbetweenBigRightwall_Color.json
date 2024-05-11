@@ -1,0 +1,9 @@
+{
+	"name": "OutbetweenBigRightwall_Color",
+	"BaseColor": "OutbetweenBigRightwall_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

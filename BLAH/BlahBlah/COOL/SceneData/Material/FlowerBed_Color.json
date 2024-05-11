@@ -1,0 +1,9 @@
+{
+	"name": "FlowerBed_Color",
+	"BaseColor": "FlowerBed_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

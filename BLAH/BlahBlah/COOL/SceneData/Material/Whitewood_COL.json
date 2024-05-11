@@ -1,0 +1,9 @@
+{
+	"name": "Whitewood_COL",
+	"BaseColor": "Whitewood_COL",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
