@@ -68,7 +68,6 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 
 
 	// 임시
-#ifdef _DEBUG
 	std::string testscene = "Test";
 	if (testscene == firstScene) 
 	{
@@ -76,6 +75,7 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 		m_CurrentScene->m_SceneName = "Test";
 		m_CurrentScene->Enter(commandList);
 	}
+#ifdef _DEBUG
 #endif
 
 

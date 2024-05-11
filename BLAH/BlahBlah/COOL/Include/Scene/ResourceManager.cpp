@@ -143,7 +143,7 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 
 	if (parent) parent->AddChild(ent);
 
-	for (auto& jsonComp : root.getMemberNames()) {
+	for (auto jsonComp : root.getMemberNames()) {
 		component::Component* cmp = GET_COMPONENT(jsonComp);
 
 		if (cmp == nullptr) {
