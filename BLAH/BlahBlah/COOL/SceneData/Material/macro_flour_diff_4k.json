@@ -1,0 +1,9 @@
+{
+	"name": "macro_flour_diff_4k",
+	"BaseColor": "macro_flour_diff_4k",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

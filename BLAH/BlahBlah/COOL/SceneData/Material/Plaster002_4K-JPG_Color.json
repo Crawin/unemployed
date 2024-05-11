@@ -1,0 +1,9 @@
+{
+	"name": "Plaster002_4K-JPG_Color",
+	"BaseColor": "Plaster002_4K-JPG_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

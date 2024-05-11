@@ -1,0 +1,9 @@
+{
+	"name": "BlackLeather02_4K_BaseColor",
+	"BaseColor": "BlackLeather02_4K_BaseColor",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "CenterRightwall2_Color",
+	"BaseColor": "CenterRightwall2_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

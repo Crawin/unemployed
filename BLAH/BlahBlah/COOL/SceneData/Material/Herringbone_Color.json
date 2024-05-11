@@ -1,0 +1,9 @@
+{
+	"name": "Herringbone_Color",
+	"BaseColor": "Herringbone_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

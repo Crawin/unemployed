@@ -1,0 +1,9 @@
+{
+	"name": "B1wall2_Color",
+	"BaseColor": "B1wall2_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

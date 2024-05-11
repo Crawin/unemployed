@@ -1,0 +1,9 @@
+{
+	"name": "CenterBenchPillar3_Color",
+	"BaseColor": "CenterBenchPillar3_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

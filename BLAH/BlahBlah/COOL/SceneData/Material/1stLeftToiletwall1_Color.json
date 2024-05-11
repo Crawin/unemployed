@@ -1,0 +1,9 @@
+{
+	"name": "1stLeftToiletwall1_Color",
+	"BaseColor": "1stLeftToiletwall1_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "CenterStairwall_Color",
+	"BaseColor": "CenterStairwall_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
