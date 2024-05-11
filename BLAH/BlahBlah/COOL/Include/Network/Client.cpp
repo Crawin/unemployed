@@ -27,6 +27,10 @@ Client::~Client()
 	std::cout << "Client 소멸자 호출" << std::endl;
 	// 소켓 닫기
 	closesocket(m_sServer);
+
+	// vivox 종료
+	vivox_state->game_state = false;
+
 	// 윈속 종료
 	WSACleanup();
 }
