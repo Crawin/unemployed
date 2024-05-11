@@ -249,54 +249,55 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		light.m_CameraIdx = -1;
 
 		// if light dir == directional, update light map
-		switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
-		case LIGHT_TYPES::DIRECTIONAL_LIGHT: 
-		{
-			++activeLights;
+		if (light.m_CastShadow != FALSE) {
+			switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
+			case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+			{
+				++activeLights;
 
-			// todo 
-			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
-			auto& p = camVec[0]->GetPosition();
-			
-			XMFLOAT3 up = light.m_Direction;
-			up.x *= -5000.0;
-			up.y *= -5000.0;
-			up.z *= -5000.0;
+				// todo 
+				// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
+				auto& p = camVec[0]->GetPosition();
 
-			XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
-			light.m_Position = pos;
+				XMFLOAT3 up = light.m_Direction;
+				up.x *= -5000.0;
+				up.y *= -5000.0;
+				up.z *= -5000.0;
 
-			// 뒷면이라면
-			if (up.y < 0) {
-				// 셰도우맵핑을 끄자
-				break;
+				XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
+				light.m_Position = pos;
+
+				// 뒷면이라면
+				if (up.y < 0) {
+					// 셰도우맵핑을 끄자
+					break;
+				}
+				// 해당 함수가 불리면 shadow mapping을 한다.
+				shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
+				res->UpdateShadowMapView(shadowMapIdx, light);
+
+				// set result
+				light.m_CameraIdx = res->GetShadowMapCamIdx(shadowMapIdx);
+				light.m_ShadowMapResults[0] = shadowMapIdx + res->GetShadowMapRTVStartIdx();
+
+				// todo
+				// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
+				res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
+
+				//DebugPrint(std::format("vie: {}, {}, {}", -mat._14, -mat._24, -mat._34));
+				//DebugPrint(std::format("lig: {}, {}, {}", pos.x, pos.y, pos.z));
 			}
-			// 해당 함수가 불리면 shadow mapping을 한다.
-			shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
-			res->UpdateShadowMapView(shadowMapIdx, light);
+			break;
+			case LIGHT_TYPES::SPOT_LIGHT:
+				DebugPrint("No current shadow map setting for spot light now");
 
-			// set result
-			light.m_CameraIdx = res->GetShadowMapCamIdx(shadowMapIdx);
-			light.m_ShadowMapResults[0] = shadowMapIdx + res->GetShadowMapRTVStartIdx();
+				break;
+			case LIGHT_TYPES::POINT_LIGHT:
+				DebugPrint("No current shadow map setting for point light now");
+				break;
 
-			// todo
-			// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
-			res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
-
-			//DebugPrint(std::format("vie: {}, {}, {}", -mat._14, -mat._24, -mat._34));
-			//DebugPrint(std::format("lig: {}, {}, {}", pos.x, pos.y, pos.z));
+			};
 		}
-			break;
-		case LIGHT_TYPES::SPOT_LIGHT:
-			DebugPrint("No current shadow map setting for spot light now");
-
-			break;
-		case LIGHT_TYPES::POINT_LIGHT:
-			DebugPrint("No current shadow map setting for point light now");
-			break;
-
-		};
-
 
 		// clear Dsv;
 		// todo 

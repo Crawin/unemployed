@@ -14,9 +14,10 @@ enum class LIGHT_TYPES {
 // data to send GPU
 struct LightData {
 	XMFLOAT4 m_LightColor;
+	XMFLOAT4 m_LightAmbient;
 
 	XMFLOAT3 m_Direction;			// Transform에 연계하여 바뀐다.
-	float m_Falloff;
+	float m_Distance;				// for spot light
 	
 	XMFLOAT3 m_Position;			// Transform에 연계하여 바뀐다.
 	int m_LightType = 0;
@@ -29,6 +30,9 @@ struct LightData {
 	BOOL m_CastShadow = FALSE;		// 상황에 맞게 판단하여 그때그때 켜진다.
 	int m_CameraIdx = -1;
 	float m_Temperature = -1;		// 1 이상이라면 켜진거임		2000 ~ 7000 (주황 - 하양), 
+
+	// (spotlight)radian
+	float m_Angle = 60.0f;
 };
 
 

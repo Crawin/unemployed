@@ -56,23 +56,25 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 
 	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtRH(pos, lookAt, XMLoadFloat3(&u)));
 
-	switch (m_Type) {
-	case LIGHT_TYPES::DIRECTIONAL_LIGHT:
-		// bounding frustum update
-		m_BoundingFrustumOrtho.Transform(m_BoundingFrustumWorld, result);
+	if (light.m_CastShadow != FALSE) {
+		switch (m_Type) {
+		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+			// bounding frustum update
+			m_BoundingFrustumOrtho.Transform(m_BoundingFrustumWorld, result);
 
-		break;
-	case LIGHT_TYPES::SPOT_LIGHT:
-		m_BoundingFrustumPerspective.Transform(m_BoundingFrustumWorld, result);
+			break;
+		case LIGHT_TYPES::SPOT_LIGHT:
+			m_BoundingFrustumPerspective.Transform(m_BoundingFrustumWorld, result);
 
-		DebugPrint("No current shadow map setting for spot light now");
+			DebugPrint("No current shadow map setting for spot light now");
 
-		break;
-	case LIGHT_TYPES::POINT_LIGHT:
-		DebugPrint("No current shadow map setting for point light now");
-		break;
+			break;
+		case LIGHT_TYPES::POINT_LIGHT:
+			DebugPrint("No current shadow map setting for point light now");
+			break;
 
-	};
+		};
+	}
 }
 
 void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) const

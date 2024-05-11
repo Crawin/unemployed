@@ -16,14 +16,16 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [45.0, 0.0, 0.0],
+				"Rotate": [135.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 
 			"Light":
 			{
 				"LightColor": [1.0, 1.0, 1.0, 1.0],
-				"FallOff": 0.0,
+				"AmbientColor": [1.0, 1.0, 1.0, 1],
+				"Distance": 200.0,
+				"Angle": 60.0,
 				"LightType": 0,
 				"Active": true,
 				"CastShadow": true,
@@ -45,13 +47,15 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [225.0, 0.0, 0.0],
+				"Rotate": [315.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 			"Light":
 			{
 				"LightColor": [0.92, 0.45, 0.04, 1.0],
-				"FallOff": 0.0,
+				"AmbientColor": [0.92, 0.45, 0.04, 1.0],
+				"Distance": 200.0,
+				"Angle": 60.0,
 				"LightType": 0,
 				"Active": true,
 				"CastShadow": true,

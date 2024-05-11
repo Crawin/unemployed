@@ -1,0 +1,143 @@
+{
+	"name": "LightMaster",
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Children":[
+	{
+		"name": "1st_Light0",
+
+		"Transform": 
+		{
+			"Position": [0.0, 100, 0.0],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"LightType": 1,
+			"Distance": 500.0,
+			"Angle": 80.0,
+			"Active": true,
+			"CastShadow": false,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light1",
+
+		"Transform": 
+		{
+			"Position": [1886.5, 200, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"LightType": 1,
+			"Distance": 500.0,
+			"Angle": 80.0,
+			"Active": true,
+			"CastShadow": false,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light2",
+
+		"Transform": 
+		{
+			"Position": [1486.5, 200, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"LightType": 1,
+			"Distance": 500.0,
+			"Angle": 80.0,
+			"Active": true,
+			"CastShadow": false,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light3",
+
+		"Transform": 
+		{
+			"Position": [1086.5, 200, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"LightType": 1,
+			"Distance": 500.0,
+			"Angle": 80.0,
+			"Active": true,
+			"CastShadow": false,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light4",
+
+		"Transform": 
+		{
+			"Position": [686.5, 200, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1.0, 1.0, 1.0, 1],
+			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"LightType": 1,
+			"Distance": 500.0,
+			"Angle": 80.0,
+			"Active": true,
+			"CastShadow": false,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light5",
+
+		"Transform": 
+		{
+			"Position": [286.5, 200, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"LightType": 1,
+			"Distance": 500.0,
+			"Angle": 80.0,
+			"Active": true,
+			"CastShadow": false,
+			"Main": false
+		}
+	}
+
+
+	]
+
+
+}
