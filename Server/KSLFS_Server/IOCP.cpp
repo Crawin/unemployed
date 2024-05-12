@@ -139,7 +139,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			delete e_over;
 			for (auto& game : Games)
 			{
-				game.second.update();
+				game.second.update(detail.m_bNPC);
 			}
 			break;
 		}
@@ -191,7 +191,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			short floor = floor_collision(position);
 			if (floor >= 0)
 			{
-				std::cout << id << "가 " << floor << "층으로 이동" << std::endl;
+				if(detail.m_bLog)
+					std::cout << id << "가 " << floor << "층으로 이동" << std::endl;
 				gameRoom.setFloor(id, floor);
 			}
 			gameRoom.setPlayerPR(id, position);
@@ -403,9 +404,20 @@ void IOCP_SERVER_MANAGER::command_thread()
 			int num_threads = std::thread::hardware_concurrency();
 			for (int i = 0; i < num_threads; ++i)
 				PostQueuedCompletionStatus(detail.m_hIOCP, 1, -1, reinterpret_cast<OVERLAPPED*>(&over));
-		}},
+		}}
+		,
 		{"/LOG",[this]() {
 			detail.m_bLog = !detail.m_bLog;
+		}}
+		,
+		{"/NPC",[this]() {
+			detail.m_bNPC = !detail.m_bNPC;
+		}}
+		,
+		{"/HELP",[this]() {
+			std::cout << "-------------------------------------------------------------------" << std::endl;
+			std::cout << "/STOP : 서버 종료\n/LOG: 로그 출력\n/NPC: NPC가 플레이어 추적" << std::endl;
+			std::cout << "-------------------------------------------------------------------" << std::endl;
 		}}
 	};
 
@@ -588,9 +600,9 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 	}
 }
 
-void Game::update()
+void Game::update(const bool& npc_state)
 {
-	guard.state_machine(player);
+	guard.state_machine(player,npc_state);
 	//std::cout << "npc 회전: " << guard.rotation.y << std::endl;
 	sc_packet_position npc(guard.id, guard.position, guard.rotation, guard.speed);
 	for (auto& p : player)
@@ -631,7 +643,7 @@ void Game::setFloor(const unsigned int& id, const unsigned short& floor)
 	}
 }
 
-void NPC::state_machine(Player* p)
+void NPC::state_machine(Player* p,const bool& npc_state)
 {
 	for (auto& node : g_um_graph)
 		node.second->init();
@@ -649,7 +661,7 @@ void NPC::state_machine(Player* p)
 
 	if (this->state == 0)				// 두리번 두리번 상태
 	{
-		if (set_destination(p))			// 두리번 거리다가 뭔갈 발견했으면, 목적지 조정하고 이동
+		if (set_destination(p, npc_state))			// 두리번 거리다가 뭔갈 발견했으면, 목적지 조정하고 이동
 		{
 			this->state = 1;
 		}
@@ -670,7 +682,7 @@ void NPC::state_machine(Player* p)
 	}
 	else if (this->state == 1)	// 목적지로 이동하는 중
 	{
-		set_destination(p);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
+		set_destination(p, npc_state);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
 	}
 
 	if(state == 1)
@@ -727,29 +739,35 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 	return false;
 }
 
-bool NPC::set_destination(Player*& p)
+bool NPC::set_destination(Player*& p, const bool& npc_state)
 {
-	for (int i = 0; i < 2; ++i)
-	{
-		if (can_see(p[i]))
+	//short n = find_near_player(p);
+	if (npc_state) {
+		for (int i = 0; i < 2; ++i)
 		{
-			std::cout << i << "P 발견" << std::endl;
-			path = aStarSearch(position, destination);
-			//this->destination = path->pos;
-			this->destination = p[i].position;
-			if (nullptr != path)
-				return true;
-			else
-				state = 0;
-		}
-		else if (can_hear(p[i]))
-		{
-			this->destination = p[i].position;
-			path = aStarSearch(position, destination);
-			if (nullptr != path)
-				return true;
-			else
-				state = 0;
+			if (p[i].sock == NULL)
+				continue;
+
+			if (can_see(p[i]))
+			{
+				std::cout << i << "P 발견" << std::endl;
+				path = aStarSearch(position, destination);
+				//this->destination = path->pos;
+				this->destination = p[i].position;
+				if (nullptr != path)
+					return true;
+				else
+					state = 0;
+			}
+			else if (can_hear(p[i]))
+			{
+				this->destination = p[i].position;
+				path = aStarSearch(position, destination);
+				if (nullptr != path)
+					return true;
+				else
+					state = 0;
+			}
 		}
 	}
 
@@ -807,4 +825,22 @@ void NPC::move()
 	rotation.y = theta;
 	movement *= 100;
 	DirectX::XMStoreFloat3(&speed, movement);
+}
+
+const short NPC::find_near_player(Player*& players)
+{
+	float distance[2] = { 1E+37 ,1E+37 };
+	for (int i = 0; i < 2; ++i)
+	{
+		if (players[i].sock)
+		{
+			distance[i] = (this->position.x - players[i].position.x) * (this->position.x - players[i].position.x)
+				+ (this->position.y - players[i].position.y) * (this->position.y - players[i].position.y)
+				+ (this->position.z - players[i].position.z) * (this->position.z - players[i].position.z);
+		}
+	}
+
+	if (distance[0] <= distance[1]) return 0;
+	else return 1;
+
 }
