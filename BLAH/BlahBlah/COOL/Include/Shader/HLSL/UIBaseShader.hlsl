@@ -41,7 +41,7 @@ VS_OUTPUT vs(uint vtxID : SV_VertexID)
 	output.position.y *= 0.5f * UIheight;
 
 	output.position.x += UIcenterX - (float)(screenWidth) * 0.5f;
-	output.position.y += UIcenterY - (float)(screenHeight) * 0.5f;
+	output.position.y += (float)(screenHeight) * 0.5f - UIcenterY;
 
 	output.position.x /= screenWidth;
 	output.position.y /= screenHeight;

@@ -85,9 +85,9 @@ namespace component {
 
 		void SetDoor(Entity* door) { m_DoorEntity = door; }
 		void SetAnswer(int ans) { m_Answer = ans; }
+		int GetAnswer() const { return m_Answer; }
 
-		int GetCurrent() const { return m_Current; }
 		void SetCurrent(int Current) { m_Current = Current; }
+		int GetCurrent() const { return m_Current; }
 	};
-
 }

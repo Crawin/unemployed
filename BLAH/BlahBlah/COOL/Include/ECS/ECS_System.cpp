@@ -954,7 +954,7 @@ namespace ECSsystem {
 					DebugPrint("UI SHOW!!");
 
 					// test
-					kpd->SetAnswer(123);
+					kpd->SetAnswer(8123);
 					kpd->SetDoor(door);
 
 					kpd->SetCurrent(0);
@@ -1016,10 +1016,13 @@ namespace ECSsystem {
 							// hide ui;
 							can->HideUI();
 							DebugPrint("check");
-							//// open door
-							//Entity* door = kpd->GetDoor();
-							//DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
-							//doorCtrl->SetLock(false);
+							
+							if (kpd->GetAnswer() == kpd->GetCurrent()) {
+								// open door
+								Entity* door = kpd->GetDoor();
+								DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+								doorCtrl->SetLock(false);
+							}
 
 							};
 						button->SetButtonReleaseEvent(check);
@@ -1030,40 +1033,35 @@ namespace ECSsystem {
 							int current = kpd->GetCurrent();
 							current = current * 10 + 8;
 							kpd->SetCurrent(current);
-							DebugPrint("8");
 							};
-						button->SetButtonEvent(password);
+						button->SetButtonReleaseEvent(password);
 					}
 					else if (name == "1Button") {
 						Button* button = manager->GetComponent<Button>(child);
 						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
 							int current = kpd->GetCurrent();
-							current = current * 10 + 8;
+							current = current * 10 + 1;
 							kpd->SetCurrent(current);
-							DebugPrint("1");
 							};
-						button->SetButtonEvent(password);
+						button->SetButtonReleaseEvent(password);
 					}
-
 					else if (name == "2Button") {
 						Button* button = manager->GetComponent<Button>(child);
 						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
 							int current = kpd->GetCurrent();
-							current = current * 10 + 8;
+							current = current * 10 + 2;
 							kpd->SetCurrent(current);
-							DebugPrint("2");
 							};
-						button->SetButtonEvent(password);
+						button->SetButtonReleaseEvent(password);
 					}
 					else if (name == "3Button") {
 						Button* button = manager->GetComponent<Button>(child);
 						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
 							int current = kpd->GetCurrent();
-							current = current * 10 + 8;
+							current = current * 10 + 3;
 							kpd->SetCurrent(current);
-							DebugPrint("3");
 							};
-						button->SetButtonEvent(password);
+						button->SetButtonReleaseEvent(password);
 					}
 				}
 			}
