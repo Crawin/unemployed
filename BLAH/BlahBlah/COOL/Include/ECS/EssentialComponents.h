@@ -366,6 +366,8 @@ namespace component {
 
 		float m_Elasticity = 1.1f;
 
+		bool m_CalculatePhysics = false;
+
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
 
@@ -390,6 +392,8 @@ namespace component {
 		void AddVelocity(const XMFLOAT3& direction, float deltaTime);
 
 		float GetElasticity() const { return m_Elasticity; }
+
+		bool IsToCalculate() const { return m_CalculatePhysics; }
 	};
 
 	/////////////////////////////////////////////////////////

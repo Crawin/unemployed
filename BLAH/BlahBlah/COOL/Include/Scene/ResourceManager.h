@@ -300,7 +300,7 @@ private:
 	//D3D12_CPU_DESCRIPTOR_HANDLE m_DefferedRTVStart = D3D12_CPU_DESCRIPTOR_HANDLE();
 
 	// cascaded + other
-	static const int m_ShadowMapRenderTargets = 5;
+	static const int m_ShadowMapRenderTargets = 4;
 	int m_ShadowMapRTVStartIdx = -1;
 	int m_ShadowMapDSVStartIdx = -1;
 

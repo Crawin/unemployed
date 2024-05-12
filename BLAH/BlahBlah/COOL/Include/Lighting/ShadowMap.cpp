@@ -2,7 +2,7 @@
 #include "ShadowMap.h"
 
 XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, 1.0f, 7000.0f);
-XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 10000.0f);
+XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 1500.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 
 
@@ -45,8 +45,8 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 	float angle = acosf(dotProduct);
 	
 	XMMATRIX rot;
-	if (axisLength == 0) rot = XMMatrixIdentity();
-	else rot = XMMatrixRotationAxis(axis, angle);
+		if (axisLength == 0) rot = XMMatrixIdentity();
+		else rot = XMMatrixRotationAxis(axis, angle);
 
 	XMMATRIX trs = XMMatrixTranslationFromVector(XMLoadFloat3(&light.m_Position));
 

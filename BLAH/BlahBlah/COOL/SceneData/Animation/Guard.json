@@ -1,4 +1,5 @@
 {
 	"Idle": "Guard_Idle",
-	"Walk": "Guard_Running"
+	"Walk": "Guard_Running",
+	"Run": "Guard_Running"
 }

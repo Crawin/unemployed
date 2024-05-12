@@ -341,6 +341,7 @@ namespace component {
 		m_Acceleration.y = s["Acceleration"][1].asFloat();
 		m_Acceleration.z = s["Acceleration"][2].asFloat();
 
+		m_CalculatePhysics = s["Calculate"].asBool();
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
@@ -414,12 +415,12 @@ namespace component {
 			XMVECTOR camDirVec = XMLoadFloat3(&camDir);
 			XMVECTOR camToLight = XMLoadFloat3(&m_LightData.m_Position) - XMLoadFloat3(&camPos);
 
-			float distFactor = 1.0f / max(XMVectorGetX(XMVector3Length(XMLoadFloat3(&camPos))), 0.1f);
+			float distFactor = 1.0f / max(XMVectorGetX(XMVector3Length(camToLight)), 0.1f);
 
 			float dotFactor = (XMVectorGetX(XMVector3Dot(lightDirVec, camDirVec)) + 1.0f) * 2.0f;
+			float dotToLight = (XMVectorGetX(XMVector3Dot(XMVector3Normalize(camToLight), camDirVec)) + 1.0f) * 2.0f;
 
-			m_Score = dotFactor * distFactor;
-
+			m_Score = dotToLight * dotFactor * distFactor;
 			break;
 		}
 

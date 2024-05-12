@@ -17,13 +17,11 @@
 
 	"Physics": 
 	{
-		"MaxVelocity": 600.0,
-		"Acceleration" : [1200.0, 1200.0, 1200.0]
+		"MaxVelocity": 1000.0,
+		"Acceleration" : [2000.0, 2000.0, 2000.0]
 	},
 
-	"TestInput": {},
-
-	"DiaAnimationControl": {},
+	"PlayerAnimControll": {},
 
 	"DynamiCollider": 
 	{
