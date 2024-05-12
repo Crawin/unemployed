@@ -13,7 +13,7 @@ public:
 
 	void SetFPSLock(float fps) { m_LockFPS = fps; }
 
-	float GetDeltaTime() const { return min(m_deltaTime, m_MaxDeltaTime); }
+	float GetDeltaTime() const { return std::min(m_deltaTime, m_MaxDeltaTime); }
 	float GetTotalTime() const { return m_TotalTime; }
 
 private:

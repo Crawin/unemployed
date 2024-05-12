@@ -17,7 +17,7 @@ XMMATRIX AnimationPlayQueueData::GetAnimatedBoneMat(int boneIdx) const
 {
 
 	int endFrame = m_Anim->GetEndFrame();
-	float playTime = min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);;
+	float playTime = std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);;
 	
 	int currentFrame = floor(playTime * m_Anim->GetFrame());
 	float interpolWeight = ceil(playTime * m_Anim->GetFrame()) - playTime * m_Anim->GetFrame();
@@ -92,8 +92,8 @@ void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> command
 	int firstAnimIdx = m_CurrentAnimation.m_Anim->GetDataIdx();
 	int	secondAnimIdx = m_BeforeAnimation.m_Anim->GetDataIdx();
 	float weight = m_BeforeAnimWeight;
-	float firstAnimPlayTime = min(m_CurrentAnimation.m_CurPlayTime, m_CurrentAnimation.m_MaxTime - 1.0f / 24.0f);
-	float secondAnimPlayTime = min(m_BeforeAnimation.m_CurPlayTime, m_BeforeAnimation.m_MaxTime - 1.0f / 24.0f);
+	float firstAnimPlayTime = std::min(m_CurrentAnimation.m_CurPlayTime, m_CurrentAnimation.m_MaxTime - 1.0f / 24.0f);
+	float secondAnimPlayTime = std::min(m_BeforeAnimation.m_CurPlayTime, m_BeforeAnimation.m_MaxTime - 1.0f / 24.0f);
 	int firstAnimFrame = m_CurrentAnimation.m_Anim->GetEndFrame() + 1;
 	int secondAnimFrame = m_BeforeAnimation.m_Anim->GetEndFrame() + 1;
 

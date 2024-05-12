@@ -126,7 +126,7 @@ public:
 	// render, 씬의 렌더러로 바꿀 예정이니 얘는 삭제 예정
 	void Render();
 
-	Renderer* GetRendererPtr();
+	//Renderer* GetRendererPtr();
 
 private:
 	static const UINT m_NumSwapChainBuffers = 2;

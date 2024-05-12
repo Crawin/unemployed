@@ -4,7 +4,7 @@
 #include "ResourceManager.h"
 #include "ECS/ECSManager.h"
 #include "Lighting/ShadowMap.h"
-#include <json/json.h>
+#include "json/json.h"
 
 //#include "Material/Material.h"
 //#include "Mesh/Mesh.h"
@@ -112,13 +112,19 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 {
 	// 오브젝트를 로드한다.
 	Json::Value root;
-	Json::Reader reader;
+	//Json::Reader reader;
+
+	Json::CharReaderBuilder builder;
+	Json::CharReader* reader = builder.newCharReader();
 
 	std::ifstream file(fileName);
-	bool parseResult = reader.parse(file, root);
-	
+	Json::String errors;
+	std::string fileStr(std::istream_iterator<char>(file), {});
+
+	bool parseResult = reader->parse(fileStr.c_str(), fileStr.c_str() + fileStr.size(), &root, &errors);
+
 	if (parseResult == false) {
-		DebugPrint(std::format("Object file Parse Failed!, fileName: {}\n{}", fileName, reader.getFormattedErrorMessages()));
+		DebugPrint(std::format("Object file Parse Failed!, fileName: {}\n{}", fileName, errors));
 		return false;
 	}
 
@@ -131,6 +137,8 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 	component::Root* cmp = new component::Root;
 	cmp->SetEntity(entptr);
 	entptr->AddComponent(cmp);
+
+	delete reader;
 
 	return true;
 }

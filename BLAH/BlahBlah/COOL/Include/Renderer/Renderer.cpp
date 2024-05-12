@@ -1105,8 +1105,8 @@ void Renderer::MouseInput(int xin, int yin)
 	DebugPrint(std::format("look: {}, {}, {}", look.x, look.y, look.z));
 }
 */
-Renderer* Renderer::GetRendererPtr()
-{
-	std::cout << "ptr: " << &Renderer::GetInstance() << std::endl;
-	return &Renderer::GetInstance();
-}
+//Renderer* Renderer::GetRendererPtr()
+//{
+//	//std::cout << "ptr: " << &Renderer::GetInstance() << std::endl;
+//	return &Renderer::GetInstance();
+//}

@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Material/Material.h"
 #include "Vertex.h"
-#include <json/json.h>
+#include "json/json.h"
 
 #define FILE_PATH "Include/Shader/HLSL/"
 
@@ -252,10 +252,11 @@ D3D12_SHADER_BYTECODE Shader::CompileShaderCode(std::string_view fileName, SHADE
 		return D3D12_SHADER_BYTECODE();
 	}
 
-	UINT nCompileFlags = 0;
+	UINT nCompileFlags = D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES;
 #if defined(_DEBUG)
 	nCompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION | D3DCOMPILE_ENABLE_UNBOUNDED_DESCRIPTOR_TABLES;
 #endif
+
 
 	std::string file(FILE_PATH);
 	file += fileName;

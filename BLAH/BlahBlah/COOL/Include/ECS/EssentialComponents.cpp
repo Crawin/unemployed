@@ -1,7 +1,7 @@
 ﻿#include "framework.h"
 #include "EssentialComponents.h"
 #include "Scene/ResourceManager.h"
-#include <json/json.h>
+#include "json/json.h"
 
 
 namespace component {
@@ -415,7 +415,7 @@ namespace component {
 			XMVECTOR camDirVec = XMLoadFloat3(&camDir);
 			XMVECTOR camToLight = XMLoadFloat3(&m_LightData.m_Position) - XMLoadFloat3(&camPos);
 
-			float distFactor = 1.0f / max(XMVectorGetX(XMVector3Length(camToLight)), 0.1f);
+			float distFactor = 1.0f / std::max(XMVectorGetX(XMVector3Length(camToLight)), 0.1f);
 
 			float dotFactor = (XMVectorGetX(XMVector3Dot(lightDirVec, camDirVec)) + 1.0f) * 2.0f;
 			float dotToLight = (XMVectorGetX(XMVector3Dot(XMVector3Normalize(camToLight), camDirVec)) + 1.0f) * 2.0f;
