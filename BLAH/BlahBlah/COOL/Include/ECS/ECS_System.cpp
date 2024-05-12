@@ -722,11 +722,12 @@ namespace ECSsystem {
 				Entity* other = otherEntity.m_Entity;
 				auto eventType = otherEntity.m_Type;
 
-				auto& eventMap = col->GetEventMap(eventType);
+				auto eventMap = col->GetEventMap(eventType);
 
-				// execute event function here
-				for (const auto& [bitset, func] : eventMap) 
-					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+				// execute event function 
+				if (eventMap != nullptr)
+					for (const auto& [bitset, func] : *eventMap) 
+						if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
 			};
 
@@ -737,11 +738,12 @@ namespace ECSsystem {
 				Entity* other = otherEntity.m_Entity;
 				auto eventType = otherEntity.m_Type;
 
-				auto& eventMap = col->GetEventMap(eventType);
+				auto eventMap = col->GetEventMap(eventType);
 
 				// execute event function here
-				for (const auto& [bitset, func] : eventMap)
-					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+				if (eventMap != nullptr)
+					for (const auto& [bitset, func] : *eventMap)
+						if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
 			};
 
@@ -757,7 +759,8 @@ namespace ECSsystem {
 			for (auto& otherEntity : colVec) {
 				Collider* other = manager->GetComponent<Collider>(otherEntity.m_Entity);
 				if (other == nullptr) {
-					DebugPrint("ERROR!! no collider found");
+					// todo dynamic collider
+					//DebugPrint("ERROR!! no collider found");
 					continue;
 				}
 				
@@ -922,18 +925,7 @@ namespace ECSsystem {
 			tr->SetPosition(temp);
 			};
 
-		// send
-		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
-			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
-			{
-				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
-					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
-			}
-			};
-
 		manager->Execute(move);
-		manager->Execute(send);
 	}
 
 	void HandleInteraction::OnInit(ECSManager* manager)
@@ -1085,5 +1077,20 @@ namespace ECSsystem {
 
 		manager->Execute(forAliveCanvas);
 
+	}
+	void SendToServer::Update(ECSManager* manager, float deltaTime)
+	{
+		using namespace component;
+		// send
+		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+			auto& client = Client::GetInstance();
+			if (client.getRoomNum())
+			{
+				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
+			}
+			};
+
+		manager->Execute(send);
 	}
 }

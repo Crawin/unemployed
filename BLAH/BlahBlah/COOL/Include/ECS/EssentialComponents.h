@@ -522,7 +522,7 @@ namespace component {
 		void InsertCollidedEntity(Entity* ent);
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
-		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
+		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
 
 		template<class COMP>
@@ -583,7 +583,7 @@ namespace component {
 		void InsertCollidedEntity(Entity* ent);
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
-		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
+		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
 
 		template<class COMP>

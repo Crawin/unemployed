@@ -584,13 +584,14 @@ namespace component {
 
 	}
 
-	const EventFunctionMap& Collider::GetEventMap(COLLIDE_EVENT_TYPE type) const
+	const EventFunctionMap* Collider::GetEventMap(COLLIDE_EVENT_TYPE type) const
 	{
 		switch (type) {
-		case COLLIDE_EVENT_TYPE::BEGIN:		return m_EventFunctions.m_OnBeginOverlap;
-		case COLLIDE_EVENT_TYPE::ING:		return m_EventFunctions.m_OnOverlapping;
-		case COLLIDE_EVENT_TYPE::END:		return m_EventFunctions.m_OnEndOverlap;
+		case COLLIDE_EVENT_TYPE::BEGIN:		return &m_EventFunctions.m_OnBeginOverlap;
+		case COLLIDE_EVENT_TYPE::ING:		return &m_EventFunctions.m_OnOverlapping;
+		case COLLIDE_EVENT_TYPE::END:		return &m_EventFunctions.m_OnEndOverlap;
 		}
+		return nullptr;
 	}
 
 	void DynamicCollider::Create(Json::Value& v, ResourceManager* rm)
@@ -659,13 +660,15 @@ namespace component {
 		}
 	}
 
-	const EventFunctionMap& DynamicCollider::GetEventMap(COLLIDE_EVENT_TYPE type) const
+	const EventFunctionMap* DynamicCollider::GetEventMap(COLLIDE_EVENT_TYPE type) const
 	{
 		switch (type) {
-		case COLLIDE_EVENT_TYPE::BEGIN:		return m_EventFunctions.m_OnBeginOverlap;
-		case COLLIDE_EVENT_TYPE::ING:		return m_EventFunctions.m_OnOverlapping;
-		case COLLIDE_EVENT_TYPE::END:		return m_EventFunctions.m_OnEndOverlap;
+		case COLLIDE_EVENT_TYPE::BEGIN:		return &m_EventFunctions.m_OnBeginOverlap;
+		case COLLIDE_EVENT_TYPE::ING:		return &m_EventFunctions.m_OnOverlapping;
+		case COLLIDE_EVENT_TYPE::END:		return &m_EventFunctions.m_OnEndOverlap;
 		}
+
+		return nullptr;
 	}
 
 }

@@ -49,13 +49,13 @@ bool Scene::AddSystem()
 	
 	// sync position by server
 	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
-	//m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
 	
 	// move collide check, handle simulate, move and send
 	m_ECSManager->InsertSystem(new ECSsystem::UpdateInput);
-	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
 	m_ECSManager->InsertSystem(new ECSsystem::SimulatePhysics);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByPhysics);
+	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+	m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
 
 	// transform sync
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
