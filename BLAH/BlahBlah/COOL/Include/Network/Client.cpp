@@ -29,7 +29,7 @@ Client::~Client()
 	closesocket(m_sServer);
 
 	// vivox 종료
-	if(vivox_state!=nullptr)
+	if (vivox_state != nullptr)
 		vivox_state->game_state = false;
 
 	// 윈속 종료

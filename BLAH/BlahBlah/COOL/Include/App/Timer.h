@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class Timer
 {
@@ -13,7 +13,7 @@ public:
 
 	void SetFPSLock(float fps) { m_LockFPS = fps; }
 
-	float GetDeltaTime() const { return m_deltaTime; }
+	float GetDeltaTime() const { return min(m_deltaTime, m_MaxDeltaTime); }
 	float GetTotalTime() const { return m_TotalTime; }
 
 private:
@@ -23,6 +23,9 @@ private:
 	float m_TotalTime = 0.0f;
 
 	float m_Cycle = 0.0f;
+
+	// limit 5fps
+	const float m_MaxDeltaTime = 1.0f / 5.0f;
 
 	__int64 m_Frequency;
 	__int64 m_LastTime;

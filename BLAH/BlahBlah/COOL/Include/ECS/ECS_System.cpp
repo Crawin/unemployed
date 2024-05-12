@@ -263,7 +263,7 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(inputFunc);
-		manager->Execute(inputFunc2);
+		//manager->Execute(inputFunc2);
 		manager->Execute(mouseInput);
 	}
 
@@ -521,8 +521,8 @@ namespace ECSsystem {
 			{
 				if (id == 1)
 				{
-					auto speed = client.characters[id].getSpeed();
-					std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
+					//auto speed = client.characters[id].getSpeed();
+					//std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
 				}
 				XMFLOAT3 pos = tr->GetPosition();
 				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
@@ -534,10 +534,12 @@ namespace ECSsystem {
 					tr->SetRotation(client.characters[id].getRot());
 				}
 				sp->SetVelocity(client.characters[id].getSpeed());
-
-				XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
-				XMStoreFloat3(&pos, dif);
-				//DebugPrint(std::format("diff: {}, {}, {}", pos.x, pos.y, pos.z));
+				XMFLOAT3 vel = sp->GetVelocityOnXZ();
+				//if (id != 1) {
+				//}
+				//DebugPrint(std::format("name: {},\tspeed: {}", n, XMVectorGetX(XMVector3Length(XMLoadFloat3(&vel)))));
+				//XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
+				//XMStoreFloat3(&pos, dif);
 			}
 
 		};
@@ -828,6 +830,8 @@ namespace ECSsystem {
 
 		// limit max speed
 		std::function<void(Physics*)> spLimit = [](Physics* py) {
+			if (py->IsToCalculate() == false) return;
+
 			XMVECTOR vel = XMLoadFloat3(&py->GetVelocityOnXZ());
 
 			float maxSpeed = py->GetMaxVelocity();
@@ -846,6 +850,8 @@ namespace ECSsystem {
 
 		// friction on xz
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
+			if (sp->IsToCalculate() == false) return;
+
 			const float friction = 1100.0f;
 			// if moving
 			float speed = sp->GetCurrentVelocityLenOnXZ();// sp->GetCurrentVelocity();
@@ -879,6 +885,8 @@ namespace ECSsystem {
 
 		// gravity
 		std::function<void(Physics*)> gravity = [deltaTime](Physics* py) {
+			if (py->IsToCalculate() == false) return;
+
 			// todo
 			// if is not static
 			XMVECTOR gravity = { 0.0, -980.0f, 0.0f };

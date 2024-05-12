@@ -1,9 +1,10 @@
 struct LIGHT
 {
 	float4 m_LightColor;
+	float4 m_LightAmbient;
 	
     float3 m_Direction;
-	float m_Falloff;
+	float m_Distance;
 
     float3 m_Position;
 	int m_LightType;
@@ -15,6 +16,8 @@ struct LIGHT
 	bool m_CastShadow;
    	int m_CameraIdx;
     float m_Temperature;
+
+    float m_Angle;
 };
 
 struct CameraData {
