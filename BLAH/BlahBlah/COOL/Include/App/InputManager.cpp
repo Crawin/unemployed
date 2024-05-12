@@ -59,6 +59,11 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		Client::GetInstance().Send_Room(pMAKEROOM, NULL);
 		break;
 	case 'I':
+		//std::cout << "입장할 방 번호를 입력하세요: ";
+		//std::string s_gameNum;
+		//std::cin >> s_gameNum;
+		//int i_gameNum = atoi(s_gameNum.c_str());
+		//Client::GetInstance().Send_Room(pENTERROOM, i_gameNum);
 		Client::GetInstance().Send_Room(pENTERROOM, 10000);
 		break;
 	}

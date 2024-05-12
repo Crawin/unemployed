@@ -108,8 +108,16 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			unsigned int my_id = static_cast<unsigned int>(key);
 			if (0 == rw_byte) {
 				unsigned int gameNum = login_players[my_id].getGameNum();
+				if (Games.find(gameNum) == Games.end())
+				{
+					std::cout<< "Error!!" << gameNum << "방이 존재하지 않습니다." << std::endl;
+					continue;
+				}
 				if (!Games[gameNum].erasePlayer(my_id))
+				{
 					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
+					continue;
+				}
 				login_players.erase(my_id);
 				continue;
 			}
