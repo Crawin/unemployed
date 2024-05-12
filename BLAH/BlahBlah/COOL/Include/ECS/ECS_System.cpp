@@ -722,11 +722,12 @@ namespace ECSsystem {
 				Entity* other = otherEntity.m_Entity;
 				auto eventType = otherEntity.m_Type;
 
-				auto& eventMap = col->GetEventMap(eventType);
+				auto eventMap = col->GetEventMap(eventType);
 
-				// execute event function here
-				for (const auto& [bitset, func] : eventMap) 
-					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+				// execute event function 
+				if (eventMap != nullptr)
+					for (const auto& [bitset, func] : *eventMap) 
+						if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
 			};
 
@@ -737,11 +738,12 @@ namespace ECSsystem {
 				Entity* other = otherEntity.m_Entity;
 				auto eventType = otherEntity.m_Type;
 
-				auto& eventMap = col->GetEventMap(eventType);
+				auto eventMap = col->GetEventMap(eventType);
 
 				// execute event function here
-				for (const auto& [bitset, func] : eventMap)
-					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+				if (eventMap != nullptr)
+					for (const auto& [bitset, func] : *eventMap)
+						if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
 			};
 
