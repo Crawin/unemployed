@@ -27,6 +27,8 @@ namespace component {
 	void DoorControl::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value door = v["Door"];
+
+		m_Answer = door["Answer"].asInt();
 	}
 
 	void DoorControl::ShowYourself() const

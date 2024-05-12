@@ -950,11 +950,11 @@ namespace ECSsystem {
 				// 정답에 대한 정보는 door가 가지고 있다. set door
 				// KeyPadUI는 확인 버튼이 눌렸을 시 전달받은 정보를 토대로 통과 여부를 판단
 
-				std::function<void(component::UICanvas*, component::UIKeypad*)> openUI = [door](component::UICanvas* can, component::UIKeypad* kpd) {
+				std::function<void(component::UICanvas*, component::UIKeypad*)> openUI = [door, doorCtrl](component::UICanvas* can, component::UIKeypad* kpd) {
 					DebugPrint("UI SHOW!!");
 
 					// test
-					kpd->SetAnswer(8123);
+					kpd->SetAnswer(doorCtrl->GetAnswer());
 					kpd->SetDoor(door);
 
 					kpd->SetCurrent(0);
@@ -1017,6 +1017,7 @@ namespace ECSsystem {
 							can->HideUI();
 							DebugPrint("check");
 							
+							DebugPrint(std::format("pw: {}", kpd->GetCurrent()));
 							if (kpd->GetAnswer() == kpd->GetCurrent()) {
 								// open door
 								Entity* door = kpd->GetDoor();
@@ -1027,41 +1028,19 @@ namespace ECSsystem {
 							};
 						button->SetButtonReleaseEvent(check);
 					}
-					else if (name == "8Button") {
-						Button* button = manager->GetComponent<Button>(child);
-						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
-							int current = kpd->GetCurrent();
-							current = current * 10 + 8;
-							kpd->SetCurrent(current);
-							};
-						button->SetButtonReleaseEvent(password);
-					}
-					else if (name == "1Button") {
-						Button* button = manager->GetComponent<Button>(child);
-						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
-							int current = kpd->GetCurrent();
-							current = current * 10 + 1;
-							kpd->SetCurrent(current);
-							};
-						button->SetButtonReleaseEvent(password);
-					}
-					else if (name == "2Button") {
-						Button* button = manager->GetComponent<Button>(child);
-						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
-							int current = kpd->GetCurrent();
-							current = current * 10 + 2;
-							kpd->SetCurrent(current);
-							};
-						button->SetButtonReleaseEvent(password);
-					}
-					else if (name == "3Button") {
-						Button* button = manager->GetComponent<Button>(child);
-						ButtonEventFunction password = [can, kpd, manager](Entity* ent) { // 버튼에 대한 콜백함수 등록
-							int current = kpd->GetCurrent();
-							current = current * 10 + 3;
-							kpd->SetCurrent(current);
-							};
-						button->SetButtonReleaseEvent(password);
+					else {
+						for (int i = 1; i <= 9; ++i) {
+							std::string buttonName = std::format("{}Button", i);
+							if (name == buttonName) {
+								Button* button = manager->GetComponent<Button>(child);
+								ButtonEventFunction password = [can, kpd, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+									int current = kpd->GetCurrent();
+									current = current * 10 + i;
+									kpd->SetCurrent(current);
+									};
+								button->SetButtonReleaseEvent(password);
+							}
+						}
 					}
 				}
 			}

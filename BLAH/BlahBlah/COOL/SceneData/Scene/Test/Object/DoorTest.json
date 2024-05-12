@@ -11,7 +11,8 @@
 	"Door": 
 	{
 		"MaxAngle": 120.0,
-		"Locked": true
+		"Locked": true,
+		"Answer": 1111
 	},
 
 	"Collider": 

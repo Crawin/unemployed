@@ -46,6 +46,7 @@ namespace component {
 		float m_CurrentAngle = 0.0f;
 
 		bool m_Locked = true;
+		int m_Answer = 0;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -55,6 +56,7 @@ namespace component {
 		bool IsLocked() const { return m_Locked; }
 		float GetMaxAngle() const { return m_MaxAngle; }
 		float GetCurAngle() const { return m_CurrentAngle; }
+		int GetAnswer() const { return m_Answer; }
 
 		void SetLock(bool lock) { m_Locked = lock; }
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
