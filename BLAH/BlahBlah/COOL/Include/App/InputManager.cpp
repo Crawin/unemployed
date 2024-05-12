@@ -9,7 +9,7 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 	//WM_LBUTTONUP
 	//WM_RBUTTONUP
 	//WM_MOUSEMOVE
-
+	m_LButtonReleased = false;
 	switch (msg) {
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
@@ -27,6 +27,7 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 		GetCursorPos(&m_CurMouse);
 		m_MouseDif = { 0,0 };
 
+		m_LButtonReleased = true;
 		m_LButtonState = false;
 		m_Dragging = false;
 

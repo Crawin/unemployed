@@ -1020,7 +1020,7 @@ namespace ECSsystem {
 							doorCtrl->SetLock(false);
 
 							};
-						button->SetButtonDownEvent(check);
+						button->SetButtonReleaseEvent(check);
 					}
 				}
 			}
@@ -1051,9 +1051,9 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftDown()) {
+			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftReleased()) {
 
-				const ButtonEventFunction& butEvent = but->GetButtonDownEvent();
+				const ButtonEventFunction& butEvent = but->GetButtonReleaseEvent();
 				if (butEvent != nullptr) {
 					butEvent(self->GetEntity());
 					DebugPrint("Button Hit!!");
