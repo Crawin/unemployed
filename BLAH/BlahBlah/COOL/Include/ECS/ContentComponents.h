@@ -73,6 +73,7 @@ namespace component {
 	class UIKeypad : public ComponentBase<UIKeypad > {
 		Entity* m_DoorEntity = nullptr;
 		int m_Answer = 0;
+		int m_Current = 0;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -84,6 +85,9 @@ namespace component {
 
 		void SetDoor(Entity* door) { m_DoorEntity = door; }
 		void SetAnswer(int ans) { m_Answer = ans; }
-	};
+		int GetAnswer() const { return m_Answer; }
 
+		void SetCurrent(int Current) { m_Current = Current; }
+		int GetCurrent() const { return m_Current; }
+	};
 }
