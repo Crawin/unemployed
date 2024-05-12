@@ -326,6 +326,7 @@ namespace component {
 		BoundingFrustum& GetBoundingFrustum() { return m_BoundingFrustum; }
 
 		XMFLOAT3 GetWorldPosition() const { return { -m_ViewMatrix._41, -m_ViewMatrix._42, -m_ViewMatrix._43 }; }
+		XMFLOAT3 GetWorldDirection() const { return { m_ViewMatrix._31, m_ViewMatrix._32, m_ViewMatrix._33 }; }
 
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -402,6 +403,8 @@ namespace component {
 
 		bool m_IsMainLight = false;
 		bool m_CastShadow = false;
+
+		float m_Score = -100;
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -412,7 +415,9 @@ namespace component {
 
 		LightData& GetLightData() { return m_LightData; }
 
-		int GetScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir) const;
+		void CalculateScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir);
+
+		float GetScore() const { return m_Score; }
 	};
 
 	/////////////////////////////////////////////////////////

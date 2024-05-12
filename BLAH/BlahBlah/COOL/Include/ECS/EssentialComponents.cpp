@@ -398,28 +398,32 @@ namespace component {
 		//DebugPrint(std::format("Light map material: {}", m_ShadowMapMaterial));
 	}
 
-	int Light::GetScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir) const
+	void Light::CalculateScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir)
 	{
+		m_Score = 0;
+
 		switch (static_cast<LIGHT_TYPES>(m_LightData.m_LightType)) {
 		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
-			if (m_LightData.m_Direction.y > 0) return 0;
-			return 100;
+			if (m_LightData.m_Direction.y > 0) m_Score = -1000;
+			else m_Score = 100000;
+			break;
 
 		case LIGHT_TYPES::SPOT_LIGHT:
 		{
+			XMVECTOR lightDirVec = XMLoadFloat3(&m_LightData.m_Direction);
+			XMVECTOR camDirVec = XMLoadFloat3(&camDir);
 			XMVECTOR camToLight = XMLoadFloat3(&m_LightData.m_Position) - XMLoadFloat3(&camPos);
-			
 
-			//float dist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&camPos)))
-			m_LightData.m_Position;
+			float distFactor = 1.0f / max(XMVectorGetX(XMVector3Length(XMLoadFloat3(&camPos))), 0.1f);
 
+			float dotFactor = (XMVectorGetX(XMVector3Dot(lightDirVec, camDirVec)) + 1.0f) * 2.0f;
+
+			m_Score = dotFactor * distFactor;
+
+			break;
 		}
 
 		}
-
-		// distance
-
-		return 0;
 	}
 
 	void TestInput::Create(Json::Value& v, ResourceManager* rm)

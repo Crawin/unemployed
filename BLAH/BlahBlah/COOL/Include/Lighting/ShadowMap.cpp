@@ -2,14 +2,14 @@
 #include "ShadowMap.h"
 
 XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, 1.0f, 7000.0f);
-//XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 10000.0f);
+XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 10000.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 
 
 ShadowMap::ShadowMap()
 {
 	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumOrtho, XMLoadFloat4x4(&m_ShadowOrthographicProj));
-	//BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
+	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
 }
 
 ShadowMap::~ShadowMap()
@@ -64,8 +64,8 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 
 			break;
 		case LIGHT_TYPES::SPOT_LIGHT:
-			m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, light.m_Distance * 1.1f);
-			BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
+			//m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, light.m_Distance * 1.1f);
+			//BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
 			m_BoundingFrustumPerspective.Transform(m_BoundingFrustumWorld, result);
 
 			//DebugPrint("No current shadow map setting for spot light now");
@@ -91,7 +91,7 @@ void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) con
 		break;
 
 	case LIGHT_TYPES::SPOT_LIGHT:
-		proj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 5000.0f);
+		//proj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 500.0f);
 		XMStoreFloat4x4(&proj, XMMatrixTranspose(XMLoadFloat4x4(&m_ShadowPerspectiveProj)));
 		break;
 

@@ -101,7 +101,7 @@ float4 SpotLight(int idx, float3 viewDir, float4 albedo, float4 roughness, float
 	float distFactor = max(1 - distance / lights[idx].m_Distance, 0);
 
 	float padding = 32.0f;
-	float epsilon = 0.1f;
+	float epsilon = 0.2f;
 	float theta = dot(normalize(lightToPos), lights[idx].m_Direction);
 	float maxCos = cos(lights[idx].m_Angle);
 	float spotLightFactor = pow(clamp((theta - maxCos) / epsilon, 0.0f, 1.0f), padding);    
