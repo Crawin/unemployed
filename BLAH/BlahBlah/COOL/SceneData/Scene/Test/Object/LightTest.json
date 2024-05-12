@@ -59,7 +59,7 @@
 				"LightType": 0,
 				"Active": true,
 				"CastShadow": true,
-				"Main": true
+				"Main": false
 			},
 		
 			"DayLight": 

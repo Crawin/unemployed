@@ -237,6 +237,28 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	int& activeLights = m_ActiveLightSize;
 	activeLights = 0;
+	component::Camera* cam = camVec[0];
+	XMFLOAT3 camPos = cam->GetWorldPosition();
+
+	std::list<component::Light*> toCastShadowLights;
+	int maxShadowMaps = m_ResourceManager->m_ShadowMaps.size();
+
+	std::function<void(component::Light*)> shadowMapEvaluate = [&camPos, &toCastShadowLights, maxShadowMaps](component::Light* lightComp) {
+		// if allways not cast, return
+		if (lightComp->IsCastShadow() == false) return;
+
+		// is main light -> cast allways cast shadow
+		lightComp->GetLightData().m_CastShadow = lightComp->IsMainLight();
+
+		// to evaluates
+		// distance
+		// direction
+		int score = 0;
+
+
+		};
+	//m_ECSManager->Execute(shadowMapEvaluate);
+
 
 	std::function<void(component::Light*)> updateLight = [&count, data, res, &camVec, &activeLights](component::Light* lightComp) {
 
@@ -272,6 +294,8 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 					// 셰도우맵핑을 끄자
 					break;
 				}
+			}
+			case LIGHT_TYPES::SPOT_LIGHT:
 				// 해당 함수가 불리면 shadow mapping을 한다.
 				shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
 				res->UpdateShadowMapView(shadowMapIdx, light);
@@ -283,15 +307,8 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 				// todo
 				// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
 				res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
-
-				//DebugPrint(std::format("vie: {}, {}, {}", -mat._14, -mat._24, -mat._34));
-				//DebugPrint(std::format("lig: {}, {}, {}", pos.x, pos.y, pos.z));
-			}
-			break;
-			case LIGHT_TYPES::SPOT_LIGHT:
-				DebugPrint("No current shadow map setting for spot light now");
-
 				break;
+
 			case LIGHT_TYPES::POINT_LIGHT:
 				DebugPrint("No current shadow map setting for point light now");
 				break;
@@ -306,7 +323,6 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 		memcpy(data + count++, &light, sizeof(LightData));
 		};
-
 	m_ECSManager->Execute(updateLight);
 
 	// 여기서 셰도으맵을 만든대
@@ -365,10 +381,6 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		const auto& view = rend->GetVertexBufferView();
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
-		//res->RenderMesh(commandList, rend->GetMesh(), rend->GetWorldMatrix());
-
-
-		// 
 
 		mesh->Render(commandList, rend->GetWorldMatrix());
 		};

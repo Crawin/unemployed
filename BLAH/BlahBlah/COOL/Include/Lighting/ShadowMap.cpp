@@ -2,14 +2,14 @@
 #include "ShadowMap.h"
 
 XMFLOAT4X4 ShadowMap::m_ShadowOrthographicProj = Matrix4x4::Orthographic(m_ShadowMapWidth, m_ShadowMapHeight, 1.0f, 7000.0f);
-XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(XMConvertToRadians(90.0f)), 1.0f, 0.1f, 10000.0f);
+//XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 10000.0f);
 //XMFLOAT4X4 ShadowMap::m_ShadowPerspectiveProj = Matrix4x4::Transpose(m_ShadowPerspectiveProj);
 
 
 ShadowMap::ShadowMap()
 {
 	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumOrtho, XMLoadFloat4x4(&m_ShadowOrthographicProj));
-	BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
+	//BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
 }
 
 ShadowMap::~ShadowMap()
@@ -55,7 +55,7 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixInverse(nullptr, result));
 
 	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtRH(pos, lookAt, XMLoadFloat3(&u)));
-
+	//DebugPrint(std::format("angle: {}", XMConvertToDegrees(angle)));
 	if (light.m_CastShadow != FALSE) {
 		switch (m_Type) {
 		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
@@ -64,9 +64,11 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 
 			break;
 		case LIGHT_TYPES::SPOT_LIGHT:
+			m_ShadowPerspectiveProj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, light.m_Distance * 1.1f);
+			BoundingFrustum::CreateFromMatrix(m_BoundingFrustumPerspective, XMLoadFloat4x4(&m_ShadowPerspectiveProj));
 			m_BoundingFrustumPerspective.Transform(m_BoundingFrustumWorld, result);
 
-			DebugPrint("No current shadow map setting for spot light now");
+			//DebugPrint("No current shadow map setting for spot light now");
 
 			break;
 		case LIGHT_TYPES::POINT_LIGHT:
@@ -89,6 +91,7 @@ void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) con
 		break;
 
 	case LIGHT_TYPES::SPOT_LIGHT:
+		proj = Matrix4x4::PerspectiveFovLH(XMConvertToRadians(90.0f), 1.0f, 0.1f, 5000.0f);
 		XMStoreFloat4x4(&proj, XMMatrixTranspose(XMLoadFloat4x4(&m_ShadowPerspectiveProj)));
 		break;
 
@@ -104,6 +107,11 @@ void ShadowMap::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList) con
 	XMStoreFloat4x4(&temp, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix)));
 
 	XMFLOAT3 position = { temp._41, temp._42, temp._43 };
+	//if (m_Type == LIGHT_TYPES::SPOT_LIGHT) 
+	//{
+	//	DebugPrint(std::format("camPos: {}, {}, {}", temp._41, temp._42, temp._43));
+	//	DebugPrint(std::format("camDir: {}, {}, {}", temp._31, temp._32, temp._33));
+	//}
 
 	//DebugPrint(std::format("pos: {}, {}, {}", position.x, position.y, position.z));
 

@@ -386,7 +386,7 @@ namespace component {
 		m_LightData.m_LightType = light["LightType"].asInt();
 
 		m_LightData.m_Active = light["Active"].asBool();
-		m_LightData.m_CastShadow = light["CastShadow"].asBool();
+		m_CastShadow = m_LightData.m_CastShadow = light["CastShadow"].asBool();
 
 		m_LightData.m_Angle = XMConvertToRadians(light["Angle"].asFloat());
 
@@ -396,6 +396,30 @@ namespace component {
 	{
 		DebugPrint("Light Comp");
 		//DebugPrint(std::format("Light map material: {}", m_ShadowMapMaterial));
+	}
+
+	int Light::GetScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir) const
+	{
+		switch (static_cast<LIGHT_TYPES>(m_LightData.m_LightType)) {
+		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+			if (m_LightData.m_Direction.y > 0) return 0;
+			return 100;
+
+		case LIGHT_TYPES::SPOT_LIGHT:
+		{
+			XMVECTOR camToLight = XMLoadFloat3(&m_LightData.m_Position) - XMLoadFloat3(&camPos);
+			
+
+			//float dist = XMVectorGetX(XMVector3Length(XMLoadFloat3(&camPos)))
+			m_LightData.m_Position;
+
+		}
+
+		}
+
+		// distance
+
+		return 0;
 	}
 
 	void TestInput::Create(Json::Value& v, ResourceManager* rm)

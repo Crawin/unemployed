@@ -325,6 +325,8 @@ namespace component {
 
 		BoundingFrustum& GetBoundingFrustum() { return m_BoundingFrustum; }
 
+		XMFLOAT3 GetWorldPosition() const { return { -m_ViewMatrix._41, -m_ViewMatrix._42, -m_ViewMatrix._43 }; }
+
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	private:
@@ -399,13 +401,18 @@ namespace component {
 		LightData m_LightData;
 
 		bool m_IsMainLight = false;
-
+		bool m_CastShadow = false;
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
+		bool IsMainLight() const { return m_IsMainLight; }
+		bool IsCastShadow() const { return m_CastShadow; }
+
 		LightData& GetLightData() { return m_LightData; }
+
+		int GetScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir) const;
 	};
 
 	/////////////////////////////////////////////////////////

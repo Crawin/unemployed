@@ -26,7 +26,7 @@
 			"Distance": 500.0,
 			"Angle": 80.0,
 			"Active": true,
-			"CastShadow": false,
+			"CastShadow": true,
 			"Main": false
 		}
 	},
@@ -47,7 +47,7 @@
 			"Distance": 500.0,
 			"Angle": 80.0,
 			"Active": true,
-			"CastShadow": false,
+			"CastShadow": true,
 			"Main": false
 		}
 	},
