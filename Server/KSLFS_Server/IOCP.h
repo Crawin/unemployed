@@ -248,6 +248,7 @@ public:
 	bool m_bServerState = false;
 	HANDLE m_hIOCP;
 	std::atomic_int id = 1;
+	bool m_bLog = false;
 };
 
 class IOCP_SERVER_MANAGER

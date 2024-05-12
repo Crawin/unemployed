@@ -209,7 +209,9 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			DirectX::XMFLOAT3 pos = position->getPosition();
 			DirectX::XMFLOAT3 rot = position->getRotation();
-			std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
+
+			if(detail.m_bLog)
+				std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(ping)<<" [" << id << ", " << login_players[id].getSock() << "] : ( " << pos.x << ", " << pos.y << ", " << pos.z << "), (" << rot.x << ", " << rot.y << ", " << rot.z << ")" << std::endl;
 			
 		}
 			break;
@@ -402,6 +404,9 @@ void IOCP_SERVER_MANAGER::command_thread()
 			for (int i = 0; i < num_threads; ++i)
 				PostQueuedCompletionStatus(detail.m_hIOCP, 1, -1, reinterpret_cast<OVERLAPPED*>(&over));
 		}},
+		{"/LOG",[this]() {
+			detail.m_bLog = !detail.m_bLog;
+		}}
 	};
 
 	while (detail.m_bServerState)
@@ -420,7 +425,7 @@ void IOCP_SERVER_MANAGER::command_thread()
 void IOCP_SERVER_MANAGER::ai_thread()
 {
 	using namespace std::chrono;
-	while (true)
+	while (detail.m_bServerState)
 	{
 		auto start_t = system_clock::now();
 		EXP_OVER* over = new EXP_OVER;
