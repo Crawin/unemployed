@@ -759,7 +759,8 @@ namespace ECSsystem {
 			for (auto& otherEntity : colVec) {
 				Collider* other = manager->GetComponent<Collider>(otherEntity.m_Entity);
 				if (other == nullptr) {
-					DebugPrint("ERROR!! no collider found");
+					// todo dynamic collider
+					//DebugPrint("ERROR!! no collider found");
 					continue;
 				}
 				
