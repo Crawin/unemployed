@@ -263,7 +263,7 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(inputFunc);
-		manager->Execute(inputFunc2);
+		//manager->Execute(inputFunc2);
 		manager->Execute(mouseInput);
 	}
 
@@ -521,8 +521,8 @@ namespace ECSsystem {
 			{
 				if (id == 1)
 				{
-					auto speed = client.characters[id].getSpeed();
-					std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
+					//auto speed = client.characters[id].getSpeed();
+					//std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
 				}
 				XMFLOAT3 pos = tr->GetPosition();
 				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
@@ -534,15 +534,17 @@ namespace ECSsystem {
 					tr->SetRotation(client.characters[id].getRot());
 				}
 				sp->SetVelocity(client.characters[id].getSpeed());
-
-				XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
-				XMStoreFloat3(&pos, dif);
-				//DebugPrint(std::format("diff: {}, {}, {}", pos.x, pos.y, pos.z));
+				XMFLOAT3 vel = sp->GetVelocityOnXZ();
+				//if (id != 1) {
+				//}
+				//DebugPrint(std::format("name: {},\tspeed: {}", n, XMVectorGetX(XMVector3Length(XMLoadFloat3(&vel)))));
+				//XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
+				//XMStoreFloat3(&pos, dif);
 			}
 
 		};
 
-		manager->Execute(func); 
+		manager->Execute(func);
 	}
 
 	void CollideHandle::OnInit(ECSManager* manager)
@@ -618,35 +620,31 @@ namespace ECSsystem {
 		std::function<void(DynamicCollider*, SelfEntity*)> dynamicWithStatic =
 			[&circleBoxCol, manager](DynamicCollider* a, SelfEntity* aEnt) {
 			auto& boxA = a->GetBoundingBox();
+			auto& originBoxA = a->GetOriginalBox();
 
-			std::function<void(Collider*, SelfEntity*)> check = [a, boxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
+			std::function<void(Collider*, SelfEntity*)> check = [a, &boxA, &originBoxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
 				auto& boxB = b->GetBoundingBox();
 
 				// check and insert box
 				if (boxA.Intersects(boxB)) {
+
 					// if capsule, check
-					if (a->IsCapsule()) {
-						XMVECTOR circleCenter = XMVector3Transform(
-							XMLoadFloat3(&boxA.Center),
-							XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxB.Orientation))));
+					//if (a->IsCapsule()) {
+					//	auto& originBoxB = b->GetOriginalBox();
+					//	XMFLOAT3 temp;
 
-						if (false == circleBoxCol(
-							XMFLOAT2(boxB.Center.x, boxB.Center.z),
-							XMFLOAT2(boxB.Extents.x, boxB.Extents.z),
-							XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
-							boxA.Extents.x)) return;
-					}
-					if (b->IsCapsule()) {
-						XMVECTOR circleCenter = XMVector3Transform(
-							XMLoadFloat3(&boxB.Center),
-							XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxA.Orientation))));
+					//	XMVECTOR 
 
-						if (false == circleBoxCol(
-							XMFLOAT2(boxA.Center.x, boxA.Center.z),
-							XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
-							XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
-							boxB.Extents.x)) return;
-					}
+					//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxA.Center), -XMLoadFloat4(&boxB.Orientation)));
+
+					//	if (false == circleBoxCol(originBoxB, XMFLOAT2(temp.x, temp.z), boxA.Extents.x)) return;
+					//}
+					//if (b->IsCapsule()) {
+					//	XMFLOAT3 temp;
+					//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxB.Center), -XMLoadFloat4(&boxA.Orientation)));
+
+					//	if (false == circleBoxCol(originBoxA, XMFLOAT2(temp.x, temp.z), boxB.Extents.x)) return;
+					//}
 
 					// if collided, add to coll list, handle later
 					if (a->IsStaticObject() == false)
@@ -680,28 +678,20 @@ namespace ECSsystem {
 			if (dist > 0 && boxA.Intersects(boxB))
 			{
 				// if capsule, check
-				if (a->IsCapsule()) {
-					XMVECTOR circleCenter = XMVector3Transform(
-						XMLoadFloat3(&boxA.Center), 
-						XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxB.Orientation))));
+				//if (a->IsCapsule()) {
+				//	auto& originBoxB = b->GetOriginalBox();
+				//	XMFLOAT3 temp;
+				//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxA.Center), -XMLoadFloat4(&boxB.Orientation)));
 
-					if (false == circleBoxCol(
-						XMFLOAT2(boxB.Center.x, boxB.Center.z),
-						XMFLOAT2(boxB.Extents.x, boxB.Extents.z), 
-						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)), 
-						boxA.Extents.x)) return;
-				}
-				if (b->IsCapsule()) {
-					XMVECTOR circleCenter = XMVector3Transform(
-						XMLoadFloat3(&boxB.Center),
-						XMMatrixInverse(nullptr, XMMatrixRotationQuaternion(XMLoadFloat4(&boxA.Orientation))));
+				//	if (false == circleBoxCol(originBoxB, XMFLOAT2(temp.x, temp.z), boxA.Extents.x)) return;
+				//}
+				//if (b->IsCapsule()) {
+				//	auto& originBoxA = a->GetOriginalBox();
+				//	XMFLOAT3 temp;
+				//	XMStoreFloat3(&temp, XMVector3Rotate(XMLoadFloat3(&boxB.Center), -XMLoadFloat4(&boxA.Orientation)));
 
-					if (false == circleBoxCol(
-						XMFLOAT2(boxA.Center.x, boxA.Center.z),
-						XMFLOAT2(boxA.Extents.x, boxA.Extents.z),
-						XMFLOAT2(XMVectorGetX(circleCenter), XMVectorGetZ(circleCenter)),
-						boxB.Extents.x)) return;
-				}
+				//	if (false == circleBoxCol(originBoxA, XMFLOAT2(temp.x, temp.z), boxB.Extents.x)) return;
+				//}
 
 				// if collided, add to coll list, handle later
 				if (a->IsStaticObject() == false)
@@ -732,11 +722,12 @@ namespace ECSsystem {
 				Entity* other = otherEntity.m_Entity;
 				auto eventType = otherEntity.m_Type;
 
-				auto& eventMap = col->GetEventMap(eventType);
+				auto eventMap = col->GetEventMap(eventType);
 
-				// execute event function here
-				for (const auto& [bitset, func] : eventMap) 
-					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+				// execute event function 
+				if (eventMap != nullptr)
+					for (const auto& [bitset, func] : *eventMap) 
+						if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
 			};
 
@@ -747,11 +738,12 @@ namespace ECSsystem {
 				Entity* other = otherEntity.m_Entity;
 				auto eventType = otherEntity.m_Type;
 
-				auto& eventMap = col->GetEventMap(eventType);
+				auto eventMap = col->GetEventMap(eventType);
 
 				// execute event function here
-				for (const auto& [bitset, func] : eventMap)
-					if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
+				if (eventMap != nullptr)
+					for (const auto& [bitset, func] : *eventMap)
+						if ((other->GetBitset() & bitset) == bitset) func(self->GetEntity(), other);
 			}
 			};
 
@@ -767,7 +759,8 @@ namespace ECSsystem {
 			for (auto& otherEntity : colVec) {
 				Collider* other = manager->GetComponent<Collider>(otherEntity.m_Entity);
 				if (other == nullptr) {
-					DebugPrint("ERROR!! no collider found");
+					// todo dynamic collider
+					//DebugPrint("ERROR!! no collider found");
 					continue;
 				}
 				
@@ -840,6 +833,8 @@ namespace ECSsystem {
 
 		// limit max speed
 		std::function<void(Physics*)> spLimit = [](Physics* py) {
+			if (py->IsToCalculate() == false) return;
+
 			XMVECTOR vel = XMLoadFloat3(&py->GetVelocityOnXZ());
 
 			float maxSpeed = py->GetMaxVelocity();
@@ -858,6 +853,8 @@ namespace ECSsystem {
 
 		// friction on xz
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
+			if (sp->IsToCalculate() == false) return;
+
 			const float friction = 1100.0f;
 			// if moving
 			float speed = sp->GetCurrentVelocityLenOnXZ();// sp->GetCurrentVelocity();
@@ -891,6 +888,8 @@ namespace ECSsystem {
 
 		// gravity
 		std::function<void(Physics*)> gravity = [deltaTime](Physics* py) {
+			if (py->IsToCalculate() == false) return;
+
 			// todo
 			// if is not static
 			XMVECTOR gravity = { 0.0, -980.0f, 0.0f };
@@ -926,18 +925,7 @@ namespace ECSsystem {
 			tr->SetPosition(temp);
 			};
 
-		// send
-		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
-			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
-			{
-				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
-					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
-			}
-			};
-
 		manager->Execute(move);
-		manager->Execute(send);
 	}
 
 	void HandleInteraction::OnInit(ECSManager* manager)
@@ -1034,7 +1022,7 @@ namespace ECSsystem {
 							//doorCtrl->SetLock(false);
 
 							};
-						button->SetButtonEvent(check);
+						button->SetButtonReleaseEvent(check);
 					}
 					else if (name == "8Button") {
 						Button* button = manager->GetComponent<Button>(child);
@@ -1106,9 +1094,9 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftDown()) {
+			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftReleased()) {
 
-				const ButtonEventFunction& butEvent = but->GetButtonEvent();
+				const ButtonEventFunction& butEvent = but->GetButtonReleaseEvent();
 				if (butEvent != nullptr) {
 					butEvent(self->GetEntity());
 					DebugPrint("Button Hit!!");
@@ -1132,5 +1120,20 @@ namespace ECSsystem {
 
 		manager->Execute(forAliveCanvas);
 
+	}
+	void SendToServer::Update(ECSManager* manager, float deltaTime)
+	{
+		using namespace component;
+		// send
+		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+			auto& client = Client::GetInstance();
+			if (client.getRoomNum())
+			{
+				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
+			}
+			};
+
+		manager->Execute(send);
 	}
 }

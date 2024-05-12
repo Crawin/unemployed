@@ -18,7 +18,8 @@
 	"Physics": 
 	{
 		"MaxVelocity": 200.0,
-		"Acceleration" : [1500.0, 1500.0, 1500.0]
+		"Acceleration" : [2000.0, 2000.0, 2000.0],
+		"Calculate" : true
 	},
 
 	"Input": {},
@@ -40,7 +41,7 @@
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 170.0, -150.0],
+				"Position": [0.0, 160.0, 17.5],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},

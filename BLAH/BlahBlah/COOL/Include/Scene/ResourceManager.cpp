@@ -143,7 +143,7 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 
 	if (parent) parent->AddChild(ent);
 
-	for (auto& jsonComp : root.getMemberNames()) {
+	for (auto jsonComp : root.getMemberNames()) {
 		component::Component* cmp = GET_COMPONENT(jsonComp);
 
 		if (cmp == nullptr) {
@@ -676,14 +676,30 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		// auto init by renderer
 		if (coll->GetCollided()) {
 			coll->SetCollided(false);
-			component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
 
-			if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
-			
-			// do st
-			Mesh* mesh = m_Meshes[rend->GetMesh()];
+			// syncMesh
+			if (coll->IsCapsule()) {
+				coll->SetCapsule(false);
+				component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
 
-			coll->SetOriginBox(mesh->GetBoundingBox());
+				if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
+
+				// do st
+				Mesh* mesh = m_Meshes[rend->GetMesh()];
+
+				// todo 이거 짜야 한다!!!!!!!!!!!!!!!!!!!
+				coll->SetOriginBoxCenter(mesh->GetBoundingBox());
+			}
+			else {
+				component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
+
+				if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
+
+				// do st
+				Mesh* mesh = m_Meshes[rend->GetMesh()];
+
+				coll->SetOriginBox(mesh->GetBoundingBox());
+			}
 		}
 		};
 

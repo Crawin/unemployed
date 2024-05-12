@@ -7,7 +7,8 @@
 
 	"Children": 
 	[
-		{	"Name": "Check",
+		{	
+			"Name": "Check",
 
 			"UITransform":
 			{
@@ -22,10 +23,7 @@
 				"Material": "UITempMaterial",
 				"IsSprite": false
 			}
-
-
 		}
-
 	]
 
 }

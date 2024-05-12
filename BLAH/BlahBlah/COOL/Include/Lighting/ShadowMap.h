@@ -16,6 +16,7 @@ class ShadowMap
 
 	static XMFLOAT4X4 m_ShadowPerspectiveProj;
 	static XMFLOAT4X4 m_ShadowOrthographicProj;
+	//XMFLOAT4X4 m_ShadowPerspectiveProj;
 
 	SIZE m_RenderTargetSize = { 8192, 8192 };
 

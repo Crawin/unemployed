@@ -3,7 +3,7 @@
 
 
 // 디버그 모드에 테스트용
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #include <iostream>
 #include <dxgidebug.h>
 
@@ -13,7 +13,7 @@
 #else
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 #endif
-#endif
+//#endif
 
 
 // 스트링을 출력한다

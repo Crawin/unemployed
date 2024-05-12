@@ -27,6 +27,7 @@ public:
 	bool GetDebugMode() const { return m_DebugMode; }
 
 	bool IsMouseLeftDown() const { return m_LButtonState; }
+	bool IsMouseLeftReleased() const { return m_LButtonReleased; }
 private:
 	// mosue input
 	BYTE lpb[sizeof(RAWINPUT)] = { 0, };
@@ -39,6 +40,7 @@ private:
 	bool m_MouseCapture = true;
 
 	bool m_LButtonState = false;
+	bool m_LButtonReleased = false;
 
 	bool m_DebugMode = false;
 

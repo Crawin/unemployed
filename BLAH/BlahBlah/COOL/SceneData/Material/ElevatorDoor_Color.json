@@ -1,0 +1,9 @@
+{
+	"name": "ElevatorDoor_Color",
+	"BaseColor": "ElevatorDoor_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

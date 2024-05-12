@@ -1,0 +1,8991 @@
+{
+	"Name": "Map",
+	"Transform": {
+		"Position": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale": [
+			1.0,
+			1.0,
+			1.0
+		]
+	},
+
+	"Children": [
+			{
+				"Name": "B1floor1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1floor1",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "B1floor2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1floor2",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "B1floor3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1floor3",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "B1floor4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1floor4",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "_1stfloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stfloor",
+					"Material": "1stfloor_Color"
+				}
+			},
+			{
+				"Name": "_1Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_1_5Centerfloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1_5Centerfloor",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1_5Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1_5Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_1_25Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1_25Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_1_75Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1_75Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "OutMiddleStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutMiddleStair",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "OutDiagonal2ndlink",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutDiagonal2ndlink",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "_2ndfloor1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor1",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2ndfloor2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor2",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2ndfloor3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor3",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2ndfloor4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndfloor4",
+					"Material": "2ndfloor_Color"
+				}
+			},
+			{
+				"Name": "_2_5Centerfloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2_5Centerfloor",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2_5Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2_5Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_2Sidefloor1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2Sidefloor1",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_2Sidefloor2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2Sidefloor2",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "B1Stair1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1Stair1",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "B1Stair2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1Stair2",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "B1Stair3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1Stair3",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "B1Stair4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1Stair4",
+					"Material": "BrushedIron01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "_1fCenterLeftStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterLeftStair",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1fCenterLeftStairRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterLeftStairRail",
+					"Material": "Wood03_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "_1fCenterRightStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterRightStair",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1fCenterRightStairRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterRightStairRail",
+					"Material": "Wood03_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "_1fCenterStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [127.5, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterStair",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1fCenterStairLeftRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterStairLeftRail",
+					"Material": "Wood03_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "_1fCenterStairRightRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [0.1, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fCenterStairRightRail",
+					"Material": "Wood03_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "_1fSideStair001",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fSideStair001",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_1fSideStair002",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fSideStair002",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_1fSideStair003",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fSideStair003",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_1fSideStair004",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1fSideStair004",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "OutStair1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutStair1",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "OutStair2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutStair2",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "_1sSideStairDoorCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1sSideStairDoorCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftPillar",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftPillar",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall1",
+					"Material": "1stLeftToiletwall1_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall5",
+					"Material": "1stLeftToiletwall5_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stLeftToiletwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stLeftToiletwall8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_1stRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stRail",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "_1stRightPillar",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._1stRightPillar",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall9",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall10",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall11",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall11",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall12",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall12",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "UWindowwall13",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.UWindowwall13",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow1",
+					"Material": "TriangleWindow1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow1_1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow1_1",
+					"Material": "TriangleWindow1-1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow2",
+					"Material": "TriangleWindow2_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow2_1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow2_1",
+					"Material": "TriangleWindow2-1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow3",
+					"Material": "TriangleWindow3_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow3_1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow3_1",
+					"Material": "TriangleWindow3-1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow4",
+					"Material": "TriangleWindow4_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow4_1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow4_1",
+					"Material": "TriangleWindow4-1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow5",
+					"Material": "TriangleWindow5_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow5_1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow5_1",
+					"Material": "TriangleWindow5-1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow6",
+					"Material": "TriangleWindow6_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindow6_1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindow6_1",
+					"Material": "TriangleWindow6-1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall1",
+					"Material": "TriangleWindowwall1_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall2",
+					"Material": "TriangleWindowwall2_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall3",
+					"Material": "TriangleWindowwall3_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall4",
+					"Material": "TriangleWindowwall4_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall5",
+					"Material": "TriangleWindowwall5_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall6",
+					"Material": "TriangleWindowwall6_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall7",
+					"Material": "TriangleWindowwall7_Color"
+				}
+			},
+			{
+				"Name": "TriangleWindowwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.TriangleWindowwall8",
+					"Material": "TriangleWindowwall8_Color"
+				}
+			},
+			{
+				"Name": "CenterBasementStairs1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterBasementStairs1",
+					"Material": "CenterBasementStairs1_Color"
+				}
+			},
+			{
+				"Name": "CenterBenchCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterBenchCeiling",
+					"Material": "Wood03_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "CenterBenchPillar1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterBenchPillar1",
+					"Material": "CenterBenchPillar1_Color"
+				}
+			},
+			{
+				"Name": "CenterBenchPillar2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterBenchPillar2",
+					"Material": "CenterBenchPillar2_Color"
+				}
+			},
+			{
+				"Name": "CenterBenchPillar3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterBenchPillar3",
+					"Material": "CenterBenchPillar3_Color"
+				}
+			},
+			{
+				"Name": "CenterBenchPillar4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterBenchPillar4",
+					"Material": "CenterBenchPillar4_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall4",
+					"Material": "CenterLeftwall4_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall4Ceiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall4Ceiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall5",
+					"Material": "CenterLeftwall5_Color"
+				}
+			},
+			{
+				"Name": "CenterLeftwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterLeftwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightManToilet",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightManToilet",
+					"Material": "CenterRightManToilet_Color"
+				}
+			},
+			{
+				"Name": "CenterRightManToiletCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightManToiletCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall2",
+					"Material": "CenterRightwall2_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall3",
+					"Material": "CenterRightwall3_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightwall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterRightWomanToilet",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightWomanToilet",
+					"Material": "CenterRightWomanToilet_Color"
+				}
+			},
+			{
+				"Name": "CenterRightWomanToiletCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterRightWomanToiletCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairLeftThickwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairLeftThickwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairLeftwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairLeftwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairLeftwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairLeftwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairRightThickwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairRightThickwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairRightwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairRightwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairRightwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "CenterStairwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.CenterStairwall",
+					"Material": "CenterStairwall_Color"
+				}
+			},
+			{
+				"Name": "Elevator",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Elevator",
+					"Material": "PolishedConcrete01_4K_BaseColor"
+				}
+			},
+			{
+				"Name": "ElevatorDoor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.ElevatorDoor",
+					"Material": "ElevatorDoor_Color"
+				}
+			},
+			{
+				"Name": "FlowerBed",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBed",
+					"Material": "FlowerBed_Color"
+				}
+			},
+			{
+				"Name": "FlowerBed2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBed2",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBed3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBed3",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedAcrosswall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedAcrosswall",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedCeiling",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedDiagonalwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedDiagonalwall",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedDiagonalwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedDiagonalwall2",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedDownhill",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedDownhill",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedDownhill2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedDownhill2",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedFloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedFloor",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedPillar",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedPillar",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FlowerBedRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FlowerBedRightwall",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "FrontDoorLeftwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FrontDoorLeftwall",
+					"Material": "FrontDoorLeftwall_Color"
+				}
+			},
+			{
+				"Name": "FrontDoorLeftwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FrontDoorLeftwall2",
+					"Material": "FrontDoorLeftwall2_Color"
+				}
+			},
+			{
+				"Name": "FrontDoorRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.FrontDoorRightwall",
+					"Material": "FrontDoorRightwall_Color"
+				}
+			},
+			{
+				"Name": "AuditoriumAcrossPillar1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumAcrossPillar1",
+					"Material": "AuditoriumAcrossPillar1_Color"
+				}
+			},
+			{
+				"Name": "AuditoriumAcrossPillar2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumAcrossPillar2",
+					"Material": "AuditoriumAcrossPillar2_Color"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontDoorCeiling1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling1",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontDoorCeiling2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling2",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontDoorCeiling3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling3",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontDoorCeiling4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontDoorCeiling4",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall1",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall2",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall3",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall4",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall5",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall6",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall7",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall8",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall9",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall10",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall11",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall11",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall12",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall12",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall13",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall13",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumFrontwall14",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumFrontwall14",
+					"Material": "wood_table_001_diff_4k"
+				}
+			},
+			{
+				"Name": "AuditoriumLeftwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumLeftwall",
+					"Material": "AuditoriumLeftwall_Color"
+				}
+			},
+			{
+				"Name": "AuditoriumRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.AuditoriumRightwall",
+					"Material": "AuditoriumRightwall_Color"
+				}
+			},
+			{
+				"Name": "LeftDoorCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.LeftDoorCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "LeftDoorLeftwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.LeftDoorLeftwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "LeftDoorRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.LeftDoorRightwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "LeftDoorRightwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.LeftDoorRightwall2",
+					"Material": "LeftDoorRightwall2_Color"
+				}
+			},
+			{
+				"Name": "OutLeft1stwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutLeft1stwall",
+					"Material": "OutLeft1stwall_Color"
+				}
+			},
+			{
+				"Name": "OutLeftInsetwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutLeftInsetwall",
+					"Material": "OutLeftInsetwall_Color"
+				}
+			},
+			{
+				"Name": "OutBetweenLeftwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutBetweenLeftwall",
+					"Material": "OutBetweenLeftwall_Color"
+				}
+			},
+			{
+				"Name": "Out1stStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Out1stStair",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "Out1stStairRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Out1stStairRail",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "OutCenterLeftRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutCenterLeftRail",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "OutCenterStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutCenterStair",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "OutFrontRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutFrontRightwall",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "B1wall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1wall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "B1wall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1wall5",
+					"Material": "B1wall5_Color"
+				}
+			},
+			{
+				"Name": "B1wall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1wall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "B1wall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1wall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "B1wall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1wall2",
+					"Material": "B1wall2_Color"
+				}
+			},
+			{
+				"Name": "B1wall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.B1wall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "OutDiagonalRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutDiagonalRail",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "OutDiagonalwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutDiagonalwall",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "_2fCenterLeftStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2fCenterLeftStair",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2fCenterRightStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [95.0, 0.1, 235],
+					"Rotate": [-28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2fCenterRightStair",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2fCenterStair",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": false,
+					"SyncMesh": true,
+					"Center": [-50.0, 120, 0],
+					"Extent": [127.5, 0.1, 300],
+					"Rotate": [28.0, 0.0, 0.0]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2fCenterStair",
+					"Material": "Tiles043_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndcolumn",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndcolumn",
+					"Material": "Bluewall_Color"
+				}
+			},
+			{
+				"Name": "_2ndElevator",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndElevator",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling9",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorCeiling10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorCeiling10",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall9",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall10",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall11",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall11",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLectureDoorwall12",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLectureDoorwall12",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLecturewall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLecturewall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftDiagonalwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftDiagonalwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftDoorwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftDoorwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftDoorwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftDoorwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftDoorwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftDoorwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftDoorwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftDoorwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftToiletwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftToiletwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftToiletwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftToiletwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftToiletwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftToiletwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftToiletwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftToiletwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndLeftToiletwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndLeftToiletwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndOutRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndOutRail",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling9",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling10",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling11",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling11",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling12",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling12",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling13",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling13",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling14",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling14",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling15",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling15",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorCeiling16",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorCeiling16",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall9",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall10",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall11",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall11",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall12",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall12",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall13",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall13",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall14",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall14",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall15",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall15",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall16",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall16",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorDoorwall17",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorDoorwall17",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall7",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall8",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall9",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall9",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall10",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall10",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall11",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall11",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall12",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall12",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall13",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall13",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall14",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall14",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_2ndProfessorwall15",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndProfessorwall15",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "IstudioCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioCeiling",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "IstudioDecor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioDecor",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "IstudioBench",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioBench",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "IstudioPillar1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioPillar1",
+					"Material": "IstudioPillar1_Color"
+				}
+			},
+			{
+				"Name": "IstudioPillar2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioPillar2",
+					"Material": "WhiteBrick_Base"
+				}
+			},
+			{
+				"Name": "IstudioPillar3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioPillar3",
+					"Material": "WhiteBrick_Base"
+				}
+			},
+			{
+				"Name": "IstudioPillar4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioPillar4",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "IstudioPillar5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioPillar5",
+					"Material": "WhiteBrick_Base"
+				}
+			},
+			{
+				"Name": "IstudioPillar6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.IstudioPillar6",
+					"Material": "WhiteBrick_Base"
+				}
+			},
+			{
+				"Name": "Istudiowall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall1",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "Istudiowall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall2",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "Istudiowall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall4",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "Istudiowall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall5",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "Istudiowall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall6",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "Istudiowall7",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall7",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "Istudiowall8",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Istudiowall8",
+					"Material": "Whitewood_COL"
+				}
+			},
+			{
+				"Name": "_217DoorCeiling1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217DoorCeiling1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_217DoorCeiling2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217DoorCeiling2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_217wall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217wall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_217wall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217wall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_217wall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217wall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_217wall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217wall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_217wall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._217wall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "OutDiagonalMiddleRail",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutDiagonalMiddleRail",
+					"Material": "factory_brick_diff_4k"
+				}
+			},
+			{
+				"Name": "OutGraywall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutGraywall",
+					"Material": "OutGraywall_Color"
+				}
+			},
+			{
+				"Name": "_2fSideStair001",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2fSideStair001",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_2fSideStair002",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2fSideStair002",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_2ndSideStairDoorCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._2ndSideStairDoorCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_3_5Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._3_5Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_3fSideStair001",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._3fSideStair001",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_3fSideStair002",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._3fSideStair002",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_3rdSideStairDoorCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._3rdSideStairDoorCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_3Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._3Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_4_5Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._4_5Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_4fSideStair001",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._4fSideStair001",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_4fSideStair002",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._4fSideStair002",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_4Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._4Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "_4thSideStairDoorCeiling",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._4thSideStairDoorCeiling",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "_5Sidefloor",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap._5Sidefloor",
+					"Material": "Beigetile_COL"
+				}
+			},
+			{
+				"Name": "Dummy",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.Dummy",
+					"Material": "Dummy_Color"
+				}
+			},
+			{
+				"Name": "OutBackwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutBackwall",
+					"Material": "OutBackwall_Color"
+				}
+			},
+			{
+				"Name": "OutbetweenBigRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutbetweenBigRightwall",
+					"Material": "OutbetweenBigRightwall_Color"
+				}
+			},
+			{
+				"Name": "OutbetweenRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutbetweenRightwall",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "OutRightBackwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutRightBackwall",
+					"Material": "OutRightBackwall_Color"
+				}
+			},
+			{
+				"Name": "OutRightInsetwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutRightInsetwall",
+					"Material": "OutRightInsetwall_Color"
+				}
+			},
+			{
+				"Name": "OutRightwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.OutRightwall",
+					"Material": "painted_plaster_wall_diff_4k"
+				}
+			},
+			{
+				"Name": "SideStairDiagoanlwall",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairDiagoanlwall",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "SideStairwall1",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairwall1",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "SideStairwall2",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairwall2",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "SideStairwall3",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairwall3",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "SideStairwall4",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairwall4",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "SideStairwall5",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairwall5",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			},
+			{
+				"Name": "SideStairwall6",
+				"Transform": {
+					"Position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Rotate": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"Scale": [
+						1.0,
+						1.0,
+						1.0
+					]
+				},
+				"Collider": {
+					"Static": true,
+					"AutoMesh": true
+				},
+				"Renderer": {
+					"Mesh": "MidtermMap.SideStairwall6",
+					"Material": "Plaster002_4K-JPG_Color"
+				}
+			}
+		]
+	}

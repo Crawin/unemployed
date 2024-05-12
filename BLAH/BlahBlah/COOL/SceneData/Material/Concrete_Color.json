@@ -1,0 +1,9 @@
+{
+	"name": "Concrete_Color",
+	"BaseColor": "Concrete_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

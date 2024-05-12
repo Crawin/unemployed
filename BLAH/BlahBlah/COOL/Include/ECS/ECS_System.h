@@ -97,7 +97,50 @@ namespace ECSsystem {
 		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 
-		static bool CheckCollisionRectCircle(const XMFLOAT2& rectCenter, const XMFLOAT2& rectSize, const XMFLOAT2& circleCenter, float circleRadius) {
+		static bool CheckCollisionRectCircle(const BoundingOrientedBox& rect, const XMFLOAT2& circleCenter, float circleRadius) {
+			XMFLOAT2 rectCenter = { rect.Center.x, rect.Center.y };
+			XMFLOAT2 rectSize = { rect.Extents.x, rect.Extents.y };
+
+			float radPow = circleRadius * circleRadius;
+
+			// 반지름으로 사각형 확장
+			XMFLOAT2 newSize = { rectSize.x + circleRadius, rectSize.y + circleRadius };
+
+			float left = rectCenter.x - newSize.x;
+			float top = rectCenter.y + newSize.y;
+			float right = rectCenter.x + newSize.x;
+			float bottom = rectCenter.y - newSize.y;
+
+			// is in expend area?
+			if ((left < circleCenter.x && circleCenter.x < right &&
+				bottom < circleCenter.y && circleCenter.y < top) == false) return false;
+
+			// if in left top
+			if (circleCenter.x < left && circleCenter.y > top &&
+				pow(circleCenter.x - left, 2) + pow(circleCenter.y - top, 2) > radPow)
+				return false;
+
+			// right top
+			if (circleCenter.x > right && circleCenter.y > top &&
+				pow(circleCenter.x - right, 2) + pow(circleCenter.y - top, 2) > radPow)
+				return false;
+
+			// left bottom
+			if (circleCenter.x < left && circleCenter.y < bottom &&
+				pow(circleCenter.x - left, 2) + pow(circleCenter.y - bottom, 2) > radPow)
+				return false;
+
+			// right bottom
+			if (circleCenter.x > right && circleCenter.y < bottom &&
+				pow(circleCenter.x - right, 2) + pow(circleCenter.y - bottom, 2) > radPow)
+				return false;
+
+
+			return true;
+		}
+
+
+		static bool CheckCollisionRectCircleNoUse(const XMFLOAT2& rectCenter, const XMFLOAT2& rectSize, const XMFLOAT2& circleCenter, float circleRadius) {
 			// 반지름으로 사각형 확장
 			XMFLOAT2 newSize = { rectSize.x + circleRadius, rectSize.y + circleRadius };
 
@@ -170,11 +213,13 @@ namespace ECSsystem {
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
-
-	//class SendToServer : public System {
-	//public:
-	//	virtual void Update(ECSManager* manager, float deltaTime);
-	//};
+	/////////////////////////////////////////////////////////
+	// Send To Server
+	// 
+	class SendToServer : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
 }
 
 

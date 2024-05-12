@@ -1,0 +1,9 @@
+{
+	"name": "dark_wood_diff_4k",
+	"BaseColor": "dark_wood_diff_4k",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

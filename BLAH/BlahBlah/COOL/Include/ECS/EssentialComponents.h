@@ -325,6 +325,9 @@ namespace component {
 
 		BoundingFrustum& GetBoundingFrustum() { return m_BoundingFrustum; }
 
+		XMFLOAT3 GetWorldPosition() const { return { -m_ViewMatrix._41, -m_ViewMatrix._42, -m_ViewMatrix._43 }; }
+		XMFLOAT3 GetWorldDirection() const { return { m_ViewMatrix._31, m_ViewMatrix._32, m_ViewMatrix._33 }; }
+
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	private:
@@ -363,6 +366,8 @@ namespace component {
 
 		float m_Elasticity = 1.1f;
 
+		bool m_CalculatePhysics = false;
+
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
 
@@ -387,6 +392,8 @@ namespace component {
 		void AddVelocity(const XMFLOAT3& direction, float deltaTime);
 
 		float GetElasticity() const { return m_Elasticity; }
+
+		bool IsToCalculate() const { return m_CalculatePhysics; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -399,13 +406,22 @@ namespace component {
 		LightData m_LightData;
 
 		bool m_IsMainLight = false;
+		bool m_CastShadow = false;
 
+		float m_Score = -100;
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
+		bool IsMainLight() const { return m_IsMainLight; }
+		bool IsCastShadow() const { return m_CastShadow; }
+
 		LightData& GetLightData() { return m_LightData; }
+
+		void CalculateScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir);
+
+		float GetScore() const { return m_Score; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -487,8 +503,10 @@ namespace component {
 
 		void SetCollided(bool col) { m_Collided = col; }
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
+		void SetOriginBoxCenter(const BoundingOrientedBox& box) { m_BoundingBoxOriginal.Center = box.Center; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
 		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
+		void SetCapsule(bool b) { m_IsCapsule = b; }
 
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
@@ -504,7 +522,7 @@ namespace component {
 		void InsertCollidedEntity(Entity* ent);
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
-		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
+		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
 
 		template<class COMP>
@@ -565,7 +583,7 @@ namespace component {
 		void InsertCollidedEntity(Entity* ent);
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
-		const EventFunctionMap& GetEventMap(COLLIDE_EVENT_TYPE type) const;
+		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
 
 		template<class COMP>

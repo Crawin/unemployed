@@ -1,0 +1,9 @@
+{
+	"name": "LeftDoorRightwall2_Color",
+	"BaseColor": "LeftDoorRightwall2_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

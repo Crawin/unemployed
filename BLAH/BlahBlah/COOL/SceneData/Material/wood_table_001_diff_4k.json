@@ -1,0 +1,9 @@
+{
+	"name": "wood_table_001_diff_4k",
+	"BaseColor": "wood_table_001_diff_4k",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "2ndfloor_Color",
+	"BaseColor": "2ndfloor_Color",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

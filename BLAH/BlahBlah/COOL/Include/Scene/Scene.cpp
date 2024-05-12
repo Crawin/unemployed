@@ -49,13 +49,13 @@ bool Scene::AddSystem()
 	
 	// sync position by server
 	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
-	//m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
 	
 	// move collide check, handle simulate, move and send
 	m_ECSManager->InsertSystem(new ECSsystem::UpdateInput);
-	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
 	m_ECSManager->InsertSystem(new ECSsystem::SimulatePhysics);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByPhysics);
+	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+	m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
 
 	// transform sync
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
@@ -217,11 +217,9 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// 5. present -> tex;
 
 
-
 	// for lambda capture
 	std::shared_ptr<ECSManager> ecs = m_ECSManager;
 	auto& res = m_ResourceManager;
-
 
 	// set light data to shader
 	int count = 0;
@@ -235,29 +233,55 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
 	m_ECSManager->Execute(getCam);
 
+	// prepare for light evaluate
 	int& activeLights = m_ActiveLightSize;
 	activeLights = 0;
+	component::Camera* cam = camVec[0];
+	XMFLOAT3 camPos = cam->GetWorldPosition();
+	XMFLOAT3 camDir = cam->GetWorldDirection();
+	std::vector<component::Light*> toCastShadowLights;
+	toCastShadowLights.reserve(m_ResourceManager->m_ShadowMaps.size());
 
-	std::function<void(component::Light*)> updateLight = [&count, data, res, &camVec, &activeLights](component::Light* lightComp) {
+	// evaluate lights for shadow mapping
+	std::function<void(component::Light*)> shadowMapEvaluate = [&camPos, &camDir, &toCastShadowLights](component::Light* lightComp) {
+		// unlink first
+		lightComp->GetLightData().m_CameraIdx = -1;
 
-		// todo
-		// if 뭐 얘가 좀 쌘 애다, shadowmap 만들기
-		LightData& light = lightComp->GetLightData();
+		// if allways not cast, return
+		if (lightComp->IsCastShadow() == false) return;
+
+		// is main light -> cast allways cast shadow
+		lightComp->GetLightData().m_CastShadow = lightComp->IsMainLight();
+		lightComp->CalculateScore(camPos, camDir);
+
+		toCastShadowLights.push_back(lightComp);
+
+		};
+	m_ECSManager->Execute(shadowMapEvaluate);
+
+	// sort by score
+	std::sort(toCastShadowLights.begin(), toCastShadowLights.end(), [](component::Light* a, component::Light* b) { return a->GetScore() > b->GetScore(); });
+
+	// link light to shadow map
+	int maxShadowMaps = m_ResourceManager->m_ShadowMaps.size();
+	for (int i = 0; i < maxShadowMaps && i < toCastShadowLights.size(); ++i) {
+		// if too low, end
+		if (toCastShadowLights[i]->GetScore() < -100.0f) break;
+
+		LightData& light = toCastShadowLights[i]->GetLightData();
+
+		light.m_CastShadow = TRUE;
 		int shadowMapIdx = -1;
-
-		// 일단 light cam의 연결을 끊는다.
-		light.m_CameraIdx = -1;
-
-		// if light dir == directional, update light map
+		// link lights
 		switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
-		case LIGHT_TYPES::DIRECTIONAL_LIGHT: 
+		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
 		{
 			++activeLights;
 
 			// todo 
 			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
 			auto& p = camVec[0]->GetPosition();
-			
+
 			XMFLOAT3 up = light.m_Direction;
 			up.x *= -5000.0;
 			up.y *= -5000.0;
@@ -265,12 +289,10 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 			XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
 			light.m_Position = pos;
+		}
 
-			// 뒷면이라면
-			if (up.y < 0) {
-				// 셰도우맵핑을 끄자
-				break;
-			}
+		// fallthrough 
+		case LIGHT_TYPES::SPOT_LIGHT:
 			// 해당 함수가 불리면 shadow mapping을 한다.
 			shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
 			res->UpdateShadowMapView(shadowMapIdx, light);
@@ -282,33 +304,21 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 			// todo
 			// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
 			res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
-
-			//DebugPrint(std::format("vie: {}, {}, {}", -mat._14, -mat._24, -mat._34));
-			//DebugPrint(std::format("lig: {}, {}, {}", pos.x, pos.y, pos.z));
-		}
 			break;
-		case LIGHT_TYPES::SPOT_LIGHT:
-			DebugPrint("No current shadow map setting for spot light now");
 
-			break;
 		case LIGHT_TYPES::POINT_LIGHT:
 			DebugPrint("No current shadow map setting for point light now");
 			break;
 
 		};
+	}
 
-
-		// clear Dsv;
-		// todo 
-		// 뭐 카메라 거리에 자르거나 할 수 있게 할까?
-
-
+	// memcpy to gpu
+	std::function<void(component::Light*)> updateLight = [&count, data](component::Light* lightComp) {
+		LightData& light = lightComp->GetLightData();
 		memcpy(data + count++, &light, sizeof(LightData));
 		};
-
 	m_ECSManager->Execute(updateLight);
-
-	// 여기서 셰도으맵을 만든대
 
 
 	// 
@@ -364,10 +374,6 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		const auto& view = rend->GetVertexBufferView();
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
-		//res->RenderMesh(commandList, rend->GetMesh(), rend->GetWorldMatrix());
-
-
-		// 
 
 		mesh->Render(commandList, rend->GetWorldMatrix());
 		};

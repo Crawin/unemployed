@@ -1,0 +1,9 @@
+{
+	"name": "BathroomTiles03_4K_BaseColor",
+	"BaseColor": "BathroomTiles03_4K_BaseColor",
+	"Roughness": null,
+	"Metalic": null,
+	"Specular": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

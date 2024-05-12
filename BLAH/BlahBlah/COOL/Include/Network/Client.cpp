@@ -17,8 +17,8 @@ void print_error(const char* msg, int err_no)
 
 Client::Client()
 {
-	//m_cpServerIP = (char*)"freerain.mooo.com";
-	m_cpServerIP = (char*)"127.0.0.1";
+	m_cpServerIP = (char*)"freerain.mooo.com";
+	//m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -27,6 +27,11 @@ Client::~Client()
 	std::cout << "Client 소멸자 호출" << std::endl;
 	// 소켓 닫기
 	closesocket(m_sServer);
+
+	// vivox 종료
+	if (vivox_state != nullptr)
+		vivox_state->game_state = false;
+
 	// 윈속 종료
 	WSACleanup();
 }

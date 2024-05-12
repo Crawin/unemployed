@@ -19,11 +19,6 @@ namespace component {
 	{
 		Json::Value rend = v["Renderer"];
 
-		//m_MeshID = rm->GetMeshToLoad(rend["Mesh"].asString());
-
-		// todo
-		// 일단 전부 late load로 해두긴 했는데
-		// 추후에 이걸 놔두어도 될지 확인
 		rm->AddLateLoad(rend["Mesh"].asString(), rend["Material"].asString(), this);
 	}
 
@@ -34,8 +29,6 @@ namespace component {
 
 	void AnimationController::Create(Json::Value& v, ResourceManager* rm)
 	{
-		//  todo
-		// resource mamager에게 toLoad 뭐시기를 추가해야 한다.
 		Json::Value anim = v["AnimationController"];
 
 		rm->AddLateLoadAnimController(anim["Player"].asString(), this);
@@ -190,12 +183,6 @@ namespace component {
 
 	XMFLOAT4X4& Transform::GetWorldTransform()
 	{
-		// TODO: 여기에 return 문을 삽입합니다.
-		//XMMATRIX mat = XMMatrixMultiply(
-		//	XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z), XMMatrixMultiply(
-		//		XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&m_Rotate)),
-		//		XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z)));
-
 		XMFLOAT3 rotRad;
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
 		rotRad.y = XMConvertToRadians(m_Rotate.y);
@@ -217,11 +204,14 @@ namespace component {
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
 		rotRad.y = XMConvertToRadians(m_Rotate.y);
 		rotRad.z = XMConvertToRadians(m_Rotate.z);
-		XMMATRIX mat = XMMatrixMultiply(
-			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
-			XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
-				XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
-
+		//XMMATRIX mat = XMMatrixMultiply(
+		//	XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)),
+		//	XMMatrixMultiply(XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z),
+		//		XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z)));
+		XMMATRIX mat =
+			XMMatrixScaling(m_Scale.x, m_Scale.y, m_Scale.z) *
+			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotRad)) *
+			XMMatrixTranslation(m_Position.x, m_Position.y, m_Position.z);
 
 		XMFLOAT4X4 worldMat = Matrix4x4::Identity();
 		XMStoreFloat4x4(&worldMat, mat);
@@ -235,7 +225,6 @@ namespace component {
 
 		m_IsMainCamera = cam["IsMainCamera"].asBool();
 
-		// todo entity에 등록하고 해당 함수를 넣어버려
 		if (m_IsMainCamera) rm->SetMainCamera(this);
 
 		m_Right.x = cam["Right"][0].asFloat();
@@ -278,8 +267,6 @@ namespace component {
 
 	void Camera::SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	{
-		// todo 여기 확인해보고 build matrix를 대신 하는 곳이 있는지 찾아봐라
-		//BuildViewMatrix();
 		if (m_ProjChanged) BuildProjectionMatrix();
 		UpdateShaderData();
 
@@ -354,6 +341,7 @@ namespace component {
 		m_Acceleration.y = s["Acceleration"][1].asFloat();
 		m_Acceleration.z = s["Acceleration"][2].asFloat();
 
+		m_CalculatePhysics = s["Calculate"].asBool();
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
@@ -383,8 +371,6 @@ namespace component {
 
 		m_IsMainLight = light["MainLight"].asBool();
 
-		// todo
-		// rm에게 나 light 쓸래요라고 등록 해야함
 		rm->AddLightData();
 
 		m_LightData.m_LightColor.x = light["LightColor"][0].asFloat();
@@ -392,17 +378,53 @@ namespace component {
 		m_LightData.m_LightColor.z = light["LightColor"][2].asFloat();
 		m_LightData.m_LightColor.w = light["LightColor"][3].asFloat();
 
-		m_LightData.m_Falloff = light["FallOff"].asFloat();
+		m_LightData.m_LightAmbient.x = light["AmbientColor"][0].asFloat();
+		m_LightData.m_LightAmbient.y = light["AmbientColor"][1].asFloat();
+		m_LightData.m_LightAmbient.z = light["AmbientColor"][2].asFloat();
+		m_LightData.m_LightAmbient.w = light["AmbientColor"][3].asFloat();
+
+		m_LightData.m_Distance = light["Distance"].asFloat();
 		m_LightData.m_LightType = light["LightType"].asInt();
 
 		m_LightData.m_Active = light["Active"].asBool();
-		m_LightData.m_CastShadow = light["CastShadow"].asBool();
+		m_CastShadow = m_LightData.m_CastShadow = light["CastShadow"].asBool();
+
+		m_LightData.m_Angle = XMConvertToRadians(light["Angle"].asFloat());
+
 	}
 
 	void Light::ShowYourself() const
 	{
 		DebugPrint("Light Comp");
 		//DebugPrint(std::format("Light map material: {}", m_ShadowMapMaterial));
+	}
+
+	void Light::CalculateScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir)
+	{
+		m_Score = 0;
+
+		switch (static_cast<LIGHT_TYPES>(m_LightData.m_LightType)) {
+		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+			if (m_LightData.m_Direction.y > 0) m_Score = -1000;
+			else m_Score = 100000;
+			break;
+
+		case LIGHT_TYPES::SPOT_LIGHT:
+		{
+			XMVECTOR lightDirVec = XMLoadFloat3(&m_LightData.m_Direction);
+			XMVECTOR camDirVec = XMLoadFloat3(&camDir);
+			XMVECTOR camToLight = XMLoadFloat3(&m_LightData.m_Position) - XMLoadFloat3(&camPos);
+
+			float distFactor = 1.0f / max(XMVectorGetX(XMVector3Length(camToLight)), 0.1f);
+
+			float dotFactor = (XMVectorGetX(XMVector3Dot(lightDirVec, camDirVec)) + 1.0f) * 2.0f;
+			float dotToLight = (XMVectorGetX(XMVector3Dot(XMVector3Normalize(camToLight), camDirVec)) + 1.0f) * 2.0f;
+
+			m_Score = dotToLight * dotFactor * distFactor;
+			break;
+		}
+
+		}
 	}
 
 	void TestInput::Create(Json::Value& v, ResourceManager* rm)
@@ -495,6 +517,32 @@ namespace component {
 			m_IsCapsule = col["IsCapsule"].asBool();
 		}
 
+		bool isSyncMesh = col["SyncMesh"].asBool();
+
+		if (isSyncMesh) {
+			XMFLOAT3 center;
+			center.x = col["Center"][0].asFloat();
+			center.y = col["Center"][1].asFloat();
+			center.z = col["Center"][2].asFloat();
+
+			XMFLOAT3 extent;
+			extent.x = col["Extent"][0].asFloat();
+			extent.y = col["Extent"][1].asFloat();
+			extent.z = col["Extent"][2].asFloat();
+
+			XMVECTOR rotate = { XMConvertToRadians(col["Rotate"][0].asFloat()), XMConvertToRadians(col["Rotate"][1].asFloat()), XMConvertToRadians(col["Rotate"][2].asFloat()) };
+
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(rotate);
+
+			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+			m_BoundingBoxOriginal.Transform(m_BoundingBoxOriginal, rot);
+
+			m_IsCapsule = true;
+			m_Collided = true;
+		}
+
+
 	}
 
 	void Collider::ShowYourself() const
@@ -505,6 +553,7 @@ namespace component {
 	void Collider::UpdateBoundingBox(const XMMATRIX& transMat)
 	{
 		m_BoundingBoxOriginal.Transform(m_CurrentBox, transMat);
+		XMStoreFloat4(&m_CurrentBox.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_CurrentBox.Orientation)));
 	}
 
 	void Collider::InsertCollidedEntity(Entity* ent)
@@ -535,13 +584,14 @@ namespace component {
 
 	}
 
-	const EventFunctionMap& Collider::GetEventMap(COLLIDE_EVENT_TYPE type) const
+	const EventFunctionMap* Collider::GetEventMap(COLLIDE_EVENT_TYPE type) const
 	{
 		switch (type) {
-		case COLLIDE_EVENT_TYPE::BEGIN:		return m_EventFunctions.m_OnBeginOverlap;
-		case COLLIDE_EVENT_TYPE::ING:		return m_EventFunctions.m_OnOverlapping;
-		case COLLIDE_EVENT_TYPE::END:		return m_EventFunctions.m_OnEndOverlap;
+		case COLLIDE_EVENT_TYPE::BEGIN:		return &m_EventFunctions.m_OnBeginOverlap;
+		case COLLIDE_EVENT_TYPE::ING:		return &m_EventFunctions.m_OnOverlapping;
+		case COLLIDE_EVENT_TYPE::END:		return &m_EventFunctions.m_OnEndOverlap;
 		}
+		return nullptr;
 	}
 
 	void DynamicCollider::Create(Json::Value& v, ResourceManager* rm)
@@ -610,13 +660,15 @@ namespace component {
 		}
 	}
 
-	const EventFunctionMap& DynamicCollider::GetEventMap(COLLIDE_EVENT_TYPE type) const
+	const EventFunctionMap* DynamicCollider::GetEventMap(COLLIDE_EVENT_TYPE type) const
 	{
 		switch (type) {
-		case COLLIDE_EVENT_TYPE::BEGIN:		return m_EventFunctions.m_OnBeginOverlap;
-		case COLLIDE_EVENT_TYPE::ING:		return m_EventFunctions.m_OnOverlapping;
-		case COLLIDE_EVENT_TYPE::END:		return m_EventFunctions.m_OnEndOverlap;
+		case COLLIDE_EVENT_TYPE::BEGIN:		return &m_EventFunctions.m_OnBeginOverlap;
+		case COLLIDE_EVENT_TYPE::ING:		return &m_EventFunctions.m_OnOverlapping;
+		case COLLIDE_EVENT_TYPE::END:		return &m_EventFunctions.m_OnEndOverlap;
 		}
+
+		return nullptr;
 	}
 
 }

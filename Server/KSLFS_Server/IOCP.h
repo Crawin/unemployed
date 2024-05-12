@@ -210,13 +210,14 @@ public:
 	DirectX::XMFLOAT3 destination = { 0,0,0 };
 	std::chrono::steady_clock::time_point arrive_time;
 	PATH* path = nullptr;
-	void state_machine(Player*);
+	void state_machine(Player*, const bool& npc_state);
 	bool can_see(Player&);
 	bool can_hear(Player&);
 	float distance(Player&);
 	bool compare_position(DirectX::XMFLOAT3&);
-	bool set_destination(Player*&);
+	bool set_destination(Player*&, const bool& npc_state);
 	void move();
+	const short find_near_player(Player*&);
 };
 
 class Game
@@ -239,7 +240,7 @@ public:
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
 	bool erasePlayer(const unsigned int& id);
 	void setFloor(const unsigned int& id, const unsigned short& floor);
-	void update();
+	void update(const bool& npc_state);
 };
 
 class ServerDetails
@@ -248,6 +249,8 @@ public:
 	bool m_bServerState = false;
 	HANDLE m_hIOCP;
 	std::atomic_int id = 1;
+	bool m_bLog = false;
+	bool m_bNPC = true;
 };
 
 class IOCP_SERVER_MANAGER
