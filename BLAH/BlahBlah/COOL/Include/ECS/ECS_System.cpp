@@ -924,18 +924,7 @@ namespace ECSsystem {
 			tr->SetPosition(temp);
 			};
 
-		// send
-		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
-			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
-			{
-				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
-					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
-			}
-			};
-
 		manager->Execute(move);
-		manager->Execute(send);
 	}
 
 	void HandleInteraction::OnInit(ECSManager* manager)
@@ -1087,5 +1076,20 @@ namespace ECSsystem {
 
 		manager->Execute(forAliveCanvas);
 
+	}
+	void SendToServer::Update(ECSManager* manager, float deltaTime)
+	{
+		using namespace component;
+		// send
+		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+			auto& client = Client::GetInstance();
+			if (client.getRoomNum())
+			{
+				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
+			}
+			};
+
+		manager->Execute(send);
 	}
 }
