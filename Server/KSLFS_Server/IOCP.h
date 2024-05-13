@@ -203,7 +203,7 @@ class NPC
 public:
 	short state = 0;				// 0: idle, 1: ¿Ãµø¡ﬂ
 	unsigned int id = NULL;
-	unsigned short m_floor = 1;
+	short m_floor = 1;
 	DirectX::XMFLOAT3 position = { 3160,0,-400 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
@@ -220,11 +220,18 @@ public:
 	const short find_near_player(Player*&);
 };
 
+//struct GameDetails
+//{
+//	bool m_bLOG = false;
+//	bool m_bNPC = true;
+//};
+
 class Game
 {
 	unsigned int GameNum;
 	Player player[2];
 	NPC guard;
+	
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n) {}
@@ -243,9 +250,8 @@ public:
 	void update(const bool& npc_state);
 };
 
-class ServerDetails
+struct ServerDetails
 {
-public:
 	bool m_bServerState = false;
 	HANDLE m_hIOCP;
 	std::atomic_int id = 1;

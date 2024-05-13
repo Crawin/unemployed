@@ -44,19 +44,19 @@ void IOCP_SERVER_MANAGER::start()
 	std::thread ai_thread{ &IOCP_SERVER_MANAGER::ai_thread,this };
 
 	// 멀티쓰레드
-	//int num_threads = std::thread::hardware_concurrency();
-	//std::vector<std::thread> worker_threads;
-	//for (int i = 0; i < num_threads; ++i)
-	//{
-	//	worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
-	//}
+	int num_threads = std::thread::hardware_concurrency();
+	std::vector<std::thread> worker_threads;
+	for (int i = 0; i < num_threads; ++i)
+	{
+		worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
+	}
 
-	//for (auto& w : worker_threads)
-	//	w.join();
+	for (auto& w : worker_threads)
+		w.join();
 
 
-	// 싱글쓰레드 디버그용
-	worker(server_s);
+	//// 싱글쓰레드 디버그용
+	//worker(server_s);
 
 	//delete lobby;
 	closesocket(server_s);
@@ -648,7 +648,7 @@ void NPC::state_machine(Player* p,const bool& npc_state)
 	for (auto& node : g_um_graph)
 		node.second->init();
 	DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
-	obb.Center.y *= 100;
+	//obb.Center.y *= 100; // 이거 왜 했던거지?
 	DirectX::XMFLOAT3 temp;
 	short now_floor = 0;
 	for (auto& mesh : m_vMeshes)
@@ -754,6 +754,7 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				path = aStarSearch(position, destination);
 				//this->destination = path->pos;
 				this->destination = p[i].position;
+				this->destination.y = position.y;
 				if (nullptr != path)
 					return true;
 				else
@@ -762,6 +763,7 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 			else if (can_hear(p[i]))
 			{
 				this->destination = p[i].position;
+				this->destination.y = position.y;
 				path = aStarSearch(position, destination);
 				if (nullptr != path)
 					return true;
