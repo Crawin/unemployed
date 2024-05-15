@@ -51,6 +51,16 @@ public:
 	void SetUpdate(bool bo) { updated = bo; }
 };
 
+struct EXP_OVER
+{
+	WSAOVERLAPPED over;
+	WSABUF wsabuf[1];
+	char buf[BUFSIZE];
+	EXP_OVER()
+	{
+		wsabuf[0].buf = buf;
+	}
+};
 
 class Client
 {
@@ -64,6 +74,7 @@ private:
 	~Client();
 	char* m_cpServerIP;
 	SOCKET m_sServer;
+	EXP_OVER EXPover;
 	WSABUF wsabuf[1];
 	WSAOVERLAPPED wsaover;
 	char buf[BUFSIZE];

@@ -17,8 +17,8 @@ void print_error(const char* msg, int err_no)
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
-	//m_cpServerIP = (char*)"127.0.0.1";
+	//m_cpServerIP = (char*)"freerain.mooo.com";
+	m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -64,31 +64,33 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 		m_SendTimeElapsed = 0.0f;
 
 		cs_packet_position temp(roomNum, pos, rot, sp);
-		wsabuf[0].buf = reinterpret_cast<char*>(&temp);
-		wsabuf[0].len = sizeof(cs_packet_position);
-
-		ZeroMemory(&wsaover, sizeof(wsaover));
 		temp.sendTime = std::chrono::high_resolution_clock::now();
-		WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
+		EXP_OVER* send_over = new EXP_OVER;
+		send_over->wsabuf->len = sizeof(cs_packet_position);
+		memcpy(send_over->buf, &temp, sizeof(cs_packet_position));
+		WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
 	}
 }
 
 void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)
 {
+	EXP_OVER* send_over;
 	if (gameNum == NULL)
 	{
 		cs_packet_make_room makeroom(type);
-		wsabuf[0].buf = reinterpret_cast<char*>(&makeroom);
-		wsabuf[0].len = sizeof(cs_packet_make_room);
+		send_over = new EXP_OVER;
+		send_over->wsabuf->len = sizeof(cs_packet_make_room);
+		memcpy(send_over->buf, &makeroom, sizeof(cs_packet_make_room));
 	}
 	else
 	{
 		cs_packet_enter_room enter(type, gameNum);
-		wsabuf[0].buf = reinterpret_cast<char*>(&enter);
-		wsabuf[0].len = sizeof(cs_packet_enter_room);
+		send_over = new EXP_OVER;
+		send_over->wsabuf->len = sizeof(cs_packet_enter_room);
+		memcpy(send_over->buf, &enter, sizeof(cs_packet_enter_room));
 	}
 	ZeroMemory(&wsaover, sizeof(wsaover));
-	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
+	WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
 }
 
 void Client::Connect_Server()
@@ -221,6 +223,8 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 
 void CALLBACK send_callback(DWORD err, DWORD sent_size, LPWSAOVERLAPPED pwsaover, DWORD recv_flag)
 {
+	auto send_packet = reinterpret_cast<EXP_OVER*>(pwsaover);
+	delete send_packet;
 	if (0 != err)
 	{
 		print_error("WSASend", WSAGetLastError());
