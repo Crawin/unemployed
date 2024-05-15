@@ -44,20 +44,20 @@ void IOCP_SERVER_MANAGER::start()
 	
 	std::thread ai_thread{ &IOCP_SERVER_MANAGER::ai_thread,this };
 
-	// 멀티쓰레드
-	int num_threads = std::thread::hardware_concurrency();
-	std::vector<std::thread> worker_threads;
-	for (int i = 0; i < num_threads; ++i)
-	{
-		worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
-	}
+	//// 멀티쓰레드
+	//int num_threads = std::thread::hardware_concurrency();
+	//std::vector<std::thread> worker_threads;
+	//for (int i = 0; i < num_threads; ++i)
+	//{
+	//	worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
+	//}
 
-	for (auto& w : worker_threads)
-		w.join();
+	//for (auto& w : worker_threads)
+	//	w.join();
 
 
-	//// 싱글쓰레드 디버그용
-	//worker(server_s);
+	// 싱글쓰레드 디버그용
+	worker(server_s);
 
 	//delete lobby;
 	closesocket(server_s);
@@ -837,19 +837,26 @@ void NPC::move()
 	XMVECTOR direction_xz = XMVector3Normalize(XMLoadFloat3(&temp));
 	XMFLOAT3 basic_head(0, 0, 1);
 	XMVECTOR basic = XMLoadFloat3(&basic_head);
+	XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	XMVECTOR dir = XMVector3Transform(basic, rotationMatrix);
 
-	float costheta = XMVectorGetX(XMVector3Dot(basic, direction_xz));
+	//float costheta = XMVectorGetX(XMVector3Dot(basic, direction_xz));
+	float costheta = XMVectorGetX(XMVector3Dot(dir, direction_xz));
 	float radian = acos(costheta);
-	float theta = XMConvertToDegrees(radian);
+	float degree = XMConvertToDegrees(radian);
 
-	XMVECTOR cross = XMVector3Cross(basic, direction_xz);
+	//XMVECTOR cross = XMVector3Cross(basic, direction_xz);
+	XMVECTOR cross = XMVector3Cross(dir, direction_xz);
+
 	float wise = XMVectorGetY(cross);
 	if (wise < 0)
 	{
-		theta = -theta;
+		degree = -degree;
 	}
 	
-	rotation.y = theta;
+	//std::cout << degree << std::endl;
+	//rotation.y = degree;
+	if(degree*degree > 0.25) rotation.y += degree / 10;
 	movement *= 100;
 	DirectX::XMStoreFloat3(&speed, movement);
 }
