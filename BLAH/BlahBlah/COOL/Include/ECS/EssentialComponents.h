@@ -325,15 +325,18 @@ namespace component {
 
 		BoundingFrustum& GetBoundingFrustum() { return m_BoundingFrustum; }
 
-		XMFLOAT3 GetWorldPosition() const { return { -m_ViewMatrix._41, -m_ViewMatrix._42, -m_ViewMatrix._43 }; }
+		XMFLOAT3 GetWorldPosition() const { 
+			XMMATRIX inv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_ViewMatrix)); 
+			XMFLOAT3 t;
+			XMStoreFloat3(&t, inv.r[3]);
+			return t;
+		}
 		XMFLOAT3 GetWorldDirection() const { return { m_ViewMatrix._31, m_ViewMatrix._32, m_ViewMatrix._33 }; }
 
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	private:
 		// 행렬 재생성
-		// 이하 임시들임
-		void BuildViewMatrix();
 		void BuildProjectionMatrix();
 
 		void UpdateShaderData();

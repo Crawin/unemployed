@@ -24,6 +24,13 @@ inline void DebugPrint(const std::string& str)
 #endif
 }
 
+inline void DebugPrintVector(const XMFLOAT3& v, std::string str = std::string())
+{
+#ifdef _DEBUG
+	std::cout << str << std::format(": {}, {}, {}", v.x, v.y, v.z) << "\n";
+#endif
+}
+
 
 // 
 #define CHECK_CREATE_FAILED(result, msg) if (!result) { DebugPrint(std::format("Failed! {}({}) {}", __FUNCTION__, __LINE__, msg)); return false; }
