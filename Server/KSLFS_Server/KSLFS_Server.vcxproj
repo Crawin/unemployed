@@ -165,7 +165,9 @@
     <ClInclude Include="IOCP.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Packets.h" />
-    <ClInclude Include="Server.h" />
+    <ClInclude Include="Server.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

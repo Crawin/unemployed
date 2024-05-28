@@ -124,6 +124,14 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				}
 				else
 				{
+					// 25.05.28 여기서부터 다시 진행 위 if문의 erasePlayer에서 이미 지워버려서 전송이 안되거나 이상해짐.
+					//auto players = Games[gameNum].getPlayers();
+					//for (int i = 0; i < 2; ++i)
+					//{
+					//	if (players[i].id == my_id || players[i].sock == NULL)	continue;
+					//	sc_packet_logout logout(players[my_id].sock);
+					//	login_players[i].send_packet(reinterpret_cast<packet_base*>(&logout));
+					//}
 					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
 				}
 				g_mutex_login_players.lock();

@@ -147,6 +147,17 @@ public:
 				}
 			}
 				break;
+			case 5:				// logout
+			{
+				auto logout = reinterpret_cast<sc_packet_logout*>(base);
+				auto sendOver = new EXP_OVER(logout);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
 		}
 	}
 
