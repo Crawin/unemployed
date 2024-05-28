@@ -461,12 +461,29 @@ namespace ECSsystem {
 			if (playerSock[0])
 			{
 				if (server->getID() == NULL && n.compare("Player1") == 0)
+				{
 					server->setID(playerSock[0]);
+					XMFLOAT3 pos = { 0,20,1000 };
+					tr->SetPosition(pos);
+					XMFLOAT3 rot = { 0,180,0 };
+					tr->SetRotation(rot);
+				}
 			}
 			if (playerSock[1])
 			{
 				if (server->getID() == NULL && n.compare("Player2") == 0)
+				{
 					server->setID(playerSock[1]);
+					XMFLOAT3 pos = { 0,20,1000 };
+					tr->SetPosition(pos);
+					XMFLOAT3 rot = { 0,180,0 };
+					tr->SetRotation(rot);
+				}
+			}
+			else //상대방 플레이어가 로그아웃 했을때
+			{
+				if (n.compare("Player2") == 0 && server->getID() != NULL)
+					server->setID(NULL);
 			}
 			if (n.compare("Guard") == 0 && server->getID() == NULL)
 				server->setID(1);
@@ -519,11 +536,11 @@ namespace ECSsystem {
 			auto id = server->getID();
 			if (id && client.characters[id].IsUpdated())
 			{
-				if (id == 1)
-				{
+				//if (id == 1)
+				//{
 					//auto speed = client.characters[id].getSpeed();
 					//std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
-				}
+				//}
 				XMFLOAT3 pos = tr->GetPosition();
 				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
 
@@ -534,7 +551,7 @@ namespace ECSsystem {
 					tr->SetRotation(client.characters[id].getRot());
 				}
 				sp->SetVelocity(client.characters[id].getSpeed());
-				XMFLOAT3 vel = sp->GetVelocityOnXZ();
+				//XMFLOAT3 vel = sp->GetVelocityOnXZ();
 				//if (id != 1) {
 				//}
 				//DebugPrint(std::format("name: {},\tspeed: {}", n, XMVectorGetX(XMVector3Length(XMLoadFloat3(&vel)))));
