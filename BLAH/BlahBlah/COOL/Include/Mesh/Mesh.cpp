@@ -64,23 +64,34 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	file.read((char*)&min, sizeof(XMFLOAT3));
 	file.read((char*)&max, sizeof(XMFLOAT3));
 	file.read((char*)&m_AABBCenter, sizeof(XMFLOAT3));
-	//min.x *= -1;
-	//max.x *= -1;
-	//m_AABBCenter.x *= -1;
 
 	XMVECTOR ext = (XMLoadFloat3(&max) - XMLoadFloat3(&min)) / 2.0f;
 	XMStoreFloat3(&m_AABBExtents, ext);
-	//m_AABBExtents = XMFLOAT3((max.x - min.x) * 0.5f, (max.y - min.y) * 0.5f, (max.z - min.z) * 0.5f);
-	//m_AABBCenter = XMFLOAT3((max.x + min.x) * 0.5f, (max.y + min.y) * 0.5f, (max.z + min.z) * 0.5f);
+
 	// 4. 부모 상대 변환 행렬		// float4x4
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
+	//XMFLOAT4X4 temp = m_LocalTransform;
+	//temp._41 = 0;
+	//temp._42 = 0;
+	//temp._43 = 0;
+
+	//// to local exts
+	//XMMATRIX invWorld = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_LocalTransform));
+	//XMMATRIX invWorldRotSc = XMMatrixInverse(nullptr, XMLoadFloat4x4(&temp));
+	//XMStoreFloat3(&m_AABBCenter, XMVector3Transform(XMLoadFloat3(&m_AABBCenter), invWorld));
+	//XMStoreFloat3(&m_AABBExtents, XMVector3Transform(XMLoadFloat3(&m_AABBExtents), invWorldRotSc));
+
 	// bounding box
-	m_AABBExtents.x *= -1;
+	//m_AABBExtents.x *= -1;
 	m_ModelBoundingBox = BoundingOrientedBox(m_AABBCenter, m_AABBExtents, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+	//m_ModelBoundingBox.Transform(m_ModelBoundingBox, XMLoadFloat4x4(&m_LocalTransform));
 
 	// global로 뽑아왔기 때문에 필요 없다.
 	//m_ModelBoundingBox.Transform(m_ModelBoundingBox, XMLoadFloat4x4(&m_LocalTransform));
+	//m_ModelBoundingBox.Extents.x = abs(m_ModelBoundingBox.Extents.x);
+	//m_ModelBoundingBox.Extents.y = abs(m_ModelBoundingBox.Extents.y);
+	//m_ModelBoundingBox.Extents.z = abs(m_ModelBoundingBox.Extents.z);
 
 	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
 	unsigned int vtxType;
@@ -88,7 +99,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 
 	// 6. 버텍스 정보
 	unsigned int vertexLen = 0;
-
+	
 #ifdef INTERLEAVED_VERTEX
 	file.read((char*)&vertexLen, sizeof(unsigned int));
 	if (vertexLen > 0) {
@@ -107,7 +118,6 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 			m_IsSkinned = true;
 			break;
 		}
-
 
 		m_VertexNum = vertexLen;
 	}

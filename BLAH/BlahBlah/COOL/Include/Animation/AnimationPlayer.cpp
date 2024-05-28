@@ -24,6 +24,7 @@ XMMATRIX AnimationPlayQueueData::GetAnimatedBoneMat(int boneIdx) const
 	int amimFrame = endFrame + 1;
 	int idx = boneIdx * amimFrame + currentFrame;
 
+	//// todo 고쳐야한다......
 	XMFLOAT4X4 left =
 	{
 		-1,0,0,0,

@@ -111,6 +111,14 @@ namespace ECSsystem {
 		// sync with camera
 		// first person cam
 		std::function<void(component::Transform*, component::Camera*)> func1 = [](component::Transform* tr, component::Camera* cam) {
+			//XMMATRIX invWorld = XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform()));
+			//XMVECTOR pos = XMLoadFloat3(&tr->GetWorldPosition());
+			//XMVECTOR look = {XMVectorGetX(invWorld.r[2]), XMVectorGetY(invWorld.r[2]), XMVectorGetZ(invWorld.r[2]) };
+			//XMVECTOR up = { 0,1,0 };
+			//XMVECTOR right = XMVector3Cross(up, look);
+			//up = XMVector3Cross(look, right);
+			//
+			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixLookToLH(pos, look, up));
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
 
 			};
@@ -905,7 +913,7 @@ namespace ECSsystem {
 
 		manager->Execute(spLimit);
 		manager->Execute(friction);
-		manager->Execute(gravity);
+		//manager->Execute(gravity);
 
 	}
 

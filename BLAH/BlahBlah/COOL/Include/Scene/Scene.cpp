@@ -54,7 +54,7 @@ bool Scene::AddSystem()
 	m_ECSManager->InsertSystem(new ECSsystem::UpdateInput);
 	m_ECSManager->InsertSystem(new ECSsystem::SimulatePhysics);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByPhysics);
-	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+	//m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
 	m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
 
 	// transform sync
@@ -162,9 +162,14 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 
 	OnPreRender(commandList, resultDsv);
 
-
 	BoundingFrustum& cameraFustum = camVec[0]->GetBoundingFrustum();
 	BoundingOrientedBox tempOBB;
+
+	XMFLOAT3 camPos = camVec[0]->GetWorldPosition();
+	XMFLOAT3 camDir = camVec[0]->GetWorldDirection();
+	//DebugPrintVector(camPos, "camPos");
+	//DebugPrintVector(camDir, "camDir");
+
 
 	// make function
 	std::function<void(component::Renderer*)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent) {
@@ -178,7 +183,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 		meshOBB.Transform(tempOBB, XMLoadFloat4x4(&renderComponent->GetWorldMatrix()));
 
 		// frustum culling
-		if (cameraFustum.Intersects(tempOBB) == false) return;
+		//if (cameraFustum.Intersects(tempOBB) == false) return;
 
 
 		material->GetShader()->SetPipelineState(commandList);

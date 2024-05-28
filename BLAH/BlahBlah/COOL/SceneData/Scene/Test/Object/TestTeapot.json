@@ -1,0 +1,43 @@
+{
+	"Name": "teapotbase",
+
+	"Transform": 
+	{
+		"Position": [0.0, 150.0, 100.0],
+		"Rotate": [0.0, 0.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Children":
+	[
+		{	
+			"Transform": 
+			{
+				"Position": [100.0, 20.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+
+			"Renderer":
+			{
+				"Mesh": "axisaxis.axis",
+				"Material": "NoMaterial"
+			}
+		},
+		{	
+			"Transform": 
+			{
+				"Position": [-100.0, 0.0, 1000.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+
+			"Renderer":
+			{
+				"Mesh": "teapotdef.teapot_zup",
+				"Material": "NoMaterial"
+			}
+		}
+	]
+
+}

@@ -41,7 +41,7 @@
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 160.0, 17.5],
+				"Position": [0.0, 160.0, 30.5],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},

@@ -126,15 +126,36 @@ struct MeshBase {
 	XMFLOAT3 center = { 0,0,0 };
 
 	XMFLOAT4X4 localTransform = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
+	
+	XMFLOAT3 trans;
+	XMFLOAT3 rotate;
+	XMFLOAT3 scale;
 
 	std::vector<MeshBase*> subMeshes;
+	/*
+	void SetBoundingBoxLocal()
+	{
+		XMMATRIX invWorld = XMMatrixInverse(nullptr, XMLoadFloat4x4(&localTransform));
 
-	virtual void ConvertToLeftHanded() = 0;
+		// store boundingbox to local coordinate
+		XMStoreFloat3(&min, XMVector3Transform(XMLoadFloat3(&min), invWorld));
+		XMStoreFloat3(&max, XMVector3Transform(XMLoadFloat3(&max), invWorld));
+		XMStoreFloat3(&center, XMVector3Transform(XMLoadFloat3(&center), invWorld));
+
+
+		for (auto& subMesh : subMeshes) subMesh->SetBoundingBoxLocal();
+	}
+	*/
+	virtual void ConvertToLeftHanded(const XMMATRIX& mat, bool rightToLeft) = 0;
 
 	virtual int GetVtxSize() const = 0;
 
 	virtual void WriteVtxInfoAndData(std::fstream& out) const = 0;
+
+	virtual void MultiplyGlobalMat() = 0;
 };
+
+XMFLOAT4X4 globalSettingTransform = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
 
 struct NormalMesh : public MeshBase {
 	std::vector<Vertex> vertices;
@@ -142,43 +163,36 @@ struct NormalMesh : public MeshBase {
 #ifndef ALL_IN_ONE
 	std::vector<uint16_t> indices;
 #endif
-
-	virtual void ConvertToLeftHanded()
+	
+	virtual void ConvertToLeftHanded(const XMMATRIX& mat, bool rightToLeft)
 	{
 		//return;
 		// swap x
 		//for (int i = 0; i < vertices.size(); ++i) {
-		//	ConvertToLH(vertices[i].position);
-		//	ConvertToLH(vertices[i].normal);
-		//	ConvertToLH(vertices[i].tangent);
+		//	XMStoreFloat3(&vertices[i].position, XMVector3Transform(XMLoadFloat3(&vertices[i].position), mat));
+		//	XMStoreFloat3(&vertices[i].normal, XMVector3Transform(XMLoadFloat3(&vertices[i].normal), mat));
+		//	XMStoreFloat3(&vertices[i].tangent, XMVector3Transform(XMLoadFloat3(&vertices[i].tangent), mat));
 		//}
 
 		// matrix
-		XMFLOAT4X4 left =
-		{
-			-1,0,0,0,
-			0,1,0,0,
-			0,0,1,0,
-			0,0,0,1
-		};
-		XMMATRIX convertLeft = XMLoadFloat4x4(&left);
 		XMMATRIX origin = XMLoadFloat4x4(&localTransform);
-		XMMATRIX lefthanded = XMMatrixMultiply(origin, convertLeft);
+		XMMATRIX lefthanded = origin * mat;
 		XMStoreFloat4x4(&localTransform, lefthanded);
 
 		// bounding
-		min.x *= -1;
-		max.x *= -1;
-		center.x *= -1;
+		XMStoreFloat3(&min, XMVector3Transform(XMLoadFloat3(&min), mat));
+		XMStoreFloat3(&max, XMVector3Transform(XMLoadFloat3(&max), mat));
+		XMStoreFloat3(&center, XMVector3Transform(XMLoadFloat3(&center), mat));
 
-		// for winding order
-		for (int i = 0; i < vertices.size(); i += 3) {
-			swap(vertices[i + 1], vertices[i + 2]);
+		if (rightToLeft) {		// for winding order
+			for (int i = 0; i < vertices.size(); i += 3) {
+				swap(vertices[i + 1], vertices[i + 2]);
+			}
 		}
 
-		for (auto& subMesh : subMeshes) subMesh->ConvertToLeftHanded();
+		for (auto& subMesh : subMeshes) subMesh->ConvertToLeftHanded(mat, rightToLeft);
 	}
-
+	
 	virtual int GetVtxSize() const { return vertices.size(); }
 
 	virtual void WriteVtxInfoAndData(std::fstream& out) const
@@ -189,6 +203,28 @@ struct NormalMesh : public MeshBase {
 			out.write((const char*)(&vertices[0]), sizeof(Vertex) * vertices.size());
 	}
 
+	virtual void MultiplyGlobalMat()
+	{
+		XMMATRIX mat = XMLoadFloat4x4(&globalSettingTransform);
+		XMMATRIX inv = XMMatrixInverse(nullptr, mat);
+		//XMMATRIX ttt = { -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, };
+
+		//XMStoreFloat4x4(&localTransform, XMLoadFloat4x4(&localTransform) * mat);// *ttt);
+
+		for (auto& v : vertices) {
+			XMStoreFloat3(&v.position, XMVector3Transform((XMLoadFloat3(&v.position)), mat));
+			XMStoreFloat3(&v.normal, XMVector3Transform((XMLoadFloat3(&v.normal)), mat));
+			XMStoreFloat3(&v.tangent, XMVector3Transform((XMLoadFloat3(&v.tangent)), mat));
+		}
+
+		for (int i = 0; i < vertices.size(); i += 3) {
+			swap(vertices[i + 1], vertices[i + 2]);
+		}
+		
+		for (auto& cild : subMeshes)
+			cild->MultiplyGlobalMat();
+	}
+
 };
 
 struct SkinnedMesh : public MeshBase {
@@ -197,40 +233,34 @@ struct SkinnedMesh : public MeshBase {
 #ifndef ALL_IN_ONE
 	std::vector<uint16_t> indices;
 #endif
-	virtual void ConvertToLeftHanded()
+
+	virtual void ConvertToLeftHanded(const XMMATRIX& mat, bool rightToLeft)
 	{
 		// swap x
-		//for (auto& vtx : vertices) {
-		//	ConvertToLH(vtx.position);
-		//	ConvertToLH(vtx.normal);
-		//	ConvertToLH(vtx.tangent);
+		//for (int i = 0; i < vertices.size(); ++i) {
+		//	XMStoreFloat3(&vertices[i].position, XMVector3Transform(XMLoadFloat3(&vertices[i].position), mat));
+		//	XMStoreFloat3(&vertices[i].normal, XMVector3Transform(XMLoadFloat3(&vertices[i].normal), mat));
+		//	XMStoreFloat3(&vertices[i].tangent, XMVector3Transform(XMLoadFloat3(&vertices[i].tangent), mat));
 		//}
 
 		// todo 더 해야함
 		// matrix
-		XMFLOAT4X4 left =
-		{
-			-1,0,0,0,
-			0,1,0,0,
-			0,0,1,0,
-			0,0,0,1
-		};
-		XMMATRIX convertLeft = XMLoadFloat4x4(&left);
 		XMMATRIX origin = XMLoadFloat4x4(&localTransform);
-		XMMATRIX lefthanded = XMMatrixMultiply(origin, convertLeft);
+		XMMATRIX lefthanded = XMMatrixMultiply(origin, mat);
 		XMStoreFloat4x4(&localTransform, lefthanded);
 
 		// bounding
-		min.x *= -1;
-		max.x *= -1;
-		center.x *= -1;
+		XMStoreFloat3(&min, XMVector3Transform(XMLoadFloat3(&min), mat));
+		XMStoreFloat3(&max, XMVector3Transform(XMLoadFloat3(&max), mat));
+		XMStoreFloat3(&center, XMVector3Transform(XMLoadFloat3(&center), mat));
 
-		// for winding order
-		for (int i = 0; i < vertices.size(); i += 3) {
-			swap(vertices[i + 1], vertices[i + 2]);
+		if (rightToLeft) {		// for winding order
+			for (int i = 0; i < vertices.size(); i += 3) {
+				swap(vertices[i + 1], vertices[i + 2]);
+			}
 		}
 
-		for (auto& subMesh : subMeshes) subMesh->ConvertToLeftHanded();
+		for (auto& subMesh : subMeshes) subMesh->ConvertToLeftHanded(mat, rightToLeft);
 	}
 
 	virtual int GetVtxSize() const { return vertices.size(); }
@@ -241,6 +271,28 @@ struct SkinnedMesh : public MeshBase {
 		WriteToFile(vertices.size(), out);
 		if (vertices.size() > 0)
 			out.write((const char*)(&vertices[0]), sizeof(SkinnedVertex) * vertices.size());
+	}
+
+	virtual void MultiplyGlobalMat()
+	{
+		XMMATRIX mat = XMLoadFloat4x4(&globalSettingTransform);
+		XMMATRIX inv = XMMatrixInverse(nullptr, mat);
+		//XMMATRIX ttt = { -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, };
+
+		//XMStoreFloat4x4(&localTransform, XMLoadFloat4x4(&localTransform) * mat);// *ttt);
+		
+		for (auto& v : vertices) {
+			XMStoreFloat3(&v.position, XMVector3Transform((XMLoadFloat3(&v.position)), mat));
+			XMStoreFloat3(&v.normal, XMVector3Transform((XMLoadFloat3(&v.normal)), mat));
+			XMStoreFloat3(&v.tangent, XMVector3Transform((XMLoadFloat3(&v.tangent)), mat));
+		}
+
+		for (int i = 0; i < vertices.size(); i += 3) {
+			swap(vertices[i + 1], vertices[i + 2]);
+		}
+
+		for (auto& cild : subMeshes)
+			cild->MultiplyGlobalMat();
 	}
 };
 
@@ -263,7 +315,7 @@ void ExtractSkinningData(FbxMesh* mesh, int vertexIndex, SkinnedVertex& vertex);
 void ExtractIndices(FbxMesh* mesh, std::vector<uint16_t>& indices);
 
 void PrintMeshHierachy(const MeshBase* mesh);
-void ExtractToFIle(const MeshBase* mesh, std::fstream& out);
+void ExtractToFIle(const MeshBase* mesh, std::fstream& out, const XMFLOAT4X4* parent = nullptr);
 
 std::string ChangeExtensionToBin(const std::string& originalFileName);
 
@@ -315,7 +367,73 @@ int main(int argc, char* argv[])
 		// 씬 생성
 		FbxScene* scene = FbxScene::Create(fbxManager, "MyScene");
 		importer->Import(scene);
+
+		// convert to left handed
+		//scene->GetGlobalSettings().SetAxisSystem(axisSystem);
+
+		// 씬 내에서 삼각형화 할 수 있는 모든 노드를 삼각형화 시킨다.
+		FbxGeometryConverter geometryConverter(fbxManager);
+		geometryConverter.Triangulate(scene, true);
+
 		importer->Destroy();
+
+		/*
+		int up, front;
+		scene->GetGlobalSettings().GetAxisSystem().GetUpVector(up);
+		scene->GetGlobalSettings().GetAxisSystem().GetFrontVector(front);
+		auto t = scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem();
+
+		FbxAMatrix matTemp;
+		scene->GetGlobalSettings().GetAxisSystem().GetMatrix(matTemp);
+
+		FbxAxisSystem axisSystem(FbxAxisSystem::eDirectX);
+		axisSystem.GetMatrix(matTemp);
+
+		XMFLOAT4X4 bef, aft;
+
+		printf("mat\n");
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				bef.m[i][j] = static_cast<float>(matTemp.Get(i, j));
+				printf("%.1f ", static_cast<float>(matTemp.Get(i, j)));
+			}
+			printf("\n");
+		}
+
+		printf("up: %d\n", up);
+		printf("front: %d\n", front);
+		printf("coordsystem: %s\n\n", (t == 0) ? "right" : "left");
+
+		
+		//FbxAxisSystem axisSystem(FbxAxisSystem::EUpVector::eYAxis, FbxAxisSystem::EFrontVector::eParityOdd, FbxAxisSystem::eLeftHanded);
+		//FbxAxisSystem axisSystem(FbxAxisSystem::EUpVector::eZAxis, FbxAxisSystem::EFrontVector::eParityEven, FbxAxisSystem::eRightHanded);
+		//FbxAxisSystem axisSystem(FbxAxisSystem::eDirectX);
+		//axisSystem.ConvertScene(scene);
+
+		// converted
+		printf("converted\n");
+		scene->GetGlobalSettings().GetAxisSystem().GetUpVector(up);
+		scene->GetGlobalSettings().GetAxisSystem().GetFrontVector(front);
+		t = scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem();
+
+		scene->GetGlobalSettings().GetAxisSystem().GetMatrix(matTemp);
+		printf("mat\n");
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				aft.m[i][j] = globalSettingTransform.m[i][j] = static_cast<float>(matTemp.Get(i, j));
+				printf("%.1f ", static_cast<float>(matTemp.Get(i, j)));
+			}
+			printf("\n");
+		}
+
+		//globalSettingTransform.m[0][0] *= -1;
+		//globalSettingTransform.m[1][1] *= -1;
+		//globalSettingTransform.m[2][2] *= -1;
+
+		printf("up: %d\n", up);
+		printf("front: %d\n", front);
+		printf("coordsystem: %s\n\n", (t == 0) ? "right" : "left");
+		*/
 
 		// 노드 탐색 및 정점 및 인덱스 추출
 		FbxNode* rootNode = scene->GetRootNode();
@@ -361,22 +479,48 @@ int main(int argc, char* argv[])
 				
 				// DirectX 12에서 사용할 형식으로 변환된 데이터 사용
 				// 
-				if (scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() != FbxAxisSystem::eLeftHanded) {
-					std::cout << "Convert to Lefthanded!" << std::endl;
-					mesh->ConvertToLeftHanded();
+				if (scene->GetGlobalSettings().GetAxisSystem() != FbxAxisSystem::eDirectX) {
+					std::cout << "Convert to DirectX Coordinate!!" << std::endl;
+
+					FbxAxisSystem dxAxis(FbxAxisSystem::eDirectX);
+					FbxAMatrix matTemp;
+					dxAxis.GetMatrix(matTemp);
+
+					XMFLOAT4X4 temp;
+
+					for (int i = 0; i < 4; ++i) {
+						for (int j = 0; j < 4; ++j) {
+							temp.m[i][j] = static_cast<float>(matTemp.Get(i, j));
+						}
+						//printf("\n");
+					}
+
+					XMMATRIX mat = XMLoadFloat4x4(&temp);
+
+					bool toLeft = scene->GetGlobalSettings().GetAxisSystem().GetCoorSystem() == FbxAxisSystem::eRightHanded;
+
+					mesh->ConvertToLeftHanded(mat, toLeft);
 				}
+
+				//std::cout << "Convert Boundingbox to Local!!" << std::endl;
+				//mesh->SetBoundingBoxLocal();
 			}
 			
+			// multiply global mat
+			//mesh->MultiplyGlobalMat();
+
 			std::string outputFileName = ChangeExtensionToBin(fileName);
 			std::string of = "Result\\" + outputFileName;
 			std::fstream outputFile(of, std::ios::binary | std::ios::out);
-			ExtractToFIle(mesh, outputFile);
+			ExtractToFIle(mesh, outputFile, nullptr);
 
 			// 정리 작업
 			fbxManager->Destroy();
 		}
 
 	}
+
+	std::cout << "Complete!!" << std::endl;
 	return 0;
 }
 
@@ -440,10 +584,41 @@ MeshBase* TraverseNode(FbxNode* node)//  std::vector<Vertex>& vertices, std::vec
 
 		// local matrix
 		FbxMatrix mat = node->EvaluateGlobalTransform();
-		for (int i = 0; i < 4; ++i)
-			for (int j = 0; j < 4; ++j)
-				myMesh->localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
+		FbxVector4 t = node->EvaluateLocalTranslation();
+		FbxVector4 r = node->EvaluateLocalRotation();
+		FbxVector4 s = node->EvaluateLocalScaling();
 
+		myMesh->trans = { static_cast<float>(t[0]), static_cast<float>(t[1]), static_cast<float>(t[2]) };
+		myMesh->rotate = { static_cast<float>(r[0]), static_cast<float>(r[1]), static_cast<float>(r[2]) };
+		myMesh->scale = { static_cast<float>(s[0]), static_cast<float>(s[1]), static_cast<float>(s[2]) };
+
+		XMMATRIX matT = XMMatrixTranslationFromVector(XMLoadFloat3(&myMesh->trans)) *XMLoadFloat4x4(&globalSettingTransform);
+		XMMATRIX matR = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&myMesh->rotate)) *XMLoadFloat4x4(&globalSettingTransform);
+		XMMATRIX matS = XMMatrixScalingFromVector(XMLoadFloat3(&myMesh->scale));
+
+		// local
+		//XMFLOAT4X4 temp;
+		//XMStoreFloat4x4(&myMesh->localTransform, matT * matR * matS);
+
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				myMesh->localTransform.m[i][j] = static_cast<float>(mat.Get(i, j));
+				//printf("%.1f ", myMesh->localTransform.m[i][j]);
+			}
+			//printf("\n");
+		}
+		//printf("\n");
+		//printf("tr: %.1f, %.1f, %.1f\n", myMesh->trans.x, myMesh->trans.y, myMesh->trans.z);
+		//printf("rt: %.1f, %.1f, %.1f\n", myMesh->rotate.x, myMesh->rotate.y, myMesh->rotate.z);
+		//printf("sc: %.1f, %.1f, %.1f\n", myMesh->scale.x, myMesh->scale.y, myMesh->scale.z);
+		//printf("\n");
+
+		//for (int i = 0; i < 4; ++i) {
+		//	for (int j = 0; j < 4; ++j) {
+		//		printf("%.1f ", temp.m[i][j]);
+		//	}
+		//	printf("\n");
+		//}
 
 
 		// 정점 추출
@@ -825,10 +1000,10 @@ void PrintMeshHierachy(const MeshBase* mesh)
 }
 
 // 파일로 출력하는 함수
-void ExtractToFIle(const MeshBase* mesh, std::fstream& out)
+void ExtractToFIle(const MeshBase* mesh, std::fstream& out, const XMFLOAT4X4* parent)
 {
-	std::cout << std::format("name: {}\n", mesh->name);
-	std::cout << std::format("vertex: {}\n\n", mesh->GetVtxSize());
+	//std::cout << std::format("name: {}\n", mesh->name);
+	//std::cout << std::format("vertex: {}\n\n", mesh->GetVtxSize());
 
 	// 1 2 name
 	WriteToFile(mesh->name, out);
@@ -839,8 +1014,17 @@ void ExtractToFIle(const MeshBase* mesh, std::fstream& out)
 	WriteToFile(mesh->center, out);
 
 	// 4 matrix
-	WriteToFile(mesh->localTransform, out);
-
+	if (parent == nullptr) {
+		WriteToFile(mesh->localTransform, out);
+	}
+	else {
+		XMMATRIX p = XMLoadFloat4x4(parent);
+		XMMATRIX c = XMLoadFloat4x4(&mesh->localTransform);
+		XMMATRIX r = c * p;
+		XMFLOAT4X4 t;
+		XMStoreFloat4x4(&t, r);
+		WriteToFile(t, out);
+	}
 	// 버텍스 정보				// int, position, normal, tangent, uv, int, index
 #ifdef ALL_IN_ONE
 	// 5, 6
@@ -879,7 +1063,19 @@ void ExtractToFIle(const MeshBase* mesh, std::fstream& out)
 	// 서브메쉬 개수				// int
 	WriteToFile(mesh->subMeshes.size(), out);
 	for (const auto& m : mesh->subMeshes) {
-		ExtractToFIle(m, out);
+
+		if (parent == nullptr) {
+			ExtractToFIle(m, out);// , & mesh->localTransform);
+		}
+		else {
+			XMMATRIX p = XMLoadFloat4x4(parent);
+			XMMATRIX c = XMLoadFloat4x4(&mesh->localTransform);
+			XMMATRIX r = c * p;
+			XMFLOAT4X4 t;
+			XMStoreFloat4x4(&t, r);
+			//WriteToFile(t, out);
+			ExtractToFIle(m, out);// , & t);
+		}
 	}
 }
 

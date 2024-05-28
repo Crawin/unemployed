@@ -280,9 +280,29 @@ namespace component {
 
 	void Camera::UpdateShaderData()
 	{
-		XMFLOAT4X4 view;
-		XMStoreFloat4x4(&view, XMMatrixTranspose(XMLoadFloat4x4(&m_ViewMatrix)));
+		//XMFLOAT3 viewDir = GetWorldDirection();
+		
+		//XMFLOAT3 pos = GetWorldPosition();
 
+		//XMVECTOR look = { viewDir.x, viewDir.y, viewDir.z };
+		//XMVECTOR up = { 0,1,0 };
+		//XMVECTOR right = XMVector3Cross(up, look);
+		//up = XMVector3Cross(look, right);
+		//XMFLOAT3 pos = GetWorldPosition();
+
+		//XMFLOAT3 r = {m_ViewMatrix._11, m_ViewMatrix._12, m_ViewMatrix._13};
+		//XMFLOAT3 u = {m_ViewMatrix._21, m_ViewMatrix._22, m_ViewMatrix._23};
+		//XMFLOAT3 v = {m_ViewMatrix._31, m_ViewMatrix._32, m_ViewMatrix._33};
+
+		//DebugPrintVector(r, "x");
+		//DebugPrintVector(u, "y");
+		//DebugPrintVector(v, "z");
+		//DebugPrint("");
+
+		XMFLOAT4X4 view;
+		//XMStoreFloat4x4(&view, XMMatrixLookToLH(XMLoadFloat3(&pos), look, up));
+		XMStoreFloat4x4(&view, XMMatrixTranspose(XMLoadFloat4x4(&m_ViewMatrix)));
+		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 		XMFLOAT4X4 proj;
 		XMStoreFloat4x4(&proj, XMMatrixTranspose(XMLoadFloat4x4(&m_ProjMatrix)));
 
