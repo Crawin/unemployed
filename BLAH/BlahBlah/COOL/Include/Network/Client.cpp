@@ -74,23 +74,30 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 
 void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)
 {
-	EXP_OVER* send_over;
-	if (gameNum == NULL)
+	if (gameNum)
 	{
-		cs_packet_make_room makeroom(type);
-		send_over = new EXP_OVER;
-		send_over->wsabuf->len = sizeof(cs_packet_make_room);
-		memcpy(send_over->buf, &makeroom, sizeof(cs_packet_make_room));
+		std::cout << "이미 " << gameNum << "에 입장하였습니다." << std::endl;
 	}
 	else
 	{
-		cs_packet_enter_room enter(type, gameNum);
-		send_over = new EXP_OVER;
-		send_over->wsabuf->len = sizeof(cs_packet_enter_room);
-		memcpy(send_over->buf, &enter, sizeof(cs_packet_enter_room));
+		EXP_OVER* send_over;
+		if (gameNum == NULL)
+		{
+			cs_packet_make_room makeroom(type);
+			send_over = new EXP_OVER;
+			send_over->wsabuf->len = sizeof(cs_packet_make_room);
+			memcpy(send_over->buf, &makeroom, sizeof(cs_packet_make_room));
+		}
+		else
+		{
+			cs_packet_enter_room enter(type, gameNum);
+			send_over = new EXP_OVER;
+			send_over->wsabuf->len = sizeof(cs_packet_enter_room);
+			memcpy(send_over->buf, &enter, sizeof(cs_packet_enter_room));
+		}
+		ZeroMemory(&wsaover, sizeof(wsaover));
+		WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
 	}
-	ZeroMemory(&wsaover, sizeof(wsaover));
-	WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
 }
 
 void Client::Connect_Server()
@@ -144,6 +151,16 @@ void Client::swapPSock()
 	SOCKET temp = playerSock[0];
 	playerSock[0] = playerSock[1];
 	playerSock[1] = temp;
+}
+
+void Client::setRoomNum(const unsigned int n)
+{
+	roomNum = n;
+	XMFLOAT3 pos = { 0,20,1000 };
+	XMFLOAT3 rot = { 0,180,0 };
+	XMFLOAT3 spd = { 0,0,0 };
+	characters[playerSock[0]].setPosRotSpeed(pos, rot, spd);
+	characters[playerSock[0]].SetUpdate(true);
 }
 
 void Client::pull_packet(const int& current_size)
@@ -232,6 +249,7 @@ void process_packet(packet_base*& base)
 		sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
 		client.setRoomNum(buf->getGameNum());
+		
 		client.setCharType(1);
 		client.characters.try_emplace(PoliceID);
 		client.vivox_state = new VIVOX_STATE;

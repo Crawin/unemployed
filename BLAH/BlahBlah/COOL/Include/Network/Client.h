@@ -101,7 +101,7 @@ public:
 	void setPSock(const SOCKET&);
 	void swapPSock();
 	const SOCKET* getPSock() { return playerSock; }
-	void setRoomNum(const unsigned int n) { roomNum = n; }
+	void setRoomNum(const unsigned int n);
 	const unsigned int getRoomNum() { return roomNum; }
 	const short getCharType() { return characterType; }
 	void setCharType(const short& type) { characterType = type; }
