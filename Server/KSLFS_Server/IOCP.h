@@ -259,6 +259,7 @@ public:
 	bool erasePlayer(const unsigned int& id);
 	void setFloor(const unsigned int& id, const unsigned short& floor);
 	void update(const bool& npc_state);
+	bool hasEmpty();
 };
 
 struct ServerDetails

@@ -124,14 +124,6 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				}
 				else
 				{
-					// 25.05.28 여기서부터 다시 진행 위 if문의 erasePlayer에서 이미 지워버려서 전송이 안되거나 이상해짐.
-					//auto players = Games[gameNum].getPlayers();
-					//for (int i = 0; i < 2; ++i)
-					//{
-					//	if (players[i].id == my_id || players[i].sock == NULL)	continue;
-					//	sc_packet_logout logout(players[my_id].sock);
-					//	login_players[i].send_packet(reinterpret_cast<packet_base*>(&logout));
-					//}
 					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
 				}
 				g_mutex_login_players.lock();
@@ -256,7 +248,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			cs_packet_enter_room* cs_enter = reinterpret_cast<cs_packet_enter_room*>(base);
 			const unsigned n = cs_enter->getRoomNum();
 			auto f = Games.find(n);
-			if (f != Games.end())
+			if (f != Games.end()&& f->second.hasEmpty())
 			{
 				Games[n].init(id, login_players[id].getSock());
 				Player* players = Games[n].getPlayers();
@@ -654,6 +646,8 @@ bool Game::erasePlayer(const unsigned int& id)
 	{
 		if (player[i].id == id)
 		{
+			sc_packet_logout logout(player[i].sock);
+			login_players[player[1 - i].id].send_packet(reinterpret_cast<packet_base*>(&logout));
 			player[i].reset();
 			return true;
 		}
@@ -671,6 +665,16 @@ void Game::setFloor(const unsigned int& id, const unsigned short& floor)
 			return;
 		}
 	}
+}
+
+bool Game::hasEmpty()
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		if (player[i].id == NULL)
+			return true;
+	}
+	return false;
 }
 
 void NPC::state_machine(Player* p,const bool& npc_state)
