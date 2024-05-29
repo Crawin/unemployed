@@ -463,10 +463,6 @@ namespace ECSsystem {
 				if (server->getID() == NULL && n.compare("Player1") == 0)
 				{
 					server->setID(playerSock[0]);
-					XMFLOAT3 pos = { 0,20,1000 };
-					tr->SetPosition(pos);
-					XMFLOAT3 rot = { 0,180,0 };
-					tr->SetRotation(rot);
 				}
 			}
 			if (playerSock[1])
@@ -474,10 +470,6 @@ namespace ECSsystem {
 				if (server->getID() == NULL && n.compare("Player2") == 0)
 				{
 					server->setID(playerSock[1]);
-					XMFLOAT3 pos = { 0,20,1000 };
-					tr->SetPosition(pos);
-					XMFLOAT3 rot = { 0,180,0 };
-					tr->SetRotation(rot);
 				}
 			}
 			else //상대방 플레이어가 로그아웃 했을때
