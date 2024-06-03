@@ -1,0 +1,98 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "CubeMM",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "testAxis.CubeMM"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							200.79998779296875,
+							116.99999237060547,
+							113.10657501220703
+						],
+						"Rotation" : 
+						[
+							10.000002861022949,
+							45.0,
+							19.999996185302734
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Collider" : 
+			{
+				"AutoMesh" : true,
+				"Static" : true
+			},
+			"Name" : "axis",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "testAxis.axis"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotation" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "testAxis_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotation" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

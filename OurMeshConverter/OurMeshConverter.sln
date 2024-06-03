@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bone_Mesh_Extractor", "FbxToOurMesh\FbxToOurMesh.vcxproj", "{1DF21013-688C-4354-98B5-04C43D589FA8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TreverseNode", "BoneExtracter\BoneExtracter.vcxproj", "{A0654679-19E8-49A1-94D6-CDC31382B710}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Anim_Extractor", "BoneExtracter\BoneExtracter.vcxproj", "{A0654679-19E8-49A1-94D6-CDC31382B710}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Extract_ALL", "Extract_ALL\Extract_ALL.vcxproj", "{FC2F0519-05BC-45E5-A203-2E308F917B73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{A0654679-19E8-49A1-94D6-CDC31382B710}.Release|x64.Build.0 = Release|x64
 		{A0654679-19E8-49A1-94D6-CDC31382B710}.Release|x86.ActiveCfg = Release|Win32
 		{A0654679-19E8-49A1-94D6-CDC31382B710}.Release|x86.Build.0 = Release|Win32
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Debug|x64.ActiveCfg = Debug|x64
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Debug|x64.Build.0 = Debug|x64
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Debug|x86.ActiveCfg = Debug|Win32
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Debug|x86.Build.0 = Debug|Win32
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Release|x64.ActiveCfg = Release|x64
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Release|x64.Build.0 = Release|x64
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Release|x86.ActiveCfg = Release|Win32
+		{FC2F0519-05BC-45E5-A203-2E308F917B73}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

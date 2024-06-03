@@ -27,6 +27,7 @@ using namespace DirectX;
 
 std::vector<std::string> g_Vector;
 std::vector<XMFLOAT4X4> g_BoneMatrixVector;
+XMFLOAT4X4 globalSettingTransform = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
 
 void SetBoneIndexSet(FbxNode* node) {
 
@@ -153,9 +154,29 @@ struct MeshBase {
 	virtual void WriteVtxInfoAndData(std::fstream& out) const = 0;
 
 	virtual void MultiplyGlobalMat() = 0;
+
+	void RebuildLocalTransform()
+	{
+		XMVECTOR tVec = XMLoadFloat3(&trans);
+		XMVECTOR rVec = XMLoadFloat3(&rotate);
+		XMVECTOR sVec = XMLoadFloat3(&scale);
+
+		XMMATRIX global = XMLoadFloat4x4(&globalSettingTransform);
+
+		tVec = XMVector3Transform(tVec, global);
+		rVec = XMVector3Transform(rVec, global);
+		sVec = XMVector3Transform(sVec, global);
+
+		XMMATRIX matT = XMMatrixTranslationFromVector(tVec) * global;
+		XMMATRIX matR = XMMatrixRotationRollPitchYawFromVector(rVec) * global;
+		XMMATRIX matS = XMMatrixScalingFromVector(sVec);
+
+		// local
+		XMStoreFloat4x4(&localTransform, matT * matR * matS);
+	}
+
 };
 
-XMFLOAT4X4 globalSettingTransform = { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, };
 
 struct NormalMesh : public MeshBase {
 	std::vector<Vertex> vertices;
@@ -553,7 +574,6 @@ void TraverseNode(FbxNode* node, std::vector<Vertex>& vertices, std::vector<uint
 // 재귀적으로 노드를 탐색하여 정점과 인덱스를 추출하는 함수
 MeshBase* TraverseNode(FbxNode* node)//  std::vector<Vertex>& vertices, std::vector<uint16_t>& indices)
 {
-
 	MeshBase* myMesh = nullptr;
 
 

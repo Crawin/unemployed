@@ -273,6 +273,8 @@ void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X
 		//XMFLOAT4X4 temp = Matrix4x4::Transpose(Matrix4x4::Multiply(m_LocalTransform, parent));
 		XMStoreFloat4x4(&temp, t);
 
+		XMStoreFloat4x4(&temp, XMMatrixTranspose(XMLoadFloat4x4(&parent)));
+
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 
 #ifdef INTERLEAVED_VERTEX
