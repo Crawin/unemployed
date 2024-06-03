@@ -21085,11 +21085,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Dummy",
 					"Renderer" : 
 					{

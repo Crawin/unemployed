@@ -72,27 +72,12 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
 	m_LocalTransform = Matrix4x4::Identity();
-	//XMFLOAT4X4 temp = m_LocalTransform;
-	//temp._41 = 0;
-	//temp._42 = 0;
-	//temp._43 = 0;
-
-	//// to local exts
-	//XMMATRIX invWorld = XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_LocalTransform));
-	//XMMATRIX invWorldRotSc = XMMatrixInverse(nullptr, XMLoadFloat4x4(&temp));
-	//XMStoreFloat3(&m_AABBCenter, XMVector3Transform(XMLoadFloat3(&m_AABBCenter), invWorld));
-	//XMStoreFloat3(&m_AABBExtents, XMVector3Transform(XMLoadFloat3(&m_AABBExtents), invWorldRotSc));
 
 	// bounding box
-	//m_AABBExtents.x *= -1;
+	m_AABBExtents.x = abs(m_AABBExtents.x);
+	m_AABBExtents.y = abs(m_AABBExtents.y);
+	m_AABBExtents.z = abs(m_AABBExtents.z);
 	m_ModelBoundingBox = BoundingOrientedBox(m_AABBCenter, m_AABBExtents, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
-	//m_ModelBoundingBox.Transform(m_ModelBoundingBox, XMLoadFloat4x4(&m_LocalTransform));
-
-	// global로 뽑아왔기 때문에 필요 없다.
-	//m_ModelBoundingBox.Transform(m_ModelBoundingBox, XMLoadFloat4x4(&m_LocalTransform));
-	//m_ModelBoundingBox.Extents.x = abs(m_ModelBoundingBox.Extents.x);
-	//m_ModelBoundingBox.Extents.y = abs(m_ModelBoundingBox.Extents.y);
-	//m_ModelBoundingBox.Extents.z = abs(m_ModelBoundingBox.Extents.z);
 
 	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
 	unsigned int vtxType;

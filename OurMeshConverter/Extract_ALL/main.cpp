@@ -90,6 +90,9 @@ void ExtractVertices(FbxMesh* mesh, Object* obj);
 void BuildMeshFile(Object* obj, const std::string& originFileName);
 void ExtractMesh(Object* obj, std::fstream& out, const XMFLOAT4X4* parent = nullptr);
 
+// Function to compute the local bounding box
+void ComputeLocalBoundingBox(FbxNode* pNode, XMFLOAT3& min, XMFLOAT3& max, XMFLOAT3& center);
+
 // for json
 void BuildJsonFile(Object* obj, const std::string& originFileName);
 Json::Value ExtractObjectJson(Object* obj);
@@ -288,6 +291,8 @@ Object* TraverseNode(FbxNode* node)
 	obj->m_Rotate = { static_cast<float>(r[0]), static_cast<float>(r[1]), static_cast<float>(r[2]) };
 	obj->m_Scale = { static_cast<float>(s[0]), static_cast<float>(s[1]), static_cast<float>(s[2]) };
 
+	ComputeLocalBoundingBox(node, obj->m_BoundingBoxMin, obj->m_BoundingBoxMax, obj->m_BoundingBoxCenter);
+
 	XMMATRIX tempMat = {
 		-1,0,0,0,
 		0,-1,0,0,
@@ -297,6 +302,10 @@ Object* TraverseNode(FbxNode* node)
 
 	XMStoreFloat3(&obj->m_Transform, XMVector3Transform(XMLoadFloat3(&obj->m_Transform), g_GlobalMat));
 	XMStoreFloat3(&obj->m_Rotate, XMVector3Transform(XMLoadFloat3(&obj->m_Rotate), g_GlobalMat * tempMat));
+
+	XMStoreFloat3(&obj->m_BoundingBoxMin, XMVector3Transform(XMLoadFloat3(&obj->m_BoundingBoxMin), g_GlobalMat));
+	XMStoreFloat3(&obj->m_BoundingBoxMax, XMVector3Transform(XMLoadFloat3(&obj->m_BoundingBoxMax), g_GlobalMat));
+	XMStoreFloat3(&obj->m_BoundingBoxCenter, XMVector3Transform(XMLoadFloat3(&obj->m_BoundingBoxCenter), g_GlobalMat));
 
 	XMMATRIX matT = XMMatrixTranslationFromVector(XMLoadFloat3(&obj->m_Transform));
 	XMMATRIX matR = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&obj->m_Rotate));
@@ -408,34 +417,46 @@ void ExtractVertices(FbxMesh* mesh, Object* obj)
 		XMStoreFloat3(&obj->m_Vertices[i]->tangent, XMVector3Transform(XMLoadFloat3(&obj->m_Vertices[i]->tangent), g_GlobalMat));
 	}
 
+	obj->m_BoundingBoxCenter.x /= g_GlobalImportScaleFactor;
+	obj->m_BoundingBoxCenter.y /= g_GlobalImportScaleFactor;
+	obj->m_BoundingBoxCenter.z /= g_GlobalImportScaleFactor;
+
+	obj->m_BoundingBoxMax.x /= g_GlobalImportScaleFactor;
+	obj->m_BoundingBoxMax.y /= g_GlobalImportScaleFactor;
+	obj->m_BoundingBoxMax.z /= g_GlobalImportScaleFactor;
+	
+	obj->m_BoundingBoxMin.x /= g_GlobalImportScaleFactor;
+	obj->m_BoundingBoxMin.y /= g_GlobalImportScaleFactor;
+	obj->m_BoundingBoxMin.z /= g_GlobalImportScaleFactor;
+
 	// set bounding box
-	XMFLOAT3 min = { 
-		std::numeric_limits<float>::infinity(), 
-		std::numeric_limits<float>::infinity(), 
-		std::numeric_limits<float>::infinity() 
-	};
-	XMFLOAT3 max = {
-		-1.0f * std::numeric_limits<float>::infinity(),
-		-1.0f * std::numeric_limits<float>::infinity(),
-		-1.0f * std::numeric_limits<float>::infinity()
-	};
-	XMFLOAT3 center = { 0,0,0 };
+	//XMFLOAT3 min = { 
+	//	std::numeric_limits<float>::infinity(), 
+	//	std::numeric_limits<float>::infinity(), 
+	//	std::numeric_limits<float>::infinity() 
+	//};
+	//XMFLOAT3 max = {
+	//	-1.0f * std::numeric_limits<float>::infinity(),
+	//	-1.0f * std::numeric_limits<float>::infinity(),
+	//	-1.0f * std::numeric_limits<float>::infinity()
+	//};
+	//XMFLOAT3 center = { 0,0,0 };
 
-	for (auto& v : obj->m_Vertices) {
-		min.x = std::min(min.x, v->position.x);
-		min.y = std::min(min.y, v->position.y);
-		min.z = std::min(min.z, v->position.z);
+	//for (auto& v : obj->m_Vertices) {
+	//	min.x = std::min(min.x, v->position.x);
+	//	min.y = std::min(min.y, v->position.y);
+	//	min.z = std::min(min.z, v->position.z);
 
-		max.x = std::max(min.x, v->position.x);
-		max.y = std::max(min.y, v->position.y);
-		max.z = std::max(min.z, v->position.z);
-	}
+	//	max.x = std::max(min.x, v->position.x);
+	//	max.y = std::max(min.y, v->position.y);
+	//	max.z = std::max(min.z, v->position.z);
+	//}
 
-	XMStoreFloat3(&center, (XMLoadFloat3(&min) + XMLoadFloat3(&max)) / 2.0f);
+	//XMStoreFloat3(&center, (XMLoadFloat3(&min) + XMLoadFloat3(&max)) / 2.0f);
 
-	obj->m_BoundingBoxCenter = center;
-	obj->m_BoundingBoxMax = max;
-	obj->m_BoundingBoxMin = min;
+	//obj->m_BoundingBoxCenter = center;
+	//obj->m_BoundingBoxMax = max;
+	//obj->m_BoundingBoxMin = min;
 }
 
 // 스키닝 정보를 추출하여 SkinnedVertex에 추가하는 함수
@@ -505,6 +526,28 @@ void ExtractSkinningData(FbxMesh* mesh, int vertexIndex, SkinnedVertex* vertex)
 	}
 }
 
+// Function to compute the local bounding box
+void ComputeLocalBoundingBox(FbxNode* pNode, XMFLOAT3& min, XMFLOAT3& max, XMFLOAT3& center)
+{
+	// Step 1: Get the global bounding box
+	FbxVector4 globalMin, globalMax, globalCenter;
+	pNode->EvaluateGlobalBoundingBoxMinMaxCenter(globalMin, globalMax, globalCenter);
+
+	// Step 2: Get the global transformation matrix and compute its inverse
+	FbxAMatrix globalTransform = pNode->EvaluateGlobalTransform();
+	FbxAMatrix inverseGlobalTransform = globalTransform.Inverse();
+
+	// Step 3: Transform global bounding box vertices to local space
+	FbxVector4 localMin = inverseGlobalTransform.MultT(globalMin);
+	FbxVector4 localMax = inverseGlobalTransform.MultT(globalMax);
+	FbxVector4 localCenter = inverseGlobalTransform.MultT(globalCenter);
+
+	// Step 4: Set the output parameters
+	min = { static_cast<float>(localMin[0]), static_cast<float>(localMin[1]), static_cast<float>(localMin[2]) };
+	max = { static_cast<float>(localMax[0]), static_cast<float>(localMax[1]), static_cast<float>(localMax[2])};
+	center = { static_cast<float>(localCenter[0]), static_cast<float>(localCenter[1]), static_cast<float>(localCenter[2])};
+}
+
 void BuildMeshFile(Object* obj, const std::string& meshName)
 {
 	_mkdir("Result\\Mesh");
@@ -524,6 +567,15 @@ void ExtractMesh(Object* obj, std::fstream& out, const XMFLOAT4X4* parent)
 	WriteToFile(obj->m_BoundingBoxMin, out);
 	WriteToFile(obj->m_BoundingBoxMax, out);
 	WriteToFile(obj->m_BoundingBoxCenter, out);
+
+	XMFLOAT3 ext = {
+		obj->m_BoundingBoxMax.x - obj->m_BoundingBoxMin.x,
+		obj->m_BoundingBoxMax.y - obj->m_BoundingBoxMin.y,
+		obj->m_BoundingBoxMax.z - obj->m_BoundingBoxMin.z
+	};
+	printf("%s\n", obj->m_Name.c_str());
+	printf("%.1f, %.1f, %.1f\n",	obj->m_BoundingBoxCenter.x, obj->m_BoundingBoxCenter.y, obj->m_BoundingBoxCenter.z);
+	printf("%.1f, %.1f, %.1f\n\n", ext.x, ext.y, ext.z);
 
 	// 4 matrix
 	if (parent == nullptr) {
