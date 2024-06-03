@@ -71,6 +71,7 @@ void Mesh::BuildMesh(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstrea
 	// 4. 부모 상대 변환 행렬		// float4x4
 	file.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
+	m_LocalTransform = Matrix4x4::Identity();
 	//XMFLOAT4X4 temp = m_LocalTransform;
 	//temp._41 = 0;
 	//temp._42 = 0;

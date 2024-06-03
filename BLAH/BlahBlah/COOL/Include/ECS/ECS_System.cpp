@@ -913,7 +913,7 @@ namespace ECSsystem {
 
 		manager->Execute(spLimit);
 		manager->Execute(friction);
-		//manager->Execute(gravity);
+		manager->Execute(gravity);
 
 	}
 

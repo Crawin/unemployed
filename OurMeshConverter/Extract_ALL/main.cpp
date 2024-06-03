@@ -115,9 +115,9 @@ int main(int argc, char* argv[])
 
 	// 1 : file name
 	// 2 : import scale factor 
-	//const char* fileName = argv[1];
-	//if (argc > 2) g_GlobalImportScaleFactor = atof(argv[2]);
-	const char* fileName = "map-Emaintest.fbx";
+	const char* fileName = argv[1];
+	if (argc > 2) g_GlobalImportScaleFactor = atof(argv[2]);
+	//const char* fileName = "map-Emaintest.fbx";
 
 	//outputFileName = "teapot.bin";
 
@@ -302,7 +302,7 @@ Object* TraverseNode(FbxNode* node)
 	XMMATRIX matR = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&obj->m_Rotate));
 	XMMATRIX matS = XMMatrixScalingFromVector(XMLoadFloat3(&obj->m_Scale));
 
-	XMStoreFloat4x4(&obj->m_LocalTransform, matT * matR * matS);
+	XMStoreFloat4x4(&obj->m_LocalTransform, matS * matR * matT);
 
 	// 노드에 메시가 있는지 확인
 	FbxNodeAttribute* attribute = node->GetNodeAttribute();

@@ -54,7 +54,7 @@ bool Scene::AddSystem()
 	m_ECSManager->InsertSystem(new ECSsystem::UpdateInput);
 	m_ECSManager->InsertSystem(new ECSsystem::SimulatePhysics);
 	m_ECSManager->InsertSystem(new ECSsystem::MoveByPhysics);
-	//m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
+	m_ECSManager->InsertSystem(new ECSsystem::CollideHandle);
 	m_ECSManager->InsertSystem(new ECSsystem::SendToServer);
 
 	// transform sync
@@ -183,7 +183,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 		meshOBB.Transform(tempOBB, XMLoadFloat4x4(&renderComponent->GetWorldMatrix()));
 
 		// frustum culling
-		//if (cameraFustum.Intersects(tempOBB) == false) return;
+		if (cameraFustum.Intersects(tempOBB) == false) return;
 
 
 		material->GetShader()->SetPipelineState(commandList);
