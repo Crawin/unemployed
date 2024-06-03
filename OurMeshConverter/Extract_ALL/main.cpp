@@ -231,7 +231,7 @@ void SetBoneIndexSet(FbxNode* node)
 		XMMATRIX boneMat = XMLoadFloat4x4(&trans);
 
 		// to root
-		XMMATRIX inv = XMMatrixInverse(nullptr, XMMatrixMultiply(boneMat, convertLeft));
+		XMMATRIX inv = XMMatrixInverse(nullptr, boneMat * g_GlobalMat);
 		inv = XMMatrixTranspose(inv);
 		XMStoreFloat4x4(&trans, inv);
 
@@ -614,7 +614,7 @@ Json::Value ExtractObjectJson(Object* obj)
 	rot.append(obj->m_Rotate.x);
 	rot.append(obj->m_Rotate.y);
 	rot.append(obj->m_Rotate.z);
-	transform["Rotation"] = rot;
+	transform["Rotate"] = rot;
 
 	Json::Value sca;
 	sca.append(obj->m_Scale.x);
