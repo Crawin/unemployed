@@ -60,7 +60,6 @@ VS_OUTPUT vs(VS_INPUT input)
 	float anim1InterpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
 	float anim2InterpolWegith = ceil(anim2PlayTime * ANIMATION_FPS) - anim2PlayTime * ANIMATION_FPS;
 
-	matrix inverseMatrix = inverse(localMatrix);
 	float weight;
 
 	int currentFrame_cur = floor(anim1PlayTime * ANIMATION_FPS);
@@ -85,9 +84,9 @@ VS_OUTPUT vs(VS_INPUT input)
 			boneToWorld += weight * anim1;	
 	}
 
-	output.position = mul(mul(mul(float4(input.position, 1.0f), localMatrix), boneToWorld), inverseMatrix).xyz;
-	output.normal = mul(mul(mul(input.normal, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
-	output.tangent = mul(mul(mul(input.tangent, (float3x3) localMatrix),(float3x3)boneToWorld), (float3x3)inverseMatrix);
+	output.position = mul(float4(input.position, 1.0f), boneToWorld).xyz;
+	output.normal = mul(input.normal,(float3x3)boneToWorld);
+	output.tangent = mul(input.tangent,(float3x3)boneToWorld);
 
 
 	//output.position = mul(mul(float4(input.position, 1.0f), localMatrix), inverseMatrix).xyz;
