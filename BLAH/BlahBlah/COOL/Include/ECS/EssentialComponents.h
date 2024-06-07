@@ -305,6 +305,9 @@ namespace component {
 		int m_MappedShaderData = -1;
 		D3D12_GPU_VIRTUAL_ADDRESS m_ShaderDataGPUAddr = 0;
 
+		// resource manager's camera rtv data
+		int m_RenderTargetDataIndex = -1;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -334,6 +337,8 @@ namespace component {
 		XMFLOAT3 GetWorldDirection() const { return { m_ViewMatrix._31, m_ViewMatrix._32, m_ViewMatrix._33 }; }
 
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+		int GetCameraIndex() const { return m_RenderTargetDataIndex; }
 
 	private:
 		// 행렬 재생성

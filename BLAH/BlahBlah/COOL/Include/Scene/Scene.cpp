@@ -137,39 +137,32 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 	//m_ECSManager->Execute(debug);
 }
 
-void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
+void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component::Camera* camera)
 {
 	auto& res = m_ResourceManager;
 
+	int camIdx = camera->GetCameraIndex();
+
 	// default deffered renderer
-	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, camIdx);
 
 	// clear mrt
 	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	m_ResourceManager->ClearMRTS(commandList, clearColor);
+	m_ResourceManager->ClearMRTS(commandList, clearColor, camIdx);
 
 	// OM set
-	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart();
-	commandList->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &resultDsv);
-	//commandLists[0]->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
+	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart(camIdx);
+	auto dsv = m_ResourceManager->GetDefferedDSV(camIdx);
+	commandList->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &dsv);
 
-	// get Camera
-	std::vector<component::Camera*> camVec;
-	std::function<void(component::Camera*)> getCam = [&commandList, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
-	m_ECSManager->Execute(getCam);
+	OnPreRender(commandList, dsv);
+	camera->SetCameraData(commandList);
 
-	camVec[0]->SetCameraData(commandList);
-
-	OnPreRender(commandList, resultDsv);
-
-	BoundingFrustum& cameraFustum = camVec[0]->GetBoundingFrustum();
+	BoundingFrustum& cameraFustum = camera->GetBoundingFrustum();
 	BoundingOrientedBox tempOBB;
 
-	XMFLOAT3 camPos = camVec[0]->GetWorldPosition();
-	XMFLOAT3 camDir = camVec[0]->GetWorldDirection();
-	//DebugPrintVector(camPos, "camPos");
-	//DebugPrintVector(camDir, "camDir");
-
+	XMFLOAT3 camPos = camera->GetWorldPosition();
+	XMFLOAT3 camDir = camera->GetWorldDirection();
 
 	// make function
 	std::function<void(component::Renderer*)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent) {
@@ -202,10 +195,13 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU
 	// execute function
 	m_ECSManager->Execute<component::Renderer>(func);
 
-	OnPostRender(commandList, resultDsv);
+	OnPostRender(commandList, dsv);
 
 	// render sky here
 
+
+	// set state common
+	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON, camIdx);
 }
 
 void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
@@ -414,18 +410,30 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->RSSetScissorRects(1, &scRect);
 	// set render target
 
+	
+	// set to common
+	m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_COMMON);
+
 }
 
 void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
+	std::vector<component::Camera*> camVec;
+	std::function<void(component::Camera*)> getCam = [&commandList, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
+	m_ECSManager->Execute(getCam);
+
+	camVec[0]->SetCameraData(commandList);
+	int camIdx = camVec[0]->GetCameraIndex();
+
 	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
 	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
-	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON);
-	m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_COMMON);
+	//m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON, camIdx);
+	//m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_COMMON);
+
+	m_ResourceManager->SetCameraToPostProcessing(camIdx);
 
 	int postMat = m_ResourceManager->GetPostProcessingMaterial();
-
 	Material* mat = m_ResourceManager->GetMaterial(postMat);
 
 	// todo light size
@@ -535,8 +543,22 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	// animate first
 	AnimateToSO(commandLists[0]);
 
+
+	// get Camera
+	std::vector<component::Camera*> camVec;
+	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
+	m_ECSManager->Execute(getCam);
+
+	int camIdx = camVec[0]->GetCameraIndex();
+
+	// wait for end here
+
+	// render on multi
 	// mrt render end
-	RenderOnMRT(commandLists[0], resultDsv);
+	for(int i = 0; i < camVec.size(); ++i)
+		RenderOnMRT(commandLists[0], camVec[i]);
+
+	// wait for end
 	///////////////////////////////////////////////////////////////////////////////////////////
 
 	// update light, and shadowm map 

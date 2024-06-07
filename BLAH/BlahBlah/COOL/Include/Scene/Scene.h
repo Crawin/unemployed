@@ -32,6 +32,10 @@ class ResourceManager;
 
 class ECSManager;
 
+namespace component {
+	class Camera;
+}
+
 class Scene
 {
 	friend class SceneManager;
@@ -61,6 +65,8 @@ protected:
 
 	void SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
 
+	// todo 아래 이것들의 대부분을 render path같은 것으로 빼야 한다
+	// render paths
 	// render seq 01
 	void AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -68,7 +74,7 @@ protected:
 	virtual void OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv) {}
 
 	// render seq
-	void RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+	void RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component::Camera* camera);
 
 	// post render on mrt
 	virtual void OnPostRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv) {}

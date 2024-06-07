@@ -244,6 +244,8 @@ namespace component {
 		m_Near = cam["Near"].asFloat();
 		m_Far = cam["Far"].asFloat();
 
+		// get camera rendertarget idx
+		m_RenderTargetDataIndex = rm->AddCamera(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END));
 
 		// create shader resource
 		m_MappedShaderData = rm->CreateObjectResource(

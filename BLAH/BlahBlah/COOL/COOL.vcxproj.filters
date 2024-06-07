@@ -301,11 +301,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Include\대충정리좀하자.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="Include\Shader\HLSL\TestRootSignature.hlsl">
       <Filter>소스 파일\Renderer\Shader\HLSL</Filter>
     </FxCompile>

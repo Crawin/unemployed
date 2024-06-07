@@ -237,9 +237,6 @@
     <ClCompile Include="Include\Shader\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Include\대충정리좀하자.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="Include\Shader\HLSL\Animation.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

@@ -64,6 +64,15 @@ struct ToLoadAttachInfo {
 	int idx;
 };
 
+struct CameraRenderTargets {
+	int m_MRTStartIdx = -1;
+	int m_MRTNum = -1;
+	COOLResourcePtr m_DepthBuffer = nullptr;
+	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
+	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
+
+};
+
 //struct ToLoadLightDataInfo {
 //	int idx;
 //	component::Light* m_Light;
@@ -132,7 +141,6 @@ private:
 
 	int CreateEmptyBuffer(ComPtr<ID3D12GraphicsCommandList> commandList, int size, int stride, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::SHADER, D3D12_HEAP_TYPE heapType = D3D12_HEAP_TYPE_DEFAULT);
 
-	
 	bool LoadObjectFile(const std::string& sceneName, bool isCam = false);	// object 폴더의 file 불러오는 함수
 	Entity* LoadObjectJson(Json::Value& root, Entity* parent = nullptr);	// Json을 파싱해 오브젝트를 실제로 만드는 함수
 	int LoadMesh(const std::string& name, ComPtr<ID3D12GraphicsCommandList> commandList);
@@ -155,8 +163,11 @@ private:
 	bool LoadObjects(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool LoadCameras(const std::string& sceneName, ComPtr<ID3D12GraphicsCommandList> commandList);
 
-	// for deferred renderer and shadow map
-	bool MakeExtraRenderTarget();
+	// for shadow map
+	bool MakeShadowMapRenderTargets();
+
+	// for mrts, returns start idx
+	bool MakeMultipleRenderTargets(CameraRenderTargets& camData);
 
 public:
 	void SetECSManager(std::shared_ptr<ECSManager> ptr);
@@ -204,12 +215,17 @@ public:
 	// for light components
 	void AddLightData();
 
+	// for camera components
+	int AddCamera(int numRenderTargets);
+
 	// for multiple render target / post processing
-	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
-	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4]);
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart() const;
+	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState, int cameraIdx);
+	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4], int cameraIdx);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart(int cameraIdx) const;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedDSV(int cameraIdx) const;
 
 	int GetPostProcessingMaterial() const;
+	void SetCameraToPostProcessing(int camIdx);
 
 	// for shadowmap
 	void SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
@@ -256,7 +272,8 @@ private:
 	ComPtr<ID3D12DescriptorHeap> m_ShaderResourceHeap;
 
 	// 추가 렌더타겟들
-	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
+	std::vector<CameraRenderTargets> m_CameraRenderTargets;
+	//ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
 	ComPtr<ID3D12DescriptorHeap> m_ShadowMapHeap;
 	ComPtr<ID3D12DescriptorHeap> m_ShadowMapDSVHeap;
 	COOLResourcePtr m_ShadowDSV;
@@ -295,8 +312,8 @@ private:
 
 	// Deffered render targets
 	// 해당갯수 만큼 m_Resources에 넣음
-	static const int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
-	int m_DefferedRTVStartIdx = -1;
+	//static const int m_DefferedRenderTargets = static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END);
+	//int m_DefferedRTVStartIdx = -1;
 	//D3D12_CPU_DESCRIPTOR_HANDLE m_DefferedRTVStart = D3D12_CPU_DESCRIPTOR_HANDLE();
 
 	// cascaded + other

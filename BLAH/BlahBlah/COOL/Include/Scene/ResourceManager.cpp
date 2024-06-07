@@ -302,16 +302,16 @@ bool ResourceManager::LoadDefferedResource(ComPtr<ID3D12GraphicsCommandList> com
 	m_PostProcessingMaterial = GetMaterial(m_PostProcessing, commandList);
 	if (m_PostProcessingMaterial == -1) return false;
 
-	for (int i = 0; i < m_DefferedRenderTargets; ++i)
-		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
+		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + 2);
 
 #ifdef _DEBUG
 	m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
 	if (m_DebuggingMaterial == -1) return false;
 
 	// debug deffered default
-	for (int i = 0; i < m_DefferedRenderTargets; ++i)
-		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
+	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
+		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + 2);
 #endif
 
 	return true;
@@ -568,7 +568,7 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	std::string scenePath = SCENE_PATH + sceneName;
 
 	// make deferred renderer texture
-	CHECK_CREATE_FAILED(MakeExtraRenderTarget(), "RenderTargets for deffered rendering make Failed!!");
+	CHECK_CREATE_FAILED(MakeShadowMapRenderTargets(), "RenderTargets for shadowmap Failed!!");
 
 	// Load Objects
 	CHECK_CREATE_FAILED(LoadObjects(sceneName, commandList), "Object Load Failed!!");
@@ -580,9 +580,17 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 	CHECK_CREATE_FAILED(LateInit(commandList), "LateInit Fail!");
 
 	// build mrt rtv heap
-	CHECK_CREATE_FAILED(
-		Renderer::GetInstance().CreateRenderTargetView(m_MRTHeap, m_Resources, m_DefferedRTVStartIdx, m_DefferedRenderTargets), 
-		"Create MRT RTV Failed!!");
+	for (int i = 0; i < m_CameraRenderTargets.size(); ++i) {
+		// rtv
+		CHECK_CREATE_FAILED(
+			Renderer::GetInstance().CreateRenderTargetView(m_CameraRenderTargets[i].m_MRTHeap, m_Resources, m_CameraRenderTargets[i].m_MRTStartIdx, m_CameraRenderTargets[i].m_MRTNum),
+			"Create MRT RTV Failed!!");
+	
+		// dsv
+		CHECK_CREATE_FAILED(
+			Renderer::GetInstance().CreateDepthStencilView(m_CameraRenderTargets[i].m_DsvHeap, m_CameraRenderTargets[i].m_DepthBuffer), "Create MRT DSV Failed!!"
+		);
+	}
 
 	// build shadow map heap
 	CHECK_CREATE_FAILED(
@@ -761,34 +769,8 @@ bool ResourceManager::LoadCameras(const std::string& sceneName, ComPtr<ID3D12Gra
 	return true;
 }
 
-bool ResourceManager::MakeExtraRenderTarget()
+bool ResourceManager::MakeShadowMapRenderTargets()
 {
-	// MRT Render Targets
-	m_DefferedRTVStartIdx = static_cast<int>(m_Resources.size());
-
-	DXGI_FORMAT format[static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END)] = {
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_R32G32B32A32_FLOAT
-	};
-
-	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i) {
-		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
-			D3D12_HEAP_TYPE_DEFAULT,
-			D3D12_RESOURCE_STATE_COMMON,
-			Renderer::GetInstance().GetScreenSize(),
-			std::format("DifferedTarget_{}", i),
-			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
-			format[i])
-		);
-
-		m_Resources[m_DefferedRTVStartIdx + i]->SetShaderResource();
-	}
-
-
 	// make Shadow Map Objects
 	CHECK_CREATE_FAILED(MakeShadowMaps(), "Shadow Map Making Failed!!");
 
@@ -799,7 +781,6 @@ bool ResourceManager::MakeExtraRenderTarget()
 			D3D12_HEAP_TYPE_DEFAULT,
 			D3D12_RESOURCE_STATE_COMMON,
 			m_ShadowMaps[i].GetRTSize(),
-			//Renderer::GetInstance().GetScreenSize(),
 			std::format("Shadow_Map_{}", i),
 			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
 			DXGI_FORMAT_R32_FLOAT)
@@ -807,18 +788,59 @@ bool ResourceManager::MakeExtraRenderTarget()
 
 		m_Resources[m_ShadowMapRTVStartIdx + i]->SetShaderResource();
 	}
-	
+
 	// create Shadpw map dsv;
 	//m_ShadowMapDSVStartIdx = static_cast<int>(m_Resources.size());
 
 	m_ShadowDSV = Renderer::GetInstance().CreateEmpty2DResourceDSV(
-		D3D12_HEAP_TYPE_DEFAULT, 
-		D3D12_RESOURCE_STATE_DEPTH_WRITE, 
+		D3D12_HEAP_TYPE_DEFAULT,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		m_ShadowMaps[0].GetRTSize(),
 		//Renderer::GetInstance().GetScreenSize(),
 		"shadowmap ds buffer");
 	m_ShadowDSV->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 	m_ShadowDSV->SetName("shadowmap ds buffer");
+
+	return true;
+}
+
+bool ResourceManager::MakeMultipleRenderTargets(CameraRenderTargets& camData)
+{
+	// MRT Render Targets
+	camData.m_MRTStartIdx = static_cast<int>(m_Resources.size());
+
+	DXGI_FORMAT format[static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END)] = {
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R32G32B32A32_FLOAT,
+		DXGI_FORMAT_R32G32B32A32_FLOAT
+	};
+
+	for (int i = 0; i < camData.m_MRTNum; ++i) {
+		m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
+			D3D12_HEAP_TYPE_DEFAULT,
+			D3D12_RESOURCE_STATE_COMMON,
+			Renderer::GetInstance().GetScreenSize(),
+			std::format("DifferedTarget_{}", i),
+			D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+			format[i])
+		);
+
+
+		//m_RenderTargetBuffer[i]->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+		m_Resources[camData.m_MRTStartIdx + i]->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+		m_Resources[camData.m_MRTStartIdx + i]->SetShaderResource();
+	}
+
+	camData.m_DepthBuffer = Renderer::GetInstance().CreateEmpty2DResourceDSV(
+		D3D12_HEAP_TYPE_DEFAULT, 
+		D3D12_RESOURCE_STATE_DEPTH_WRITE, 
+		Renderer::GetInstance().GetScreenSize(), 
+		"Diff dsv");
+	camData.m_DepthBuffer->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	camData.m_DepthBuffer->SetName("Diff dsv");
 
 	return true;
 }
@@ -961,36 +983,66 @@ void ResourceManager::AddLightData()
 	//return static_cast<int>(m_LightDatas.size() - 1);
 }
 
+int ResourceManager::AddCamera(int numRenderTargets)
+{
+	m_CameraRenderTargets.emplace_back();
+
+	auto& camData = m_CameraRenderTargets.back();
+	camData.m_MRTNum = numRenderTargets;
+
+	// render target
+	CHECK_CREATE_FAILED(MakeMultipleRenderTargets(camData), "MRT Resource Create Failed!!");
+
+	return static_cast<int>(m_CameraRenderTargets.size() - 1);
+}
+
 //LightData& ResourceManager::GetLightData(int idx)
 //{
 //	return m_LightDatas[idx];
 //}
 
-void ResourceManager::SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)
+void ResourceManager::SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState, int cameraIdx)
 {
-	for (int i = m_DefferedRTVStartIdx; i < m_DefferedRTVStartIdx + m_DefferedRenderTargets; ++i) {
+	int startIdx = m_CameraRenderTargets[cameraIdx].m_MRTStartIdx;
+	int size = m_CameraRenderTargets[cameraIdx].m_MRTNum;
+
+	for (int i = startIdx; i < startIdx + size; ++i) {
 		m_Resources[i]->TransToState(cmdList, toState);
 	}
 }
 
-void ResourceManager::ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4])
+void ResourceManager::ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4], int cameraIdx)
 {
 	auto inc = Renderer::GetInstance().GetRTVHeapIncSize();
-	auto decs = m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
-	for (int i = 0; i < m_DefferedRenderTargets; ++i) {
+
+	int size = m_CameraRenderTargets[cameraIdx].m_MRTNum;
+	auto decs = m_CameraRenderTargets[cameraIdx].m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+
+	for (int i = 0; i < size; ++i) {
 		cmdList->ClearRenderTargetView(decs, color, 0, nullptr);
 		decs.ptr += inc;
 	}
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart() const
+D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart(int cameraIdx) const
 {
-	return m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+	return m_CameraRenderTargets[cameraIdx].m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedDSV(int cameraIdx) const
+{
+	return m_CameraRenderTargets[cameraIdx].m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 }
 
 int ResourceManager::GetPostProcessingMaterial() const
 {
 	return m_PostProcessingMaterial;
+}
+
+void ResourceManager::SetCameraToPostProcessing(int camIdx)
+{
+	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
+		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_CameraRenderTargets[camIdx].m_MRTStartIdx);
 }
 
 void ResourceManager::SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)

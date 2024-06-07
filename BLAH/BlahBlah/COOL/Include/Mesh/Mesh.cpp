@@ -210,21 +210,7 @@ int Mesh::GetBone(ComPtr<ID3D12GraphicsCommandList> commandList, const std::stri
 	}
 
 	ERROR_QUIT(std::format("No Such Bone File!!, fileName: {}", fileName));
-	//exit(1);
 }
-
-//bool Mesh::LoadFile(ComPtr<ID3D12GraphicsCommandList> commandList, const char* fileName)
-//{
-//	std::ifstream meshFile(fileName, std::ios::binary);
-//
-//	if (meshFile.fail()) {
-//		DebugPrint(std::format("Failed to open mesh file!! fileName: {}", fileName));
-//		return false;
-//	}
-//
-//	BuildMesh(commandList, meshFile);
-//	return true;
-//}
 
 void Mesh::SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
@@ -247,20 +233,11 @@ void Mesh::SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
 }
 
-void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& parent)
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& worldMat)
 {
 	if (m_VertexNum > 0) {
-
-
-		//m_RootTransform = Matrix4x4::Multiply(m_LocalTransform, parent);
-
-		XMMATRIX t = XMMatrixTranspose(XMLoadFloat4x4(&m_LocalTransform) * XMLoadFloat4x4(&parent));
 		XMFLOAT4X4 temp;
-		//XMFLOAT4X4 temp = Matrix4x4::Transpose(Matrix4x4::Multiply(m_LocalTransform, parent));
-		XMStoreFloat4x4(&temp, t);
-
-		XMStoreFloat4x4(&temp, XMMatrixTranspose(XMLoadFloat4x4(&parent)));
-
+		XMStoreFloat4x4(&temp, XMMatrixTranspose(XMLoadFloat4x4(&worldMat)));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
 
 #ifdef INTERLEAVED_VERTEX
