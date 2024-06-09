@@ -630,12 +630,22 @@ namespace ECSsystem {
 			auto& boxA = a->GetBoundingBox();
 			auto& originBoxA = a->GetOriginalBox();
 
-			std::function<void(Collider*, SelfEntity*)> check = [a, &boxA, &originBoxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
+			std::function<void(Collider*, SelfEntity*)> check = [manager, a, &boxA, &originBoxA, aEnt, &circleBoxCol](Collider* b, SelfEntity* bEnt) {
 				auto& boxB = b->GetBoundingBox();
 
 				// check and insert box
 				if (boxA.Intersects(boxB)) {
 
+					auto name = manager->GetComponent<Name>(bEnt->GetEntity());
+					auto aName = manager->GetComponent<Name>(aEnt->GetEntity());
+					if (aName->getName() == "Player1") {
+						DebugPrint(std::format("name: {}", name->getName()));
+						DebugPrintVector(boxB.Extents, "CurrExtents");
+						DebugPrintVector(b->GetOriginalBox().Extents, "RealExtents");
+						DebugPrint("");
+
+
+					}
 					// if capsule, check
 					//if (a->IsCapsule()) {
 					//	auto& originBoxB = b->GetOriginalBox();

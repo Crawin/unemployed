@@ -733,9 +733,9 @@ Json::Value ExtractObjectJson(Object* obj)
 			collider["AutoMesh"] = false;
 
 			XMFLOAT3 ext = {
-				obj->m_BoundingBoxMax.x - obj->m_BoundingBoxMin.x,
-				obj->m_BoundingBoxMax.y - obj->m_BoundingBoxMin.y,
-				obj->m_BoundingBoxMax.z - obj->m_BoundingBoxMin.z
+				(obj->m_BoundingBoxMax.x - obj->m_BoundingBoxMin.x) / 2.0f,
+				(obj->m_BoundingBoxMax.y - obj->m_BoundingBoxMin.y) / 2.0f,
+				(obj->m_BoundingBoxMax.z - obj->m_BoundingBoxMin.z) / 2.0f
 			};
 			ext.x = abs(ext.x);
 			ext.y = abs(ext.y);

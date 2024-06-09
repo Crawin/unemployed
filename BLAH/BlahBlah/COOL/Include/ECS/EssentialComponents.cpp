@@ -513,7 +513,11 @@ namespace component {
 			extent.y = col["Extent"][1].asFloat();
 			extent.z = col["Extent"][2].asFloat();
 
+			XMVECTOR rotate = { XMConvertToRadians(col["Rotate"][0].asFloat()), XMConvertToRadians(col["Rotate"][1].asFloat()), XMConvertToRadians(col["Rotate"][2].asFloat()) };
+			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(rotate);
+
 			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+			m_BoundingBoxOriginal.Transform(m_BoundingBoxOriginal, rot);
 
 			// if capsue, check dist
 			m_IsCapsule = col["IsCapsule"].asBool();
@@ -533,11 +537,9 @@ namespace component {
 			extent.z = col["Extent"][2].asFloat();
 
 			XMVECTOR rotate = { XMConvertToRadians(col["Rotate"][0].asFloat()), XMConvertToRadians(col["Rotate"][1].asFloat()), XMConvertToRadians(col["Rotate"][2].asFloat()) };
-
 			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(rotate);
 
 			m_BoundingBoxOriginal = BoundingOrientedBox(center, extent, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
-
 			m_BoundingBoxOriginal.Transform(m_BoundingBoxOriginal, rot);
 
 			m_IsCapsule = true;
