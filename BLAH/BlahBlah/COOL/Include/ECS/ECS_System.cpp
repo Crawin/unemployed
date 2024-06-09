@@ -635,17 +635,6 @@ namespace ECSsystem {
 
 				// check and insert box
 				if (boxA.Intersects(boxB)) {
-
-					auto name = manager->GetComponent<Name>(bEnt->GetEntity());
-					auto aName = manager->GetComponent<Name>(aEnt->GetEntity());
-					if (aName->getName() == "Player1") {
-						DebugPrint(std::format("name: {}", name->getName()));
-						DebugPrintVector(boxB.Extents, "CurrExtents");
-						DebugPrintVector(b->GetOriginalBox().Extents, "RealExtents");
-						DebugPrint("");
-
-
-					}
 					// if capsule, check
 					//if (a->IsCapsule()) {
 					//	auto& originBoxB = b->GetOriginalBox();

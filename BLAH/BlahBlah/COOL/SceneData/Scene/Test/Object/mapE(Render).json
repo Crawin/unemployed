@@ -1,0 +1,895 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "_4thPillar",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render)._4thPillar"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							614.82122802734375,
+							1363.0,
+							46.829204559326172
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "_4thwall",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render)._4thwall"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							695.7479248046875,
+							1363.0001220703125,
+							38.198436737060547
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "acs",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).acs"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-736.61505126953125,
+							187.50001525878906,
+							22.78584098815918
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Asphalt",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Asphalt"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							614.82122802734375,
+							1002.9998779296875,
+							33.354591369628906
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BathroomTiles",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).BathroomTiles"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-121.33535003662109,
+							975.0,
+							555.1561279296875
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Beigetile",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Beigetile"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2922.356689453125,
+							788.477783203125,
+							-1274.7979736328125
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BlackLeather",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).BlackLeather"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-410.26239013671875,
+							110.43086242675781,
+							25.482765197753906
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Bluetile",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Bluetile"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-211.08673095703125,
+							510.00003051757812,
+							-194.797607421875
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Bluewall",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Bluewall"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							785.93212890625,
+							895.00006103515625,
+							-287.90496826171875
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BrushedIron",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).BrushedIron"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1674.388671875,
+							862.5001220703125,
+							463.63363647460938
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BrushedMetalTiles",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).BrushedMetalTiles"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2688.83447265625,
+							1247.3385009765625,
+							6.4232425689697266
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Ceiling",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Ceiling"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-17.18574333190918,
+							1316.0001220703125,
+							-29.93989372253418
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Chainmail",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Chainmail"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							614.82330322265625,
+							822.352294921875,
+							33.356105804443359
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Concrete",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Concrete"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-102.59238433837891,
+							1269.546875,
+							1107.9073486328125
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "factory_brick",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).factory_brick"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							61.754692077636719,
+							1079.5001220703125,
+							-48.817775726318359
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Granite",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Granite"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1190.26611328125,
+							-40.000007629394531,
+							201.125
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Herringbone",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Herringbone"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1659.2548828125,
+							510.00003051757812,
+							33.438186645507812
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "macro_flour",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).macro_flour"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-17.18574333190918,
+							1363.0001220703125,
+							-29.939990997314453
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "painted_plaster_wall",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).painted_plaster_wall"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							69.288970947265625,
+							209.5,
+							44.309326171875
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Plaster002",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Plaster002"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-18.88056755065918,
+							1012.5001220703125,
+							40.075389862060547
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "PolishedConcrete",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).PolishedConcrete"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							176.70860290527344,
+							927.9998779296875,
+							33.354541778564453
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Porcelain",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Porcelain"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							570.821044921875,
+							643.0,
+							22.037696838378906
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Terrazzo",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Terrazzo"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-420.2825927734375,
+							975.00018310546875,
+							-1095.733642578125
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "WhiteBrick",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).WhiteBrick"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							607.32098388671875,
+							643.0,
+							33.354740142822266
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Whitewood",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Whitewood"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							634.82110595703125,
+							643.0,
+							33.354740142822266
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Windows",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Windows"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-18.880861282348633,
+							1320.0001220703125,
+							-29.93794059753418
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "WomanToilet",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).WomanToilet"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							793.499755859375,
+							895.00006103515625,
+							-187.58502197265625
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Wood03",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Wood03"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1057.5911865234375,
+							1025.06298828125,
+							23.015651702880859
+						],
+						"Rotate" : 
+						[
+							-2.5044780613825424e-06,
+							-5.0089561227650847e-06,
+							5.0089561227650847e-06
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Wood051",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "mapE(Render).Wood051"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-95.278182983398438,
+							642.99993896484375,
+							133.8250732421875
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "mapE_Render_",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "mapE(Render)_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

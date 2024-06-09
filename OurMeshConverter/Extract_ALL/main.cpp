@@ -750,22 +750,73 @@ Json::Value ExtractObjectJson(Object* obj)
 
 			// todo
 			// if name contains stair, ext.y = 0.1, rotate = "calculated angle"
-			//std::string::size_type p = obj->m_Name.find("stair");
-			//if (p != std::string::npos) printf("stair!!");
+			std::string::size_type p = obj->m_Name.find("_toStair");
+			if (p != std::string::npos) {
+				// climb to z
+				if (ext.z > ext.x) {
+					float hypot = ext.y * ext.y + ext.z * ext.z;
+					hypot = sqrtf(hypot);
 
-			// extent
-			Json::Value extent;
-			extent.append(ext.x);
-			extent.append(ext.y);
-			extent.append(ext.z);
-			collider["Extent"] = extent;
+					float angle = XMConvertToDegrees(acos(ext.z / hypot));
 
-			// rotate
-			Json::Value rotate;
-			rotate.append(0.0f);
-			rotate.append(0.0f);
-			rotate.append(0.0f);
-			collider["Rotate"] = rotate;
+					// extent
+					Json::Value extent;
+					extent.append(ext.x);
+					extent.append(0.1f);
+					extent.append(hypot);
+					collider["Extent"] = extent;
+
+					// rotate
+					if (obj->m_Name.find("Right") != std::string::npos || obj->m_Name.find("Left") != std::string::npos) angle *= -1;
+					Json::Value rotate;
+					rotate.append(angle);
+					rotate.append(0.0f);
+					rotate.append(0.0f);
+					collider["Rotate"] = rotate;
+				}
+				// climb to x
+				else {
+					float hypot = ext.y * ext.y + ext.x * ext.x;
+					hypot = sqrtf(hypot);
+
+					float angle = XMConvertToDegrees(acos(ext.x / hypot));
+
+					// extent
+					Json::Value extent;
+					extent.append(hypot);
+					extent.append(0.1f);
+					extent.append(ext.z);
+					collider["Extent"] = extent;
+
+					// rotate
+					Json::Value rotate;
+					rotate.append(0.0f);
+					rotate.append(0.0f);
+					rotate.append(angle);
+					collider["Rotate"] = rotate;
+				}
+
+				
+
+
+			}
+			else {			
+				// extent
+				Json::Value extent;
+				extent.append(ext.x);
+				extent.append(ext.y);
+				extent.append(ext.z);
+				collider["Extent"] = extent;
+
+				// rotate
+				Json::Value rotate;
+				rotate.append(0.0f);
+				rotate.append(0.0f);
+				rotate.append(0.0f);
+				collider["Rotate"] = rotate;
+			}
+
+
 		}
 		else collider["AutoMesh"] = true;
 
