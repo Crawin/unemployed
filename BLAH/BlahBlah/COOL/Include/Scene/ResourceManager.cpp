@@ -693,29 +693,11 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 		if (coll->GetCollided()) {
 			coll->SetCollided(false);
 
-			// syncMesh
-			if (coll->IsCapsule()) {
-				coll->SetCapsule(false);
-				component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
+			component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
+			if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
 
-				if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
-
-				// do st
-				Mesh* mesh = m_Meshes[rend->GetMesh()];
-
-				// todo 이거 짜야 한다!!!!!!!!!!!!!!!!!!!
-				coll->SetOriginBoxCenter(mesh->GetBoundingBox());
-			}
-			else {
-				component::Renderer* rend = m_ECSManager->GetComponent<component::Renderer>(ent);
-
-				if (rend == nullptr) ERROR_QUIT("ERROR!!!!, no renderer component on collider auto init!");
-
-				// do st
-				Mesh* mesh = m_Meshes[rend->GetMesh()];
-
-				coll->SetOriginBox(mesh->GetBoundingBox());
-			}
+			Mesh* mesh = m_Meshes[rend->GetMesh()];
+			coll->SetOriginBox(mesh->GetBoundingBox());
 		}
 		};
 

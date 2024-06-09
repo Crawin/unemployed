@@ -34,6 +34,12 @@ enum MESH_TYPE {
 	SKINNED = 2
 };
 
+enum JSON_FILE_OUT_TYPE {
+	JSON_ALL = 0,
+	JSON_COLLIDER_ONLY = 1,
+	JSON_RENDERER_ONLY = 2,
+};
+
 struct Vertex
 {
 	XMFLOAT3 position = { 0,0,0 };
@@ -74,6 +80,7 @@ XMMATRIX g_GlobalMat;
 float g_GlobalImportScaleFactor = 1.0f;
 bool g_ToOtherHandedSystem = false;
 std::string g_FileName = "";
+JSON_FILE_OUT_TYPE g_JsonFileOutOpt = JSON_ALL;
 
 // for bone file
 void SetBoneIndexSet(FbxNode* node);
@@ -119,7 +126,21 @@ int main(int argc, char* argv[])
 	// 1 : file name
 	// 2 : import scale factor 
 	const char* fileName = argv[1];
-	if (argc > 2) g_GlobalImportScaleFactor = atof(argv[2]);
+	//if (argc > 2) g_GlobalImportScaleFactor = atof(argv[2]);
+	if (argc >= 2) {
+		for (int i = 1; i < argc; ++i) {
+			if (strcmp(argv[i], "-b") == 0) g_JsonFileOutOpt = JSON_COLLIDER_ONLY;
+			else if (strcmp(argv[i], "-r") == 0) g_JsonFileOutOpt = JSON_RENDERER_ONLY;
+			else if (strcmp(argv[i], "-s") == 0) {
+				// scale
+				if (i + 1 < argc) g_GlobalImportScaleFactor = atof(argv[++i]);
+				else {
+					printf("ERROR!!!!, not enough args");
+					exit(-1);
+				}
+			}
+		}
+	}
 	//const char* fileName = "map-Emaintest.fbx";
 
 	//outputFileName = "teapot.bin";
@@ -142,9 +163,26 @@ int main(int argc, char* argv[])
 	FbxAMatrix matTemp;
 	FbxAxisSystem axisSystem(FbxAxisSystem::eDirectX);
 	axisSystem.GetMatrix(matTemp);
-	for (int i = 0; i < 4; ++i) 
-		for (int j = 0; j < 4; ++j) 
+	printf("ToMat\n");
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
 			g_GlobalSettingTransform.m[i][j] = static_cast<float>(matTemp.Get(i, j));
+			printf("%.1f, ", matTemp.Get(i, j));
+		}
+		printf("\n");
+	}
+	printf("\n");
+
+	FbxAMatrix globalMat;
+	scene->GetGlobalSettings().GetAxisSystem().GetMatrix(globalMat);
+	printf("GlobalMat\n");
+	for (int i = 0; i < 4; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			printf("%.1f, ", globalMat.Get(i, j));
+		}
+		printf("\n");
+	}
+	printf("\n");
 
 	g_GlobalMat = XMLoadFloat4x4(&g_GlobalSettingTransform);
 
@@ -287,7 +325,7 @@ Object* TraverseNode(FbxNode* node)
 	FbxVector4 r = node->EvaluateLocalRotation();
 	FbxVector4 s = node->EvaluateLocalScaling();
 
-	obj->m_Transform = { static_cast<float>(t[0]), static_cast<float>(t[1]), static_cast<float>(t[2]) };
+	obj->m_Transform = { static_cast<float>(t[0]) / g_GlobalImportScaleFactor, static_cast<float>(t[1]) / g_GlobalImportScaleFactor, static_cast<float>(t[2]) / g_GlobalImportScaleFactor };
 	obj->m_Rotate = { static_cast<float>(r[0]), static_cast<float>(r[1]), static_cast<float>(r[2]) };
 	obj->m_Scale = { static_cast<float>(s[0]), static_cast<float>(s[1]), static_cast<float>(s[2]) };
 
@@ -573,9 +611,9 @@ void ExtractMesh(Object* obj, std::fstream& out, const XMFLOAT4X4* parent)
 		obj->m_BoundingBoxMax.y - obj->m_BoundingBoxMin.y,
 		obj->m_BoundingBoxMax.z - obj->m_BoundingBoxMin.z
 	};
-	printf("%s\n", obj->m_Name.c_str());
-	printf("%.1f, %.1f, %.1f\n",	obj->m_BoundingBoxCenter.x, obj->m_BoundingBoxCenter.y, obj->m_BoundingBoxCenter.z);
-	printf("%.1f, %.1f, %.1f\n\n", ext.x, ext.y, ext.z);
+	//printf("%s\n", obj->m_Name.c_str());
+	//printf("%.1f, %.1f, %.1f\n",	obj->m_BoundingBoxCenter.x, obj->m_BoundingBoxCenter.y, obj->m_BoundingBoxCenter.z);
+	//printf("%.1f, %.1f, %.1f\n\n", ext.x, ext.y, ext.z);
 
 	// 4 matrix
 	if (parent == nullptr) {
@@ -683,15 +721,56 @@ Json::Value ExtractObjectJson(Object* obj)
 		renderer["Mesh"] = g_FileName + "." + obj->m_Name;
 		renderer["Material"] = "NoMaterial";
 
-		val["Renderer"] = renderer;
-
+		if (g_JsonFileOutOpt == JSON_ALL || g_JsonFileOutOpt == JSON_RENDERER_ONLY)
+			val["Renderer"] = renderer;
+	
 		// collider
 		Json::Value collider;
 		collider["Static"] = true;
-		collider["AutoMesh"] = true;
+		
+		// manual
+		if (g_JsonFileOutOpt == JSON_COLLIDER_ONLY) {
+			collider["AutoMesh"] = false;
 
-		val["Collider"] = collider;
+			XMFLOAT3 ext = {
+				obj->m_BoundingBoxMax.x - obj->m_BoundingBoxMin.x,
+				obj->m_BoundingBoxMax.y - obj->m_BoundingBoxMin.y,
+				obj->m_BoundingBoxMax.z - obj->m_BoundingBoxMin.z
+			};
+			ext.x = abs(ext.x);
+			ext.y = abs(ext.y);
+			ext.z = abs(ext.z);
 
+			// center
+			Json::Value center;
+			center.append(obj->m_BoundingBoxCenter.x);
+			center.append(obj->m_BoundingBoxCenter.y);
+			center.append(obj->m_BoundingBoxCenter.z);
+			collider["Center"] = center;
+
+			// todo
+			// if name contains stair, ext.y = 0.1, rotate = "calculated angle"
+			//std::string::size_type p = obj->m_Name.find("stair");
+			//if (p != std::string::npos) printf("stair!!");
+
+			// extent
+			Json::Value extent;
+			extent.append(ext.x);
+			extent.append(ext.y);
+			extent.append(ext.z);
+			collider["Extent"] = extent;
+
+			// rotate
+			Json::Value rotate;
+			rotate.append(0.0f);
+			rotate.append(0.0f);
+			rotate.append(0.0f);
+			collider["Rotate"] = rotate;
+		}
+		else collider["AutoMesh"] = true;
+
+		if (g_JsonFileOutOpt == JSON_ALL || g_JsonFileOutOpt == JSON_COLLIDER_ONLY)
+			val["Collider"] = collider;
 	}
 
 	if (obj->m_Children.size() > 0) {
