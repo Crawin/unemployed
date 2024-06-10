@@ -1,9 +1,0 @@
-{
-	"name": "CenterBenchPillar4_Color",
-	"BaseColor": "CenterBenchPillar4_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

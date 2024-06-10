@@ -1,9 +1,0 @@
-{
-	"name": "Bluetile_Color",
-	"BaseColor": "Bluetile_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

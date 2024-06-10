@@ -1,9 +1,0 @@
-{
-	"name": "CenterRightManToilet_Color",
-	"BaseColor": "CenterRightManToilet_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

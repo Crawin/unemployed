@@ -1,9 +1,0 @@
-{
-	"name": "PolishedConcrete01_4K_BaseColor",
-	"BaseColor": "PolishedConcrete01_4K_BaseColor",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

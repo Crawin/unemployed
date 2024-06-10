@@ -1,9 +1,0 @@
-{
-	"name": "UITempMaterial",
-	"BaseColor": "test_button",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "UIBaseShader"
-}

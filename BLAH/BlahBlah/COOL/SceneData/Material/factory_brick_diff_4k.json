@@ -1,9 +1,0 @@
-{
-	"name": "factory_brick_diff_4k",
-	"BaseColor": "factory_brick_diff_4k",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

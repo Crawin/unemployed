@@ -1,9 +1,0 @@
-{
-	"name": "TriangleWindow5_Color",
-	"BaseColor": "TriangleWindow5_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

@@ -1,9 +1,0 @@
-{
-	"name": "OutBackwall_Color",
-	"BaseColor": "OutBackwall_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

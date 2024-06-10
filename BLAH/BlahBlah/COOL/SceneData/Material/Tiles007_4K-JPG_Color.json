@@ -1,9 +1,0 @@
-{
-	"name": "Tiles007_4K-JPG_Color",
-	"BaseColor": "Tiles007_4K-JPG_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

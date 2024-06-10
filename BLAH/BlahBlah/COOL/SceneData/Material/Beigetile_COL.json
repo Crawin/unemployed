@@ -1,9 +1,0 @@
-{
-	"name": "Beigetile_COL",
-	"BaseColor": "Beigetile_COL",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

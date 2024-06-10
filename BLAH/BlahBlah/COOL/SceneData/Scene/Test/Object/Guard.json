@@ -30,7 +30,7 @@
 
 	"Renderer": {
 		"Mesh": "Guard.Ch18",
-		"Material": "Guard_mat"
+		"Material": "Character/Guard_mat"
 	},
 
 	"AnimationExecutor": {

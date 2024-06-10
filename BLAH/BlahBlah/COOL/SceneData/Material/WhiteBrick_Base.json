@@ -1,9 +1,0 @@
-{
-	"name": "WhiteBrick_Base",
-	"BaseColor": "WhiteBrick_Base",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

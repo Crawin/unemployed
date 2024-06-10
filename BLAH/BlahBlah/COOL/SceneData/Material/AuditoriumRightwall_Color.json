@@ -1,9 +1,0 @@
-{
-	"name": "AuditoriumRightwall_Color",
-	"BaseColor": "AuditoriumRightwall_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

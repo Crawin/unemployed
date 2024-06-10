@@ -1,9 +1,0 @@
-{
-	"name": "CenterRightWomanToilet_Color",
-	"BaseColor": "CenterRightWomanToilet_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

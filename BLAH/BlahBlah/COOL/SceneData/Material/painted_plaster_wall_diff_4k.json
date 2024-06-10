@@ -1,9 +1,0 @@
-{
-	"name": "painted_plaster_wall_diff_4k",
-	"BaseColor": "painted_plaster_wall_diff_4k",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

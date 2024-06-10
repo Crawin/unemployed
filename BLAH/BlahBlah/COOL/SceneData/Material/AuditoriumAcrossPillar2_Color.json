@@ -1,9 +1,0 @@
-{
-	"name": "AuditoriumAcrossPillar2_Color",
-	"BaseColor": "AuditoriumAcrossPillar2_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

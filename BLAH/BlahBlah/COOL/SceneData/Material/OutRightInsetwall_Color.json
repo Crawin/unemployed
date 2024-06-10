@@ -1,9 +1,0 @@
-{
-	"name": "OutRightInsetwall_Color",
-	"BaseColor": "OutRightInsetwall_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

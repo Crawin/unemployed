@@ -1,9 +1,0 @@
-{
-	"name": "FrontDoorRightwall_Color",
-	"BaseColor": "FrontDoorRightwall_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

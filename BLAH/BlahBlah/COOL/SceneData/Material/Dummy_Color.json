@@ -1,9 +1,0 @@
-{
-	"name": "Dummy_Color",
-	"BaseColor": "Dummy_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

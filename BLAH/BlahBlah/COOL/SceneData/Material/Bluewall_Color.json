@@ -1,9 +1,0 @@
-{
-	"name": "Bluewall_Color",
-	"BaseColor": "Bluewall_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

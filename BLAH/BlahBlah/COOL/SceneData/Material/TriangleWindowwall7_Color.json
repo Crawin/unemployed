@@ -1,9 +1,0 @@
-{
-	"name": "TriangleWindowwall7_Color",
-	"BaseColor": "TriangleWindowwall7_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

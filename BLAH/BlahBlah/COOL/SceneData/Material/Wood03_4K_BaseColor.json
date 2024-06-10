@@ -1,9 +1,0 @@
-{
-	"name": "Wood03_4K_BaseColor",
-	"BaseColor": "Wood03_4K_BaseColor",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

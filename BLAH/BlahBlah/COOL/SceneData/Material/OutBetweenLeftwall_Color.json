@@ -1,9 +1,0 @@
-{
-	"name": "OutBetweenLeftwall_Color",
-	"BaseColor": "OutBetweenLeftwall_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

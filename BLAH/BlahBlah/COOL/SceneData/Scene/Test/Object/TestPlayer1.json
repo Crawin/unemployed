@@ -89,6 +89,7 @@
 						"Mesh": "Phone.Phone_Cube",
 						"Material": "NoMaterial"
 					}
+					
 				},
 				{
 					"Name": "Phone_Cylinder",
@@ -146,7 +147,7 @@
 			"Renderer":
 			{
 				"Mesh": "Player_01.hands",
-				"Material": "Player_Hands"
+				"Material": "Character/Player_Hands"
 			},
 			"AnimationExecutor": 
 			{
@@ -165,7 +166,7 @@
 			"Renderer":
 			{
 				"Mesh": "Player_01.Hat1",
-				"Material": "Player_Hat1_Black"
+				"Material": "Character/Player_Hat1_Black"
 			},
 			"AnimationExecutor": 
 			{
@@ -184,7 +185,7 @@
 			"Renderer":
 			{
 				"Mesh": "Player_01.Head1",
-				"Material": "Player_Head1"
+				"Material": "Character/Player_Head1"
 			},
 			"AnimationExecutor": 
 			{
@@ -203,7 +204,7 @@
 			"Renderer":
 			{
 				"Mesh": "Player_01.Hoodie1",
-				"Material": "Player_Hoodie_Black"
+				"Material": "Character/Player_Hoodie_Black"
 			},
 			"AnimationExecutor": 
 			{
@@ -222,7 +223,7 @@
 			"Renderer":
 			{
 				"Mesh": "Player_01.pants1",
-				"Material": "Player_Pants_Black"
+				"Material": "Character/Player_Pants_Black"
 			},
 			"AnimationExecutor": 
 			{
@@ -241,7 +242,7 @@
 			"Renderer":
 			{
 				"Mesh": "Player_01.Sneakers1",
-				"Material": "Player_Sneakers_Black"
+				"Material": "Character/Player_Sneakers_Black"
 			},
 			"AnimationExecutor": 
 			{

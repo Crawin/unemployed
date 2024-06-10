@@ -1,9 +1,0 @@
-{
-	"name": "BrushedIron01_4K_BaseColor",
-	"BaseColor": "BrushedIron01_4K_BaseColor",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

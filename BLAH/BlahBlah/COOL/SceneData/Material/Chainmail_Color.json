@@ -1,9 +1,0 @@
-{
-	"name": "Chainmail_Color",
-	"BaseColor": "Chainmail_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}

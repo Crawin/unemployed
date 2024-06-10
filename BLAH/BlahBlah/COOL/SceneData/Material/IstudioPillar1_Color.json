@@ -1,9 +1,0 @@
-{
-	"name": "IstudioPillar1_Color",
-	"BaseColor": "IstudioPillar1_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"Specular": null,
-	"Normal": null,
-	"Shader": "TestMeshDiffered"
-}
