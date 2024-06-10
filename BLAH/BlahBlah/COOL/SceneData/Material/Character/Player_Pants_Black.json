@@ -1,6 +1,6 @@
 {
 	"name": "NoMaterial",
-	"BaseColor": "Mat_pants_Base_Color_2",
+	"BaseColor": "Character/Mat_pants_Base_Color_2",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,

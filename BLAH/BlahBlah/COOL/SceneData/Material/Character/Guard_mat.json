@@ -1,6 +1,6 @@
 {
 	"name": "Guard",
-	"BaseColor": "Guard_Dif",
+	"BaseColor": "Character/Guard_Dif",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,

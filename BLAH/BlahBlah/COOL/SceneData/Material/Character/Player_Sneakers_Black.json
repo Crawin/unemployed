@@ -1,6 +1,6 @@
 {
 	"name": "NoMaterial",
-	"BaseColor": "Mat_Sneakers_Base_Color_6",
+	"BaseColor": "Character/Mat_Sneakers_Base_Color_6",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,

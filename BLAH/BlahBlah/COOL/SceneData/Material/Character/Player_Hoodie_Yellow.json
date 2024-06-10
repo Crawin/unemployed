@@ -1,6 +1,6 @@
 {
 	"name": "NoMaterial",
-	"BaseColor": "Mat_Hoodie_Base_Color_3",
+	"BaseColor": "Character/Mat_Hoodie_Base_Color_3",
 	"Roughness": null,
 	"Metalic": null,
 	"Specular": null,
