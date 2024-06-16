@@ -1,0 +1,9 @@
+{
+	"name": "Wood03",
+	"BaseColor": "Map/Wood03/Wood03_4K_BaseColor",
+	"Roughness": "Map/Wood03/Wood03_4K_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/Wood03/Wood03_4K_Normal",
+	"Shader": "TestMeshDiffered"
+}

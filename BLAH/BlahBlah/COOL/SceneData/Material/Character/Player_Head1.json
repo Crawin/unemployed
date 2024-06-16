@@ -3,7 +3,7 @@
 	"BaseColor": "Character/Mat_Head_Base_Color",
 	"Roughness": null,
 	"Metalic": null,
-	"Specular": null,
+	"AO": null,
 	"Normal": null,
 	"Shader": "TestMeshDiffered"
 }

@@ -3,7 +3,7 @@
 	"BaseColor": "Character/Mat_pants_Base_Color_2",
 	"Roughness": null,
 	"Metalic": null,
-	"Specular": null,
+	"AO": null,
 	"Normal": null,
 	"Shader": "TestMeshDiffered"
 }

@@ -1,0 +1,9 @@
+{
+	"name": "Whitewood",
+	"BaseColor": "Map/Whitewood/WhiteWood_diffuseOriginal",
+	"Roughness": "Map/Whitewood/WhiteWood_roughnessjpg",
+	"Metalic": null,
+	"AO": "Map/Whitewood/WhiteWood_ao",
+	"Normal": "Map/Whitewood/WhiteWood_normal",
+	"Shader": "TestMeshDiffered"
+}

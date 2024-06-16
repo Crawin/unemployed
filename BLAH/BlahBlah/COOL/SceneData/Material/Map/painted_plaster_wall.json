@@ -1,0 +1,9 @@
+{
+	"name": "painted_plaster_wall",
+	"BaseColor": "Map/painted_plaster_wall/painted_plaster_wall_diffuseOriginal",
+	"Roughness": "Map/painted_plaster_wall/painted_plaster_wall_roughness",
+	"Metalic": null,
+	"AO": "Map/painted_plaster_wall/painted_plaster_wall_ao",
+	"Normal": "Map/painted_plaster_wall/painted_plaster_wall_normal",
+	"Shader": "TestMeshDiffered"
+}

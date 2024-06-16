@@ -1,0 +1,9 @@
+{
+	"name": "Porcelain",
+	"BaseColor": "Map/Porcelain/Porcelain003_4K-JPG_Color",
+	"Roughness": "Map/Porcelain/Porcelain003_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/Porcelain/Porcelain003_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

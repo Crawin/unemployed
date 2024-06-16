@@ -1,0 +1,9 @@
+{
+	"name": "Bluewall",
+	"BaseColor": "Map/Bluewall/Bluewall_Color",
+	"Roughness": "Map/Bluewall/Plastic008_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/Bluewall/Plastic008_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

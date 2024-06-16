@@ -1,0 +1,9 @@
+{
+	"name": "PolishedConcrete",
+	"BaseColor": "Map/PolishedConcrete/PolishedConcrete01_4K_BaseColor",
+	"Roughness": "Map/PolishedConcrete/PolishedConcrete01_4K_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/PolishedConcrete/PolishedConcrete01_4K_Normal",
+	"Shader": "TestMeshDiffered"
+}

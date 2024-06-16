@@ -1,0 +1,9 @@
+{
+	"name": "Terrazzo",
+	"BaseColor": "Map/Terrazzo/Terrazzo012_4K-JPG_Color",
+	"Roughness": "Map/Terrazzo/Terrazzo012_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/Terrazzo/Terrazzo012_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

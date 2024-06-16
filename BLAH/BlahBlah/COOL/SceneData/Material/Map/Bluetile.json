@@ -1,0 +1,9 @@
+{
+	"name": "Bluetile",
+	"BaseColor": "Map/Bluetile/Bluetile2_Color",
+	"Roughness": "Map/Bluetile/SquareTiles01_4K_Roughness",
+	"Metalic": null,
+	"AO": "Map/Bluetile/SquareTiles01_4K_AO",
+	"Normal": "Map/Bluetile/SquareTiles01_4K_Normal",
+	"Shader": "TestMeshDiffered"
+}

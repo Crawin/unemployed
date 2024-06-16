@@ -1,0 +1,9 @@
+{
+	"name": "Plaster002",
+	"BaseColor": "Map/Plaster002/Plaster002_4K-JPG_Color",
+	"Roughness": "Map/Plaster002/Plaster002_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/Plaster002/Plaster002_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

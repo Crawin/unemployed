@@ -1,0 +1,9 @@
+{
+	"name": "Windows",
+	"BaseColor": "Map/Windows/Windows_Color",
+	"Roughness": "Map/Windows/Facade005_4K-JPG_Roughness",
+	"Metalic": "Map/Windows/Facade005_4K-JPG_Metalness",
+	"AO": null,
+	"Normal": "Map/Windows/Facade005_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

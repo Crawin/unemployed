@@ -1,0 +1,9 @@
+{
+	"name": "WomanToilet",
+	"BaseColor": "Map/WomanToilet/WomanToilet",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

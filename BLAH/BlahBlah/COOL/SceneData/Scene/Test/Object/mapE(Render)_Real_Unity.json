@@ -8,7 +8,7 @@
 					"Name" : "_4thPillar",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/_4thPillar",
 						"Mesh" : "mapE(Render)_Real_Unity._4thPillar"
 					},
 					"Transform" : 
@@ -37,7 +37,7 @@
 					"Name" : "_4thwall",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/_4thwall",
 						"Mesh" : "mapE(Render)_Real_Unity._4thwall"
 					},
 					"Transform" : 
@@ -66,7 +66,7 @@
 					"Name" : "acs",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/acs",
 						"Mesh" : "mapE(Render)_Real_Unity.acs"
 					},
 					"Transform" : 
@@ -95,7 +95,7 @@
 					"Name" : "Asphalt",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Asphalt",
 						"Mesh" : "mapE(Render)_Real_Unity.Asphalt"
 					},
 					"Transform" : 
@@ -124,7 +124,7 @@
 					"Name" : "BathroomTiles",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BathroomTiles",
 						"Mesh" : "mapE(Render)_Real_Unity.BathroomTiles"
 					},
 					"Transform" : 
@@ -153,7 +153,7 @@
 					"Name" : "Beigetile",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Beigetile",
 						"Mesh" : "mapE(Render)_Real_Unity.Beigetile"
 					},
 					"Transform" : 
@@ -182,7 +182,7 @@
 					"Name" : "BlackLeather",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BlackLeather",
 						"Mesh" : "mapE(Render)_Real_Unity.BlackLeather"
 					},
 					"Transform" : 
@@ -211,7 +211,7 @@
 					"Name" : "Bluetile",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Bluetile",
 						"Mesh" : "mapE(Render)_Real_Unity.Bluetile"
 					},
 					"Transform" : 
@@ -240,7 +240,7 @@
 					"Name" : "Bluewall",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Bluewall",
 						"Mesh" : "mapE(Render)_Real_Unity.Bluewall"
 					},
 					"Transform" : 
@@ -269,7 +269,7 @@
 					"Name" : "BrushedIron",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BrushedIron",
 						"Mesh" : "mapE(Render)_Real_Unity.BrushedIron"
 					},
 					"Transform" : 
@@ -298,7 +298,7 @@
 					"Name" : "BrushedMetalTiles",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BrushedMetalTiles",
 						"Mesh" : "mapE(Render)_Real_Unity.BrushedMetalTiles"
 					},
 					"Transform" : 
@@ -327,7 +327,7 @@
 					"Name" : "Ceiling",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Ceiling",
 						"Mesh" : "mapE(Render)_Real_Unity.Ceiling"
 					},
 					"Transform" : 
@@ -356,7 +356,7 @@
 					"Name" : "Chainmail",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Chainmail",
 						"Mesh" : "mapE(Render)_Real_Unity.Chainmail"
 					},
 					"Transform" : 
@@ -385,7 +385,7 @@
 					"Name" : "Concrete",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Concrete",
 						"Mesh" : "mapE(Render)_Real_Unity.Concrete"
 					},
 					"Transform" : 
@@ -414,7 +414,7 @@
 					"Name" : "factory_brick",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/factory_brick",
 						"Mesh" : "mapE(Render)_Real_Unity.factory_brick"
 					},
 					"Transform" : 
@@ -443,7 +443,7 @@
 					"Name" : "Granite",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Granite",
 						"Mesh" : "mapE(Render)_Real_Unity.Granite"
 					},
 					"Transform" : 
@@ -472,7 +472,7 @@
 					"Name" : "Herringbone",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Herringbone",
 						"Mesh" : "mapE(Render)_Real_Unity.Herringbone"
 					},
 					"Transform" : 
@@ -501,7 +501,7 @@
 					"Name" : "macro_flour",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/macro_flour",
 						"Mesh" : "mapE(Render)_Real_Unity.macro_flour"
 					},
 					"Transform" : 
@@ -530,7 +530,7 @@
 					"Name" : "painted_plaster_wall",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/painted_plaster_wall",
 						"Mesh" : "mapE(Render)_Real_Unity.painted_plaster_wall"
 					},
 					"Transform" : 
@@ -559,7 +559,7 @@
 					"Name" : "Plaster002",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Plaster002",
 						"Mesh" : "mapE(Render)_Real_Unity.Plaster002"
 					},
 					"Transform" : 
@@ -588,7 +588,7 @@
 					"Name" : "PolishedConcrete",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/PolishedConcrete",
 						"Mesh" : "mapE(Render)_Real_Unity.PolishedConcrete"
 					},
 					"Transform" : 
@@ -617,7 +617,7 @@
 					"Name" : "Porcelain",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Porcelain",
 						"Mesh" : "mapE(Render)_Real_Unity.Porcelain"
 					},
 					"Transform" : 
@@ -646,7 +646,7 @@
 					"Name" : "Terrazzo",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Terrazzo",
 						"Mesh" : "mapE(Render)_Real_Unity.Terrazzo"
 					},
 					"Transform" : 
@@ -675,7 +675,7 @@
 					"Name" : "WhiteBrick",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/WhiteBrick",
 						"Mesh" : "mapE(Render)_Real_Unity.WhiteBrick"
 					},
 					"Transform" : 
@@ -704,7 +704,7 @@
 					"Name" : "Whitewood",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Whitewood",
 						"Mesh" : "mapE(Render)_Real_Unity.Whitewood"
 					},
 					"Transform" : 
@@ -733,7 +733,7 @@
 					"Name" : "Windows",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Windows",
 						"Mesh" : "mapE(Render)_Real_Unity.Windows"
 					},
 					"Transform" : 
@@ -762,7 +762,7 @@
 					"Name" : "WomanToilet",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/WomanToilet",
 						"Mesh" : "mapE(Render)_Real_Unity.WomanToilet"
 					},
 					"Transform" : 
@@ -791,7 +791,7 @@
 					"Name" : "Wood03",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Wood03",
 						"Mesh" : "mapE(Render)_Real_Unity.Wood03"
 					},
 					"Transform" : 
@@ -820,7 +820,7 @@
 					"Name" : "Wood051",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/Wood051",
 						"Mesh" : "mapE(Render)_Real_Unity.Wood051"
 					},
 					"Transform" : 

@@ -3,7 +3,7 @@
 	"BaseColor": null,
 	"Roughness": null,
 	"Metalic": null,
-	"Specular": null,
+	"AO": null,
 	"Normal": null,
 	"Shader": "_ForDebug"
 }

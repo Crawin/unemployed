@@ -1,0 +1,9 @@
+{
+	"name": "Asphalt",
+	"BaseColor": "Map/Asphalt/Asphalt_diffuse",
+	"Roughness": "Map/Asphalt/Asphalt029B_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": "Map/Asphalt/Asphalt_AmbientOcclusion",
+	"Normal": "Map/Asphalt/Asphalt029B_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

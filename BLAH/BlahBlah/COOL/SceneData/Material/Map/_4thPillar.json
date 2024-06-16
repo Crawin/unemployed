@@ -1,0 +1,9 @@
+{
+	"name": "Map_Pillar",
+	"BaseColor": "Map/_4thPillar/4thPillar_diffuseOriginal",
+	"Roughness": "Map/_4thPillar/4thPillar_roughness",
+	"Metalic": null,
+	"AO": "Map/_4thPillar/4thPillar_AO",
+	"Normal": "Map/_4thPillar/4thPillar_normal",
+	"Shader": "TestMeshDiffered"
+}

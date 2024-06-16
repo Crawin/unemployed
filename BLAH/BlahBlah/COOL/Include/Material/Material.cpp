@@ -50,7 +50,7 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 
 	// todo 유지보수 에러!!!!!!!!!!!!!!!!!!
 	// MATERIAL_TYPES
-	const char* materialTypes[] = { "BaseColor", "Roughness", "Metalic", "Specular", "Normal" };
+	const char* materialTypes[] = { "BaseColor", "Roughness", "Metalic", "AO", "Normal" };
 
 	//for (int i = 0; i < static_cast<int>(MATERIAL_TYPES::MATERIAL_END); ++i)
 	for (int i = 0; i < _countof(materialTypes); ++i)

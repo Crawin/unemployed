@@ -3,7 +3,7 @@
 	"BaseColor": "Character/Guard_Dif",
 	"Roughness": null,
 	"Metalic": null,
-	"Specular": null,
+	"AO": null,
 	"Normal": null,
 	"Shader": "TestMeshDiffered"
 }

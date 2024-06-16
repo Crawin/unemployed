@@ -3,7 +3,7 @@
 	"BaseColor": "uv_checker",
 	"Roughness": null,
 	"Metalic": null,
-	"Specular": null,
+	"AO": null,
 	"Normal": null,
 	"Shader": "TestMeshDiffered"
 }

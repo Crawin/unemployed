@@ -1,0 +1,9 @@
+{
+	"name": "Granite",
+	"BaseColor": "Map/Granite/Granite_diffuseOriginal",
+	"Roughness": "Map/Granite/Granite_roughnessjpg",
+	"Metalic": null,
+	"AO": "Map/Granite/Granite_ao",
+	"Normal": "Map/Granite/Granite_normal",
+	"Shader": "TestMeshDiffered"
+}

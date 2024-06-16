@@ -1,0 +1,9 @@
+{
+	"name": "Concrete",
+	"BaseColor": "Map/Concrete/Concrete_Color",
+	"Roughness": "Map/Concrete/Concrete009_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": "Map/Concrete/Concrete009_4K-JPG_AmbientOcclusion",
+	"Normal": "Map/Concrete/Concrete009_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

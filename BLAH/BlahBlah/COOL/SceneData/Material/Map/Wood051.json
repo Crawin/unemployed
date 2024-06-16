@@ -1,0 +1,9 @@
+{
+	"name": "Wood051",
+	"BaseColor": "Map/Wood051/Wood051_4K-JPG_Color",
+	"Roughness": "Map/Wood051/Wood051_4K-JPG_Roughness",
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Map/Wood051/Wood051_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

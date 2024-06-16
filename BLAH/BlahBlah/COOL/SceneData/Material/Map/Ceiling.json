@@ -1,0 +1,9 @@
+{
+	"name": "Ceiling",
+	"BaseColor": "Map/Ceiling/Ceiling_diffuseOriginal",
+	"Roughness": "Map/Ceiling/Ceiling_roughnessjpg",
+	"Metalic": null,
+	"AO": "Map/Ceiling/Ceiling_ao",
+	"Normal": "Map/Ceiling/Ceiling_normal",
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "Beigetile",
+	"BaseColor": "Map/Beigetile/Beigetile_diffuse",
+	"Roughness": "Map/Beigetile/Beigetile_roughness",
+	"Metalic": null,
+	"AO": "Map/Beigetile/Beigetile_ao",
+	"Normal": "Map/Beigetile/Beigetile_normal",
+	"Shader": "TestMeshDiffered"
+}
