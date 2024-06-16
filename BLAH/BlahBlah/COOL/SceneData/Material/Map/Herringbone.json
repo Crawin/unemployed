@@ -2,7 +2,7 @@
 	"name": "Herringbone",
 	"BaseColor": "Map/Herringbone/Herringbone_Color",
 	"Roughness": "Map/Herringbone/WoodFloor012_4K-JPG_Roughness",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/Herringbone/WoodFloor012_4K-JPG_AmbientOcclusion",
 	"Normal": "Map/Herringbone/WoodFloor012_4K-JPG_NormalDX",
 	"Shader": "TestMeshDiffered"

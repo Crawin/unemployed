@@ -2,8 +2,8 @@
 	"name": "acs",
 	"BaseColor": "Map/acs/acs_diffuseOriginal",
 	"Roughness": "Map/acs/acs_roughness",
-	"Metalic": null,
-	"AO": null,
+	"Metalic": "Black",
+	"AO": "White",
 	"Normal": "Map/acs/acs_normal",
 	"Shader": "TestMeshDiffered"
 }

@@ -2,7 +2,7 @@
 	"name": "macro_flour",
 	"BaseColor": "Map/macro_flour/macro_flour_diff_4k",
 	"Roughness": "Map/macro_flour/macro_flour_roughnessjpg",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/macro_flour/macro_flour_ao",
 	"Normal": "Map/macro_flour/macro_flour_normal",
 	"Shader": "TestMeshDiffered"

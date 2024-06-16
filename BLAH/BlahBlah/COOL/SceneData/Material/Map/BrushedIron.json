@@ -2,7 +2,7 @@
 	"name": "BrushedIron",
 	"BaseColor": "Map/BrushedIron/BrushedIron01_4K_BaseColor",
 	"Roughness": "Map/BrushedIron/BrushedIron01_4K_Roughness",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/BrushedIron/BrushedIron01_4K_AO",
 	"Normal": "Map/BrushedIron/BrushedIron01_4K_Normal",
 	"Shader": "TestMeshDiffered"

@@ -2,8 +2,8 @@
 	"name": "BlackLeather",
 	"BaseColor": "Map/BlackLeather/BlackLeather02_4K_BaseColor",
 	"Roughness": "Map/BlackLeather/BlackLeather02_4K_Roughness",
-	"Metalic": null,
-	"AO": null,
+	"Metalic": "Black",
+	"AO": "White",
 	"Normal": "Map/BlackLeather/BlackLeather02_4K_Normal",
 	"Shader": "TestMeshDiffered"
 }

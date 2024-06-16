@@ -3,7 +3,7 @@
 	"BaseColor": "Map/Chainmail/Chainmail_Color",
 	"Roughness": "Map/Chainmail/Chainmail004_4K-JPG_Roughness",
 	"Metalic": "Map/Chainmail/Chainmail004_4K-JPG_Metalness",
-	"AO": null,
+	"AO": "Black",
 	"Opacity": "Map/Chainmail/Chainmail004_4K-JPG_Opacity",
 	"Normal": "Map/Chainmail/Chainmail004_4K-JPG_NormalDX",
 	"Shader": "TestMeshDiffered"

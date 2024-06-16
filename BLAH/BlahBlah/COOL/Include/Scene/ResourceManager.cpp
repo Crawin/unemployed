@@ -1021,6 +1021,21 @@ int ResourceManager::GetPostProcessingMaterial() const
 	return m_PostProcessingMaterial;
 }
 
+int ResourceManager::GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARGETS rtType) const
+{
+
+	m_CameraRenderTargets[camIdx].m_MRTStartIdx;
+	int add = static_cast<int>(rtType);
+
+	// if num over
+	if (m_CameraRenderTargets[camIdx].m_MRTNum <= add) {
+		DebugPrint(std::format("ERROR!! Camera: {}, No RT TYPE: {}", camIdx, add));
+		return m_CameraRenderTargets[camIdx].m_MRTStartIdx;
+	}
+
+	return m_CameraRenderTargets[camIdx].m_MRTStartIdx + add;
+}
+
 void ResourceManager::SetCameraToPostProcessing(int camIdx)
 {
 	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)

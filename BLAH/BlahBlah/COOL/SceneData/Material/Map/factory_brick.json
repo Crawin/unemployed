@@ -2,7 +2,7 @@
 	"name": "factory_brick",
 	"BaseColor": "Map/factory_brick/factory_brick_diffuseOriginal",
 	"Roughness": "Map/factory_brick/factory_brick_roughnesspng",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/factory_brick/factory_brick_ao",
 	"Normal": "Map/factory_brick/factory_brick_normal",
 	"Shader": "TestMeshDiffered"

@@ -459,6 +459,9 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 		
 		if (GetAsyncKeyState(VK_F9) & 0x8000)
 			a[0] = m_ResourceManager->GetShadowMapRTVStartIdx();
+		else {
+			a[0] = m_ResourceManager->GetCameraRenderTargetIndex(camIdx, MULTIPLE_RENDER_TARGETS::BaseColor);
+		}
 
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
 		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));

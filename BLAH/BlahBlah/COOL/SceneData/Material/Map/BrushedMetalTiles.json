@@ -2,7 +2,7 @@
 	"name": "BrushedMetalTiles",
 	"BaseColor": "Map/BrushedMetalTiles/BrushedMetalTiles04_4K_BaseColor",
 	"Roughness": "Map/BrushedMetalTiles/BrushedMetalTiles04_4K_Roughness",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/BrushedMetalTiles/BrushedMetalTiles04_4K_AO",
 	"Normal": "Map/BrushedMetalTiles/BrushedMetalTiles04_4K_Normal",
 	"Shader": "TestMeshDiffered"

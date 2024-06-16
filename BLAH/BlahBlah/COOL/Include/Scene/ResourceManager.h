@@ -225,6 +225,7 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedDSV(int cameraIdx) const;
 
 	int GetPostProcessingMaterial() const;
+	int GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARGETS rtType) const;
 	void SetCameraToPostProcessing(int camIdx);
 
 	// for shadowmap

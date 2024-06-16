@@ -53,9 +53,9 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	PS_MRT_OUTPUT output;
 	
 	output.Albedo = float4(Tex2DList[matIdx0.x].Sample(samplerWarp, i.uv));
-	output.Roughness = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	output.Metalic = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	output.Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	output.Roughness = float4(Tex2DList[matIdx0.y].Sample(samplerWarp, i.uv).rrr, 1.0f);
+	output.Metalic = float4(Tex2DList[matIdx0.z].Sample(samplerWarp, i.uv).rrr, 1.0f);
+	output.Specular =float4(Tex2DList[matIdx0.w].Sample(samplerWarp, i.uv).rrr, 1.0f);
 	output.NormalW = float4(i.normalW, 0.0f);
 	output.PositionW = float4(i.positionW.xyz, i.position.z);
 	

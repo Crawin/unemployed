@@ -2,7 +2,7 @@
 	"name": "WhiteBrick",
 	"BaseColor": "Map/WhiteBrick/WhiteBrick_Base",
 	"Roughness": "Map/WhiteBrick/WhiteBrick_Roughness",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/WhiteBrick/WhiteBrick_AmbientOcclusion",
 	"Normal": "Map/WhiteBrick/WhiteBrick_NormalDX",
 	"Shader": "TestMeshDiffered"

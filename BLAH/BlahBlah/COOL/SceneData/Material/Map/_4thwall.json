@@ -2,7 +2,7 @@
 	"name": "_4thwall",
 	"BaseColor": "Map/_4thwall/4thwall_diffuseOriginal",
 	"Roughness": "Map/_4thwall/4thwall_roughness",
-	"Metalic": null,
+	"Metalic": "Black",
 	"AO": "Map/_4thwall/4thwall_ao",
 	"Normal": "Map/_4thwall/4thwall_normal",
 	"Shader": "TestMeshDiffered"
