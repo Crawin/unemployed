@@ -364,7 +364,7 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 			DebugPrint(std::format(
 				"ERROR!!, no such material, name: {}\nSet to uv_checker",
 				materialFileName));
-			res = GetMaterial(materialFileName, commandList);
+			res = GetMaterial("NoMaterial", commandList);
 		}
 
 

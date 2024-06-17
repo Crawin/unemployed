@@ -1,0 +1,56 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_Metal",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "PBRTEst_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			-154.7,
+			91.0,
+			152.8
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -12,7 +12,7 @@ struct PS_MRT_OUTPUT
 	float4 Albedo : SV_TARGET0;
 	float4 Roughness : SV_TARGET1;
 	float4 Metalic : SV_TARGET2;
-	float4 Specular : SV_TARGET3;
+	float4 AO : SV_TARGET3;
 	float4 NormalW : SV_TARGET4;
 	float4 PositionW : SV_Target5;
 };
@@ -115,7 +115,7 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	//output.Albedo = lights[MainLightIdx].m_LightColor * color;
 	output.Roughness = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	output.Specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	output.AO = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.NormalW = float4(normalize(i.normalOnPos), 0.0f);
 	output.PositionW = float4(0.0f, 0.0f, 0.0f, 0.0f);
 

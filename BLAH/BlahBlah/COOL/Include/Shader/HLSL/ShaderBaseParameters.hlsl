@@ -18,6 +18,7 @@ struct LIGHT
     float m_Temperature;
 
     float m_Angle;
+    float3 m_Padding;
 };
 
 struct CameraData {
@@ -62,11 +63,12 @@ StructuredBuffer<CameraData> ShadowCameraDataList[] : register(t0, space7);
 #define ALBEDO 0
 #define ROUGHNESS 1
 #define METALIC	2
-#define SPECULAR 3
+#define AMBIENTOCCLUSION 3
 #define NORMALW 4
 #define POSITIONW 5
 #define MRT_END 6
 // ...
+#define PI 3.1415926f
 
 cbuffer Material : register(b0)
 {

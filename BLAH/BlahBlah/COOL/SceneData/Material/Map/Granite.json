@@ -3,7 +3,7 @@
 	"BaseColor": "Map/Granite/Granite_diffuseOriginal",
 	"Roughness": "Map/Granite/Granite_roughnessjpg",
 	"Metalic": "Black",
-	"AO": "Map/Granite/Granite_ao",
+	"AO": "White",
 	"Normal": "Map/Granite/Granite_normal",
 	"Shader": "TestMeshDiffered"
 }

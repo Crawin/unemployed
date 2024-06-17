@@ -33,6 +33,7 @@ struct LightData {
 
 	// (spotlight)radian
 	float m_Angle = 60.0f;
+	XMFLOAT3 m_Padding;
 };
 
 
