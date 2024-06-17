@@ -24,14 +24,14 @@ VS_OUTPUT vs(uint vtxID : SV_VertexID)
 
 cbuffer PostMaterial : register(b0)
 {
-	int albedoIdx;
-	int roughIdx;
-	int metalIdx;
-	int aoIdx;
-	int normalIdx;
-	int positionIdx;
-	int lightSize;
-	int lightIdx;
+	int g_AlbedoIndex;
+	int g_RoughnessIndex;
+	int g_MetallicIndex;
+	int g_AOIndex;
+	int g_NormalIndex;
+	int g_PositionIndex;
+	int g_LightSize;
+	int g_LightDataIndex;
 };
 
 float ShadowCalculate(float4 worldPos, float dotNormal, int camIdx, int mapIdx)
@@ -95,21 +95,12 @@ float G_SchlickGGX(float NdotH, float roughness)
 	return no / de;
 }
 
-float G_Schlick(float theta, float k)
-{
-	return theta / (theta * (1.0f - k) + k);
-}
-
 float G_Smith(float NdotV, float NdotL, float roughness)
 {
-	float r = roughness + 1.0f;
-	float k = r * r * 0.125;
+	float v = G_SchlickGGX(NdotL, roughness);
+	float l = G_SchlickGGX(NdotV, roughness);
 
-	return G_Schlick(NdotV, k) * G_Schlick(NdotL, k);
-	//float v = G_SchlickGGX(NdotL, roughness);
-	//float l = G_SchlickGGX(NdotV, roughness);
-
-	//return v * l;
+	return v * l;
 }
 
 float3 SpecularBRDF(float3 albedo, float3 normal, float3 viewDir, float3 lightDir, float roughness, float metalic)
@@ -143,7 +134,7 @@ float3 SpecularBRDF(float3 albedo, float3 normal, float3 viewDir, float3 lightDi
 
 float3 PBRLighting(int idx, float3 normal, float3 viewDir, float3 lightDir, float4 albedo, float roughness, float metalic, float ao, float3 worldPosition)
 {
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
+	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
 	float shadowFactor = 1;
 	if (lights[idx].m_CameraIdx > 0) {
@@ -158,38 +149,9 @@ float3 PBRLighting(int idx, float3 normal, float3 viewDir, float3 lightDir, floa
 	return DiffuseBRDF(albedo.rgb, lights[idx].m_LightAmbient.rgb) + SpecularBRDF(albedo.rgb, normal, viewDir, lightDir, roughness, metalic) * shadowFactor;
 }
 
-float4 DirectionalLight(int idx, float3 viewDir, float4 albedo, float roughness, float metalic, float3 worldNormal, float3 worldPosition)
-{
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
-
-	//lights[i];
-	// if on light (light map)
-	// ambient
-	float3 ambient = lights[idx].m_LightAmbient.rgb * 0.2f * albedo.rgb;
-
-	// diffuse
-	float3 lightDir = -lights[idx].m_Direction;
-
-	float dotNormal = dot(worldNormal.rgb, lightDir);
-	float3 diff = max(dotNormal, float3(0.0f, 0.0f, 0.0f));
-	float3 diffuse = lights[idx].m_LightColor.rgb * diff * 0.7f * albedo.rgb;
-
-	float3 refl = reflect(lightDir, worldNormal.rgb);
-	float specInt = 0;//pow(max(dot(viewDir, refl), 0.0f), 64.0f);
-	float3 specularres = lights[idx].m_LightColor.rgb * specInt * 0.1f * albedo.rgb;
-
-	float shadow = 1;
-	if (lights[idx].m_CameraIdx > 0)
-		shadow = ShadowCalculate(float4(worldPosition, 1.0f), dotNormal, lights[idx].m_CameraIdx, lights[idx].m_ShadowMapResults.x);
-
-	//shadow = shadow + (1 - worldPosition.w);
-
-	return float4(ambient + shadow * (diffuse + specularres), 0.0f);;
-}
-
 float CalculateSpotLightFactor(int idx, float3 worldPosition)
 {
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
+	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
 	float3 lightToPos = worldPosition.xyz - lights[idx].m_Position;
 
@@ -207,7 +169,7 @@ float CalculateSpotLightFactor(int idx, float3 worldPosition)
 
 float CalculatePointLightFactor(int idx, float3 worldPosition)
 {
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
+	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
 	float3 lightToPos = worldPosition - lights[idx].m_Position;
 	float distance = length(lightToPos);
@@ -218,60 +180,16 @@ float CalculatePointLightFactor(int idx, float3 worldPosition)
 	return factor;
 }
 
-float4 SpotLight(int idx, float3 viewDir, float4 albedo, float roughness, float metalic, float3 worldNormal, float3 worldPosition)
-{
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
-
-	float4 result = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	float3 lightToPos = worldPosition.xyz - lights[idx].m_Position;
-
-	float distance = length(lightToPos);
-	float distFactor = max(1 - distance / lights[idx].m_Distance, 0);
-
-	float padding = 32.0f;
-	float epsilon = 0.2f;
-	float theta = dot(normalize(lightToPos), lights[idx].m_Direction);
-	float maxCos = cos(lights[idx].m_Angle);
-	float spotLightFactor = pow(clamp((theta - maxCos) / epsilon, 0.0f, 1.0f), padding);    
-
-	result = DirectionalLight(idx, viewDir, albedo, roughness, metalic, worldNormal, worldPosition) * spotLightFactor * distFactor;
-
-	return result;
-}
-
-float4 PointLight(int idx, float3 viewDir, float4 albedo, float roughness, float metalic, float3 worldNormal, float3 worldPosition)
-{
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
-
-	float4 result = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	float3 lightToPos = worldPosition - lights[idx].m_Position;
-	float distance = length(lightToPos);
-
-	// distance factor
-	float factor = max(1 - distance / lights[idx].m_Distance, 0);
-
-	result = DirectionalLight(idx, viewDir, albedo, roughness, metalic, worldNormal, worldPosition) * factor;
-
-	return result;
-}
-
 float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 worldNormal, float3 worldPosition)
 {
-	StructuredBuffer<LIGHT> lights = LightDataList[lightIdx];
+	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
 	//float3 viewDir = viewMatrix[2].xyz;
 	float3 viewDir = normalize(cameraPosition - worldPosition);
 	float4 result = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	//float3 PBRLighting(int idx, float3 normal, float3 viewDir, float3 lightDir, float4 albedo, float roughness, float metalic, float ao, float3 worldPosition)
-
-	for (int i = 0; i < lightSize; ++i) {
+	for (int i = 0; i < g_LightSize; ++i) {
 		LIGHT light = lights[i];
-		//if (light.m_LightType == 0)		result += DirectionalLight(i, viewDir, albedo, roughness, metalic, worldNormal, worldPosition);
-		//else if (light.m_LightType == 1)	result += SpotLight(i, viewDir, albedo, roughness, metalic, worldNormal, worldPosition);
-		//else if (light.m_LightType == 2)	result += PointLight(i, viewDir, albedo, roughness, metalic, worldNormal, worldPosition);
 
 		if (lights[i].m_LightType == 0) {
 			result.rgb += PBRLighting(i, worldNormal, viewDir, -light.m_Direction, albedo, roughness, metalic, ao, worldPosition);
@@ -293,35 +211,14 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 float4 ps(VS_OUTPUT input) : SV_Target
 {
 	// sample all
-	float4 albedoColor = float4(Tex2DList[albedoIdx].Sample(samplerWarp, input.uv));
-	float4 roughness = float4(Tex2DList[roughIdx].Sample(samplerWarp, input.uv));
-	float4 metalic = float4(Tex2DList[metalIdx].Sample(samplerWarp, input.uv));
-	float4 ao = float4(Tex2DList[aoIdx].Sample(samplerWarp, input.uv));
-	float4 normalW = float4(Tex2DList[normalIdx].Sample(samplerWarp, input.uv));
+	float4 albedoColor = float4(Tex2DList[g_AlbedoIndex].Sample(samplerWarp, input.uv));
+	float4 roughness = float4(Tex2DList[g_RoughnessIndex].Sample(samplerWarp, input.uv));
+	float4 metalic = float4(Tex2DList[g_MetallicIndex].Sample(samplerWarp, input.uv));
+	float4 ao = float4(Tex2DList[g_AOIndex].Sample(samplerWarp, input.uv));
+	float4 normalW = float4(Tex2DList[g_NormalIndex].Sample(samplerWarp, input.uv));
 	//normalW *= 2;
 	//normalW -= 1;
-	float4 positionW = float4(Tex2DList[positionIdx].Sample(samplerWarp, input.uv));
+	float4 positionW = float4(Tex2DList[g_PositionIndex].Sample(samplerWarp, input.uv));
 	
 	return Lighting(albedoColor, roughness.r, metalic.r, ao.r, normalize(normalW.rgb), positionW.xyz);
-
-	// do something for post processing
-	
-	// ambient
-	//float3 ambient = lightColor * 0.2f * albedoColor.rgb;
-	
-	//// diffuse
-	//float3 diff = max(dot(normalW.rgb, lightDir), float3(0.0f, 0.0f, 0.0f));
-	//float3 diffuse = lightColor * diff * 0.7f * albedoColor.rgb;
-	
-	//// specular
-	//float3 viewDir = viewMatrix[2].xyz;
-	//float3 refl = reflect(-lightDir, normalW.rgb);
-	//float specInt = pow(max(dot(viewDir, refl), 0.0f), 32.0f);
-	//float3 specularres = lightColor * specInt * 0.1f * albedoColor.rgb;
-	
-	//i.uv = tempUV.yx;
-	//return float4(i.tangentW, 1.0f);
-	//float3 result = ambient + diffuse + specularres;
-
-	//return float4(result, 1.0f);
 }

@@ -152,7 +152,7 @@
 				"Distance": 7000.0,
 				"Angle": 70.0,
 				"Active": true,
-				"CastShadow": true,
+				"CastShadow": false,
 				"Main": false
 			},
 			"Attach":
