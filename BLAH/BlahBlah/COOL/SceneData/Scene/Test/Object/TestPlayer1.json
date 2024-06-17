@@ -65,7 +65,7 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [-19.813, -0.107, 153.383] ,
+				"Rotate": [-19.813, -0.107, 153.383],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 			"Attach":
@@ -134,6 +134,33 @@
 					}
 				}
 			]
+		},
+
+		{
+			"Name": "FlashLight",
+			"Transform":
+			{
+				"Position": [10.0, 0.0, 0.0],
+				"Rotate": [90.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Light": 
+			{
+				"LightColor": [1.0, 1.0, 1.0, 1],
+				"AmbientColor": [0.1, 0.1, 0.1, 1],
+				"LightType": 1,
+				"Distance": 7000.0,
+				"Angle": 70.0,
+				"Active": true,
+				"CastShadow": true,
+				"Main": false
+			},
+			"Attach":
+			{
+				"Mesh": "Player_01",
+				"BoneIDX": 48,
+				"Player": "Player1"
+			}
 		},
 
 		{

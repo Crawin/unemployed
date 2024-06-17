@@ -134,17 +134,17 @@ namespace ECSsystem {
 			LightData& light = li->GetLightData();
 
 			XMFLOAT3 direction = { 0.0f, 0.0f, 1.0f };
-			XMFLOAT3 rotate = tr->GetRotation();
-			XMFLOAT3 rad;
-			rad.x = XMConvertToRadians(rotate.x);
-			rad.y = XMConvertToRadians(rotate.y);
-			rad.z = XMConvertToRadians(rotate.z);
 
-			XMMATRIX rot = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&(rad)));
+			XMFLOAT4X4 world = tr->GetWorldTransform();
+			world._41 = 0;
+			world._42 = 0;
+			world._43 = 0;
+
+			XMMATRIX rot = XMLoadFloat4x4(&world);
 			
 			// light.m_Direction;
+			light.m_Position = tr->GetWorldPosition();
 			XMStoreFloat3(&light.m_Direction, XMVector3Normalize(XMVector3Transform(XMLoadFloat3(&direction), rot)));
-			light.m_Position = tr->GetPosition();
 			};
 		
 

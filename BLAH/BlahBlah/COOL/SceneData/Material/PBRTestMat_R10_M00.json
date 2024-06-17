@@ -1,0 +1,9 @@
+{
+	"name": "br",
+	"BaseColor": "White",
+	"Roughness": "White",
+	"Metalic": "ZeroOneBlack",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

@@ -77,7 +77,7 @@ float D_GGX(float NdotH, float roughness)
 	float r4 = r2 * r2;
 	float NdH2 = NdotH * NdotH;
 
-	return r2  / (PI * pow((NdH2 * (r2 - 1.0f) + 1.0f), 2.0f));
+	return r2 / (PI * pow((NdH2 * (r2 - 1.0f) + 1.0f), 2.0f));
 }
 
 // fresnel

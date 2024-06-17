@@ -1,8 +1,8 @@
 {
 	"name": "br",
 	"BaseColor": "White",
-	"Roughness": "ZeroTwoBlack",
-	"Metalic": "Black",
+	"Roughness": "ZeroOneBlack",
+	"Metalic": "Gray",
 	"AO": "White",
 	"Normal": null,
 	"Shader": "TestMeshDiffered"

@@ -5,7 +5,7 @@
 			"Name" : "Sphere",
 			"Renderer" : 
 			{
-				"Material" : "PBRTestMat_NonMetal",
+				"Material" : "PBRTestMat_R00_M00",
 				"Mesh" : "PBRTEst.Sphere"
 			},
 			"Transform" : 
@@ -29,6 +29,238 @@
 					1.0
 				]
 			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R05_M00",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-100.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R10_M00",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-200.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R00_M05",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					-100.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R05_M05",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-100.0,
+					0.0,
+					-100.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R10_M05",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-200.0,
+					0.0,
+					-100.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R00_M10",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					-200.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R05_M10",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-100.0,
+					0.0,
+					-200.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Name" : "Sphere",
+			"Renderer" : 
+			{
+				"Material" : "PBRTestMat_R10_M10",
+				"Mesh" : "PBRTEst.Sphere"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-200.0,
+					0.0,
+					-200.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
 		}
 	],
 	"Name" : "PBRTEst_Root",
@@ -37,7 +269,7 @@
 		"Position" : 
 		[
 			-354.7,
-			91.0,
+			50.0,
 			152.8
 		],
 		"Rotate" : 
