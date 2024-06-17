@@ -54,6 +54,33 @@ void ShadowMap::UpdateViewMatrixByLight(const LightData& light)
 
 	XMStoreFloat4x4(&m_ViewMatrix, XMMatrixInverse(nullptr, result));
 
+	//XMFLOAT3 x;
+	//XMFLOAT3 y = { 0,1,0 };
+	//XMFLOAT3 z = light.m_Direction;
+	//
+	//XMVECTOR zVec = XMVector3Normalize(XMLoadFloat3(&z));
+	//XMVECTOR yVec = XMLoadFloat3(&y);
+	//XMVECTOR xVec = XMVector3Cross(yVec, zVec);
+	//yVec = XMVector3Cross(zVec, xVec);
+
+	//XMStoreFloat3(&x, xVec);
+	//XMStoreFloat3(&y, yVec);
+	//XMStoreFloat3(&z, zVec);
+
+	//XMVECTOR pos = XMLoadFloat3(&light.m_Position);
+
+	//XMMATRIX result = {
+	//	x.x, x.y, x.z, 0.0f,
+	//	y.x, y.y, y.z, 0.0f,
+	//	z.x, z.y, z.z, 0.0f,
+	//	-XMVectorGetX(XMVector3Dot(xVec, pos)),
+	//	-XMVectorGetX(XMVector3Dot(yVec, pos)),
+	//	-XMVectorGetX(XMVector3Dot(zVec, pos)),
+	//	1.0f
+	//};
+
+	//XMStoreFloat4x4(&m_ViewMatrix, result);
+
 	//XMStoreFloat4x4(&m_ViewMatrix, XMMatrixLookAtRH(pos, lookAt, XMLoadFloat3(&u)));
 	//DebugPrint(std::format("angle: {}", XMConvertToDegrees(angle)));
 	if (light.m_CastShadow != FALSE) {

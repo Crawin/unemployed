@@ -610,4 +610,16 @@ namespace component {
 
 	};
 
+	/////////////////////////////////////////////////////////
+	// AttachInputcomponent
+	// 로컬 x축을 회전시키기 위해
+	//
+	class AttachInput : public ComponentBase<AttachInput> {
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+	};
+
 }

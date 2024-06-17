@@ -27,6 +27,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Server, "Server");
 	REGISTER_COMPONENT(component::Collider, "Collider");
 	REGISTER_COMPONENT(component::DynamicCollider, "DynamicCollider");
+	REGISTER_COMPONENT(component::AttachInput, "AttachInput");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");

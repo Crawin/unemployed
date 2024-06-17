@@ -393,6 +393,8 @@ namespace component {
 
 		m_LightData.m_Angle = XMConvertToRadians(light["Angle"].asFloat());
 
+		m_LightData.m_Intensity = light["Intensity"].asFloat();
+
 	}
 
 	void Light::ShowYourself() const
@@ -673,6 +675,14 @@ namespace component {
 		}
 
 		return nullptr;
+	}
+
+	void AttachInput::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void AttachInput::ShowYourself() const
+	{
 	}
 
 }

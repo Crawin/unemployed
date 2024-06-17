@@ -146,38 +146,60 @@ float3 PBRLighting(int idx, float3 normal, float3 viewDir, float3 lightDir, floa
 							lights[idx].m_ShadowMapResults.x);
 	}
 
-	return DiffuseBRDF(albedo.rgb, lights[idx].m_LightAmbient.rgb) + SpecularBRDF(albedo.rgb, normal, viewDir, lightDir, roughness, metalic) * shadowFactor;
+	float3 diff = DiffuseBRDF(albedo.rgb, lights[idx].m_LightAmbient.rgb) ;
+	float3 spec = 	SpecularBRDF(albedo.rgb, normal, viewDir, lightDir, roughness, metalic) 
+					* lights[idx].m_LightColor.rgb
+					* lights[idx].m_Intensity
+					* shadowFactor;
+
+	//if (shadowFactor == 1 && lights[idx].m_LightType == 0) return float3(1,0,0);
+
+	return diff + spec;
+}
+
+float CalculateDistanceFactor(float3 lightPos, float3 worldPos, float maxDistance)
+{
+	float3 lightToPos = worldPos - lightPos;
+	float distance = length(lightToPos);
+
+	// distance factor
+	return max(1 - distance / maxDistance, 0);
+}
+
+float CalculateAngleFactor(float3 lightPos, float3 worldPos, float3 lightDir, float maxAngle)
+{
+	float3 lightToPos = normalize(worldPos - lightPos);
+	float actualAngle = acos(dot(lightToPos, lightDir));
+
+	float falloutAngle = 2.0f * maxAngle / 3.0f;
+
+
+
+	//if (actualAngle > maxAngle) return 0;
+	//return 1;
+
+
+	//return lerp(0, 1, actualAngle / maxAngle);
+	return 1 - smoothstep(falloutAngle, maxAngle, actualAngle);
+
+	return 1;
 }
 
 float CalculateSpotLightFactor(int idx, float3 worldPosition)
 {
 	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
-	float3 lightToPos = worldPosition.xyz - lights[idx].m_Position;
+	float distFactor = CalculateDistanceFactor(lights[idx].m_Position, worldPosition, lights[idx].m_Distance);
+	float angleFactor = CalculateAngleFactor(lights[idx].m_Position, worldPosition, lights[idx].m_Direction, lights[idx].m_Angle);
 
-	float distance = length(lightToPos);
-	float distFactor = max(1 - distance / lights[idx].m_Distance, 0);
-
-	float padding = 32.0f;
-	float epsilon = 0.2f;
-	float theta = dot(normalize(lightToPos), lights[idx].m_Direction);
-	float maxCos = cos(lights[idx].m_Angle);
-	float spotLightFactor = pow(clamp((theta - maxCos) / epsilon, 0.0f, 1.0f), padding); 
-
-	return spotLightFactor * distFactor;
+	return angleFactor * distFactor;
 }
 
 float CalculatePointLightFactor(int idx, float3 worldPosition)
 {
 	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
-	float3 lightToPos = worldPosition - lights[idx].m_Position;
-	float distance = length(lightToPos);
-
-	// distance factor
-	float factor = max(1 - distance / lights[idx].m_Distance, 0);
-
-	return factor;
+	return CalculateDistanceFactor(lights[idx].m_Position, worldPosition, lights[idx].m_Distance);
 }
 
 float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 worldNormal, float3 worldPosition)
@@ -191,16 +213,24 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 	for (int i = 0; i < g_LightSize; ++i) {
 		LIGHT light = lights[i];
 
+		if (light.m_Active == false) continue;
+
 		if (lights[i].m_LightType == 0) {
-			result.rgb += PBRLighting(i, worldNormal, viewDir, -light.m_Direction, albedo, roughness, metalic, ao, worldPosition);
+			result.rgb += 
+				//light.m_LightColor.rgb * light.m_Intensity *
+				PBRLighting(i, worldNormal, viewDir, -light.m_Direction, albedo, roughness, metalic, ao, worldPosition);
 		}		
 		else if (lights[i].m_LightType == 1) {
 			float3 pointToLight = normalize(light.m_Position - worldPosition);
-			result.rgb += PBRLighting(i, worldNormal, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculateSpotLightFactor(i, worldPosition);
+			result.rgb += 
+				//light.m_LightColor.rgb * light.m_Intensity *
+				PBRLighting(i, worldNormal, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculateSpotLightFactor(i, worldPosition);
 		}	
 		else if (lights[i].m_LightType == 2) {
 			float3 pointToLight = normalize(light.m_Position - worldPosition);
-			result.rgb += PBRLighting(i, worldNormal, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculatePointLightFactor(i, worldPosition);
+			result.rgb += 
+				//light.m_LightColor.rgb * light.m_Intensity *
+				PBRLighting(i, worldNormal, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculatePointLightFactor(i, worldPosition);
 		}
 
 	}

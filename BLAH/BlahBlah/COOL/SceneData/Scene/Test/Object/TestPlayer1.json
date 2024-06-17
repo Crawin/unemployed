@@ -41,7 +41,7 @@
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 160.0, 30.5],
+				"Position": [0.0, 160.0, 15.5],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
@@ -57,7 +57,38 @@
 				"Aspect": 1.777,
 				"Near": 0.1,
 				"Far": 10000.0
-			}
+			},
+
+			"Children":
+			[
+				{
+					"Name": "FlashLight",
+					"Transform":
+					{
+						"Position": [100.0, 10.0, 0.0],
+						"Rotate": [90.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Light": 
+					{
+						"LightColor": [1.0, 1.0, 1.0, 1],
+						"AmbientColor": [0.0, 0.0, 0.0, 1],
+						"LightType": 1,
+						"Distance": 7000.0,
+						"Angle": 30.0,
+						"Intensity": 5.0,
+						"Active": true,
+						"CastShadow": true,
+						"Main": false
+					},
+					"Attach":
+					{
+						"Mesh": "Player_01",
+						"BoneIDX": 48,
+						"Player": "Player1"
+					}
+				}
+			]
 		},
 
 		{
@@ -136,32 +167,7 @@
 			]
 		},
 
-		{
-			"Name": "FlashLight",
-			"Transform":
-			{
-				"Position": [10.0, 0.0, 0.0],
-				"Rotate": [90.0, 0.0, 0.0],
-				"Scale": [1.0, 1.0, 1.0]
-			},
-			"Light": 
-			{
-				"LightColor": [1.0, 1.0, 1.0, 1],
-				"AmbientColor": [0.1, 0.1, 0.1, 1],
-				"LightType": 1,
-				"Distance": 7000.0,
-				"Angle": 70.0,
-				"Active": true,
-				"CastShadow": false,
-				"Main": false
-			},
-			"Attach":
-			{
-				"Mesh": "Player_01",
-				"BoneIDX": 48,
-				"Player": "Player1"
-			}
-		},
+
 
 		{
 			"Name": "Player1_hands",

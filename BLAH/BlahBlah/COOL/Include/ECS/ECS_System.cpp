@@ -270,9 +270,24 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
+		// mouse
+		std::function<void(Transform*, AttachInput*)> attachinput = [deltaTime](Transform* tr, AttachInput* cam) {
+			// todo rotate must not be orbit
+
+			const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
+			XMFLOAT3 rot = tr->GetRotation();
+			const float rootSpeed = 10.0f;
+			//rot.y += (mouseMove.x / rootSpeed);
+			rot.x += (mouseMove.y / rootSpeed);
+			tr->SetRotation(rot);
+			};
+
+
 		manager->Execute(inputFunc);
 		//manager->Execute(inputFunc2);
 		manager->Execute(mouseInput);
+		manager->Execute(attachinput);
+
 	}
 
 	void ChangeAnimationTest::OnInit(ECSManager* manager)

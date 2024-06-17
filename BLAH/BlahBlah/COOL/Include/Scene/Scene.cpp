@@ -370,7 +370,7 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 		meshOBB.Transform(tempOBB, XMLoadFloat4x4(&rend->GetWorldMatrix()));
 
 		// frustum culling
-		if (cameraFustum->Intersects(tempOBB) == false) return;
+		//if (cameraFustum->Intersects(tempOBB) == false) return;
 
 		const auto& view = rend->GetVertexBufferView();
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };

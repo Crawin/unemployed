@@ -27,6 +27,7 @@
 				"Distance": 200.0,
 				"Angle": 60.0,
 				"LightType": 0,
+				"Intensity": 1.0,
 				"Active": true,
 				"CastShadow": true,
 				"Main": true
