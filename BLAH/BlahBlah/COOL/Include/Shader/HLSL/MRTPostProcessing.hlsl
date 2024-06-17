@@ -69,20 +69,24 @@ float3 DiffuseBRDF(float3 albedo, float3 lightColor)
 	return (albedo / PI) * lightColor;
 }
 
+// normal distribute function
 float D_GGX(float NdotH, float roughness)
 {
 	// Trowbridge-Reitz GGX
 	float r2 = roughness * roughness;
+	float r4 = r2 * r2;
 	float NdH2 = NdotH * NdotH;
 
-	return r2 / (PI * pow((NdH2 * (r2 - 1.0f) + 1.0f), 2.0f));
+	return r2  / (PI * pow((NdH2 * (r2 - 1.0f) + 1.0f), 2.0f));
 }
 
+// fresnel
 float3 F_Schlick(float3 specColor, float theta)
 {
 	return specColor + (1.0f - specColor) * pow(1.0f - theta, 5.0f);
 }
 
+// geometric shadowing
 float G_SchlickGGX(float NdotH, float roughness)
 {
 	float no = NdotH;
@@ -91,13 +95,21 @@ float G_SchlickGGX(float NdotH, float roughness)
 	return no / de;
 }
 
+float G_Schlick(float theta, float k)
+{
+	return theta / (theta * (1.0f - k) + k);
+}
+
 float G_Smith(float NdotV, float NdotL, float roughness)
 {
-	float v = G_SchlickGGX(NdotL, roughness);
-	float l = G_SchlickGGX(NdotV, roughness);
+	float r = roughness + 1.0f;
+	float k = r * r * 0.125;
 
-	// faster than /
-	return v * l;
+	return G_Schlick(NdotV, k) * G_Schlick(NdotL, k);
+	//float v = G_SchlickGGX(NdotL, roughness);
+	//float l = G_SchlickGGX(NdotV, roughness);
+
+	//return v * l;
 }
 
 float3 SpecularBRDF(float3 albedo, float3 normal, float3 viewDir, float3 lightDir, float roughness, float metalic)
@@ -124,7 +136,7 @@ float3 SpecularBRDF(float3 albedo, float3 normal, float3 viewDir, float3 lightDi
 	float G = G_Smith(NdotV, NdotL, roughness);
 	//float G = G_SmithSchlickGGX(NdotV, roughness);
 
-	float3 result = (D * F * G) / max(4.0 * NdotV * NdotL, 0.001f);
+	float3 result = (D * F * G) / max(PI * NdotV * NdotL, 0.001f);
 
 	return result;
 }
@@ -290,7 +302,7 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	//normalW -= 1;
 	float4 positionW = float4(Tex2DList[positionIdx].Sample(samplerWarp, input.uv));
 	
-	return Lighting(albedoColor, roughness.r, metalic.r, ao.r, normalW.rgb, positionW.xyz);
+	return Lighting(albedoColor, roughness.r, metalic.r, ao.r, normalize(normalW.rgb), positionW.xyz);
 
 	// do something for post processing
 	

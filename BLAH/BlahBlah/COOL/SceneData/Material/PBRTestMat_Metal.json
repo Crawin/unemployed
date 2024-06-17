@@ -1,7 +1,7 @@
 {
 	"name": "br",
 	"BaseColor": "White",
-	"Roughness": "Black",
+	"Roughness": "ZeroTwoBlack",
 	"Metalic": "White",
 	"AO": "White",
 	"Normal": null,

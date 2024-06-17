@@ -21,10 +21,10 @@
 		"Light": 
 		{
 			"LightColor": [1, 1, 1, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -42,10 +42,10 @@
 		"Light": 
 		{
 			"LightColor": [1, 1, 1, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -63,10 +63,10 @@
 		"Light": 
 		{
 			"LightColor": [1, 1, 1, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -84,10 +84,10 @@
 		"Light": 
 		{
 			"LightColor": [1.0, 1.0, 1.0, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -105,10 +105,10 @@
 		"Light": 
 		{
 			"LightColor": [1, 1, 1, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -126,10 +126,10 @@
 		"Light": 
 		{
 			"LightColor": [1.0, 1.0, 1.0, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -147,10 +147,10 @@
 		"Light": 
 		{
 			"LightColor": [1.0, 1.0, 1.0, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
@@ -168,10 +168,10 @@
 		"Light": 
 		{
 			"LightColor": [1.0, 1.0, 1.0, 1],
-			"AmbientColor": [0.0, 0.0, 0.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
 			"LightType": 1,
-			"Distance": 5000.0,
-			"Angle": 80.0,
+			"Distance": 15000.0,
+			"Angle": 70.0,
 			"Active": true,
 			"CastShadow": true,
 			"Main": false
