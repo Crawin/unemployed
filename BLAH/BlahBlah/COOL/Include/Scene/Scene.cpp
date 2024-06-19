@@ -530,6 +530,9 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 		ERROR_QUIT(std::format("ERROR!! Scene load error, {}", m_SceneName));
 	}
 
+	// run Component::OnStart()
+	m_ECSManager->OnStart(m_ResourceManager);
+
 	return true;
 }
 

@@ -19,7 +19,7 @@ enum COLLIDE_EVENT_TYPE {
 
 using InteractionFuncion = std::function<void(Entity*, Entity*)>;
 using EventFunction = std::function<void(Entity*, Entity*)>;
-using EventFunctionMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, EventFunction>;
+using EventFunctionMap = std::unordered_map<COMP_BITSET, EventFunction>;
 
 struct CollideEvents {
 	EventFunctionMap m_OnBeginOverlap;
@@ -536,7 +536,7 @@ namespace component {
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
 		{
-			std::bitset<COMPONENT_COUNT> bit = COMP::GetBit();
+			COMP_BITSET bit = COMP::GetBit();
 
 			switch (type) {
 			case COLLIDE_EVENT_TYPE::BEGIN:	m_EventFunctions.m_OnBeginOverlap[bit] = eventFunc;		break;
@@ -597,7 +597,7 @@ namespace component {
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
 		{
-			std::bitset<COMPONENT_COUNT> bit = COMP::GetBit();
+			COMP_BITSET bit = COMP::GetBit();
 
 			switch (type) {
 			case COLLIDE_EVENT_TYPE::BEGIN:	m_EventFunctions.m_OnBeginOverlap[bit] = eventFunc;		break;

@@ -4,6 +4,11 @@
 #include "Component.h"
 #include "ECS_System.h"
 
+class ResourceManager;
+
+
+class ECSManager;
+
 // 컴포넌트들을 가지는 클래스
 // std::vector<char>를 랩핑 하였다.
 class ComponentContainer {
@@ -36,7 +41,7 @@ public:
 
 };
 
-using ComponentContainerMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentContainer>;
+using ComponentContainerMap = std::unordered_map<COMP_BITSET, ComponentContainer>;
 
 // ComponentContainer들을 가짐
 class ComponentSet {
@@ -51,9 +56,11 @@ public:
 	ComponentSet() {
 		DebugPrint("NO");
 	}
-	ComponentSet(std::bitset<COMPONENT_COUNT> bit);
+	ComponentSet(COMP_BITSET bit);
 
 	void InsertComponentByEntity(Entity* entity);
+
+	void OnStart(Entity* ent, ECSManager* manager, ResourceManager* rm);
 
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func)
@@ -89,7 +96,7 @@ private:
 
 };
 
-using ComponentSetMap = std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet>;
+using ComponentSetMap = std::unordered_map<COMP_BITSET, ComponentSet>;
 
 class ECSManager
 {
@@ -98,11 +105,12 @@ class ECSManager
 	std::vector<Entity*> m_RootEntities;
 
 	// ComponentSet을 저장
-	std::unordered_map<std::bitset<COMPONENT_COUNT>, ComponentSet> m_ComponentSets;
+	std::unordered_map<COMP_BITSET, ComponentSet> m_ComponentSets;
 
 	// system
 	std::vector<ECSsystem::System*> m_Systems;
 
+	bool m_Started = false;
 public:
 	ECSManager();
 	~ECSManager();
@@ -115,12 +123,14 @@ public:
 	void InitSystem();
 	void UpdateSystem(float deltaTime);
 
+	void OnStart(ResourceManager* rm);
+
 	// execute normal O(n)
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func)
 	{
 		// find bitset first
-		std::bitset<COMPONENT_COUNT> bitset = GetBitset<COMPONENTS...>();
+		COMP_BITSET bitset = GetBitset<COMPONENTS...>();
 
 		// structured binding
 		for (auto& [key, compSet] : m_ComponentSets) {
@@ -137,13 +147,13 @@ public:
 	void ExecuteRoot(std::function<void(COMPONENTS*...)>& func) 
 	{
 		auto& compSet = m_ComponentSets;
-		std::bitset<COMPONENT_COUNT> funcBitset = GetBitset<COMPONENTS...>();
+		COMP_BITSET funcBitset = GetBitset<COMPONENTS...>();
 		// for every root and Template Entities
 
 		std::function<void(component::Root*)> forRoot = [&compSet, &func, funcBitset](component::Root* root) {
 			// find bitset first
 			Entity* ent = root->GetEntity();
-			std::bitset<COMPONENT_COUNT> entityBitset = ent->GetBitset();
+			COMP_BITSET entityBitset = ent->GetBitset();
 			int entityID = ent->GetInnerID();
 
 			// do sth with Root & component
@@ -156,9 +166,9 @@ public:
 
 	// execute exact entity(bit, innerID)
 	template<class ...COMPONENTS>
-	void ExecuteFromEntity(std::bitset<COMPONENT_COUNT> bit, int innerID, std::function<void(COMPONENTS*...)>& func)
+	void ExecuteFromEntity(COMP_BITSET bit, int innerID, std::function<void(COMPONENTS*...)>& func)
 	{
-		std::bitset<COMPONENT_COUNT> funcBitset = GetBitset<COMPONENTS...>();
+		COMP_BITSET funcBitset = GetBitset<COMPONENTS...>();
 
 		if ((funcBitset & bit) == funcBitset)
 			m_ComponentSets[bit].Execute(innerID, func);
@@ -169,7 +179,7 @@ public:
 	void ExecuteSquare(std::function<void(COMPONENTS*..., COMPONENTS*...)>& func) 
 	{
 		// find bitset first
-		std::bitset<COMPONENT_COUNT> bitset = GetBitset<COMPONENTS...>();
+		COMP_BITSET bitset = GetBitset<COMPONENTS...>();
 
 		for (auto outIter = m_ComponentSets.begin(); outIter != m_ComponentSets.end(); ++outIter) {
 			if ((bitset & outIter->first) != bitset) continue;
@@ -197,7 +207,7 @@ public:
 
 	// 사용을 자제하자
 	template<class T>
-	T* GetComponent(std::bitset<COMPONENT_COUNT> entBit, int innerId)
+	T* GetComponent(COMP_BITSET entBit, int innerId)
 	{
 		if (m_ComponentSets.contains(entBit)) {
 			return m_ComponentSets[entBit].GetComponent<T>(innerId);
@@ -209,7 +219,7 @@ public:
 	template<class T>
 	T* GetComponent(Entity* entity)
 	{
-		std::bitset<COMPONENT_COUNT> entBit = entity->GetBitset();
+		COMP_BITSET entBit = entity->GetBitset();
 
 		int innerId = entity->GetInnerID();
 
@@ -222,7 +232,7 @@ public:
 
 private:
 	template<class ...COMPONENTS>
-	std::bitset<COMPONENT_COUNT> GetBitset()
+	COMP_BITSET GetBitset()
 	{
 		return (COMPONENTS::GetBit() | ...);
 	}

@@ -41,9 +41,10 @@ namespace component {
 		// nothing to do
 	}
 
-	void UIKeypad::OnStart(ECSManager* manager, ResourceManager* rm)
+	void UIKeypad::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		// 여기서 자신의 자식들을 돌며 해당 버튼이 눌렸을 때 본인의 answer가 올라가게 만들어 두어야 함
+
 	}
 
 	void UIKeypad::ShowYourself() const
