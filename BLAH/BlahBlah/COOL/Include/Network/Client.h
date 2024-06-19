@@ -51,6 +51,16 @@ public:
 	void SetUpdate(bool bo) { updated = bo; }
 };
 
+struct EXP_OVER
+{
+	WSAOVERLAPPED over;
+	WSABUF wsabuf[1];
+	char buf[BUFSIZE];
+	EXP_OVER()
+	{
+		wsabuf[0].buf = buf;
+	}
+};
 
 class Client
 {
@@ -64,6 +74,7 @@ private:
 	~Client();
 	char* m_cpServerIP;
 	SOCKET m_sServer;
+	EXP_OVER EXPover;
 	WSABUF wsabuf[1];
 	WSAOVERLAPPED wsaover;
 	char buf[BUFSIZE];
@@ -90,12 +101,14 @@ public:
 	void setPSock(const SOCKET&);
 	void swapPSock();
 	const SOCKET* getPSock() { return playerSock; }
-	void setRoomNum(const unsigned int n) { roomNum = n; }
+	void setRoomNum(const unsigned int n);
 	const unsigned int getRoomNum() { return roomNum; }
 	const short getCharType() { return characterType; }
 	void setCharType(const short& type) { characterType = type; }
 	void set_prev_packet_size(const short& size) { prev_packet_size = size; }
 	void pull_packet(const int& current_size);
+	void logout_opponent();
+	short get_prev_packet_size() { return prev_packet_size; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

@@ -17,8 +17,8 @@ void print_error(const char* msg, int err_no)
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
-	//m_cpServerIP = (char*)"127.0.0.1";
+	//m_cpServerIP = (char*)"freerain.mooo.com";
+	m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -64,62 +64,79 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 		m_SendTimeElapsed = 0.0f;
 
 		cs_packet_position temp(roomNum, pos, rot, sp);
-		wsabuf[0].buf = reinterpret_cast<char*>(&temp);
-		wsabuf[0].len = sizeof(cs_packet_position);
-
-		ZeroMemory(&wsaover, sizeof(wsaover));
 		temp.sendTime = std::chrono::high_resolution_clock::now();
-		WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
+		EXP_OVER* send_over = new EXP_OVER;
+		send_over->wsabuf->len = sizeof(cs_packet_position);
+		memcpy(send_over->buf, &temp, sizeof(cs_packet_position));
+		WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
 	}
 }
 
 void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)
 {
-	if (gameNum == NULL)
+	if (roomNum)
 	{
-		cs_packet_make_room makeroom(type);
-		wsabuf[0].buf = reinterpret_cast<char*>(&makeroom);
-		wsabuf[0].len = sizeof(cs_packet_make_room);
+		std::cout << "이미 " << roomNum << "에 입장하였습니다." << std::endl;
 	}
 	else
 	{
-		cs_packet_enter_room enter(type, gameNum);
-		wsabuf[0].buf = reinterpret_cast<char*>(&enter);
-		wsabuf[0].len = sizeof(cs_packet_enter_room);
+		
+		EXP_OVER* send_over;
+		if (gameNum == NULL)
+		{
+			cs_packet_make_room makeroom(type);
+			send_over = new EXP_OVER;
+			send_over->wsabuf->len = sizeof(cs_packet_make_room);
+			memcpy(send_over->buf, &makeroom, sizeof(cs_packet_make_room));
+		}
+		else
+		{
+			cs_packet_enter_room enter(type, gameNum);
+			send_over = new EXP_OVER;
+			send_over->wsabuf->len = sizeof(cs_packet_enter_room);
+			memcpy(send_over->buf, &enter, sizeof(cs_packet_enter_room));
+		}
+		ZeroMemory(&wsaover, sizeof(wsaover));
+		WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
 	}
-	ZeroMemory(&wsaover, sizeof(wsaover));
-	WSASend(m_sServer, wsabuf, 1, nullptr, 0, &wsaover, send_callback);
 }
 
 void Client::Connect_Server()
 {
-	std::wcout.imbue(std::locale("korean"));
+	if (playerSock[0] == NULL)
+	{
+		std::wcout.imbue(std::locale("korean"));
 
-	// 원속 초기화
-	WSADATA WSAData;
-	WSAStartup(MAKEWORD(2, 2), &WSAData);
+		// 원속 초기화
+		WSADATA WSAData;
+		WSAStartup(MAKEWORD(2, 2), &WSAData);
 
-	// 소켓 생성
-	m_sServer = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
-	SOCKADDR_IN server_a;
-	server_a.sin_family = AF_INET;
-	server_a.sin_port = htons(SERVERPORT);
-	if (strncmp(m_cpServerIP, "free", 4) == 0) {            // 아이피가 도메인이면
-		struct hostent* ptr = gethostbyname(m_cpServerIP);
-		memcpy(&server_a.sin_addr, ptr->h_addr, ptr->h_length);
+		// 소켓 생성
+		m_sServer = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+		SOCKADDR_IN server_a;
+		server_a.sin_family = AF_INET;
+		server_a.sin_port = htons(SERVERPORT);
+		if (strncmp(m_cpServerIP, "free", 4) == 0) {            // 아이피가 도메인이면
+			struct hostent* ptr = gethostbyname(m_cpServerIP);
+			memcpy(&server_a.sin_addr, ptr->h_addr, ptr->h_length);
+		}
+		else
+		{
+			inet_pton(AF_INET, m_cpServerIP, &server_a.sin_addr);
+		}
+		int res = WSAConnect(m_sServer, reinterpret_cast<sockaddr*>(&server_a), sizeof(server_a), nullptr, nullptr, NULL, NULL);
+		if (0 != res)
+		{
+			print_error("WSAConnect", WSAGetLastError());
+		}
+
+		ZeroMemory(buf, BUFSIZE);
+		Recv_Start();
 	}
 	else
 	{
-		inet_pton(AF_INET, m_cpServerIP, &server_a.sin_addr);
+		std::cout << "이미 [" << playerSock[0] << "] 으로 로그인 되어있습니다." << std::endl;
 	}
-	int res = WSAConnect(m_sServer, reinterpret_cast<sockaddr*>(&server_a), sizeof(server_a), nullptr, nullptr, NULL, NULL);
-	if (0 != res)
-	{
-		print_error("WSAConnect", WSAGetLastError());
-	}
-
-	ZeroMemory(buf, BUFSIZE);
-	Recv_Start();
 }
 
 void Client::setPSock(const SOCKET& player)
@@ -137,9 +154,25 @@ void Client::swapPSock()
 	playerSock[1] = temp;
 }
 
+void Client::setRoomNum(const unsigned int n)
+{
+	roomNum = n;
+	XMFLOAT3 pos = { 0,20,1000 };
+	XMFLOAT3 rot = { 0,180,0 };
+	XMFLOAT3 spd = { 0,0,0 };
+	characters[playerSock[0]].setPosRotSpeed(pos, rot, spd);
+	characters[playerSock[0]].SetUpdate(true);
+}
+
 void Client::pull_packet(const int& current_size)
 {
 	memcpy(buf, buf + current_size, BUFSIZE - current_size);
+}
+
+void Client::logout_opponent()
+{
+	playerSock[1] = NULL;
+	std::cout << "해당 클라이언트에서 상대방이 삭제되었습니다." << std::endl;
 }
 
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
@@ -154,15 +187,16 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 	
 	int current_size = 0;
 	char* recv_buf = client.Get_Buf();
+	short prev_size = client.get_prev_packet_size();
 	while (current_size < recv_size)
 	{
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
 		int size = base->getSize();
-		if (size == 0)
-			break;
+		//if (size == 0)
+		//	break;
 
-		if (size + current_size > recv_size)
+		if (size + current_size > recv_size + prev_size)
 		{
 			client.set_prev_packet_size(size);
 			client.pull_packet(current_size);
@@ -176,51 +210,12 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 	ZeroMemory(client.Get_Buf(), BUFSIZE);
 	client.set_prev_packet_size(0);
 	client.Recv_Start();
-	//while (current_size < recv_size)
-	//{
-	//	packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
-
-	//	if (client.over_buf.size() > 0)
-	//	{
-	//		char temp_buf[256];
-	//		ZeroMemory(temp_buf, 256);
-	//		int i = 0;
-	//		for (auto c : client.over_buf)        // 이전에 들어와서 짤려있던 패킷을 temp_buf로 이동
-	//		{
-	//			temp_buf[i++] = c;
-	//		}
-
-	//		int size = temp_buf[0];
-	//		while (size > current_size + client.over_buf.size())    // 이전에 들어와있던 패킷에 추후 들어온 패킷 연결
-	//		{
-	//			temp_buf[i++] = recv_buf[current_size++];
-	//		}
-	//		packet_base* connected_packet = reinterpret_cast<packet_base*>(temp_buf);
-	//		process_packet(connected_packet);
-	//		client.over_buf.clear();
-	//		continue;                // 잘린 패킷 처리 완료
-	//	}
-
-	//	int size = base->getSize();
-	//	if (size == 0) break;                                    // 왜 서버에선 16바이트 보냈는데 32바이트를 받는거지?
-
-	//	if (current_size + size > recv_size)                // 패킷이 짤려서 들어왔으면
-	//		if (size + current_size > recv_size)
-	//		{
-	//			while (current_size < recv_size)
-	//				client.over_buf.emplace_back(reinterpret_cast<char*>(base)[current_size++]);
-	//			break;
-	//		}
-	//	process_packet(base);
-	//	current_size += size;
-	//}
-
-	//ZeroMemory(client.Get_Buf(), BUFSIZE);
-	//client.Recv_Start();
 }
 
 void CALLBACK send_callback(DWORD err, DWORD sent_size, LPWSAOVERLAPPED pwsaover, DWORD recv_flag)
 {
+	auto send_packet = reinterpret_cast<EXP_OVER*>(pwsaover);
+	delete send_packet;
 	if (0 != err)
 	{
 		print_error("WSASend", WSAGetLastError());
@@ -235,13 +230,7 @@ void process_packet(packet_base*& base)
 	case 0:									// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-		//if (buf->getPlayer() == client.getPSock()[0]) {
-		//	client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), client.characters[buf->getPlayer()].getRot(), buf->getSpeed());	// 수정 필요
-		//}
-		//else
-		//{
-			client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
-		//}
+		client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
 		break;
 	}
 	case 1:									// LOGIN
@@ -256,6 +245,7 @@ void process_packet(packet_base*& base)
 		sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
 		client.setRoomNum(buf->getGameNum());
+		
 		client.setCharType(1);
 		client.characters.try_emplace(PoliceID);
 		client.vivox_state = new VIVOX_STATE;
@@ -294,6 +284,13 @@ void process_packet(packet_base*& base)
 		SOCKET playerSock = buf->getPlayerSock();
 		client.characters.try_emplace(playerSock);
 		client.setPSock(playerSock);
+	}
+		break;
+	case 5:									// pLogout
+	{
+		sc_packet_logout* buf = reinterpret_cast<sc_packet_logout*>(base);
+		client.characters.erase(buf->player);
+		client.logout_opponent();
 	}
 		break;
 	}

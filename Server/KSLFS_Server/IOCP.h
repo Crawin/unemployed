@@ -19,6 +19,7 @@ public:
 	char buf[BUFSIZE];
 	C_OP	c_op;
 	SOCKET sock;
+	short prev_packet_size = 0;
 
 	EXP_OVER()
 	{
@@ -75,6 +76,20 @@ public:
 			if (WSA_IO_PENDING != err_no)
 				print_error("WSARecv", WSAGetLastError());
 		}
+	}
+
+	void set_prev_packet_size(const short& size)
+	{
+		recv_over.prev_packet_size = size;
+		if (size == 0)
+			ZeroMemory(recv_over.buf, BUFSIZE);
+		recv_over.wsabuf->buf = recv_over.buf + size;
+		recv_over.wsabuf->len = BUFSIZE - size;
+	}
+
+	void pull_recv_buf(const int& start)
+	{
+		memcpy(recv_over.buf, recv_over.buf + start, BUFSIZE - start);
 	}
 
 	void do_send(int s_id, char* mess, int recv_size)
@@ -140,6 +155,17 @@ public:
 			{
 				auto player = reinterpret_cast<sc_packet_room_player*>(base);
 				auto sendOver = new EXP_OVER(player);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case 5:				// logout
+			{
+				auto logout = reinterpret_cast<sc_packet_logout*>(base);
+				auto sendOver = new EXP_OVER(logout);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
 				if (0 != res) {
@@ -248,6 +274,7 @@ public:
 	bool erasePlayer(const unsigned int& id);
 	void setFloor(const unsigned int& id, const unsigned short& floor);
 	void update(const bool& npc_state);
+	bool hasEmpty();
 };
 
 struct ServerDetails

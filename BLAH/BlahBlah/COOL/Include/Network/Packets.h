@@ -17,7 +17,8 @@ enum PACKET_TYPE
 	pLOGIN,
 	pMAKEROOM,
 	pENTERROOM,
-	pRoomPlayer
+	pRoomPlayer,
+	pLogout
 };
 
 class packet_base
@@ -57,6 +58,18 @@ public:
 		player = sc_socket;
 		size = sizeof(sc_packet_login);
 		type = pLOGIN;
+	}
+};
+
+class sc_packet_logout : public packet_base
+{
+public:
+	SOCKET player = NULL;
+	sc_packet_logout(const SOCKET sc_socket)
+	{
+		player = sc_socket;
+		size = sizeof(sc_packet_logout);
+		type = pLogout;
 	}
 };
 

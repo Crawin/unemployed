@@ -6,6 +6,7 @@ std::vector<Mesh*> m_vMeshes;
 std::unordered_map<int, NODE*> g_um_graph;
 //concurrency::concurrent_unordered_map<int, std::atomic<std::shared_ptr>
 std::unordered_map<unsigned int, SESSION> login_players;
+std::mutex g_mutex_login_players;
 
 void IOCP_SERVER_MANAGER::start()
 {
@@ -78,10 +79,35 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		ULONG_PTR key;
 		WSAOVERLAPPED* over;
 		BOOL ret = GetQueuedCompletionStatus(detail.m_hIOCP, &rw_byte, &key, &over, INFINITE);
+		unsigned int my_id = static_cast<unsigned int>(key);
+
 		if (FALSE == ret) {
 			print_error("GQCS", WSAGetLastError());
-			//exit(-1);
+			if (0 == rw_byte) {
+				unsigned int gameNum = login_players[my_id].getGameNum();
+				if (Games.find(gameNum) == Games.end())
+				{
+					std::cout << "Error!!" << gameNum << "방이 존재하지 않습니다." << std::endl;
+					continue;
+				}
+
+				if (!Games[gameNum].erasePlayer(my_id))
+				{
+					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
+					continue;
+				}
+				else
+				{
+					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+				}
+				g_mutex_login_players.lock();
+				login_players.erase(my_id);
+				g_mutex_login_players.unlock();
+				std::cout << "login_players에서 " << my_id << "를 삭제하였습니다." << std::endl;
+				continue;
+			}
 		}
+
 		EXP_OVER* e_over = reinterpret_cast<EXP_OVER*>(over);
 		switch (e_over->c_op)
 		{
@@ -89,7 +115,9 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		{
 			SOCKET client_s = e_over->sock;
 			CreateIoCompletionPort(reinterpret_cast<HANDLE>(client_s), detail.m_hIOCP, detail.id, 0);
+			g_mutex_login_players.lock();
 			login_players.try_emplace(detail.id, detail.id, client_s, PS_LOBBY);
+			g_mutex_login_players.unlock();
 			login_players[detail.id].do_recv();
 
 			sc_packet_login login(client_s);
@@ -105,24 +133,26 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		break;
 		case C_RECV:
 		{
-			unsigned int my_id = static_cast<unsigned int>(key);
-			if (0 == rw_byte) {
-				unsigned int gameNum = login_players[my_id].getGameNum();
-				if (Games.find(gameNum) == Games.end())
+			int current_size = 0;
+			int total_recv_packet_size = rw_byte + e_over->prev_packet_size;
+			while (current_size < total_recv_packet_size)
+			{
+				auto base = reinterpret_cast<packet_base*>(&e_over->buf[current_size]);
+				int packet_size = base->getSize();
+				if (packet_size + current_size > total_recv_packet_size)
 				{
-					std::cout<< "Error!!" << gameNum << "방이 존재하지 않습니다." << std::endl;
-					continue;
+					login_players[my_id].set_prev_packet_size(packet_size);
+					login_players[my_id].pull_recv_buf(current_size);
+					login_players[my_id].do_recv();
+					break;
 				}
-				if (!Games[gameNum].erasePlayer(my_id))
+				else
 				{
-					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
-					continue;
+					process_packet(my_id, e_over);
+					current_size += packet_size;
 				}
-				login_players.erase(my_id);
-				continue;
 			}
-
-			process_packet(my_id, e_over);
+			login_players[my_id].set_prev_packet_size(0);
 			login_players[my_id].do_recv();
 		}
 		break;
@@ -237,7 +267,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			cs_packet_enter_room* cs_enter = reinterpret_cast<cs_packet_enter_room*>(base);
 			const unsigned n = cs_enter->getRoomNum();
 			auto f = Games.find(n);
-			if (f != Games.end())
+			if (f != Games.end()&& f->second.hasEmpty())
 			{
 				Games[n].init(id, login_players[id].getSock());
 				Player* players = Games[n].getPlayers();
@@ -408,16 +438,27 @@ void IOCP_SERVER_MANAGER::command_thread()
 		,
 		{"/LOG",[this]() {
 			detail.m_bLog = !detail.m_bLog;
+			std::cout << "LOG 출력 : " << detail.m_bLog << std::endl;
 		}}
 		,
 		{"/NPC",[this]() {
 			detail.m_bNPC = !detail.m_bNPC;
+			std::cout << "NPC 플레이어 추적 : " << detail.m_bNPC << std::endl;
 		}}
 		,
 		{"/HELP",[this]() {
 			std::cout << "-------------------------------------------------------------------" << std::endl;
 			std::cout << "/STOP : 서버 종료\n/LOG: 로그 출력\n/NPC: NPC가 플레이어 추적" << std::endl;
 			std::cout << "-------------------------------------------------------------------" << std::endl;
+		}}
+		,
+		{"/STATE",[this]() {
+			g_mutex_login_players.lock();
+			for (auto& player : login_players)
+			{
+				std::cout << "[" << player.first << "]" << std::endl;
+			}
+			g_mutex_login_players.unlock();
 		}}
 	};
 
@@ -445,8 +486,8 @@ void IOCP_SERVER_MANAGER::ai_thread()
 		PostQueuedCompletionStatus(detail.m_hIOCP, 1, 0, &over->over);
 		auto end_t = system_clock::now();
 		auto hb_time = end_t - start_t;
-		if (hb_time < 0.016s)
-			std::this_thread::sleep_for(0.016s - hb_time);
+		if (hb_time < 0.008s)
+			std::this_thread::sleep_for(0.008s - hb_time);
 		//if (hb_time < 3s)
 		//	std::this_thread::sleep_for(3s - hb_time);
 	}
@@ -624,6 +665,8 @@ bool Game::erasePlayer(const unsigned int& id)
 	{
 		if (player[i].id == id)
 		{
+			sc_packet_logout logout(player[i].sock);
+			login_players[player[1 - i].id].send_packet(reinterpret_cast<packet_base*>(&logout));
 			player[i].reset();
 			return true;
 		}
@@ -643,12 +686,21 @@ void Game::setFloor(const unsigned int& id, const unsigned short& floor)
 	}
 }
 
+bool Game::hasEmpty()
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		if (player[i].id == NULL)
+			return true;
+	}
+	return false;
+}
+
 void NPC::state_machine(Player* p,const bool& npc_state)
 {
 	for (auto& node : g_um_graph)
 		node.second->init();
 	DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
-	//obb.Center.y *= 100; // 이거 왜 했던거지?
 	DirectX::XMFLOAT3 temp;
 	short now_floor = 0;
 	for (auto& mesh : m_vMeshes)
@@ -741,28 +793,31 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 
 bool NPC::set_destination(Player*& p, const bool& npc_state)
 {
-	//short n = find_near_player(p);
+	short n = find_near_player(p);
 	if (npc_state) {
 		for (int i = 0; i < 2; ++i)
 		{
-			if (p[i].sock == NULL)
-				continue;
-
-			if (can_see(p[i]))
+			if (p[n].sock == NULL)
 			{
-				std::cout << i << "P 발견" << std::endl;
+				n = 1 - n;
+				continue;
+			}
+
+			if (can_see(p[n]))
+			{
+				std::cout << n << "P 발견" << std::endl;
 				path = aStarSearch(position, destination);
 				//this->destination = path->pos;
-				this->destination = p[i].position;
+				this->destination = p[n].position;
 				this->destination.y = position.y;
 				if (nullptr != path)
 					return true;
 				else
 					state = 0;
 			}
-			else if (can_hear(p[i]))
+			else if (can_hear(p[n]))
 			{
-				this->destination = p[i].position;
+				this->destination = p[n].position;
 				this->destination.y = position.y;
 				path = aStarSearch(position, destination);
 				if (nullptr != path)
@@ -770,6 +825,7 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				else
 					state = 0;
 			}
+			n = 1 - n;
 		}
 	}
 
@@ -802,7 +858,7 @@ void NPC::move()
 	XMVECTOR ActorPos = XMLoadFloat3(&position);
 	XMVECTOR DestPos = XMLoadFloat3(&destination);
 	XMVECTOR direction = XMVector3Normalize(XMVectorSubtract(DestPos, ActorPos));
-	XMVECTOR movement = XMVectorScale(direction, 10);
+	XMVECTOR movement = XMVectorScale(direction, 5);
 	XMStoreFloat3(&position, XMVectorAdd(ActorPos, movement));
 	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
 	
@@ -812,26 +868,33 @@ void NPC::move()
 	XMVECTOR direction_xz = XMVector3Normalize(XMLoadFloat3(&temp));
 	XMFLOAT3 basic_head(0, 0, 1);
 	XMVECTOR basic = XMLoadFloat3(&basic_head);
+	XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	XMVECTOR dir = XMVector3Transform(basic, rotationMatrix);
 
-	float costheta = XMVectorGetX(XMVector3Dot(basic, direction_xz));
+	//float costheta = XMVectorGetX(XMVector3Dot(basic, direction_xz));
+	float costheta = XMVectorGetX(XMVector3Dot(dir, direction_xz));
 	float radian = acos(costheta);
-	float theta = XMConvertToDegrees(radian);
+	float degree = XMConvertToDegrees(radian);
 
-	XMVECTOR cross = XMVector3Cross(basic, direction_xz);
+	//XMVECTOR cross = XMVector3Cross(basic, direction_xz);
+	XMVECTOR cross = XMVector3Cross(dir, direction_xz);
+
 	float wise = XMVectorGetY(cross);
 	if (wise < 0)
 	{
-		theta = -theta;
+		degree = -degree;
 	}
 	
-	rotation.y = theta;
+	//std::cout << degree << std::endl;
+	//rotation.y = degree;
+	if(degree*degree > 0.25) rotation.y += degree / 10;
 	movement *= 100;
 	DirectX::XMStoreFloat3(&speed, movement);
 }
 
 const short NPC::find_near_player(Player*& players)
 {
-	float distance[2] = { 1E+37 ,1E+37 };
+	float distance[2] = { 1E+37,1E+37 };
 	for (int i = 0; i < 2; ++i)
 	{
 		if (players[i].sock)
