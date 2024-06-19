@@ -15,7 +15,7 @@ ComponentContainer::ComponentContainer(size_t stride)
 // Component Set
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-inline ComponentSet::ComponentSet(std::bitset<COMPONENT_COUNT> bit)
+inline ComponentSet::ComponentSet(COMP_BITSET bit)
 {
 	// 미리 해당 bitset에 맞춰 componentcontainer를 만들어둔다.
 	for (int i = 0; i < COMPONENT_COUNT; ++i) {
@@ -23,20 +23,17 @@ inline ComponentSet::ComponentSet(std::bitset<COMPONENT_COUNT> bit)
 			// add
 			size_t componentSize = GET_COMP_SIZE(i);
 			
-			std::bitset<COMPONENT_COUNT> tempBit(1);
+			COMP_BITSET tempBit(1);
 			tempBit <<= i;
 
 			m_Set.emplace(tempBit, componentSize);
-			
-			//std::bitset bitset = Components::m_BIT;
-
 		}
 	}
 }
 
 void ComponentSet::InsertComponent(component::Component* comp)
 {
-	std::bitset<COMPONENT_COUNT> bit = comp->GetBitset();
+	COMP_BITSET bit = comp->GetBitset();
 
 	// check the component is exist in the set
 	if (m_Set.contains(bit) == false) {
@@ -65,6 +62,17 @@ void ComponentSet::InsertComponentByEntity(Entity* entity)
 	entity->m_Id = m_EntitySize++;
 }
 
+void ComponentSet::OnStart(Entity* ent, ECSManager* manager, ResourceManager* rm)
+{
+	int idx = ent->GetInnerID();
+
+	for (auto& [key, val] : m_Set) {
+		component::Component* comp = val.GetData<component::Component>(idx);
+		comp->OnStart(ent, manager, rm);
+	}
+
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // ECS System
@@ -89,7 +97,7 @@ ECSManager::~ECSManager()
 void ECSManager::AddEntity(Entity* entity)
 {
 	// 1. 일단 entity가 어떤 component를 가지고 있는지 확인해야함
-	std::bitset<COMPONENT_COUNT> bitset(0);
+	COMP_BITSET bitset(0);
 	for (auto& comp : entity->m_Components) 
 		bitset |= comp->GetBitset();
 
@@ -123,5 +131,22 @@ void ECSManager::UpdateSystem(float deltaTime)
 {
 	for (auto& system : m_Systems) {
 		system->Update(this, deltaTime);
+	}
+}
+
+void ECSManager::OnStart(ResourceManager* rm)
+{
+	if (m_Started) return;
+	m_Started = true;
+	
+	// for every entities
+	for (Entity* ent : m_Entities) {
+		// On Start
+
+		COMP_BITSET entBitset = ent->GetBitset();
+
+		COMP_BITSET bit(1);
+
+		m_ComponentSets[entBitset].OnStart(ent, this, rm);
 	}
 }

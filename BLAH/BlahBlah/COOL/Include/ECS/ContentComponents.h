@@ -50,6 +50,7 @@ namespace component {
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -64,6 +65,43 @@ namespace component {
 
 	};
 
+	/////////////////////////////////////////////////////////
+	// Throwable Component
+	// 던질 수 있는 오브젝트에 사용, 마우스 홀드로 쿠킹 후 투척
+	//
+	class Throwable : public ComponentBase<Throwable> {
+
+	};
+
+	/////////////////////////////////////////////////////////
+	// Attackable Component
+	// 공격할 수 있는 오브젝트에 사용, 
+	//
+	class Attackable : public ComponentBase<Attackable> {
+
+	};
+
+	/////////////////////////////////////////////////////////
+	// Holdable Component
+	// 손에 들 수 있는 오브젝트(손에 들 수 있다)
+	//
+	class Holdable : public ComponentBase<Holdable> {
+		// 아래는 보류하자
+		//bool m_HoldableEnable = true;	// after throw, disable
+		bool m_CurrentHolding = false;
+
+		bool m_Holding = false;
+		std::function<void()> m_OnMouseClicked;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Inventory Component
+	// Holdable 들을 보관한다
+	//
+	class Inventory : public ComponentBase<Inventory> {
+		Holdable* m_HoldingItem = nullptr;
+	};
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI 관련 컴포넌트들
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,14 +110,14 @@ namespace component {
 	// UIKeypad component
 	// 문열기 미니게임의 결과
 	//
-	class UIKeypad : public ComponentBase<UIKeypad > {
+	class UIKeypad : public ComponentBase<UIKeypad> {
 		Entity* m_DoorEntity = nullptr;
 		int m_Answer = 0;
 		int m_Current = 0;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
-		virtual void OnStart(ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 

@@ -17,8 +17,8 @@ namespace component {
 	{
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) = 0;
-		virtual void OnStart(ECSManager* manager = nullptr, ResourceManager* rm = nullptr) {};
-		virtual std::bitset<COMPONENT_COUNT> GetBitset() = 0;
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr) {};
+		virtual COMP_BITSET GetBitset() = 0;
 
 		virtual void ShowYourself() const = 0;
 	};
@@ -32,17 +32,17 @@ namespace component {
 	{
 		friend class ComponentFactory;
 
-		inline static std::bitset<COMPONENT_COUNT> m_Bitset;
+		inline static COMP_BITSET m_Bitset;
 
 	public:
 		ComponentBase() = default;
 		virtual ~ComponentBase() {}
 
-		virtual std::bitset<COMPONENT_COUNT> GetBitset() override { 
+		virtual COMP_BITSET GetBitset() override { 
 			return m_Bitset;
 		}
 
-		static std::bitset<COMPONENT_COUNT> GetBit() { return m_Bitset; }
+		static COMP_BITSET GetBit() { return m_Bitset; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ namespace component {
 			static_assert(std::is_base_of<component::Component, T>::value, "T is not base of Component!!");
 #endif
 			// Set bitset to each component
-			std::bitset<COMPONENT_COUNT> bitset(1);
+			COMP_BITSET bitset(1);
 			bitset <<= GetInstance().m_ComponentCount++;
 			T::m_Bitset = bitset;
 

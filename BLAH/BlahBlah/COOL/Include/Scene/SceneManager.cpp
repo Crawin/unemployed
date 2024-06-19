@@ -28,6 +28,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Collider, "Collider");
 	REGISTER_COMPONENT(component::DynamicCollider, "DynamicCollider");
 	REGISTER_COMPONENT(component::AttachInput, "AttachInput");
+	REGISTER_COMPONENT(component::Interaction, "Interaction");
+	REGISTER_COMPONENT(component::Player, "Player");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
