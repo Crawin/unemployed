@@ -708,6 +708,19 @@ namespace component {
 	{
 	}
 
+	void Interaction::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		auto col = manager->GetComponent<Collider>(selfEntity);
+		auto dco = manager->GetComponent<DynamicCollider>(selfEntity);
+
+		if (!((col && col->IsTrigger() == true) ||
+			 (dco && dco->IsTrigger() == true)))
+		{
+			Name* name = manager->GetComponent<Name>(selfEntity);
+			ERROR_QUIT(std::format("ERROR!! no collider on Interaction Component, name: {}", name->getName()));
+		}
+	}
+
 	void Interaction::ShowYourself() const
 	{
 	}
