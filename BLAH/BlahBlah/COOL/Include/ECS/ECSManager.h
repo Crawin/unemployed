@@ -120,6 +120,12 @@ public:
 	void AddEntity(Entity* entity);
 	void AddToRoot(Entity* entity);
 
+	// attach to child
+	void AttachChild(Entity* to, Entity* targetEntity);
+
+	// detach child
+	void DetachChild(Entity* from, Entity* targetEntity);
+
 	void InsertSystem(ECSsystem::System* system) { m_Systems.push_back(system); }
 
 	void InitSystem();

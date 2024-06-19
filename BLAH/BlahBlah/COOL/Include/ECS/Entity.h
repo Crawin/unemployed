@@ -22,13 +22,15 @@ public:
 
 private:
 	void AddComponent(component::Component* component) { m_Components.push_back(component); }
-	void AddChild(Entity* entity) { m_Children.push_back(entity); }
 	void AddBit(const COMP_BITSET& bit) { 
 		m_Bitset |= bit;
 	}
 
 public:
-	const std::vector<Entity*>& GetChildren() const { return m_Children; }
+	const std::list<Entity*>& GetChildren() const { return m_Children; }
+
+	void AddChild(Entity* entity) { m_Children.push_back(entity); }
+	void EraseChild(Entity* ent);
 
 	COMP_BITSET GetBitset() const { return m_Bitset; }
 
@@ -45,7 +47,7 @@ private:
 	std::vector<component::Component*> m_Components;
 
 	// 소유주는 리소스매니저
-	std::vector<Entity*> m_Children;
+	std::list<Entity*> m_Children;
 };
 
 
