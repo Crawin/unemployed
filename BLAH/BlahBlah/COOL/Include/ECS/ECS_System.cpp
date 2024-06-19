@@ -14,8 +14,8 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
-		std::function<void(/*Name*, */Transform*, Children*)> func = [&func, &manager](/*Name* name, */Transform* trans, Children* childComp) {
-			Entity* ent = childComp->GetEntity();
+		std::function<void(/*Name*, */Transform*, SelfEntity*)> func = [&func, &manager](/*Name* name, */Transform* trans, SelfEntity* self) {
+			Entity* ent = self->GetEntity();
 
 			const std::vector<Entity*>& children = ent->GetChildren();
 
@@ -965,10 +965,10 @@ namespace ECSsystem {
 
 			};
 
-		std::function<void(UICanvas*, Children*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, Children* childComp) {
+		std::function<void(UICanvas*, SelfEntity*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, SelfEntity* selfEntity) {
 			if (canvas->IsActive() == false) return;
 
-			Entity* self = childComp->GetEntity();
+			Entity* self = selfEntity->GetEntity();
 			auto& children = self->GetChildren();
 
 			for (Entity* child : children) 

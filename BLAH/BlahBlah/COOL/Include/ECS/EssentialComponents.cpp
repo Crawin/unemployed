@@ -102,24 +102,6 @@ namespace component {
 		m_AnimationPlayer->SetAnimationData(commandList, manager);
 	}
 
-	void Root::Create(Json::Value& v, ResourceManager* rm)
-	{
-	}
-
-	void Root::ShowYourself() const
-	{
-		DebugPrint("Root Comp");
-	}
-
-	void Children::Create(Json::Value& v, ResourceManager* rm)
-	{
-	}
-
-	void Children::ShowYourself() const
-	{
-		DebugPrint("Children Comp");
-	}
-
 	void Transform::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value trans = v["Transform"];

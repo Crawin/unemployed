@@ -102,7 +102,9 @@ class ECSManager
 {
 	// entity
 	std::vector<Entity*> m_Entities;
-	std::vector<Entity*> m_RootEntities;
+
+	// to loop in root entities
+	std::list<Entity*> m_RootEntities;
 
 	// ComponentSet을 저장
 	std::unordered_map<COMP_BITSET, ComponentSet> m_ComponentSets;
@@ -150,18 +152,14 @@ public:
 		COMP_BITSET funcBitset = GetBitset<COMPONENTS...>();
 		// for every root and Template Entities
 
-		std::function<void(component::Root*)> forRoot = [&compSet, &func, funcBitset](component::Root* root) {
-			// find bitset first
-			Entity* ent = root->GetEntity();
+		for (auto* ent : m_RootEntities) {
 			COMP_BITSET entityBitset = ent->GetBitset();
 			int entityID = ent->GetInnerID();
 
-			// do sth with Root & component
 			if ((funcBitset & entityBitset) == funcBitset)
 				compSet[entityBitset].Execute(entityID, func);
-			};
+		}
 
-		Execute(forRoot);
 	}
 
 	// execute exact entity(bit, innerID)

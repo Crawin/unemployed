@@ -15,8 +15,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::AnimationController, "AnimationController");
 	REGISTER_COMPONENT(component::AnimationExecutor, "AnimationExecutor");
 	REGISTER_COMPONENT(component::Attach, "Attach");
-	REGISTER_COMPONENT(component::Root, "Root");
-	REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
+	//REGISTER_COMPONENT(component::Root, "Root");
+	//REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::SelfEntity, "_MANUAL_01_SELFENTITY");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");

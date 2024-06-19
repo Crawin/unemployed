@@ -192,50 +192,27 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// root
-	// 루트 엔티티라면 가지고 있음
-	//
-	class Root : public ComponentBase<Root>
-	{
-		Entity* m_SelfEntity = nullptr;
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
-
-		virtual void ShowYourself() const;
-
-		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
-		Entity* GetEntity() const { return m_SelfEntity; }
-	};
-
-	/////////////////////////////////////////////////////////
-	// root
-	// 루트 엔티티라면 가지고 있음
-	//
-	class Children : public ComponentBase<Children>
-	{
-		Entity* m_SelfEntity = nullptr;
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
-
-		virtual void ShowYourself() const;
-
-		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
-		Entity* GetEntity() const { return m_SelfEntity; }
-	};
-	/////////////////////////////////////////////////////////
 	// SelfEntity component
 	// 본인을 가리키는거 사용할진 모름)
 	//
 	class SelfEntity : public ComponentBase<SelfEntity>
 	{
+		Entity* m_Parent = nullptr;
 		Entity* m_SelfEntity = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
+		void SetParent(Entity* par) { m_Parent = par; }
 		void SetEntity(Entity* ent) { m_SelfEntity = ent; }
+
+		Entity* GetParent() const { return m_Parent; }
 		Entity* GetEntity() const { return m_SelfEntity; }
+
+		// if parent == null, the entity is root entity
+		bool IsRootEntity() const { return m_Parent == nullptr; }
 	};
 
 
