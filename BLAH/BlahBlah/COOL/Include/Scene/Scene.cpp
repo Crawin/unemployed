@@ -502,7 +502,7 @@ void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESC
 	std::function<void(UICanvas*, SelfEntity*)> forAllUICanvas = [&ecsManager, &renderUI](UICanvas* canvas, SelfEntity* selfEntity) {
 		if (canvas->IsActive()) {
 			Entity* ent = selfEntity->GetEntity();
-			const std::vector<Entity*>& children = ent->GetChildren();
+			const std::list<Entity*>& children = ent->GetChildren();
 
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();

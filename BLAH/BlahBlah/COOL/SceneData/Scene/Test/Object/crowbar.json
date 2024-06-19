@@ -5,7 +5,7 @@
 			"Name" : "crowbar",
 			"Renderer" : 
 			{
-				"Material" : "NoMaterial",
+				"Material" : "Object/crowbar",
 				"Mesh" : "crowbar.crowbar"
 			},
 			"Transform" : 

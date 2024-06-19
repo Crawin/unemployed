@@ -17,7 +17,7 @@ namespace ECSsystem {
 		std::function<void(/*Name*, */Transform*, SelfEntity*)> func = [&func, &manager](/*Name* name, */Transform* trans, SelfEntity* self) {
 			Entity* ent = self->GetEntity();
 
-			const std::vector<Entity*>& children = ent->GetChildren();
+			const std::list<Entity*>& children = ent->GetChildren();
 
 			// build world matrix for child
 			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
@@ -58,7 +58,7 @@ namespace ECSsystem {
 			
 			Entity* ent = self->GetEntity();
 
-			const std::vector<Entity*>& children = ent->GetChildren();
+			const std::list<Entity*>& children = ent->GetChildren();
 
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();
