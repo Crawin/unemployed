@@ -254,13 +254,14 @@ public:
 
 class Game
 {
+	std::atomic_bool state;				// 0 = 삭제된애, 1 = 돌아가고있는애
 	unsigned int GameNum;
 	Player player[2];
 	NPC guard;
 	
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
-	Game(const unsigned int& n) : GameNum(n) {}
+	Game(const unsigned int& n) : GameNum(n), state(true) {}
 	void init(const unsigned int& i, const SOCKET& s);
 	Player* getPlayers() { return player; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
@@ -275,6 +276,7 @@ public:
 	void setFloor(const unsigned int& id, const unsigned short& floor);
 	void update(const bool& npc_state);
 	bool hasEmpty();
+	bool CAS_state(bool& before, bool& after);
 };
 
 struct ServerDetails

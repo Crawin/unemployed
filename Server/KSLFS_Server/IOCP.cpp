@@ -91,14 +91,26 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 					continue;
 				}
 
-				if (!Games[gameNum].erasePlayer(my_id))
+				if (Games[gameNum].erasePlayer(my_id))
 				{
-					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
-					continue;
+					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+					auto players = Games[gameNum].getPlayers();
+					if (players[0].id == NULL && players[1].id == NULL)
+					{
+						std::cout << gameNum << "에 플레이어가 존재하지 않습니다. 방을 삭제합니다." << std::endl;
+						while (true)
+						{
+							bool before = true;
+							bool after = false;
+							if (Games[gameNum].CAS_state(before, after))
+								break;
+						}
+					}
 				}
 				else
 				{
-					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
+					continue;
 				}
 				g_mutex_login_players.lock();
 				login_players.erase(my_id);
@@ -169,7 +181,11 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			delete e_over;
 			for (auto& game : Games)
 			{
-				game.second.update(detail.m_bNPC);
+				bool b = true;
+				if (game.second.CAS_state(b, b))
+				{
+					game.second.update(detail.m_bNPC);
+				}
 			}
 			break;
 		}
@@ -694,6 +710,11 @@ bool Game::hasEmpty()
 			return true;
 	}
 	return false;
+}
+
+bool Game::CAS_state(bool& before, bool& after)
+{
+	return std::atomic_compare_exchange_strong(&state, &before, after);
 }
 
 void NPC::state_machine(Player* p,const bool& npc_state)
