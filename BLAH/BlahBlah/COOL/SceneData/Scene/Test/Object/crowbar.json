@@ -1,0 +1,51 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "crowbar",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "crowbar.crowbar"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					-90.0,
+					0.0,
+					-110.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "crowbar_Root",
+	"Transform" : 
+	{
+		"Position": [0.0, 120.0, 1000.0],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
