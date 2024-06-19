@@ -50,6 +50,7 @@ namespace component {
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 

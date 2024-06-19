@@ -39,7 +39,6 @@ namespace ECSsystem {
 	class SyncWithTransform : public System {
 
 	public:
-		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
@@ -94,7 +93,6 @@ namespace ECSsystem {
 	//
 	class CollideHandle : public System {
 	public:
-		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 
 		static bool CheckCollisionRectCircle(const BoundingOrientedBox& rect, const XMFLOAT2& circleCenter, float circleRadius) {
@@ -200,7 +198,6 @@ namespace ECSsystem {
 	// 
 	class HandleInteraction : public System {
 	public:
-		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 
@@ -209,7 +206,6 @@ namespace ECSsystem {
 	// 
 	class HandleUIComponent : public System {
 	public:
-		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 

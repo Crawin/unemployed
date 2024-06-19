@@ -254,6 +254,7 @@ namespace component {
 		int m_BoneIndex = -1;
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -356,6 +357,7 @@ namespace component {
 	//
 	class Input : public ComponentBase<Input> {
 		Entity* m_InteractionEntity = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -502,10 +504,9 @@ namespace component {
 
 		std::list<CollidedEntity> m_CollidedEntities;
 
-		InteractionFuncion m_InteractionFunction = nullptr;
-
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -513,7 +514,6 @@ namespace component {
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
 		void SetOriginBoxCenter(const BoundingOrientedBox& box) { m_BoundingBoxOriginal.Center = box.Center; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
-		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
 		void SetCapsule(bool b) { m_IsCapsule = b; }
 
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
@@ -522,7 +522,6 @@ namespace component {
 		bool IsStaticObject() const { return m_StaticObject; }
 		bool IsCapsule() const { return m_IsCapsule; }
 		bool IsTrigger() const { return m_Trigger; }
-		const InteractionFuncion& GetInteractionFunction() const { return m_InteractionFunction; }
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 
@@ -531,7 +530,6 @@ namespace component {
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
 		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
-
 
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
@@ -544,7 +542,7 @@ namespace component {
 			case COLLIDE_EVENT_TYPE::END:	m_EventFunctions.m_OnEndOverlap[bit] = eventFunc;		break;
 			default:
 				DebugPrint("ERROR!! no event type");
-			};
+	};
 		}
 
 	};
@@ -565,17 +563,15 @@ namespace component {
 
 		std::list<CollidedEntity> m_CollidedEntities;
 
-		InteractionFuncion m_InteractionFunction = nullptr;
-
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
 		void SetCollided(bool col) { m_Collided = col; }
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
-		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
 
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
@@ -583,7 +579,7 @@ namespace component {
 		bool IsStaticObject() const { return m_StaticObject; }
 		bool IsCapsule() const { return m_IsCapsule; }
 		bool IsTrigger() const { return m_Trigger; }
-		const InteractionFuncion& GetInteractionFunction() const { return m_InteractionFunction; }
+
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 
@@ -591,8 +587,8 @@ namespace component {
 		void InsertCollidedEntity(Entity* ent);
 		void UpdateCollidedList();
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
-		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
+		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
 
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
@@ -607,7 +603,23 @@ namespace component {
 				DebugPrint("ERROR!! no event type");
 			};
 		}
+	};
+	
+	/////////////////////////////////////////////////////////
+	// Interaction Component
+	// 상호작용이 있는 무언가를 위해
+	//
+	class Interaction : public ComponentBase<Interaction> {
+		InteractionFuncion m_InteractionFunction = nullptr;
 
+		CollideEvents m_EventFunctions;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const;
+		
+		void SetInteractionFunction(InteractionFuncion& interaction) { m_InteractionFunction = interaction; }
+		const InteractionFuncion& GetInteractionFunction() const { return m_InteractionFunction; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -619,6 +631,17 @@ namespace component {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
+		virtual void ShowYourself() const;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Player Component
+	// 플레이어 컴포넌트
+	//
+	class Player : public ComponentBase<Player> {
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 		virtual void ShowYourself() const;
 	};
 

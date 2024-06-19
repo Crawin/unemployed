@@ -94,18 +94,6 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
-	void SyncWithTransform::OnInit(ECSManager* manager)
-	{
-		std::function<void(component::Transform*, component::Attach*)> func = [manager](component::Transform* tr, component::Attach* at) {
-			at->SetOriginalPosition(tr->GetPosition());
-			at->SetOriginalRotation(tr->GetRotation());
-			at->SetOriginalScale(tr->GetScale());
-
-			};
-
-		manager->Execute(func);
-	}
-
 	void SyncWithTransform::Update(ECSManager* manager, float deltaTime)
 	{
 		// sync with camera
@@ -570,46 +558,6 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
-	void CollideHandle::OnInit(ECSManager* manager)
-	{
-		std::function<void(component::Collider*)> func = [](component::Collider* col) {
-			col->ResetList();
-			};
-
-		manager->Execute(func);
-
-		std::function<void(component::DynamicCollider*)> func2 = [](component::DynamicCollider* col) {
-			col->ResetList();
-			};
-
-		manager->Execute(func2);
-
-
-		// make collide events here!!
-
-		// todo
-		// 지금은 player를 Input으로 표현하지만 추후에 ControlPlayer같은게 생기면 대체해야한다.
-
-		// input <-> door
-		INSERT_COLLIDE_EVENT_FOR_DYNAMIC(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::BEGIN, [manager](Entity* self, Entity* other) {
-			auto door = manager->GetComponent<component::DoorControl>(other);
-			auto player = manager->GetComponent<component::Input>(self);
-			if (door && player)
-				player->SetInteractionEntity(other);
-			});
-
-		INSERT_COLLIDE_EVENT_FOR_DYNAMIC(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::ING, [manager](Entity* self, Entity* other) {
-			//DebugPrint("ING");
-			});
-
-		INSERT_COLLIDE_EVENT_FOR_DYNAMIC(manager, component::Input, component::DoorControl, COLLIDE_EVENT_TYPE::END, [manager](Entity* self, Entity* other) {
-			auto door = manager->GetComponent<component::DoorControl>(other);
-			auto player = manager->GetComponent<component::Input>(self);
-			if (door && player)
-				player->SetInteractionEntity(nullptr);
-			});
-	}
-
 	void CollideHandle::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
@@ -737,7 +685,7 @@ namespace ECSsystem {
 		};
 
 		// collision events
-		std::function<void(Collider*, SelfEntity*)> handleEventStatic = [](Collider* col, SelfEntity* self) {
+		std::function<void(Collider*, SelfEntity*)> handleEventStatic = [manager](Collider* col, SelfEntity* self) {
 			auto& colVec = col->GetCollidedEntitiesList();
 
 			for (auto& otherEntity : colVec) {
@@ -753,7 +701,7 @@ namespace ECSsystem {
 			}
 			};
 
-		std::function<void(DynamicCollider*, SelfEntity*)> handleEventDynamic = [](DynamicCollider* col, SelfEntity* self) {
+		std::function<void(DynamicCollider*, SelfEntity*)> handleEventDynamic = [manager](DynamicCollider* col, SelfEntity* self) {
 			auto& colVec = col->GetCollidedEntitiesList();
 
 			for (auto& otherEntity : colVec) {
@@ -950,49 +898,6 @@ namespace ECSsystem {
 		manager->Execute(move);
 	}
 
-	void HandleInteraction::OnInit(ECSManager* manager)
-	{
-		// build interaction function
-		InteractionFuncion withDoor = [manager](Entity* player, Entity* door) {
-			DebugPrint("Interaction, DOOR!!");
-
-			// if opened
-			component::DoorControl* doorCtrl = manager->GetComponent<component::DoorControl>(door);
-			auto trans = manager->GetComponent<component::Transform>(door);
-			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
-				auto rot = trans->GetRotation();
-				rot.y -= 90.0f;
-				trans->SetRotation(rot);
-			}
-			else {
-				// todo
-				// door에 연결된 미니게임이 무엇인지 정보를 찾고
-				// 키패드인지 패턴인지 등등을 확인한 후
-				// 정답에 대한 정보를 넣어준다. set answer
-				// 정답에 대한 정보는 door가 가지고 있다. set door
-				// KeyPadUI는 확인 버튼이 눌렸을 시 전달받은 정보를 토대로 통과 여부를 판단
-
-				std::function<void(component::UICanvas*, component::UIKeypad*)> openUI = [door, doorCtrl](component::UICanvas* can, component::UIKeypad* kpd) {
-					DebugPrint("UI SHOW!!");
-
-					// test
-					kpd->SetAnswer(doorCtrl->GetAnswer());
-					kpd->SetDoor(door);
-
-					kpd->SetCurrent(0);
-
-					can->ShowUI();
-					};
-
-				manager->Execute(openUI);
-			}
-			};
-
-		SET_INTERACTION_EVENT(manager, component::DoorControl, withDoor);
-		
-
-	}
-
 	void HandleInteraction::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;
@@ -1001,15 +906,13 @@ namespace ECSsystem {
 		std::function<void(Input*, SelfEntity*)> interactionFunc = [manager](Input* in, SelfEntity* self) {
 			Entity* interactionEntity = nullptr;
 
+			// if press 'E'
 			if (GetAsyncKeyState('E') & 0x0001) interactionEntity = in->GetInteractionEntity();
 			if (interactionEntity == nullptr) return;
 
-			Collider* col = manager->GetComponent<Collider>(interactionEntity);
-			DynamicCollider* colD = manager->GetComponent<DynamicCollider>(interactionEntity);
-			if (col == nullptr && colD == nullptr) return;
+			Interaction* interaction = manager->GetComponent<Interaction>(interactionEntity);
 
-			auto& interactionFunc = col != nullptr ? col->GetInteractionFunction() : colD->GetInteractionFunction();
-			if (interactionFunc == nullptr) return;
+			auto interactionFunc = interaction->GetInteractionFunction();
 
 			interactionFunc(self->GetEntity(), interactionEntity);
 			};
@@ -1017,59 +920,6 @@ namespace ECSsystem {
 		manager->Execute(interactionFunc);
 
 
-	}
-
-	void HandleUIComponent::OnInit(ECSManager* manager)
-	{
-		using namespace component;
-		std::function<void(UICanvas*, UIKeypad*, Children*)> setUIButtonCallbackFunc = [manager](UICanvas* can, UIKeypad* kpd, Children* childComp) {
-			Entity* self = childComp->GetEntity();
-			auto& children = self->GetChildren();
-
-			for (Entity* child : children) {
-				Name* childName = manager->GetComponent<Name>(child);
-				// 확인 버튼
-				if (childName != nullptr) {
-					std::string name = childName->getName();
-
-					if (name == "Check") {
-						Button* button = manager->GetComponent<Button>(child);
-						ButtonEventFunction check = [can, kpd, manager](Entity* ent) { 
-							// hide ui;
-							can->HideUI();
-							DebugPrint("check");
-							
-							DebugPrint(std::format("pw: {}", kpd->GetCurrent()));
-							if (kpd->GetAnswer() == kpd->GetCurrent()) {
-								// open door
-								Entity* door = kpd->GetDoor();
-								DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
-								doorCtrl->SetLock(false);
-							}
-
-							};
-						button->SetButtonReleaseEvent(check);
-					}
-					else {
-						for (int i = 1; i <= 9; ++i) {
-							std::string buttonName = std::format("{}Button", i);
-							if (name == buttonName) {
-								Button* button = manager->GetComponent<Button>(child);
-								ButtonEventFunction password = [can, kpd, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
-									int current = kpd->GetCurrent();
-									current = current * 10 + i;
-									kpd->SetCurrent(current);
-									};
-								button->SetButtonReleaseEvent(password);
-							}
-						}
-					}
-				}
-			}
-
-			};
-
-		manager->Execute(setUIButtonCallbackFunc);
 	}
 
 	void HandleUIComponent::Update(ECSManager* manager, float deltaTime)
@@ -1120,6 +970,7 @@ namespace ECSsystem {
 		manager->Execute(forAliveCanvas);
 
 	}
+
 	void SendToServer::Update(ECSManager* manager, float deltaTime)
 	{
 		using namespace component;

@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "EssentialComponents.h"
 #include "Scene/ResourceManager.h"
+#include "ECS/ECSManager.h"
 #include "json/json.h"
 
 
@@ -143,6 +144,15 @@ namespace component {
 		m_BoneIndex = att["BoneIDX"].asInt();
 
 		rm->AddLateLoadAttach(att["Player"].asString(), this, att["Mesh"].asString(), m_BoneIndex);
+	}
+
+	void Attach::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Transform* tr = manager->GetComponent<Transform>(selfEntity);
+
+		SetOriginalPosition(tr->GetPosition());
+		SetOriginalRotation(tr->GetRotation());
+		SetOriginalScale(tr->GetScale());
 	}
 
 	void Attach::ShowYourself() const
@@ -551,6 +561,11 @@ namespace component {
 
 	}
 
+	void Collider::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		ResetList();
+	}
+
 	void Collider::ShowYourself() const
 	{
 		DebugPrint("Collider Comp");
@@ -629,6 +644,11 @@ namespace component {
 		}
 	}
 
+	void DynamicCollider::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		ResetList();
+	}
+
 	void DynamicCollider::ShowYourself() const
 	{
 		DebugPrint("Collider Comp");
@@ -673,7 +693,6 @@ namespace component {
 		case COLLIDE_EVENT_TYPE::ING:		return &m_EventFunctions.m_OnOverlapping;
 		case COLLIDE_EVENT_TYPE::END:		return &m_EventFunctions.m_OnEndOverlap;
 		}
-
 		return nullptr;
 	}
 
@@ -682,6 +701,51 @@ namespace component {
 	}
 
 	void AttachInput::ShowYourself() const
+	{
+	}
+
+	void Interaction::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Interaction::ShowYourself() const
+	{
+	}
+
+	void Player::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Player::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// make interaction enable
+		
+		EventFunction begin = [manager](Entity* playerEnt, Entity* interaction) {
+			auto player = manager->GetComponent<component::Input>(playerEnt);
+			player->SetInteractionEntity(interaction);
+			};
+		EventFunction ing = [manager](Entity* playerEnt, Entity* interaction) {
+			//DebugPrint("ING");
+			};
+		EventFunction end = [manager](Entity* playerEnt, Entity* interaction) {
+			auto player = manager->GetComponent<component::Input>(playerEnt);
+			if (player->GetInteractionEntity() == interaction)
+				player->SetInteractionEntity(nullptr);
+			};
+
+		DynamicCollider* dcol = manager->GetComponent<DynamicCollider>(selfEntity);
+
+		if (dcol != nullptr) {
+			dcol->InsertEvent<component::Interaction>(begin, COLLIDE_EVENT_TYPE::BEGIN);
+			dcol->InsertEvent<component::Interaction>(ing, COLLIDE_EVENT_TYPE::ING);
+			dcol->InsertEvent<component::Interaction>(end, COLLIDE_EVENT_TYPE::END);
+		}
+		else {
+			ERROR_QUIT("ERROR!!! no dynamic collider on Player Entity!!");
+		}
+	}
+
+	void Player::ShowYourself() const
 	{
 	}
 

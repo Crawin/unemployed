@@ -24,6 +24,8 @@
 		"Extent": [50.0, 100, 50]
 	},
 
+	"Interaction": {},
+
 	"Children":[
 		{
 			"Name": "DoorRender",
