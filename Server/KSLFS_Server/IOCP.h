@@ -19,6 +19,7 @@ public:
 	char buf[BUFSIZE];
 	C_OP	c_op;
 	SOCKET sock;
+	short prev_packet_size = 0;
 
 	EXP_OVER()
 	{
@@ -75,6 +76,20 @@ public:
 			if (WSA_IO_PENDING != err_no)
 				print_error("WSARecv", WSAGetLastError());
 		}
+	}
+
+	void set_prev_packet_size(const short& size)
+	{
+		recv_over.prev_packet_size = size;
+		if (size == 0)
+			ZeroMemory(recv_over.buf, BUFSIZE);
+		recv_over.wsabuf->buf = recv_over.buf + size;
+		recv_over.wsabuf->len = BUFSIZE - size;
+	}
+
+	void pull_recv_buf(const int& start)
+	{
+		memcpy(recv_over.buf, recv_over.buf + start, BUFSIZE - start);
 	}
 
 	void do_send(int s_id, char* mess, int recv_size)

@@ -74,12 +74,13 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 
 void Client::Send_Room(const PACKET_TYPE& type, const unsigned int& gameNum)
 {
-	if (gameNum)
+	if (roomNum)
 	{
-		std::cout << "이미 " << gameNum << "에 입장하였습니다." << std::endl;
+		std::cout << "이미 " << roomNum << "에 입장하였습니다." << std::endl;
 	}
 	else
 	{
+		
 		EXP_OVER* send_over;
 		if (gameNum == NULL)
 		{
@@ -186,15 +187,16 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 	
 	int current_size = 0;
 	char* recv_buf = client.Get_Buf();
+	short prev_size = client.get_prev_packet_size();
 	while (current_size < recv_size)
 	{
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
 		int size = base->getSize();
-		if (size == 0)
-			break;
+		//if (size == 0)
+		//	break;
 
-		if (size + current_size > recv_size)
+		if (size + current_size > recv_size + prev_size)
 		{
 			client.set_prev_packet_size(size);
 			client.pull_packet(current_size);
@@ -228,13 +230,7 @@ void process_packet(packet_base*& base)
 	case 0:									// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-		//if (buf->getPlayer() == client.getPSock()[0]) {
-		//	client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), client.characters[buf->getPlayer()].getRot(), buf->getSpeed());	// 수정 필요
-		//}
-		//else
-		//{
-			client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
-		//}
+		client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
 		break;
 	}
 	case 1:									// LOGIN

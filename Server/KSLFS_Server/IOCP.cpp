@@ -44,20 +44,20 @@ void IOCP_SERVER_MANAGER::start()
 	
 	std::thread ai_thread{ &IOCP_SERVER_MANAGER::ai_thread,this };
 
-	//// 멀티쓰레드
-	//int num_threads = std::thread::hardware_concurrency();
-	//std::vector<std::thread> worker_threads;
-	//for (int i = 0; i < num_threads; ++i)
-	//{
-	//	worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
-	//}
+	// 멀티쓰레드
+	int num_threads = std::thread::hardware_concurrency();
+	std::vector<std::thread> worker_threads;
+	for (int i = 0; i < num_threads; ++i)
+	{
+		worker_threads.emplace_back(&IOCP_SERVER_MANAGER::worker, this, server_s);
+	}
 
-	//for (auto& w : worker_threads)
-	//	w.join();
+	for (auto& w : worker_threads)
+		w.join();
 
 
-	// 싱글쓰레드 디버그용
-	worker(server_s);
+	//// 싱글쓰레드 디버그용
+	//worker(server_s);
 
 	//delete lobby;
 	closesocket(server_s);
@@ -79,10 +79,35 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		ULONG_PTR key;
 		WSAOVERLAPPED* over;
 		BOOL ret = GetQueuedCompletionStatus(detail.m_hIOCP, &rw_byte, &key, &over, INFINITE);
+		unsigned int my_id = static_cast<unsigned int>(key);
+
 		if (FALSE == ret) {
 			print_error("GQCS", WSAGetLastError());
-			//exit(-1);
+			if (0 == rw_byte) {
+				unsigned int gameNum = login_players[my_id].getGameNum();
+				if (Games.find(gameNum) == Games.end())
+				{
+					std::cout << "Error!!" << gameNum << "방이 존재하지 않습니다." << std::endl;
+					continue;
+				}
+
+				if (!Games[gameNum].erasePlayer(my_id))
+				{
+					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
+					continue;
+				}
+				else
+				{
+					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+				}
+				g_mutex_login_players.lock();
+				login_players.erase(my_id);
+				g_mutex_login_players.unlock();
+				std::cout << "login_players에서 " << my_id << "를 삭제하였습니다." << std::endl;
+				continue;
+			}
 		}
+
 		EXP_OVER* e_over = reinterpret_cast<EXP_OVER*>(over);
 		switch (e_over->c_op)
 		{
@@ -108,32 +133,26 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		break;
 		case C_RECV:
 		{
-			unsigned int my_id = static_cast<unsigned int>(key);
-			if (0 == rw_byte) {
-				unsigned int gameNum = login_players[my_id].getGameNum();
-				if (Games.find(gameNum) == Games.end())
+			int current_size = 0;
+			int total_recv_packet_size = rw_byte + e_over->prev_packet_size;
+			while (current_size < total_recv_packet_size)
+			{
+				auto base = reinterpret_cast<packet_base*>(&e_over->buf[current_size]);
+				int packet_size = base->getSize();
+				if (packet_size + current_size > total_recv_packet_size)
 				{
-					std::cout<< "Error!!" << gameNum << "방이 존재하지 않습니다." << std::endl;
-					continue;
-				}
-
-				if (!Games[gameNum].erasePlayer(my_id))
-				{
-					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
-					continue;
+					login_players[my_id].set_prev_packet_size(packet_size);
+					login_players[my_id].pull_recv_buf(current_size);
+					login_players[my_id].do_recv();
+					break;
 				}
 				else
 				{
-					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+					process_packet(my_id, e_over);
+					current_size += packet_size;
 				}
-				g_mutex_login_players.lock();
-				login_players.erase(my_id);
-				g_mutex_login_players.unlock();
-				std::cout << "login_players에서 " << my_id << "를 삭제하였습니다." << std::endl;
-				continue;
 			}
-
-			process_packet(my_id, e_over);
+			login_players[my_id].set_prev_packet_size(0);
 			login_players[my_id].do_recv();
 		}
 		break;

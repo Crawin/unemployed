@@ -108,6 +108,7 @@ public:
 	void set_prev_packet_size(const short& size) { prev_packet_size = size; }
 	void pull_packet(const int& current_size);
 	void logout_opponent();
+	short get_prev_packet_size() { return prev_packet_size; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
