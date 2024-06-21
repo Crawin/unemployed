@@ -29,12 +29,14 @@ private:
 public:
 	const std::list<Entity*>& GetChildren() const { return m_Children; }
 
-	void AddChild(Entity* entity) { m_Children.push_back(entity); }
+	void AddChild(Entity* entity);
 	void EraseChild(Entity* ent);
 
-	COMP_BITSET GetBitset() const { return m_Bitset; }
+	void SetParent(Entity* ent) { m_ParentEntity = ent; }
 
+	COMP_BITSET GetBitset() const { return m_Bitset; }
 	int GetInnerID() const { return m_Id; }
+	Entity* GetParent() const { return m_ParentEntity; }
 
 private:
 	// 컴포넌트 소유 bitset
@@ -48,6 +50,8 @@ private:
 
 	// 소유주는 리소스매니저
 	std::list<Entity*> m_Children;
+
+	Entity* m_ParentEntity = nullptr;
 };
 
 

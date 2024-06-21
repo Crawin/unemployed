@@ -53,9 +53,10 @@ namespace ECSsystem {
 
 			XMFLOAT4X4 temp;
 			XMStoreFloat4x4(&temp, parent);
-
 			tr->SetParentTransform(temp);
 			
+			parent = XMLoadFloat4x4(&tr->GetWorldTransform());
+
 			Entity* ent = self->GetEntity();
 
 			const std::list<Entity*>& children = ent->GetChildren();

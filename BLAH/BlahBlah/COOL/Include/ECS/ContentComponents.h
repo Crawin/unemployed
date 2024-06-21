@@ -94,12 +94,27 @@ namespace component {
 		std::function<void()> m_OnMouseClicked;
 	};
 
+#define MAX_INVENTORY 4
 	/////////////////////////////////////////////////////////
 	// Inventory Component
 	// Holdable 들을 보관한다
 	//
 	class Inventory : public ComponentBase<Inventory> {
-		Holdable* m_HoldingItem = nullptr;
+		Entity* m_Items[MAX_INVENTORY] = {nullptr, };
+		const char* m_TargetEntityNames[MAX_INVENTORY] = { nullptr, };
+		int m_CurrentHolding = 0;
+
+		// anim socket
+		Entity* m_HoldingSocket = nullptr;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
+		
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

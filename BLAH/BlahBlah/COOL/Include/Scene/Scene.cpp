@@ -539,6 +539,8 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 void Scene::Update(float deltaTime)
 {
 	m_ECSManager->UpdateSystem(deltaTime);
+
+	auto manager = m_ECSManager;
 }
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)

@@ -45,6 +45,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
 	REGISTER_COMPONENT(component::DoorControl, "Door");
+	REGISTER_COMPONENT(component::Inventory, "Inventory");
+
 
 	// ui content
 	REGISTER_COMPONENT(component::UIKeypad, "UIKeypad");

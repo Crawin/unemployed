@@ -126,6 +126,12 @@ void ECSManager::AttachChild(Entity* to, Entity* targetEntity)
 	auto iter = std::find(m_RootEntities.begin(), m_RootEntities.end(), targetEntity);
 	if (iter != m_RootEntities.end()) m_RootEntities.erase(iter);
 
+	// if was not parent, detach from its parent
+	Entity* befParent = targetEntity->GetParent();
+	if (befParent != nullptr) {
+		befParent->EraseChild(targetEntity);
+	}
+
 	// add to child
 	to->AddChild(targetEntity);
 
@@ -177,4 +183,16 @@ void ECSManager::OnStart(ResourceManager* rm)
 
 		m_ComponentSets[entBitset].OnStart(ent, this, rm);
 	}
+}
+
+Entity* ECSManager::GetEntity(const std::string& targetName)
+{
+	Entity* target = nullptr;
+	std::function<void(component::Name*, component::SelfEntity*)> getEntity = [&target, &targetName](component::Name* name, component::SelfEntity* selfEnt) {
+		if (name->getName().compare(targetName) == 0) target = selfEnt->GetEntity();
+		};
+
+	Execute(getEntity);
+
+	return target;
 }

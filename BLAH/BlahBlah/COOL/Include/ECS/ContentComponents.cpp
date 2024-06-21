@@ -146,4 +146,60 @@ namespace component {
 	{
 	}
 
+	void Inventory::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value inven = v["Inventory"];
+
+		//m_TargetEntityNames[0] = inven["Answer"].asString().c_str();
+	}
+
+	void Inventory::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Name* childNameComp = nullptr;
+
+		const char* playerCam = "PlayerCamera";
+		const char* invenSocketName = "InventoryHand";
+
+		// inventory hand is in Root/PlayerCamera/InventoryHand
+		// 
+		// find inventory socket from self's child
+		Entity* parent = nullptr;
+		for (Entity* child : selfEntity->GetChildren()) {
+			childNameComp = manager->GetComponent<Name>(child);
+			if (childNameComp && childNameComp->getName().compare(playerCam) == 0) {
+				parent = child;
+				break;
+			}
+		}
+
+		if (parent == nullptr)
+			ERROR_QUIT("ERROR!!! hierachy error");
+
+		for (Entity* child : parent->GetChildren()) {
+			childNameComp = manager->GetComponent<Name>(child);
+			if (childNameComp && childNameComp->getName().compare(invenSocketName) == 0) {
+				m_HoldingSocket = child;
+				break;
+			}
+		}
+
+		if (m_HoldingSocket == nullptr) 
+			ERROR_QUIT("ERROR!! no holding hand in current child, inventory component error");
+		
+		// find targets here
+		const char* targetName = "crowbar";
+		Entity* target = manager->GetEntity(targetName);
+
+		if (target != nullptr) {
+			m_CurrentHolding = 0;
+			m_Items[m_CurrentHolding] = target;
+			manager->AttachChild(m_HoldingSocket, target);
+		}
+	}
+
+	void Inventory::ShowYourself() const
+	{
+
+	}
+
 }

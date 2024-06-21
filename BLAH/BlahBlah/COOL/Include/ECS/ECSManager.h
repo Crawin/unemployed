@@ -133,6 +133,9 @@ public:
 
 	void OnStart(ResourceManager* rm);
 
+	// find entity by name
+	Entity* GetEntity(const std::string& name);
+
 	// execute normal O(n)
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func)

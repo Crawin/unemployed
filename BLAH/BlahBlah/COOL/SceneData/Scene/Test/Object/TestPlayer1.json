@@ -37,13 +37,15 @@
 		"Extent": [25, 85, 25]
 	},
 
+	"Inventory":{},
+
 	"Children": 
 	[
 		{
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 160.0, 15.5],
+				"Position": [0.0, 160.0, 17.0],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
@@ -63,6 +65,21 @@
 
 			"Children":
 			[
+				{
+					"Name": "InventoryHand",
+					"Transform": 
+					{
+						"Position": [171.79, -46.4 , 24.1],
+						"Rotate": [-11.71, -87.62, 48.24],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Attach":
+					{
+						"Mesh": "Player_01",
+						"BoneIDX": 48,
+						"Player": "Player1"
+					}
+				},
 				{
 					"Name": "FlashLight",
 					"Transform":
@@ -168,8 +185,6 @@
 				}
 			]
 		},
-
-
 
 		{
 			"Name": "Player1_hands",
