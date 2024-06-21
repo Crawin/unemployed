@@ -3,7 +3,7 @@
 class InputManager
 {
 // 싱글톤 지옥
-	InputManager() {}
+	InputManager();
 	~InputManager() {}
 	InputManager(const InputManager& other) = delete;
 	InputManager& operator=(const InputManager& other) = delete;
@@ -28,11 +28,18 @@ public:
 
 	bool IsMouseLeftDown() const { return m_LButtonState; }
 	bool IsMouseLeftReleased() const { return m_LButtonReleased; }
+
+	// mouse show/hide, keyboard able/disable
+	void SetUIState(bool uiState);
+
+	//bool OnMouseLeftPressStart();
+	//bool IsMouseLeftDownStart() const { return false; }
+
 private:
 	// mosue input
 	BYTE lpb[sizeof(RAWINPUT)] = { 0, };
 
-	POINT m_BefMouse = { 0,0 };
+	POINT m_WndCenter = { 0,0 };
 	POINT m_CurMouse = { 0,0 };
 	POINT m_MouseDif = { 0,0 };
 

@@ -1,6 +1,17 @@
 ﻿#include "framework.h"
 #include "InputManager.h"
+#include "Application.h"
 #include "Network/Client.h"
+
+InputManager::InputManager()
+{
+	POINT center;
+	Application::GetInstance().GetWindowCenterPos(center);
+
+	SetCursorPos(center.x, center.y);
+
+	SetUIState(false);
+}
 
 void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -12,18 +23,16 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 	m_LButtonReleased = false;
 	switch (msg) {
 	case WM_LBUTTONDOWN:
-	case WM_RBUTTONDOWN:
-		if (m_MouseCapture) SetCapture(hWnd);
+		//if (m_MouseCapture) SetCapture(hWnd);
 		GetCursorPos(&m_CurMouse);
-		GetCursorPos(&m_BefMouse);
+		//GetCursorPos(&m_WndCenter);
 
 		m_LButtonState = true;
 		m_Dragging = true;
 		
 		break;
 	case WM_LBUTTONUP:
-	case WM_RBUTTONUP:
-		ReleaseCapture();
+		//ReleaseCapture();
 		GetCursorPos(&m_CurMouse);
 		m_MouseDif = { 0,0 };
 
@@ -32,13 +41,26 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 		m_Dragging = false;
 
 		break;
+
+	case WM_RBUTTONDOWN:
+		m_LButtonState = true;
+		break;
+
+	case WM_RBUTTONUP:
+		m_LButtonState = false;
+		break;
+
+
 	case WM_MOUSEMOVE:
 	{
 		GetCursorPos(&m_CurMouse);
-		if (m_Dragging && m_MouseCapture) {
-			m_MouseDif.x = m_CurMouse.x - m_BefMouse.x;
-			m_MouseDif.y = m_CurMouse.y - m_BefMouse.y;
-			SetCursorPos(m_BefMouse.x, m_BefMouse.y);
+
+		// main game state
+		if (m_MouseCapture) 
+		{
+			m_MouseDif.x = m_CurMouse.x - m_WndCenter.x;
+			m_MouseDif.y = m_CurMouse.y - m_WndCenter.y;
+			SetCursorPos(m_WndCenter.x, m_WndCenter.y);
 		}
 		//m_BefMouse = curPos;
 		
@@ -67,5 +89,46 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		//Client::GetInstance().Send_Room(pENTERROOM, i_gameNum);
 		Client::GetInstance().Send_Room(pENTERROOM, 10000);
 		break;
+
+	case VK_ESCAPE:
+		// test code
+		SetUIState(m_MouseCapture);
+		break;
+		break;
+	}
+}
+
+void InputManager::SetUIState(bool uiState)
+{
+	// set input state
+	if (uiState == true) {
+		m_MouseDif = { 0,0 };
+
+		ReleaseCapture();
+		m_MouseCapture = false;
+
+		ShowCursor(true);
+
+		// todo
+		// set keyboard state to disable
+	}
+	else {
+		SetCapture(Application::GetInstance().GethWnd());
+		m_MouseCapture = true;
+
+		ShowCursor(false);
+		
+		POINT pt;
+		Application::GetInstance().GetWindowCenterPos(pt);
+
+		m_WndCenter = pt;
+		m_CurMouse = pt;
+		SetCursorPos(pt.x, pt.y);
+
+		//GetCursorPos(&m_CurMouse);
+		//GetCursorPos(&m_BefMouse);
+
+		// todo
+		// set keyboard state to disable
 	}
 }

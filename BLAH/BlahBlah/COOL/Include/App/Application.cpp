@@ -74,6 +74,14 @@ void Application::Tick()
 #endif // DEBUG
 }
 
+void Application::GetWindowCenterPos(POINT& pos)
+{
+	RECT rt;
+	GetWindowRect(Application::GetInstance().GethWnd(), &rt);
+
+	pos = { (rt.right + rt.left) / 2, (rt.bottom + rt.top) / 2 };
+}
+
 bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 {
 	m_hInst = hInst;
