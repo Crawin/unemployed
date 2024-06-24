@@ -156,10 +156,6 @@ namespace ECSsystem {
 			// tick first
 			curPawn->TickInput();
 
-
-			// if ui state, no more update
-			if (InputManager::GetInstance().IsUIState()) return;
-
 			// update inputs
 			for (int i = 0; i < static_cast<int>(GAME_INPUT::GAME_INPUT_END); ++i) {
 				GAME_INPUT input = static_cast<GAME_INPUT>(i);
@@ -249,10 +245,13 @@ namespace ECSsystem {
 
 
 		manager->Execute(tickAndUpdateInput);
-		manager->Execute(inputFunc);
-		manager->Execute(mouseInput);
-		manager->Execute(attachinput);
-
+	
+		// if ui state, no more update
+		if (InputManager::GetInstance().IsUIState() == false) {
+			manager->Execute(inputFunc);
+			manager->Execute(mouseInput);
+			manager->Execute(attachinput);
+		}
 	}
 
 	void ChangeAnimationTest::OnInit(ECSManager* manager)
@@ -914,7 +913,14 @@ namespace ECSsystem {
 
 		using namespace component;
 
-		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [](Button* but, UITransform* trans, SelfEntity* self) {
+		Pawn* controlledPawn = nullptr;
+
+		std::function<void(PlayerController*)> getController = [&controlledPawn](PlayerController* control) {
+			controlledPawn = control->GetControllingPawn();
+			};
+		manager->Execute(getController);
+
+		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [controlledPawn](Button* but, UITransform* trans, SelfEntity* self) {
 			POINT mousePos =  InputManager::GetInstance().GetMouseCurrentPosition();
 			ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
 
@@ -929,7 +935,7 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftReleased()) {
+			if (PtInRect(&rect, mousePos) && controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT) == KEY_STATE::END_PRESS) {
 
 				const ButtonEventFunction& butEvent = but->GetButtonReleaseEvent();
 				if (butEvent != nullptr) {
@@ -965,7 +971,7 @@ namespace ECSsystem {
 			auto& client = Client::GetInstance();
 			if (client.getRoomNum() && pawn->IsActive() == true)
 			{
-				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+				if (sp->GetCurrentVelocityLen() > 0 || pawn->IsPressing(GAME_INPUT::MOUSE_LEFT))
 					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
 			}
 			};
