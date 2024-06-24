@@ -107,7 +107,7 @@ public:
 	{
 		switch (base->getType())
 		{
-			case 0:				// POSITION
+			case 0:				// POSITION 
 			{
 				auto position = reinterpret_cast<sc_packet_position*>(base);
 				auto sendOver = new EXP_OVER(position);
@@ -118,7 +118,7 @@ public:
 				}
 			}
 				break;
-			case 1:				// LOGIN
+			case pLOGIN:				// LOGIN
 			{
 				auto login = reinterpret_cast<sc_packet_login*>(base);
 				auto sendOver = new EXP_OVER(login);
@@ -129,7 +129,7 @@ public:
 				}
 			}
 				break;
-			case 2:				//	pMAKEROOM
+			case pMAKEROOM:				//	pMAKEROOM
 			{
 				auto room = reinterpret_cast<sc_packet_make_room*>(base);
 				auto sendOver = new EXP_OVER(room);
@@ -140,7 +140,7 @@ public:
 				}
 			}
 				break;
-			case 3:				// pENTERROOM
+			case pENTERROOM:				// pENTERROOM
 			{
 				auto enter = reinterpret_cast<sc_packet_enter_room*>(base);
 				auto sendOver = new EXP_OVER(enter);
@@ -151,7 +151,7 @@ public:
 				}
 			}
 				break;
-			case 4:				//	pRoomPlayer
+			case pRoomPlayer:				//	pRoomPlayer
 			{
 				auto player = reinterpret_cast<sc_packet_room_player*>(base);
 				auto sendOver = new EXP_OVER(player);
@@ -162,10 +162,21 @@ public:
 				}
 			}
 				break;
-			case 5:				// logout
+			case pLogout:				// logout
 			{
 				auto logout = reinterpret_cast<sc_packet_logout*>(base);
 				auto sendOver = new EXP_OVER(logout);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case pAttack:
+			{
+				auto attack = reinterpret_cast<sc_packet_npc_attack*>(base);
+				auto sendOver = new EXP_OVER(attack);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
 				if (0 != res) {
@@ -209,7 +220,7 @@ public:
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
-
+	DirectX::BoundingOrientedBox obb;
 	void reset()
 	{
 		id = NULL;
@@ -219,6 +230,13 @@ public:
 		position = { 0,0,0 };
 		rotation = { 0,0,0 };
 		speed = { 0,0,0 };
+		obb = DirectX::BoundingOrientedBox();
+	}
+	void make_obb()
+	{
+		DirectX::XMFLOAT3 temp_extents = { 40,50,40 };
+		DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
+		obb = DirectX::BoundingOrientedBox(DirectX::XMFLOAT3(0, 0, 0), temp_extents, temp_quarta);
 	}
 };
 
@@ -230,13 +248,23 @@ public:
 	short state = 0;				// 0: idle, 1: 이동중
 	unsigned int id = NULL;
 	short m_floor = 1;
-	DirectX::XMFLOAT3 position = { 3160,0,-400 };
+	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
 	DirectX::XMFLOAT3 destination = { 0,0,0 };
 	std::chrono::steady_clock::time_point arrive_time;
+	std::chrono::steady_clock::time_point attacked_time;
 	PATH* path = nullptr;
-	void state_machine(Player*, const bool& npc_state);
+	DirectX::BoundingOrientedBox obb;
+public:
+	NPC() {
+		DirectX::XMFLOAT3 basic_obb_position = { 0,85,0 };
+		DirectX::XMFLOAT3 basic_obb_extents = { 25,85,25 };
+		DirectX::XMFLOAT4 basic_obb_orients = { 0,0,0,1 };
+		obb = DirectX::BoundingOrientedBox(basic_obb_position, basic_obb_extents, basic_obb_orients);
+	}
+	void guard_state_machine(Player*, const bool& npc_state);
+	void student_state_machine(Player*);
 	bool can_see(Player&);
 	bool can_hear(Player&);
 	float distance(Player&);
@@ -244,6 +272,7 @@ public:
 	bool set_destination(Player*&, const bool& npc_state);
 	void move();
 	const short find_near_player(Player*&);
+
 };
 
 //struct GameDetails
@@ -258,10 +287,22 @@ class Game
 	unsigned int GameNum;
 	Player player[2];
 	NPC guard;
+	NPC students[50];
 	
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
-	Game(const unsigned int& n) : GameNum(n), state(true) {}
+	Game(const unsigned int& n) : GameNum(n), state(true) {
+		// 가드 초기위치 설정
+		guard.position = DirectX::XMFLOAT3(3160, 0, -400);
+		guard.id = 1;
+		
+		// npc 초기위치를 어떻게 설정할깝쇼
+		// 노가다로 설정해둘까
+		for (int i = 1; i < 21; ++i)
+		{
+			students[i].id = i;
+		}
+	}
 	void init(const unsigned int& i, const SOCKET& s);
 	Player* getPlayers() { return player; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
@@ -277,6 +318,7 @@ public:
 	void update(const bool& npc_state);
 	bool hasEmpty();
 	bool CAS_state(bool& before, bool& after);
+
 };
 
 struct ServerDetails
@@ -302,9 +344,6 @@ public:
 	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	unsigned short floor_collision(cs_packet_position*& packet);
-	bool world_collision(cs_packet_position*&);
-	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
-	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* floor, std::chrono::nanoseconds& ping);
 	void command_thread();
 	void ai_thread();
 };
