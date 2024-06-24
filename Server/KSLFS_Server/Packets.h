@@ -25,7 +25,7 @@ enum PACKET_TYPE
 class packet_base
 {
 protected:
-	int size;
+	char size;
 	PACKET_TYPE type;
 public:
 	const unsigned char getSize() { return size; }

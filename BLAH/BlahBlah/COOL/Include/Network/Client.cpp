@@ -188,17 +188,20 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 	int current_size = 0;
 	char* recv_buf = client.Get_Buf();
 	short prev_size = client.get_prev_packet_size();
-	while (current_size < recv_size)
+	while (current_size < recv_size + prev_size)			// 이전에 들어온 패킷 사이즈 + 현재 들어온 패킷 사이즈
 	{
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
-		int size = base->getSize();
-		//if (size == 0)
-		//	break;
+		char size = base->getSize();
+		if (size == 0)
+		{
+			std::cout << "사이즈가 0인 패킷 확인?" << std::endl;
+			while (1);
+		}
 
 		if (size + current_size > recv_size + prev_size)
 		{
-			client.set_prev_packet_size(size);
+			client.set_prev_packet_size(recv_size + prev_size - current_size);
 			client.pull_packet(current_size);
 			client.Recv_Start();
 			return;

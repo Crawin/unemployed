@@ -150,10 +150,10 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			while (current_size < total_recv_packet_size)
 			{
 				auto base = reinterpret_cast<packet_base*>(&e_over->buf[current_size]);
-				int packet_size = base->getSize();
+				char packet_size = base->getSize();
 				if (packet_size + current_size > total_recv_packet_size)
 				{
-					login_players[my_id].set_prev_packet_size(packet_size);
+					login_players[my_id].set_prev_packet_size(total_recv_packet_size - current_size);
 					login_players[my_id].pull_recv_buf(current_size);
 					login_players[my_id].do_recv();
 					break;
