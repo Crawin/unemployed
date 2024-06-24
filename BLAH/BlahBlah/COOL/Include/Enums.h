@@ -33,10 +33,37 @@ enum class ANIMATION_STATE {
 	NULLANIM
 };
 
+enum class KEY_STATE {
+	NONE = 0,
+	START_PRESS,
+	PRESSING,
+	END_PRESS
+};
+
+enum class GAME_INPUT {
+	FORWARD = 0,
+	BACKWARD,
+	LEFT,
+	RIGHT,
+	INTERACTION,
+	CTRL,
+	SHIFT,
+	SPACE_BAR,
+	MOUSE_LEFT,
+	MOUSE_RIGHT,
+	NUM_1,
+	NUM_2,
+	NUM_3,
+	NUM_4,
+	NUM_5,
+	GAME_INPUT_END
+};
+
 
 
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim);
+int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput);
 
 // struct
 //struct PS_MRT_OUTPUT

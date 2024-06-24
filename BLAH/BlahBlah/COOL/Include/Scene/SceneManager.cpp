@@ -21,7 +21,6 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Light, "Light");
-	REGISTER_COMPONENT(component::Input, "Input");
 	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
 	REGISTER_COMPONENT(component::Server, "Server");
@@ -30,6 +29,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::AttachInput, "AttachInput");
 	REGISTER_COMPONENT(component::Interaction, "Interaction");
 	REGISTER_COMPONENT(component::Player, "Player");
+	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
+	REGISTER_COMPONENT(component::Pawn, "Pawn");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");

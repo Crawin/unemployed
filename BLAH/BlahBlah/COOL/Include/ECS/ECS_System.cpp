@@ -149,25 +149,48 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
+		// tick input
+		std::function<void(PlayerController*)> tickAndUpdateInput = [](PlayerController* ctrl) {
+			Pawn* curPawn = ctrl->GetControllingPawn();
+			
+			// tick first
+			curPawn->TickInput();
+
+
+			// if ui state, no more update
+			if (InputManager::GetInstance().IsUIState()) return;
+
+			// update inputs
+			for (int i = 0; i < static_cast<int>(GAME_INPUT::GAME_INPUT_END); ++i) {
+				GAME_INPUT input = static_cast<GAME_INPUT>(i);
+				if (GetAsyncKeyState(ConvertGameInputEnumToKeyIntValue(input)) & 0x8000) 
+					curPawn->PressInput(input);
+			}
+
+			};
+
+
+
 		// input으로 pysics 업데이트
-		std::function<void(Transform*, Input*, Physics*)> inputFunc = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime](Transform* tr, Pawn* pawn, Physics* sp) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
-			if (GetAsyncKeyState('W') & 0x8000) { tempMove.z += 1.0f; move = true; }
-			if (GetAsyncKeyState('S') & 0x8000) { tempMove.z -= 1.0f; move = true; }
-			if (GetAsyncKeyState('A') & 0x8000) { tempMove.x -= 1.0f; move = true; }
-			if (GetAsyncKeyState('D') & 0x8000) { tempMove.x += 1.0f; move = true; }
-			//if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
+			if (pawn->IsPressing(GAME_INPUT::FORWARD)) { 
+				tempMove.z += 1.0f; move = true;
+			}
+			if (pawn->IsPressing(GAME_INPUT::BACKWARD)) { tempMove.z -= 1.0f; move = true; }
+			if (pawn->IsPressing(GAME_INPUT::LEFT)) { tempMove.x -= 1.0f; move = true; }
+			if (pawn->IsPressing(GAME_INPUT::RIGHT)) { tempMove.x += 1.0f; move = true; }
 
-			if (GetAsyncKeyState(VK_SPACE) & 0x0001) 
+			if (pawn->GetInputState(GAME_INPUT::SPACE_BAR) == KEY_STATE::START_PRESS)
 			{ 
 				XMFLOAT3 temp = sp->GetVelocity();
 				sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
 			}
 
 			float maxSpeed = 200.0f;
-			if (GetAsyncKeyState(VK_SHIFT) * 0x8000) maxSpeed += 400.0f;
+			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
 			sp->SetMaxSpeed(maxSpeed);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
@@ -196,55 +219,8 @@ namespace ECSsystem {
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
 			}
+		};
 
-			};
-
-		std::function<void(Transform*, TestInput*, Physics*)> inputFunc2 = [deltaTime](Transform* tr, TestInput* in, Physics* sp) {
-			// keyboard input
-			bool move = false;
-			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
-			if (GetAsyncKeyState(VK_UP) & 0x8000)		{ tempMove.z += 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_DOWN) & 0x8000)		{ tempMove.z -= 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_LEFT) & 0x8000)		{ tempMove.x -= 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_RIGHT) & 0x8000)	{ tempMove.x += 1.0f; move = true; }
-
-			float speed = sp->GetCurrentVelocityLenOnXZ();
-
-			// update speed if key down
-			if (move) {
-				XMVECTOR vec = XMLoadFloat3(&tempMove);
-				XMFLOAT4X4 tpRot = tr->GetWorldTransform();
-				tpRot._41 = 0.0f;
-				tpRot._42 = 0.0f;
-				tpRot._43 = 0.0f;
-
-				vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-
-				XMStoreFloat3(&tempMove, vec);
-				sp->AddVelocity(tempMove, deltaTime);
-			}
-
-
-			//XMVECTOR vec = XMLoadFloat3(&tempMove) * speed * deltaTime;
-
-			//XMFLOAT4X4 tpRot = tr->GetWorldTransform();
-			//tpRot._41 = 0.0f;
-			//tpRot._42 = 0.0f;
-			//tpRot._43 = 0.0f;
-
-			//vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-			//XMStoreFloat3(&tempMove, vec);
-
-
-			//if (move)
-			//	sp->SetForce(tempMove);
-
-			////DebugPrint(std::format("speed: {}", speed));
-			//if (speed != 0)
-			//	tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
-
-			};
-		
 		// mouse
 		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime](Transform* tr, Camera* cam) {
 			if (cam->m_IsMainCamera == false) return;
@@ -272,8 +248,8 @@ namespace ECSsystem {
 			};
 
 
+		manager->Execute(tickAndUpdateInput);
 		manager->Execute(inputFunc);
-		//manager->Execute(inputFunc2);
 		manager->Execute(mouseInput);
 		manager->Execute(attachinput);
 
@@ -913,11 +889,11 @@ namespace ECSsystem {
 		using namespace component;
 
 		// interaction
-		std::function<void(Input*, SelfEntity*)> interactionFunc = [manager](Input* in, SelfEntity* self) {
+		std::function<void(Pawn*, SelfEntity*)> interactionFunc = [manager](Pawn* pawn, SelfEntity* self) {
 			Entity* interactionEntity = nullptr;
 
 			// if press 'E'
-			if (GetAsyncKeyState('E') & 0x0001) interactionEntity = in->GetInteractionEntity();
+			if (pawn->GetInputState(GAME_INPUT::INTERACTION) == KEY_STATE::START_PRESS) interactionEntity = interactionEntity = pawn->GetInteractionEntity();
 			if (interactionEntity == nullptr) return;
 
 			Interaction* interaction = manager->GetComponent<Interaction>(interactionEntity);
@@ -985,9 +961,9 @@ namespace ECSsystem {
 	{
 		using namespace component;
 		// send
-		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*)> send = [deltaTime](Transform* tr, Pawn* pawn, Physics* sp) {
 			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
+			if (client.getRoomNum() && pawn->IsActive() == true)
 			{
 				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
 					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);

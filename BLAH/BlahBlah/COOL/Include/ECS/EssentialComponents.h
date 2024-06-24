@@ -332,17 +332,17 @@ namespace component {
 	// input component
 	// 단순히 얘가 인풋을 받는 컴포넌트다 라고 알려주는 컴포넌트, 냉무, 임시, todo
 	//
-	class Input : public ComponentBase<Input> {
-		Entity* m_InteractionEntity = nullptr;
+	//class Input : public ComponentBase<Input> {
+	//	Entity* m_InteractionEntity = nullptr;
 
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+	//public:
+	//	virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
-		virtual void ShowYourself() const;
+	//	virtual void ShowYourself() const;
 
-		void SetInteractionEntity(Entity* ent) { m_InteractionEntity = ent; }
-		Entity* GetInteractionEntity() { return m_InteractionEntity; }
-	};
+	//	void SetInteractionEntity(Entity* ent) { m_InteractionEntity = ent; }
+	//	Entity* GetInteractionEntity() { return m_InteractionEntity; }
+	//};
 
 	/////////////////////////////////////////////////////////
 	// Physics component
@@ -621,6 +621,52 @@ namespace component {
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 		virtual void ShowYourself() const;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Pawn Component
+	// PlayerController에 의해 입력을 받는다, 입력 상태를 저장한다
+	//
+	class Pawn : public ComponentBase<Pawn> {
+		KEY_STATE m_KeyStates[static_cast<long long int>(GAME_INPUT::GAME_INPUT_END)];
+		Entity* m_InteractionEntity = nullptr;
+		bool m_Active = false;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const;
+
+		void ResetInput();
+		void TickInput();
+		
+		void PressInput(GAME_INPUT key);
+
+		KEY_STATE GetInputState(GAME_INPUT key) const { return m_KeyStates[static_cast<long long int>(key)]; }
+		bool IsPressing(GAME_INPUT key) const;
+
+		void SetInteractionEntity(Entity* ent) { m_InteractionEntity = ent; }
+		Entity* GetInteractionEntity() { return m_InteractionEntity; }
+
+		void SetActive(bool active) { m_Active = active; }
+		bool IsActive() const { return m_Active; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// PlayerController Component
+	// 플레이어 컨트롤러 컴포넌트, Player에 빙의
+	//
+	class PlayerController : public ComponentBase<PlayerController> {
+		Pawn* m_CurrentPossess = nullptr;
+		std::string m_TargetEntityName;			// todo 안써도 되는 방법을 찾아보자
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const;
+
+		bool Possess(ECSManager* manager, const std::string& targetName);
+
+		Pawn* GetControllingPawn() const { return m_CurrentPossess; }
 	};
 
 }

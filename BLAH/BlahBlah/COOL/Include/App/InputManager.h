@@ -28,6 +28,7 @@ public:
 
 	bool IsMouseLeftDown() const { return m_LButtonState; }
 	bool IsMouseLeftReleased() const { return m_LButtonReleased; }
+	bool IsUIState() const { return m_UIState; }
 
 	// mouse show/hide, keyboard able/disable
 	void SetUIState(bool uiState);
@@ -45,6 +46,7 @@ private:
 
 	bool m_Dragging = false;
 	bool m_MouseCapture = true;
+	bool m_UIState = false;
 
 	bool m_LButtonState = false;
 	bool m_LButtonReleased = false;

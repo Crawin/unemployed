@@ -102,17 +102,20 @@ void InputManager::SetUIState(bool uiState)
 {
 	// set input state
 	if (uiState == true) {
+		m_UIState = true;
+
 		m_MouseDif = { 0,0 };
 
 		ReleaseCapture();
 		m_MouseCapture = false;
-
 		ShowCursor(true);
 
 		// todo
 		// set keyboard state to disable
 	}
 	else {
+		m_UIState = false;
+
 		SetCapture(Application::GetInstance().GethWnd());
 		m_MouseCapture = true;
 
