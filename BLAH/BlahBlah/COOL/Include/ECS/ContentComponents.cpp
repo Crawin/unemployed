@@ -150,7 +150,8 @@ namespace component {
 	{
 		Json::Value inven = v["Inventory"];
 
-		//m_TargetEntityNames[0] = inven["Answer"].asString().c_str();
+		for(int i = 0; i < MAX_INVENTORY; ++i)
+			m_TargetEntityNames[i] = inven[std::format("Slot_{}", i)].asString().c_str();
 	}
 
 	void Inventory::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -163,43 +164,63 @@ namespace component {
 		// inventory hand is in Root/PlayerCamera/InventoryHand
 		// 
 		// find inventory socket from self's child
-		Entity* parent = nullptr;
-		for (Entity* child : selfEntity->GetChildren()) {
-			childNameComp = manager->GetComponent<Name>(child);
-			if (childNameComp && childNameComp->getName().compare(playerCam) == 0) {
-				parent = child;
-				break;
-			}
-		}
-
+		Entity* parent = manager->GetEntityInChildren(playerCam, selfEntity);
 		if (parent == nullptr)
 			ERROR_QUIT("ERROR!!! hierachy error");
 
-		for (Entity* child : parent->GetChildren()) {
-			childNameComp = manager->GetComponent<Name>(child);
-			if (childNameComp && childNameComp->getName().compare(invenSocketName) == 0) {
-				m_HoldingSocket = child;
-				break;
-			}
-		}
-
+		m_HoldingSocket = manager->GetEntityInChildren(invenSocketName, parent);
 		if (m_HoldingSocket == nullptr) 
 			ERROR_QUIT("ERROR!! no holding hand in current child, inventory component error");
 		
 		// find targets here
-		const char* targetName = "crowbar";
-		Entity* target = manager->GetEntity(targetName);
+		for (int i = 0; i < MAX_INVENTORY; ++i) {
+			if (m_TargetEntityNames[i] != "") {
+				Entity* target = manager->GetEntity(m_TargetEntityNames[i]);
 
-		if (target != nullptr) {
-			m_CurrentHolding = 0;
-			m_Items[m_CurrentHolding] = target;
-			manager->AttachChild(m_HoldingSocket, target);
+				if (target != nullptr) {
+					Holdable* hold = manager->GetComponent<Holdable>(target);
+					if (hold == nullptr) ERROR_QUIT(std::format("ERROR!! no holdable component in this entity, name: {}", m_TargetEntityNames[i]));
+
+					m_Items[i] = target;
+				}
+			}
+		}
+
+		m_CurrentHolding = 0;
+		if (m_Items[m_CurrentHolding] != nullptr) 
+		{
+			manager->AttachChild(m_HoldingSocket, m_Items[m_CurrentHolding]);
 		}
 	}
 
 	void Inventory::ShowYourself() const
 	{
 
+	}
+
+	void Holdable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value hold = v["Holdable"];
+
+		std::string action = hold["Action"].asString();
+
+		if (action == "Attack") {
+			//Input_State_In_LongLong atk = Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS);
+			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS)] = []() {
+				DebugPrint("ATTACK");
+				};
+		}
+		else if (action == "Throw") {
+
+		}
+	}
+
+	void Holdable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
+	void Holdable::ShowYourself() const
+	{
 	}
 
 }

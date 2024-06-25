@@ -39,7 +39,13 @@
 		"Extent": [25, 85, 25]
 	},
 
-	"Inventory":{},
+	"Inventory":
+	{
+		"Slot_0": "crowbar",
+		"Slot_1": "",
+		"Slot_2": "",
+		"Slot_3": ""
+	},
 
 	"Children": 
 	[
@@ -59,7 +65,7 @@
 				"Look": 	[0.0, 0.0, 1.0],
 				"Position": [0.0, 70.0, 5.5],
 		
-				"Fov": 90.0,
+				"Fov": 75.0,
 				"Aspect": 1.777,
 				"Near": 0.1,
 				"Far": 10000.0

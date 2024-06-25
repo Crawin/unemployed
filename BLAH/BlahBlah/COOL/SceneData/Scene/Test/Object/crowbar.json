@@ -8,6 +8,12 @@
 				"Material" : "Object/crowbar",
 				"Mesh" : "crowbar.crowbar"
 			},
+			
+			"Holdable": 
+			{
+				"Action": "Attack"				
+			},
+
 			"Transform" : 
 			{
 				"Position" : 

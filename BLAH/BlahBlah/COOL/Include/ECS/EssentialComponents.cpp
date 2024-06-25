@@ -773,6 +773,8 @@ namespace component {
 			}
 		}
 
+		m_MouseDif = { 0, 0 };
+
 	}
 
 	void Pawn::PressInput(GAME_INPUT key)

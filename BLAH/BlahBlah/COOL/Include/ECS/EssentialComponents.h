@@ -631,6 +631,7 @@ namespace component {
 		KEY_STATE m_KeyStates[static_cast<long long int>(GAME_INPUT::GAME_INPUT_END)];
 		Entity* m_InteractionEntity = nullptr;
 		bool m_Active = false;
+		POINT m_MouseDif = { 0, 0 };
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -649,6 +650,9 @@ namespace component {
 
 		void SetActive(bool active) { m_Active = active; }
 		bool IsActive() const { return m_Active; }
+
+		void SetMouseMove(const POINT& pt) { m_MouseDif = pt; }
+		const POINT& GetMouseMove() const { return m_MouseDif; }
 	};
 
 	/////////////////////////////////////////////////////////

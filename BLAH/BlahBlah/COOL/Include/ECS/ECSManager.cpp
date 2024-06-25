@@ -196,3 +196,16 @@ Entity* ECSManager::GetEntity(const std::string& targetName)
 
 	return target;
 }
+
+Entity* ECSManager::GetEntityInChildren(const std::string& name, Entity* parent)
+{
+	component::Name* childNameComp = nullptr;
+
+	for (Entity* child : parent->GetChildren()) {
+		childNameComp = GetComponent<component::Name>(child);
+		if (childNameComp && childNameComp->getName() == name)
+			return child;
+	}
+
+	return nullptr;
+}

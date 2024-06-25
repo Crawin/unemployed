@@ -170,8 +170,6 @@ namespace ECSsystem {
 			InputManager::GetInstance().ResetMouseMove();
 			};
 
-
-
 		// input으로 pysics 업데이트
 		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime, &mouseMove](Transform* tr, Pawn* pawn, Physics* sp) {
 			// keyboard input
@@ -221,7 +219,7 @@ namespace ECSsystem {
 			}
 		};
 
-		// mouse
+		// mouse - cameras
 		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime, &mouseMove](Transform* tr, Camera* cam) {
 			if (cam->m_IsMainCamera == false) return;
 
@@ -234,7 +232,7 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
-		// mouse
+		// mouse - attachInputs
 		std::function<void(Transform*, AttachInput*)> attachinput = [deltaTime, &mouseMove](Transform* tr, AttachInput* cam) {
 			// todo rotate must not be orbit
 
@@ -245,6 +243,32 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
+		//////////////////////////////////////////
+		// Content
+		//////////////////////////////////////////
+		// Pawn Inventory Action
+		std::function<void(Pawn*, Inventory*)> pawnInvenAction = [deltaTime, manager](Pawn* pawn, Inventory* inven) {
+			Entity* holding = inven->GetCurrentHoldingItem();
+
+			if (holding == nullptr) return;
+
+			Holdable* holdComp = manager->GetComponent<Holdable>(holding);
+
+			if (holdComp == nullptr) {
+				Name* name = manager->GetComponent<Name>(holding);
+				DebugPrint(std::format("ERROR!! no holdable component on this entity, name: {}", name->getName()));
+				return;
+			}
+
+			auto& maps = holdComp->GetActionMap();
+			//auto& inputState = pawn->GetInputState();
+
+			for (auto& [key, actionFunc] : maps) 
+				if (key.GetState() == pawn->GetInputState(key.GetInput())) 
+					actionFunc();
+			
+
+			};
 
 		manager->Execute(tickAndUpdateInput);
 	
@@ -253,6 +277,7 @@ namespace ECSsystem {
 			manager->Execute(inputFunc);
 			manager->Execute(mouseInput);
 			manager->Execute(attachinput);
+			manager->Execute(pawnInvenAction);
 		}
 	}
 
