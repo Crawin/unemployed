@@ -143,8 +143,8 @@ namespace component {
 	// CCTV, drinks
 	//
 	class Throwable : public ComponentBase<Throwable> {
-		XMFLOAT3 m_DirectionOrigin = { 0.0f, 0.707f, 0.707f };
-		XMFLOAT3 m_DirectionResult = { 0.0f, 0.707f, 0.707f };
+		XMFLOAT3 m_DirectionOrigin = { 0.0f, 0.0f, 1.0f };
+		XMFLOAT3 m_DirectionResult = { 0.0f, 0.0f, 1.0f };
 		float m_ThrowPower = 0.0f;
 		float m_ThrowMax = 10.0f;
 
@@ -178,6 +178,9 @@ namespace component {
 		bool ChangeHoldingItem(int idx, ECSManager* manager);
 
 		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
+		const Entity* GetHoldingSocket() const { return m_HoldingSocket; }
+
+		void EraseCurrentHolding() { m_Items[m_CurrentHolding] = nullptr; }
 		
 	};
 

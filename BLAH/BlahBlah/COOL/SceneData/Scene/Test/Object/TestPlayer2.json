@@ -19,7 +19,8 @@
 	{
 		"MaxVelocity": 1000.0,
 		"Acceleration" : [2000.0, 2000.0, 2000.0],
-		"Calculate" : true
+		"Calculate" : true,
+		"Friction": true
 	},
 
 	"PlayerAnimControll": {},
@@ -29,6 +30,7 @@
 		"Static": false,
 		"AutoMesh": false,
 		"IsCapsule": true,
+		"ColideWithDynamic": true,
 		"Center": [0.0, 85, 0],
 		"Extent": [25, 85, 25]
 	},

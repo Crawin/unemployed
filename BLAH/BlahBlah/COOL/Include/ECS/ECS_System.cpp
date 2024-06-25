@@ -20,6 +20,8 @@ namespace ECSsystem {
 			const std::list<Entity*>& children = ent->GetChildren();
 
 			// build world matrix for child
+			if (self->GetEntity()->GetParent() == nullptr)
+				trans->SetParentTransform(Matrix4x4::Identity());
 			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
 
 			for (Entity* child : children) {
@@ -742,7 +744,7 @@ namespace ECSsystem {
 
 		// friction on xz
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
-			if (sp->IsToCalculate() == false) return;
+			if (sp->IsToCalculate() == false || sp->IsFrictionActive() == false) return;
 
 			const float friction = 1100.0f;
 			// if moving

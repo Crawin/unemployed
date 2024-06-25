@@ -71,15 +71,16 @@ namespace component {
 
 		const XMFLOAT3& GetPosition() const { return m_Position; }
 		const XMFLOAT3& GetRotation() const { return m_Rotate; }
+		const XMFLOAT3& GetScale() const { return m_Scale; }
+
 		const XMFLOAT3& GetWorldPosition() const;
 		const XMFLOAT3& GetWorldRotation() const;
 
-		const XMFLOAT3& GetScale() const { return m_Scale; }
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 
 		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
-		XMFLOAT4X4& GetWorldTransform();
-		XMFLOAT4X4& GetLocalTransform();
+		const XMFLOAT4X4& GetWorldTransform() const;
+		const XMFLOAT4X4& GetLocalTransform() const;
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
@@ -354,6 +355,7 @@ namespace component {
 		float m_Elasticity = 1.1f;
 
 		bool m_CalculatePhysics = false;
+		bool m_Friction = true;
 
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
@@ -380,7 +382,11 @@ namespace component {
 
 		float GetElasticity() const { return m_Elasticity; }
 
+		void SetCalculateState(bool state) { m_CalculatePhysics = state; }
 		bool IsToCalculate() const { return m_CalculatePhysics; }
+
+		void SetActiveFriction(bool state) { m_Friction = state; }
+		bool IsFrictionActive() const { return m_Friction; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -536,6 +542,7 @@ namespace component {
 		bool m_IsCapsule = false;
 		bool m_Collided = false;
 		bool m_Active = true;
+		bool m_ColideWithDynamic = true;
 
 		CollideEvents m_EventFunctions;
 

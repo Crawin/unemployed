@@ -15,7 +15,9 @@
 
 	"Physics": {
 		"MaxVelocity": 200.0,
-		"Acceleration": [ 1500.0, 1500.0, 1500.0 ]
+		"Acceleration": [ 1500.0, 1500.0, 1500.0 ],
+		"Calculate" : true,
+		"Friction": true
 	},
 
 	"PlayerAnimControll": {},

@@ -373,7 +373,7 @@ namespace component {
 			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			//selfCollider->SetActive(true);
 
-			DebugPrint("PlayAttackAnimation and Weapon Collider On");
+			DebugPrint("Todo: PlayAttackAnimation and Weapon Collider On");
 		});
 	}
 
@@ -420,28 +420,53 @@ namespace component {
 			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			//selfCollider->SetActive(true);
 
-			DebugPrint("PlayAttackAnimation and Weapon Collider On");
+			DebugPrint("Todo: PlayAttackAnimation and Weapon Collider On");
 		});
-		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING), [&directionOrigin, &directionResult, &throwPow, manager, selfEntity](float deltaTime) {
-			Transform* selfTr = manager->GetComponent<Transform>(selfEntity);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING), [&directionOrigin, &directionResult, &throwPow, manager, holdable](float deltaTime) {
+			Inventory* masterInv = manager->GetComponent<Inventory>(holdable->GetMaster());
+			Transform* masterTr = manager->GetComponent<Transform>(masterInv->GetHoldingSocket()->GetParent());
 
-			XMVECTOR dir = XMLoadFloat3(&directionOrigin);
-			XMMATRIX world = XMLoadFloat4x4(&selfTr->GetWorldTransform());
-			XMVECTOR pos = XMLoadFloat3(&selfTr->GetWorldPosition());
+			XMVECTOR dir{ directionOrigin.x, directionOrigin.y, directionOrigin.z, 0 };
+			XMMATRIX world = XMLoadFloat4x4(&masterTr->GetWorldTransform());
 
-			XMVECTOR resDir = XMVector3Transform(dir, world) - pos;
+			// vector4 transform으로 방향벡터 transform
+			XMVECTOR resDir = XMVector3Normalize(XMVector4Transform(dir, world));
 			XMStoreFloat3(&directionResult, resDir);
 
 			throwPow += deltaTime;
 
-			DebugPrintVector(directionResult, "realDir");
 		});
-		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), [&directionResult, &throwPow, maxPow](float deltaTime) {
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), [&directionResult, &throwPow, maxPow, manager, selfEntity, holdable](float deltaTime) {
 			DebugPrint(std::format("power: {}", throwPow));
+			XMStoreFloat3(&directionResult, XMVector3Normalize(XMLoadFloat3(&directionResult)));
 			DebugPrintVector(directionResult, "realDir");
 
 			throwPow = std::min(throwPow, maxPow);
 			DebugPrint(std::format("power: {}", throwPow));
+
+			// detach
+			manager->DetachChild(selfEntity->GetParent(), selfEntity);
+
+			// erase itself from Inventory
+			Inventory* masterInv = manager->GetComponent<Inventory>(holdable->GetMaster());
+			masterInv->EraseCurrentHolding();
+
+			Transform* selfTr = manager->GetComponent<Transform>(selfEntity);
+			Physics* py = manager->GetComponent<Physics>(selfEntity);
+			DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
+
+			// when detach, set entity to world pos
+			selfTr->SetRotation(selfTr->GetWorldRotation());
+			selfTr->SetPosition(selfTr->GetWorldPosition());
+			
+			// add force, calculate physics true
+			py->AddVelocity(directionResult, throwPow);
+			py->SetCalculateState(true);
+
+			DebugPrintVector(py->GetVelocity(), "velocity");
+			DebugPrintVector(selfTr->GetRotation(), "rotate");
+			// set collider on
+			//dc->SetActive(true);
 
 			DebugPrint("Throw");
 		});

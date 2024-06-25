@@ -22,13 +22,15 @@
 			{
 				"MaxVelocity": 200.0,
 				"Acceleration" : [2000.0, 2000.0, 2000.0],
-				"Calculate" : false
+				"Calculate" : false,
+				"Friction": false
 			},
 
 			"DynamicCollider":
 			{
 				"Static": false,
-				"AutoMesh" : true
+				"AutoMesh" : true,
+				"ColideWithDynamic": false
 			},
 
 			"Transform" : 
