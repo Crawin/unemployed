@@ -551,10 +551,10 @@ void Game::update(const bool& npc_state)
 {
 	guard.guard_state_machine(player, npc_state);
 	//std::cout << "npc 회전: " << guard.rotation.y << std::endl;
-	//for (auto& student : students)
-	//{
-	//	student.student_state_machine(player);
-	//}
+	for (auto& student : students)
+	{
+		student.student_state_machine(player);
+	}
 	sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
 	for (auto& p : player)
 	{
@@ -705,39 +705,63 @@ void NPC::student_state_machine(Player* p)
 	DirectX::XMVECTOR student_location = DirectX::XMLoadFloat3(&this->position);
 	this->obb.Transform(now_obb, 1, student_rotation, student_location);
 	// 다른 캐릭터와 충돌했나?
-	//now_obb.Intersects()
-	if (false)
+	bool hit = false;
+	DirectX::BoundingOrientedBox player_obb;
+	float player_pitch;
+	float player_yaw;
+	float player_roll;
+	DirectX::XMVECTOR player_rotation;
+	DirectX::XMVECTOR player_location;
+	for (int i = 0; i < 2; ++i)
 	{
-		using namespace std::chrono;
-		attacked_time = steady_clock::now();
+		if (p[i].sock == NULL)
+			continue;
+		player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
+		player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
+		player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
+		player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
+		player_location = DirectX::XMLoadFloat3(&p[i].position);
+		p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
+		hit = now_obb.Intersects(player_obb);
+		if (hit)
+		{
+			std::cout << i<<" 와 충돌" << std::endl;
+			break;
+		}
+	}
 
-		sc_packet_npc_attack attack_student(this->id);
-		for (int i = 0; i < 2; ++i)
-		{
-			if(p[i].sock != NULL)
-				login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
-		}
-	}
-	else
-	{
-		if (this->state == 0)			// 목적지 도착한 상태
-		{
-			// 2초동안 대기
-			int stop = 2;
-			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
-			if (duration > 2)			// 2초 대기 이후
-			{
-				// 새로운 목표 위치 선정
-				int des = rand() % g_um_graph.size();
-				std::cout <<"student["<<this->id<<"] "<< des << "로 목적지 설정" << std::endl;
-				this->state = 1;
-			}
-		}
-		else if (this->state == 1)		// 목적지로 이동하는 중
-		{
-			move();		// 목표 위치로 이동
-		}
-	}
+	//if (hit)
+	//{
+	//	using namespace std::chrono;
+	//	attacked_time = steady_clock::now();
+
+	//	sc_packet_npc_attack attack_student(this->id);
+	//	for (int i = 0; i < 2; ++i)
+	//	{
+	//		if(p[i].sock != NULL)
+	//			login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
+	//	}
+	//}
+	//else
+	//{
+	//	if (this->state == 0)			// 목적지 도착한 상태
+	//	{
+	//		// 2초동안 대기
+	//		int stop = 2;
+	//		auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
+	//		if (duration > 2)			// 2초 대기 이후
+	//		{
+	//			// 새로운 목표 위치 선정
+	//			int des = rand() % g_um_graph.size();
+	//			std::cout <<"student["<<this->id<<"] "<< des << "로 목적지 설정" << std::endl;
+	//			this->state = 1;
+	//		}
+	//	}
+	//	else if (this->state == 1)		// 목적지로 이동하는 중
+	//	{
+	//		move();		// 목표 위치로 이동
+	//	}
+	//}
 }
 
 bool NPC::can_see(Player& p)
