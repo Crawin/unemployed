@@ -20,6 +20,7 @@ public:
 	void HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	const POINT& GetMouseMove() const { return m_MouseDif; }
+	void ResetMouseMove() { m_MouseDif = { 0,0 }; }
 	const POINT& GetMouseCurrentPosition() const { return m_CurMouse; }
 
 	bool GetDrag() const { return m_Dragging; }

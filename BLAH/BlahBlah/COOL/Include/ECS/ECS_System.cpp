@@ -149,8 +149,10 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
+		POINT mouseMove = InputManager::GetInstance().GetMouseMove();
+
 		// tick input
-		std::function<void(PlayerController*)> tickAndUpdateInput = [](PlayerController* ctrl) {
+		std::function<void(PlayerController*)> tickAndUpdateInput = [&mouseMove](PlayerController* ctrl) {
 			Pawn* curPawn = ctrl->GetControllingPawn();
 			
 			// tick first
@@ -163,12 +165,15 @@ namespace ECSsystem {
 					curPawn->PressInput(input);
 			}
 
+			// set mouse input
+			curPawn->SetMouseMove(mouseMove);
+			InputManager::GetInstance().ResetMouseMove();
 			};
 
 
 
 		// input으로 pysics 업데이트
-		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime](Transform* tr, Pawn* pawn, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime, &mouseMove](Transform* tr, Pawn* pawn, Physics* sp) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
@@ -208,7 +213,6 @@ namespace ECSsystem {
 			// mouse
 			//if (InputManager::GetInstance().GetDrag()) 
 			{
-				const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 				XMFLOAT3 rot = tr->GetRotation();
 				const float rootSpeed = 10.0f;
 				rot.y += (mouseMove.x / rootSpeed);
@@ -218,12 +222,11 @@ namespace ECSsystem {
 		};
 
 		// mouse
-		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime](Transform* tr, Camera* cam) {
+		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime, &mouseMove](Transform* tr, Camera* cam) {
 			if (cam->m_IsMainCamera == false) return;
 
 			// todo rotate must not be orbit
 
-			const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 			XMFLOAT3 rot = tr->GetRotation();
 			const float rootSpeed = 10.0f;
 			//rot.y += (mouseMove.x / rootSpeed);
@@ -232,10 +235,9 @@ namespace ECSsystem {
 			};
 
 		// mouse
-		std::function<void(Transform*, AttachInput*)> attachinput = [deltaTime](Transform* tr, AttachInput* cam) {
+		std::function<void(Transform*, AttachInput*)> attachinput = [deltaTime, &mouseMove](Transform* tr, AttachInput* cam) {
 			// todo rotate must not be orbit
 
-			const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 			XMFLOAT3 rot = tr->GetRotation();
 			const float rootSpeed = 10.0f;
 			//rot.y += (mouseMove.x / rootSpeed);

@@ -58,8 +58,8 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 		// main game state
 		if (m_MouseCapture) 
 		{
-			m_MouseDif.x = m_CurMouse.x - m_WndCenter.x;
-			m_MouseDif.y = m_CurMouse.y - m_WndCenter.y;
+			m_MouseDif.x += m_CurMouse.x - m_WndCenter.x;
+			m_MouseDif.y += m_CurMouse.y - m_WndCenter.y;
 			SetCursorPos(m_WndCenter.x, m_WndCenter.y);
 		}
 		//m_BefMouse = curPos;
