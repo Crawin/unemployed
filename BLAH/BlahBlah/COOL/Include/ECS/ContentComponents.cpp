@@ -288,6 +288,7 @@ namespace component {
 					Holdable* hold = manager->GetComponent<Holdable>(target);
 					if (hold == nullptr) ERROR_QUIT(std::format("ERROR!! no holdable component in this entity, name: {}", m_TargetEntityNames[i]));
 
+					hold->SetMaster(selfEntity);
 					m_Items[i] = target;
 				}
 			}
@@ -296,6 +297,7 @@ namespace component {
 		m_CurrentHolding = 0;
 		if (m_Items[m_CurrentHolding] != nullptr) 
 		{
+			
 			manager->AttachChild(m_HoldingSocket, m_Items[m_CurrentHolding]);
 		}
 	}
@@ -305,36 +307,121 @@ namespace component {
 
 	}
 
+	bool Inventory::ChangeToNum(int idx)
+	{
+
+		return false;
+	}
+
 	void Holdable::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value hold = v["Holdable"];
 
-		std::string action = hold["Action"].asString();
-
-		if (action == "Attack") {
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS)] = [](float deltaTime) {
-				DebugPrint("START");
-				};
-
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING)] = [](float deltaTime) {
-				DebugPrint("PRESSING");
-				};
-
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS)] = [](float deltaTime) {
-				DebugPrint("END");
-				};
-		}
-		else if (action == "Throw") {
-
-		}
 	}
 
-	void Holdable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	void Attackable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value attack = v["Attackable"];
+	}
+
+	void Attackable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		if (holdable == nullptr) {
+			Name* name = manager->GetComponent<Name>(selfEntity);
+			ERROR_QUIT(std::format("ERROR!!! no Holdable component in this entity, entity name: {}\n태양이 두개면 시원한 이유는?\nsun sun 해지니까", name->getName()));
+		}
+
+		// todo
+		// find self's dynamic collider
+		// collide event with self -> other player or Guard, Get DAMAGE
+
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity](float deltaTime) {
+			Entity* master = holdable->GetMaster();
+			
+			// todo
+			// change player chara animation to attack
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+
+			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
+			//selfCollider->SetActive(true);
+
+			DebugPrint("PlayAttackAnimation and Weapon Collider On");
+		});
+	}
+
+	void Attackable::ShowYourself() const
 	{
 	}
 
-	void Holdable::ShowYourself() const
+	void Throwable::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value thr = v["Throwable"];
+
+		m_ThrowMax = thr["ThrowMax"].asFloat();
+
+		XMStoreFloat3(&m_DirectionOrigin, XMVector3Normalize(XMLoadFloat3(&m_DirectionOrigin)));
+	}
+
+	void Throwable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		if (holdable == nullptr) {
+			Name* name = manager->GetComponent<Name>(selfEntity);
+			ERROR_QUIT(std::format("ERROR!!! no Holdable component in this entity, entity name: {}\n차가 놀라면?\n앗 차가!", name->getName()));
+		}
+
+		float& throwPow = m_ThrowPower;
+		float& maxPow = m_ThrowMax;
+		XMFLOAT3& directionOrigin = m_DirectionOrigin;
+		XMFLOAT3& directionResult = m_DirectionResult;
+
+		// todo
+		// find self's dynamic collider
+		// collide event with self -> other wall, stick to wall
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity, &throwPow](float deltaTime) {
+			throwPow = 0;
+
+			Entity* master = holdable->GetMaster();
+
+			// todo
+			// change player chara animation to throw ready
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROWREADY);
+
+			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
+			//selfCollider->SetActive(true);
+
+			DebugPrint("PlayAttackAnimation and Weapon Collider On");
+		});
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING), [&directionOrigin, &directionResult, &throwPow, manager, selfEntity](float deltaTime) {
+			Transform* selfTr = manager->GetComponent<Transform>(selfEntity);
+
+			XMVECTOR dir = XMLoadFloat3(&directionOrigin);
+			XMMATRIX world = XMLoadFloat4x4(&selfTr->GetWorldTransform());
+			XMVECTOR pos = XMLoadFloat3(&selfTr->GetWorldPosition());
+
+			XMVECTOR resDir = XMVector3Transform(dir, world) - pos;
+			XMStoreFloat3(&directionResult, resDir);
+
+			throwPow += deltaTime;
+
+			DebugPrintVector(directionResult, "realDir");
+		});
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), [&directionResult, &throwPow, maxPow](float deltaTime) {
+			DebugPrint(std::format("power: {}", throwPow));
+			DebugPrintVector(directionResult, "realDir");
+
+			throwPow = std::min(throwPow, maxPow);
+			DebugPrint(std::format("power: {}", throwPow));
+
+			DebugPrint("Throw");
+		});
+
 	}
 
 }

@@ -1,0 +1,79 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "CCTV_TEST",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "Sphere.Sphere"
+			},
+
+			"Holdable": 
+			{
+			},
+
+			"Throwable":
+			{
+				"ThrowMax": 10.0
+			},
+
+			"Physics": 
+			{
+				"MaxVelocity": 200.0,
+				"Acceleration" : [2000.0, 2000.0, 2000.0],
+				"Calculate" : false
+			},
+
+			"DynamicCollider":
+			{
+				"Static": false,
+				"AutoMesh" : true
+			},
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					0.5,
+					0.5,
+					0.5
+				]
+			}
+		}
+	],
+	"Name" : "Sphere_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

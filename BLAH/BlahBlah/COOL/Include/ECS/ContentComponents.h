@@ -105,27 +105,49 @@ namespace component {
 	class Holdable : public ComponentBase<Holdable> {
 		ActionFunctionMap m_ActionMap;
 
+		// entity를 들고 있는 주체
+		Entity* m_HoldingMaster = nullptr;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+
+		void SetAction(const Input_State_In_LongLong& keyCond, const ActionFunction& act) { m_ActionMap[keyCond] = act; }
+		const ActionFunctionMap& GetActionMap() const { return m_ActionMap; }
+
+		void SetMaster(Entity* master) { m_HoldingMaster = master; }
+		Entity* GetMaster() const { return m_HoldingMaster; }
+
+		virtual void ShowYourself() const {};
+	};
+
+	/////////////////////////////////////////////////////////
+	// Attackable Component
+	// 공격 아이템 
+	//
+	class Attackable : public ComponentBase<Attackable> {
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
-
-		const ActionFunctionMap& GetActionMap() const { return m_ActionMap; }
 
 		virtual void ShowYourself() const;
 	};
 
 	/////////////////////////////////////////////////////////
-	// Attackable Component
+	// Throwable Component
+	// CCTV, drinks
 	//
-	//
-	class Attackable : public ComponentBase<Attackable> {
-		ActionFunctionMap m_ActionMap;
+	class Throwable : public ComponentBase<Throwable> {
+		XMFLOAT3 m_DirectionOrigin = { 0.0f, 0.707f, 0.707f };
+		XMFLOAT3 m_DirectionResult = { 0.0f, 0.707f, 0.707f };
+		float m_ThrowPower = 0.0f;
+		float m_ThrowMax = 10.0f;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
-		virtual void ShowYourself() const;
+		virtual void ShowYourself() const {}
 	};
 
 #define MAX_INVENTORY 4
@@ -147,6 +169,8 @@ namespace component {
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
+
+		bool ChangeToNum(int idx);
 
 		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
 		

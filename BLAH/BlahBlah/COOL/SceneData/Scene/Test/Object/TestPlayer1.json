@@ -41,8 +41,8 @@
 
 	"Inventory":
 	{
-		"Slot_0": "crowbar",
-		"Slot_1": "",
+		"Slot_0": "CCTV_TEST",
+		"Slot_1": "crowbar",
 		"Slot_2": "",
 		"Slot_3": ""
 	},

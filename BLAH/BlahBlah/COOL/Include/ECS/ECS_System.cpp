@@ -260,6 +260,12 @@ namespace ECSsystem {
 				return;
 			}
 
+			// holding change
+
+			//inven->ChangeToNum(0);
+
+
+			// action
 			auto& maps = holdComp->GetActionMap();
 			//auto& inputState = pawn->GetInputState();
 
@@ -493,6 +499,8 @@ namespace ECSsystem {
 		// collide check
 		std::function<void(DynamicCollider*, SelfEntity*)> dynamicWithStatic =
 			[&circleBoxCol, manager](DynamicCollider* a, SelfEntity* aEnt) {
+			if (a->IsActive() == false) return;
+
 			auto& boxA = a->GetBoundingBox();
 			auto& originBoxA = a->GetOriginalBox();
 
@@ -539,6 +547,8 @@ namespace ECSsystem {
 
 			// if both static, skip
 			if (a->IsStaticObject() && b->IsStaticObject()) return;
+
+			if (a->IsActive() == false || b->IsActive() == false) return;
 
 			auto& boxA = a->GetBoundingBox();
 			auto& boxB = b->GetBoundingBox();

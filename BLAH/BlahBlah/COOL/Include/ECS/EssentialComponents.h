@@ -535,6 +535,7 @@ namespace component {
 		bool m_Trigger = false;
 		bool m_IsCapsule = false;
 		bool m_Collided = false;
+		bool m_Active = true;
 
 		CollideEvents m_EventFunctions;
 
@@ -549,6 +550,7 @@ namespace component {
 		void SetCollided(bool col) { m_Collided = col; }
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
+		void SetActive(bool active) { m_Active = active; }
 
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
@@ -556,7 +558,7 @@ namespace component {
 		bool IsStaticObject() const { return m_StaticObject; }
 		bool IsCapsule() const { return m_IsCapsule; }
 		bool IsTrigger() const { return m_Trigger; }
-
+		bool IsActive() const { return m_Active; }
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 
