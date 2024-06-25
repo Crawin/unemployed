@@ -261,8 +261,15 @@ namespace ECSsystem {
 			}
 
 			// holding change
+			for (int i = 0; i < MAX_INVENTORY; ++i) {
+				int start = static_cast<int>(GAME_INPUT::NUM_1);
 
-			//inven->ChangeToNum(0);
+				GAME_INPUT key = static_cast<GAME_INPUT>(i + start);
+				if (pawn->GetInputState(key) == KEY_STATE::START_PRESS) {
+					inven->ChangeHoldingItem(i, manager);
+					break;
+				}
+			}
 
 
 			// action

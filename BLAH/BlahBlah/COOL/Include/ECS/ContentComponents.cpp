@@ -307,16 +307,35 @@ namespace component {
 
 	}
 
-	bool Inventory::ChangeToNum(int idx)
+	bool Inventory::ChangeHoldingItem(int idx, ECSManager* manager)
 	{
+		// if same item, no chagne
+		if (idx == m_CurrentHolding) return true;
 
-		return false;
+		// attach bef item to origin parent;
+		Holdable* curHold = manager->GetComponent<Holdable>(m_Items[m_CurrentHolding]);
+		manager->AttachChild(curHold->GetOriginParent(), m_Items[m_CurrentHolding]);
+
+		// if no item, just return
+		if (m_Items[idx] == nullptr) return true;
+
+		// attach new item to inven socket
+		// dont have to nullcheck
+		manager->AttachChild(m_HoldingSocket, m_Items[idx]);
+		m_CurrentHolding = idx;
+
+		return true;
 	}
 
 	void Holdable::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value hold = v["Holdable"];
 
+	}
+
+	void Holdable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		m_OriginalParent = selfEntity->GetParent();
 	}
 
 	void Attackable::Create(Json::Value& v, ResourceManager* rm)

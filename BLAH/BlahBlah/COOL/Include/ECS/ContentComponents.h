@@ -108,14 +108,19 @@ namespace component {
 		// entity를 들고 있는 주체
 		Entity* m_HoldingMaster = nullptr;
 
+		// 원래 있던 곳, (사용하지 않는 Holdable들은 안보이는곳에 보관
+		Entity* m_OriginalParent = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		void SetAction(const Input_State_In_LongLong& keyCond, const ActionFunction& act) { m_ActionMap[keyCond] = act; }
 		const ActionFunctionMap& GetActionMap() const { return m_ActionMap; }
 
 		void SetMaster(Entity* master) { m_HoldingMaster = master; }
 		Entity* GetMaster() const { return m_HoldingMaster; }
+		Entity* GetOriginParent() const { return m_OriginalParent; }
 
 		virtual void ShowYourself() const {};
 	};
@@ -170,7 +175,7 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		bool ChangeToNum(int idx);
+		bool ChangeHoldingItem(int idx, ECSManager* manager);
 
 		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
 		
