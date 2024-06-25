@@ -313,11 +313,16 @@ namespace component {
 		if (idx == m_CurrentHolding) return true;
 
 		// attach bef item to origin parent;
-		Holdable* curHold = manager->GetComponent<Holdable>(m_Items[m_CurrentHolding]);
-		manager->AttachChild(curHold->GetOriginParent(), m_Items[m_CurrentHolding]);
+		if (m_Items[m_CurrentHolding] != nullptr) {
+			Holdable* curHold = manager->GetComponent<Holdable>(m_Items[m_CurrentHolding]);
+			manager->AttachChild(curHold->GetOriginParent(), m_Items[m_CurrentHolding]);
+		}
 
+		m_CurrentHolding = idx;
 		// if no item, just return
-		if (m_Items[idx] == nullptr) return true;
+		if (m_Items[idx] == nullptr) {
+			return true;
+		}
 
 		// attach new item to inven socket
 		// dont have to nullcheck

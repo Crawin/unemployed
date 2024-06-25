@@ -248,18 +248,6 @@ namespace ECSsystem {
 		//////////////////////////////////////////
 		// Pawn Inventory Action
 		std::function<void(Pawn*, Inventory*)> pawnInvenAction = [deltaTime, manager](Pawn* pawn, Inventory* inven) {
-			Entity* holding = inven->GetCurrentHoldingItem();
-
-			if (holding == nullptr) return;
-
-			Holdable* holdComp = manager->GetComponent<Holdable>(holding);
-
-			if (holdComp == nullptr) {
-				Name* name = manager->GetComponent<Name>(holding);
-				DebugPrint(std::format("ERROR!! no holdable component on this entity, name: {}", name->getName()));
-				return;
-			}
-
 			// holding change
 			for (int i = 0; i < MAX_INVENTORY; ++i) {
 				int start = static_cast<int>(GAME_INPUT::NUM_1);
@@ -271,6 +259,17 @@ namespace ECSsystem {
 				}
 			}
 
+			// go with holding action
+			Entity* holding = inven->GetCurrentHoldingItem();
+			if (holding == nullptr) return;
+
+			Holdable* holdComp = manager->GetComponent<Holdable>(holding);
+
+			if (holdComp == nullptr) {
+				Name* name = manager->GetComponent<Name>(holding);
+				DebugPrint(std::format("ERROR!! no holdable component on this entity, name: {}", name->getName()));
+				return;
+			}
 
 			// action
 			auto& maps = holdComp->GetActionMap();
