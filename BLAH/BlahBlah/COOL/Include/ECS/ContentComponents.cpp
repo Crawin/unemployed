@@ -11,6 +11,67 @@ namespace component {
 	{
 	}
 
+	void PlayerAnimControll::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		AnimationController* ctrl = manager->GetComponent<AnimationController>(selfEntity);
+
+		if (ctrl == nullptr) {
+			const std::string& name = manager->GetComponent<Name>(selfEntity)->getName();
+			ERROR_QUIT(std::format("ERROR!! no anim controller on this entity, name: {}", name));
+		}
+
+		using COND = std::function<bool(void*)>;
+
+		// make conditions
+		COND idle = [](void* data) {
+			float* sp = reinterpret_cast<float*>(data);
+			return *sp < 30.0f;
+			};
+
+		COND idleToWalk = [](void* data) {
+			float* sp = reinterpret_cast<float*>(data);
+			return *sp >= 30.0f;
+			};
+
+		COND walkToRun = [](void* data) {
+			float* sp = reinterpret_cast<float*>(data);
+			return *sp >= 300.0f;
+			};
+
+		COND runToWalk = [](void* data) {
+			float* sp = reinterpret_cast<float*>(data);
+			return *sp < 300.0f;
+			};
+
+		COND hit = [](void* data) {
+			return GetAsyncKeyState(VK_END) & 0x8000;
+			};
+
+		COND falldown = [ctrl](void* data) {
+			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
+			};
+
+		COND getup = [ctrl](void* data) {
+			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
+			};
+
+		// insert transition (graph)
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
+		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
+		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
+
+		// set start animation
+		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+
+	}
+
 	void PlayerAnimControll::ShowYourself() const
 	{
 		DebugPrint("PlayerAnimControll Comp");
@@ -18,6 +79,52 @@ namespace component {
 
 	void DiaAnimationControl::Create(Json::Value& v, ResourceManager* rm)
 	{
+	}
+
+	void DiaAnimationControl::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		AnimationController* ctrl = manager->GetComponent<AnimationController>(selfEntity);
+
+		if (ctrl == nullptr) {
+			const std::string& name = manager->GetComponent<Name>(selfEntity)->getName();
+			ERROR_QUIT(std::format("ERROR!! no anim controller on this entity, name: {}", name));
+		}
+
+		using COND = std::function<bool(void*)>;
+
+		// make conditions
+		COND idle = [](void* data) {
+			float* sp = reinterpret_cast<float*>(data);
+			return *sp < 30.0f;
+			};
+
+		COND walk = [](void* data) {
+			float* sp = reinterpret_cast<float*>(data);
+			return *sp >= 30.0f;
+			};
+
+		COND hit = [](void* data) {
+			return GetAsyncKeyState(VK_END) & 0x8000;
+			};
+
+		COND falldown = [ctrl](void* data) {
+			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
+			};
+
+		COND getup = [ctrl](void* data) {
+			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
+			};
+
+		// insert transition (graph)
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
+
+		// set start animation
+		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
 	}
 
 	void DiaAnimationControl::ShowYourself() const
@@ -205,9 +312,16 @@ namespace component {
 		std::string action = hold["Action"].asString();
 
 		if (action == "Attack") {
-			//Input_State_In_LongLong atk = Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS);
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS)] = []() {
-				DebugPrint("ATTACK");
+			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS)] = [](float deltaTime) {
+				DebugPrint("START");
+				};
+
+			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING)] = [](float deltaTime) {
+				DebugPrint("PRESSING");
+				};
+
+			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS)] = [](float deltaTime) {
+				DebugPrint("END");
 				};
 		}
 		else if (action == "Throw") {

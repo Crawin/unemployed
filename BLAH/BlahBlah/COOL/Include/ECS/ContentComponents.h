@@ -29,7 +29,8 @@ namespace std {
 	};
 }
 
-using ActionFunction = std::function<void()>;
+// void func(float deltaTime);
+using ActionFunction = std::function<void(float)>;
 using ActionFunctionMap = std::unordered_map<Input_State_In_LongLong, ActionFunction>;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ namespace component {
 	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -59,6 +61,7 @@ namespace component {
 	class DiaAnimationControl : public ComponentBase<DiaAnimationControl> {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -100,10 +103,6 @@ namespace component {
 	// 손에 들 수 있는 오브젝트(손에 들 수 있다)
 	//
 	class Holdable : public ComponentBase<Holdable> {
-		// 아래는 보류하자
-		//bool m_HoldableEnable = true;	// after throw, disable
-		//bool m_CurrentHolding = false
-
 		ActionFunctionMap m_ActionMap;
 
 	public:
@@ -111,6 +110,20 @@ namespace component {
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		const ActionFunctionMap& GetActionMap() const { return m_ActionMap; }
+
+		virtual void ShowYourself() const;
+	};
+
+	/////////////////////////////////////////////////////////
+	// Attackable Component
+	//
+	//
+	class Attackable : public ComponentBase<Attackable> {
+		ActionFunctionMap m_ActionMap;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 	};
