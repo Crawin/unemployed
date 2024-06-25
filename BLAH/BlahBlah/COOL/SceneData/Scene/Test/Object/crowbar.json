@@ -1,0 +1,57 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "crowbar",
+			"Renderer" : 
+			{
+				"Material" : "Object/crowbar",
+				"Mesh" : "crowbar.crowbar"
+			},
+			
+			"Holdable": 
+			{
+				"Action": "Attack"				
+			},
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "crowbar_Root",
+	"Transform" : 
+	{
+		"Position": [0.0, 120.0, 1000.0],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

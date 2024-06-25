@@ -36,3 +36,29 @@ std::string ConvertAnimationStateToString(ANIMATION_STATE anim)
 	case ANIMATION_STATE::DANCE:				return std::string("Dance");
 	}
 }
+
+// global key setting
+int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput)
+{
+	switch (gameInput)
+	{
+	case GAME_INPUT::FORWARD:				 return 'W';
+	case GAME_INPUT::BACKWARD:				 return 'S';
+	case GAME_INPUT::LEFT:					 return 'A';
+	case GAME_INPUT::RIGHT:					 return 'D';
+	case GAME_INPUT::INTERACTION:			 return 'E';
+	case GAME_INPUT::CTRL:					 return VK_CONTROL;
+	case GAME_INPUT::SHIFT:					 return VK_SHIFT;
+	case GAME_INPUT::SPACE_BAR:				 return VK_SPACE;
+	case GAME_INPUT::MOUSE_LEFT:			 return VK_LBUTTON;
+	case GAME_INPUT::MOUSE_RIGHT:			 return VK_RBUTTON;
+	case GAME_INPUT::NUM_1:					 return '1';
+	case GAME_INPUT::NUM_2:					 return '2';
+	case GAME_INPUT::NUM_3:					 return '3';
+	case GAME_INPUT::NUM_4:					 return '4';
+	case GAME_INPUT::NUM_5:					 return '5';
+	default:
+		DebugPrint("ERRPR!! no such input defined");
+		return -1;
+	}
+}

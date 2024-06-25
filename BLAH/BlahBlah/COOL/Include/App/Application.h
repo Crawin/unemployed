@@ -28,6 +28,7 @@ public:
 	bool GetGameLoop() const { return m_GameLoop; }
 	void SetGameLoopFalse() { m_GameLoop = false; }
 
+	void GetWindowCenterPos(POINT& pos);
 
 	bool Init(HINSTANCE hInst, const SIZE& wndSize);
 	int StartProgram();

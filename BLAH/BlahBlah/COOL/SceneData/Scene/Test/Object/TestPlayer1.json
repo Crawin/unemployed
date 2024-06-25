@@ -22,6 +22,8 @@
 		"Calculate" : true
 	},
 
+	"Pawn": {},
+
 	"Input": {},
 
 	"Player": {},
@@ -37,13 +39,21 @@
 		"Extent": [25, 85, 25]
 	},
 
+	"Inventory":
+	{
+		"Slot_0": "crowbar",
+		"Slot_1": "",
+		"Slot_2": "",
+		"Slot_3": ""
+	},
+
 	"Children": 
 	[
 		{
 			"Name": "PlayerCamera",
 			"Transform": 
 			{
-				"Position": [0.0, 160.0, 15.5],
+				"Position": [0.0, 160.0, 17.0],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
@@ -55,7 +65,7 @@
 				"Look": 	[0.0, 0.0, 1.0],
 				"Position": [0.0, 70.0, 5.5],
 		
-				"Fov": 90.0,
+				"Fov": 75.0,
 				"Aspect": 1.777,
 				"Near": 0.1,
 				"Far": 10000.0
@@ -63,6 +73,21 @@
 
 			"Children":
 			[
+				{
+					"Name": "InventoryHand",
+					"Transform": 
+					{
+						"Position": [176.4, -40.9 , 23.8],
+						"Rotate": [-11.716, -87.62, 48.249],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Attach":
+					{
+						"Mesh": "Player_01",
+						"BoneIDX": 48,
+						"Player": "Player1"
+					}
+				},
 				{
 					"Name": "FlashLight",
 					"Transform":
@@ -168,8 +193,6 @@
 				}
 			]
 		},
-
-
 
 		{
 			"Name": "Player1_hands",

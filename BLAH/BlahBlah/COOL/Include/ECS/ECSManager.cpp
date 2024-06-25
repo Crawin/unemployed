@@ -120,6 +120,40 @@ void ECSManager::AddToRoot(Entity* entity)
 	m_RootEntities.push_back(entity);
 }
 
+void ECSManager::AttachChild(Entity* to, Entity* targetEntity)
+{
+	// if was parent, erase from root list
+	auto iter = std::find(m_RootEntities.begin(), m_RootEntities.end(), targetEntity);
+	if (iter != m_RootEntities.end()) m_RootEntities.erase(iter);
+
+	// if was not parent, detach from its parent
+	Entity* befParent = targetEntity->GetParent();
+	if (befParent != nullptr) {
+		befParent->EraseChild(targetEntity);
+	}
+
+	// add to child
+	to->AddChild(targetEntity);
+
+	// 
+	auto selfEntComp = GetComponent<component::SelfEntity>(targetEntity);
+	selfEntComp->SetParent(to);
+}
+
+void ECSManager::DetachChild(Entity* from, Entity* targetEntity)
+{
+	// add to root entity list
+	auto iter = std::find(m_RootEntities.begin(), m_RootEntities.end(), targetEntity);
+	if (iter == m_RootEntities.end()) m_RootEntities.push_back(targetEntity);
+
+	// erase from its entity ch
+	from->EraseChild(targetEntity);
+
+	// 
+	auto selfEntComp = GetComponent<component::SelfEntity>(targetEntity);
+	selfEntComp->SetParent(nullptr);
+}
+
 void ECSManager::InitSystem()
 {
 	for (auto& system : m_Systems) {
@@ -149,4 +183,29 @@ void ECSManager::OnStart(ResourceManager* rm)
 
 		m_ComponentSets[entBitset].OnStart(ent, this, rm);
 	}
+}
+
+Entity* ECSManager::GetEntity(const std::string& targetName)
+{
+	Entity* target = nullptr;
+	std::function<void(component::Name*, component::SelfEntity*)> getEntity = [&target, &targetName](component::Name* name, component::SelfEntity* selfEnt) {
+		if (name->getName().compare(targetName) == 0) target = selfEnt->GetEntity();
+		};
+
+	Execute(getEntity);
+
+	return target;
+}
+
+Entity* ECSManager::GetEntityInChildren(const std::string& name, Entity* parent)
+{
+	component::Name* childNameComp = nullptr;
+
+	for (Entity* child : parent->GetChildren()) {
+		childNameComp = GetComponent<component::Name>(child);
+		if (childNameComp && childNameComp->getName() == name)
+			return child;
+	}
+
+	return nullptr;
 }

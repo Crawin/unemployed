@@ -15,13 +15,12 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::AnimationController, "AnimationController");
 	REGISTER_COMPONENT(component::AnimationExecutor, "AnimationExecutor");
 	REGISTER_COMPONENT(component::Attach, "Attach");
-	REGISTER_COMPONENT(component::Root, "Root");
-	REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
+	//REGISTER_COMPONENT(component::Root, "Root");
+	//REGISTER_COMPONENT(component::Children, "_MANUAL_00_CHILDREN");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::SelfEntity, "_MANUAL_01_SELFENTITY");			// 자동으로 되어선 안된다
 	REGISTER_COMPONENT(component::Transform, "Transform");
 	REGISTER_COMPONENT(component::Camera, "Camera");
 	REGISTER_COMPONENT(component::Light, "Light");
-	REGISTER_COMPONENT(component::Input, "Input");
 	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
 	REGISTER_COMPONENT(component::Server, "Server");
@@ -30,6 +29,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::AttachInput, "AttachInput");
 	REGISTER_COMPONENT(component::Interaction, "Interaction");
 	REGISTER_COMPONENT(component::Player, "Player");
+	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
+	REGISTER_COMPONENT(component::Pawn, "Pawn");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
@@ -45,6 +46,9 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
 	REGISTER_COMPONENT(component::DoorControl, "Door");
+	REGISTER_COMPONENT(component::Inventory, "Inventory");
+	REGISTER_COMPONENT(component::Holdable, "Holdable");
+
 
 	// ui content
 	REGISTER_COMPONENT(component::UIKeypad, "UIKeypad");
