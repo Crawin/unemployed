@@ -259,12 +259,14 @@ public:
 	std::chrono::steady_clock::time_point attacked_time;
 	PATH* path = nullptr;
 	DirectX::BoundingOrientedBox obb;
+	float movement_speed;
 public:
 	NPC() {
 		DirectX::XMFLOAT3 basic_obb_position = { 0,85,0 };
 		DirectX::XMFLOAT3 basic_obb_extents = basic_extents;
 		DirectX::XMFLOAT4 basic_obb_orients = { 0,0,0,1 };
 		obb = DirectX::BoundingOrientedBox(basic_obb_position, basic_obb_extents, basic_obb_orients);
+		movement_speed = 5;
 	}
 	void guard_state_machine(Player*, const bool& npc_state);
 	void student_state_machine(Player*);

@@ -730,38 +730,38 @@ void NPC::student_state_machine(Player* p)
 		}
 	}
 
-	//if (hit)
-	//{
-	//	using namespace std::chrono;
-	//	attacked_time = steady_clock::now();
+	if (hit)
+	{
+		using namespace std::chrono;
+		attacked_time = steady_clock::now();
 
-	//	sc_packet_npc_attack attack_student(this->id);
-	//	for (int i = 0; i < 2; ++i)
-	//	{
-	//		if(p[i].sock != NULL)
-	//			login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
-	//	}
-	//}
-	//else
-	//{
-	//	if (this->state == 0)			// 목적지 도착한 상태
-	//	{
-	//		// 2초동안 대기
-	//		int stop = 2;
-	//		auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
-	//		if (duration > 2)			// 2초 대기 이후
-	//		{
-	//			// 새로운 목표 위치 선정
-	//			int des = rand() % g_um_graph.size();
-	//			std::cout <<"student["<<this->id<<"] "<< des << "로 목적지 설정" << std::endl;
-	//			this->state = 1;
-	//		}
-	//	}
-	//	else if (this->state == 1)		// 목적지로 이동하는 중
-	//	{
-	//		move();		// 목표 위치로 이동
-	//	}
-	//}
+		sc_packet_npc_attack attack_student(this->id);
+		for (int i = 0; i < 2; ++i)
+		{
+			if(p[i].sock != NULL)
+				login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
+		}
+	}
+	else
+	{
+		if (this->state == 0)			// 목적지 도착한 상태
+		{
+			// 2초동안 대기
+			int stop = 2;
+			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
+			if (duration > 2)			// 2초 대기 이후
+			{
+				// 새로운 목표 위치 선정
+				int des = rand() % g_um_graph.size();
+				std::cout <<"student["<<this->id<<"] "<< des << "로 목적지 설정" << std::endl;
+				this->state = 1;
+			}
+		}
+		else if (this->state == 1)		// 목적지로 이동하는 중
+		{
+			move();		// 목표 위치로 이동
+		}
+	}
 }
 
 bool NPC::can_see(Player& p)
@@ -881,7 +881,7 @@ void NPC::move()
 	XMVECTOR ActorPos = XMLoadFloat3(&position);
 	XMVECTOR DestPos = XMLoadFloat3(&destination);
 	XMVECTOR direction = XMVector3Normalize(XMVectorSubtract(DestPos, ActorPos));
-	XMVECTOR movement = XMVectorScale(direction, 5);
+	XMVECTOR movement = XMVectorScale(direction, movement_speed);
 	XMStoreFloat3(&position, XMVectorAdd(ActorPos, movement));
 	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
 	
