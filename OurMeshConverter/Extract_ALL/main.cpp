@@ -61,7 +61,7 @@ struct Object {
 	XMFLOAT3 m_BoundingBoxMax = { 0,0,0 };
 	XMFLOAT3 m_BoundingBoxCenter = { 0,0,0 };
 
-	XMFLOAT4X4 m_LocalTransform;
+	XMFLOAT4X4 m_LocalTransform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 
 	XMFLOAT3 m_Transform = { 0,0,0 };
 	XMFLOAT3 m_Rotate = { 0,0,0 };
