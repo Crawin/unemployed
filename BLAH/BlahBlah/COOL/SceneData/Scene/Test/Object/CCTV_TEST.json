@@ -15,12 +15,13 @@
 
 			"Throwable":
 			{
-				"ThrowMax": 10.0
+				"BakeTime": 2.0,
+				"ThrowSpeed": 70.0
 			},
 
 			"Physics": 
 			{
-				"MaxVelocity": 200.0,
+				"MaxVelocity": 20000.0,
 				"Acceleration" : [2000.0, 2000.0, 2000.0],
 				"Calculate" : false,
 				"Friction": false
@@ -29,8 +30,9 @@
 			"DynamicCollider":
 			{
 				"Static": false,
-				"AutoMesh" : true,
-				"ColideWithDynamic": false
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [50.0, 50, 50]
 			},
 
 			"Transform" : 
@@ -62,7 +64,7 @@
 		"Position" : 
 		[
 			0.0,
-			0.0,
+			-1000.0,
 			0.0
 		],
 		"Rotate" : 

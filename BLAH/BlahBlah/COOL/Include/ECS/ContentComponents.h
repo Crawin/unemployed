@@ -145,8 +145,9 @@ namespace component {
 	class Throwable : public ComponentBase<Throwable> {
 		XMFLOAT3 m_DirectionOrigin = { 0.0f, 0.0f, 1.0f };
 		XMFLOAT3 m_DirectionResult = { 0.0f, 0.0f, 1.0f };
-		float m_ThrowPower = 0.0f;
-		float m_ThrowMax = 10.0f;
+		float m_ThrowBakeTime = 0.0f;
+		float m_ThrowBakeTimeMax = 3.0f;
+		float m_ThrowSpeed = 2000.0f;			// abuot 70km/h, our unit ->cm/s
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);

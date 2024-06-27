@@ -149,7 +149,12 @@ void ECSManager::DetachChild(Entity* from, Entity* targetEntity)
 	// erase from its entity ch
 	from->EraseChild(targetEntity);
 
-	// 
+	// when detach, set entity to world pos
+	auto selfTr = GetComponent<component::Transform>(targetEntity);
+	selfTr->SetRotation(selfTr->GetWorldRotation());
+	selfTr->SetPosition(selfTr->GetWorldPosition());
+	selfTr->SetParentTransform(Matrix4x4::Identity());
+	
 	auto selfEntComp = GetComponent<component::SelfEntity>(targetEntity);
 	selfEntComp->SetParent(nullptr);
 }

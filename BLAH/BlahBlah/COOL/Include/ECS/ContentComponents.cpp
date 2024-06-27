@@ -385,7 +385,8 @@ namespace component {
 	{
 		Json::Value thr = v["Throwable"];
 
-		m_ThrowMax = thr["ThrowMax"].asFloat();
+		m_ThrowBakeTimeMax = thr["BakeTime"].asFloat();
+		m_ThrowSpeed = thr["ThrowSpeed"].asFloat();
 
 		XMStoreFloat3(&m_DirectionOrigin, XMVector3Normalize(XMLoadFloat3(&m_DirectionOrigin)));
 	}
@@ -399,16 +400,29 @@ namespace component {
 			ERROR_QUIT(std::format("ERROR!!! no Holdable component in this entity, entity name: {}\n차가 놀라면?\n앗 차가!", name->getName()));
 		}
 
-		float& throwPow = m_ThrowPower;
-		float& maxPow = m_ThrowMax;
+		// km/h -> cm/s
+		float speed = m_ThrowSpeed * 27.7778f;
+		float maxBakeTime = m_ThrowBakeTimeMax;
+		float& bakeTime = m_ThrowBakeTime;
 		XMFLOAT3& directionOrigin = m_DirectionOrigin;
 		XMFLOAT3& directionResult = m_DirectionResult;
+
+		// set collide event
+		EventFunction cctvHitEvent = [manager](Entity* self, Entity* other) {
+
+			Name* name = manager->GetComponent<Name>(other);
+
+			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+			};
+
+		DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
+		dc->InsertEvent<Collider>(cctvHitEvent, COLLIDE_EVENT_TYPE::ING);
 
 		// todo
 		// find self's dynamic collider
 		// collide event with self -> other wall, stick to wall
-		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity, &throwPow](float deltaTime) {
-			throwPow = 0;
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity, &bakeTime](float deltaTime) {
+			bakeTime = 0;
 
 			Entity* master = holdable->GetMaster();
 
@@ -422,7 +436,8 @@ namespace component {
 
 			DebugPrint("Todo: PlayAttackAnimation and Weapon Collider On");
 		});
-		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING), [&directionOrigin, &directionResult, &throwPow, manager, holdable](float deltaTime) {
+	
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING), [&directionOrigin, &directionResult, &bakeTime, manager, holdable](float deltaTime) {
 			Inventory* masterInv = manager->GetComponent<Inventory>(holdable->GetMaster());
 			Transform* masterTr = manager->GetComponent<Transform>(masterInv->GetHoldingSocket()->GetParent());
 
@@ -433,17 +448,19 @@ namespace component {
 			XMVECTOR resDir = XMVector3Normalize(XMVector4Transform(dir, world));
 			XMStoreFloat3(&directionResult, resDir);
 
-			throwPow += deltaTime;
+			bakeTime += deltaTime;
 
 		});
-		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), [&directionResult, &throwPow, maxPow, manager, selfEntity, holdable](float deltaTime) {
-			DebugPrint(std::format("power: {}", throwPow));
+	
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), [&directionResult, &bakeTime, maxBakeTime, speed, manager, selfEntity, holdable](float deltaTime) {
 			XMStoreFloat3(&directionResult, XMVector3Normalize(XMLoadFloat3(&directionResult)));
 			DebugPrintVector(directionResult, "realDir");
+			bakeTime = std::min(maxBakeTime, bakeTime);
 
-			throwPow = std::min(throwPow, maxPow);
-			DebugPrint(std::format("power: {}", throwPow));
+			DebugPrint(std::format("bakeTime: {}, speed: {}, result: {}", bakeTime, speed, ((bakeTime / maxBakeTime)*speed) / 27.7778f));
 
+
+			float resultSpeed = speed * (bakeTime / maxBakeTime);
 			// detach
 			manager->DetachChild(selfEntity->GetParent(), selfEntity);
 
@@ -451,22 +468,43 @@ namespace component {
 			Inventory* masterInv = manager->GetComponent<Inventory>(holdable->GetMaster());
 			masterInv->EraseCurrentHolding();
 
-			Transform* selfTr = manager->GetComponent<Transform>(selfEntity);
 			Physics* py = manager->GetComponent<Physics>(selfEntity);
 			DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
 
-			// when detach, set entity to world pos
-			selfTr->SetRotation(selfTr->GetWorldRotation());
-			selfTr->SetPosition(selfTr->GetWorldPosition());
-			
+		
 			// add force, calculate physics true
-			py->AddVelocity(directionResult, throwPow);
+			directionResult.x *= resultSpeed;
+			directionResult.y *= resultSpeed;
+			directionResult.z *= resultSpeed;
+
+			py->SetVelocity(directionResult);
 			py->SetCalculateState(true);
 
 			DebugPrintVector(py->GetVelocity(), "velocity");
-			DebugPrintVector(selfTr->GetRotation(), "rotate");
 			// set collider on
-			//dc->SetActive(true);
+			dc->SetActive(true);
+
+			// set collide event
+			EventFunction cctvHitEvent = [manager](Entity* self, Entity* other) {
+				DynamicCollider* dc = manager->GetComponent<DynamicCollider>(self);
+				Physics* py = manager->GetComponent<Physics>(self);
+
+				// set velocity calculate false
+				py->SetCalculateState(false);
+				py->SetVelocity({ 0,0,0 });
+
+				// collider off
+				dc->SetActive(false);
+
+				Name* name = manager->GetComponent<Name>(other);
+				Transform* otherTrans = manager->GetComponent<Transform>(other);
+				Collider* otherCol = manager->GetComponent<Collider>(other);
+
+				DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+				};
+
+
+			dc->InsertEvent<Collider>(cctvHitEvent, COLLIDE_EVENT_TYPE::BEGIN);
 
 			DebugPrint("Throw");
 		});
