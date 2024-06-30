@@ -125,6 +125,11 @@ void SceneManager::Update(float deltaTime)
 	if (m_CurrentScene) m_CurrentScene->Update(deltaTime);
 }
 
+void SceneManager::SyncWithRender(float deltaTime)
+{
+	if (m_CurrentScene) m_CurrentScene->RenderSync(deltaTime);
+}
+
 void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
 	m_CurrentScene->Render(commandLists, resultRtv, resultDsv);

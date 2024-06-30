@@ -59,15 +59,17 @@ bool Scene::AddSystem()
 
 	// transform sync
 	m_ECSManager->InsertSystem(new ECSsystem::LocalToWorldTransform);
-	m_ECSManager->InsertSystem(new ECSsystem::SyncWithTransform);
 
 
 	// 나중에 해도 상관 없는 것들
 	m_ECSManager->InsertSystem(new ECSsystem::AnimationPlayTimeAdd);
 	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
-	m_ECSManager->InsertSystem(new ECSsystem::DayLight);
 	m_ECSManager->InsertSystem(new ECSsystem::HandleInteraction);
 	m_ECSManager->InsertSystem(new ECSsystem::HandleUIComponent);
+
+	// Updates on pre render, use light, renderer
+	m_ECSManager->InsertPreRenderSystem(new ECSsystem::DayLight);
+	m_ECSManager->InsertPreRenderSystem(new ECSsystem::SyncWithTransform);
 
 
 	return true;
@@ -543,8 +545,14 @@ void Scene::Update(float deltaTime)
 	auto manager = m_ECSManager;
 }
 
+void Scene::RenderSync(float deltaTime)
+{
+	m_ECSManager->UpdatePreRenderSystem(deltaTime);
+}
+
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
+
 	// heap set
 	SetResourceHeap(commandLists[0]);
 
@@ -557,15 +565,14 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
 	m_ECSManager->Execute(getCam);
 
-	int camIdx = camVec[0]->GetCameraIndex();
-
 	// wait for end here
 
 	// render on multi
 	// mrt render end
-	for(int i = 0; i < camVec.size(); ++i)
-		RenderOnMRT(commandLists[0], camVec[i]);
-
+	for (int i = 0; i < camVec.size(); ++i) {
+		if (camVec[i]->IsActive())
+			RenderOnMRT(commandLists[0], camVec[i]);
+	}
 	// wait for end
 	///////////////////////////////////////////////////////////////////////////////////////////
 

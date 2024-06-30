@@ -91,6 +91,9 @@ ECSManager::~ECSManager()
 	for (auto& sys : m_Systems)
 		delete sys;
 
+	for (auto& sys : m_PreRenderSystem)
+		delete sys;
+
 	// component엔 동적할당 하지 않았음
 }
 
@@ -164,11 +167,22 @@ void ECSManager::InitSystem()
 	for (auto& system : m_Systems) {
 		system->OnInit(this);
 	}
+
+	for (auto& system : m_PreRenderSystem) {
+		system->OnInit(this);
+	}
 }
 
 void ECSManager::UpdateSystem(float deltaTime)
 {
 	for (auto& system : m_Systems) {
+		system->Update(this, deltaTime);
+	}
+}
+
+void ECSManager::UpdatePreRenderSystem(float deltaTime)
+{
+	for (auto& system : m_PreRenderSystem) {
 		system->Update(this, deltaTime);
 	}
 }

@@ -270,6 +270,7 @@ namespace component {
 		float m_Far = 50000.0f;
 
 		bool m_IsMainCamera = false;
+		bool m_Active = false;
 
 		// camera matrix
 		XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
@@ -318,6 +319,11 @@ namespace component {
 		void SetCameraData(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 		int GetCameraIndex() const { return m_RenderTargetDataIndex; }
+
+		void SetActive(bool state) { m_Active = state; }
+
+		bool IsMainCamera() const { return m_IsMainCamera; }
+		bool IsActive() const { return m_Active; }
 
 	private:
 		// 행렬 재생성

@@ -34,6 +34,7 @@
 #include <functional>
 #include <bitset>
 #include <any>
+#include <thread>
 
 // DirectX 12 Headers
 #include <d3d12.h>
