@@ -2,7 +2,7 @@
 	"name": "ForDebug",
 	"NumRenderTargets": 1,
 	"RenderTargetFormat_0": 0,
-	"DepthStencilViewFormat": 0,
+	"DepthStencilViewFormat": 1,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
 	"VS": "MRTDebugging.hlsl",
