@@ -1,18 +1,18 @@
 {
-	"name": "ShadowMapping",
+	"name": "Blit",
 	"NumRenderTargets": 1,
-	"RenderTargetFormat_0": 6,
-	"DepthStencilViewFormat": 0,
+	"RenderTargetFormat_0": 0,
+	"DepthStencilViewFormat": 1,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
-	"VS": "ShadowMapping.hlsl",
+	"VS": "Blit.hlsl",
 	"HS": null,
 	"DS": null,
 	"GS": null,
-	"PS": "ShadowMapping.hlsl",
+	"PS": "Blit.hlsl",
 	"StreamOutput": 0,
 	"BlendState": 0,
 	"RasterizerState": 0,
 	"DepthStencilState": 0,
-	"InputLayout": 1
+	"InputLayout": 0
 }

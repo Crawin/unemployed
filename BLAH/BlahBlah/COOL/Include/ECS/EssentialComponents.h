@@ -275,6 +275,9 @@ namespace component {
 		bool m_IsMainCamera = false;
 		bool m_Active = false;
 
+		// on off상태를 이분화
+		bool m_ActiveStateOnRender = false;
+
 		// camera matrix
 		XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
 		XMFLOAT4X4 m_ProjMatrix = Matrix4x4::Identity();
@@ -325,8 +328,11 @@ namespace component {
 
 		void SetActive(bool state) { m_Active = state; }
 
+		void SyncActiveState() { m_ActiveStateOnRender = m_Active; }
+
 		bool IsMainCamera() const { return m_IsMainCamera; }
 		bool IsActive() const { return m_Active; }
+		bool IsActiveOnRender() const { return m_ActiveStateOnRender; }
 
 	private:
 		// 행렬 재생성

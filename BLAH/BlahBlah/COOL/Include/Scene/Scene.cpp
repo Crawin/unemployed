@@ -88,6 +88,113 @@ void Scene::SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 }
 
+void Scene::UpdateLightData()
+{
+	// for lambda capture
+	std::shared_ptr<ECSManager> ecs = m_ECSManager;
+	auto& res = m_ResourceManager;
+
+	// set light data to shader
+	int count = 0;
+	LightData* data = m_ResourceManager->m_MappedLightData;
+
+	// unoccupy
+	res->UnOccupyShadowRTVs();
+
+	// get Camera
+	std::vector<component::Camera*> camVec;
+	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
+	m_ECSManager->Execute(getCam);
+
+	// prepare for light evaluate
+	int& activeLights = m_ActiveLightSize;
+	activeLights = 0;
+	component::Camera* cam = camVec[0];
+	XMFLOAT3 camPos = cam->GetWorldPosition();
+	XMFLOAT3 camDir = cam->GetWorldDirection();
+	std::vector<component::Light*> toCastShadowLights;
+	toCastShadowLights.reserve(m_ResourceManager->m_ShadowMaps.size());
+
+	// evaluate lights score for shadow mapping
+	std::function<void(component::Light*)> shadowMapEvaluate = [&camPos, &camDir, &toCastShadowLights](component::Light* lightComp) {
+		// unlink first
+		lightComp->GetLightData().m_CameraIdx = -1;
+
+		// if allways not cast, return
+		if (lightComp->IsCastShadow() == false) return;
+
+		// is main light -> cast allways cast shadow
+		lightComp->GetLightData().m_CastShadow = lightComp->IsMainLight();
+		lightComp->CalculateScore(camPos, camDir);
+
+		toCastShadowLights.push_back(lightComp);
+
+		};
+	m_ECSManager->Execute(shadowMapEvaluate);
+
+	// sort by score
+	std::sort(toCastShadowLights.begin(), toCastShadowLights.end(), [](component::Light* a, component::Light* b) { return a->GetScore() > b->GetScore(); });
+
+	// link light to shadow map
+	int maxShadowMaps = m_ResourceManager->m_ShadowMaps.size();
+	for (int i = 0; i < maxShadowMaps && i < toCastShadowLights.size(); ++i) {
+		// if too low, end
+		if (toCastShadowLights[i]->GetScore() < -100.0f) break;
+
+		LightData& light = toCastShadowLights[i]->GetLightData();
+
+		light.m_CastShadow = TRUE;
+		int shadowMapIdx = -1;
+		// link lights
+		switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
+		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
+		{
+			++activeLights;
+
+			// todo 
+			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
+			auto& p = camVec[0]->GetPosition();
+
+			XMFLOAT3 up = light.m_Direction;
+			up.x *= -5000.0;
+			up.y *= -5000.0;
+			up.z *= -5000.0;
+
+			XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
+			light.m_Position = pos;
+		}
+
+		// fallthrough 
+		[[fallthrough]];
+		case LIGHT_TYPES::SPOT_LIGHT:
+			// 해당 함수가 불리면 shadow mapping을 한다.
+			shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
+			res->UpdateShadowMapView(shadowMapIdx, light);
+
+			// set result
+			light.m_CameraIdx = res->GetShadowMapCamIdx(shadowMapIdx);
+			light.m_ShadowMapResults[0] = shadowMapIdx + res->GetShadowMapRTVStartIdx();
+
+			// todo
+			// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
+			res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
+			break;
+
+		case LIGHT_TYPES::POINT_LIGHT:
+			DebugPrint("No current shadow map setting for point light now");
+			break;
+
+		};
+	}
+
+	// memcpy to gpu
+	std::function<void(component::Light*)> updateLight = [&count, data](component::Light* lightComp) {
+		LightData& light = lightComp->GetLightData();
+		memcpy(data + count++, &light, sizeof(LightData));
+		};
+	m_ECSManager->Execute(updateLight);
+}
+
 void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	ResourceManager* manager = m_ResourceManager;
@@ -144,6 +251,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	auto& res = m_ResourceManager;
 
 	int camIdx = camera->GetCameraIndex();
+	auto& camDatas = m_ResourceManager->GetCameraRenderTargetData(camIdx);
 
 	// default deffered renderer
 	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, camIdx);
@@ -153,8 +261,8 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	m_ResourceManager->ClearMRTS(commandList, clearColor, camIdx);
 
 	// OM set
-	auto rtMRT = m_ResourceManager->GetDefferedRenderTargetStart(camIdx);
-	auto dsv = m_ResourceManager->GetDefferedDSV(camIdx);
+	auto rtMRT = camDatas.m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+	auto dsv = camDatas.m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	commandList->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &dsv);
 
 	OnPreRender(commandList, dsv);
@@ -206,7 +314,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON, camIdx);
 }
 
-void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
+void Scene::BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
 	// render shadow map
 
@@ -219,122 +327,14 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// 4 - 2.
 	// 5. present -> tex;
 
-
-	// for lambda capture
+	//// for lambda capture
 	std::shared_ptr<ECSManager> ecs = m_ECSManager;
 	auto& res = m_ResourceManager;
 
-	// set light data to shader
-	int count = 0;
-	LightData* data = m_ResourceManager->m_MappedLightData;
 
-	// unoccupy
-	res->UnOccupyShadowRTVs();
-
-	// get Camera
-	std::vector<component::Camera*> camVec;
-	std::function<void(component::Camera*)> getCam = [&camVec](component::Camera* cam) { camVec.push_back(cam); };
-	m_ECSManager->Execute(getCam);
-
-	// prepare for light evaluate
-	int& activeLights = m_ActiveLightSize;
-	activeLights = 0;
-	component::Camera* cam = camVec[0];
-	XMFLOAT3 camPos = cam->GetWorldPosition();
-	XMFLOAT3 camDir = cam->GetWorldDirection();
-	std::vector<component::Light*> toCastShadowLights;
-	toCastShadowLights.reserve(m_ResourceManager->m_ShadowMaps.size());
-
-	// evaluate lights for shadow mapping
-	std::function<void(component::Light*)> shadowMapEvaluate = [&camPos, &camDir, &toCastShadowLights](component::Light* lightComp) {
-		// unlink first
-		lightComp->GetLightData().m_CameraIdx = -1;
-
-		// if allways not cast, return
-		if (lightComp->IsCastShadow() == false) return;
-
-		// is main light -> cast allways cast shadow
-		lightComp->GetLightData().m_CastShadow = lightComp->IsMainLight();
-		lightComp->CalculateScore(camPos, camDir);
-
-		toCastShadowLights.push_back(lightComp);
-
-		};
-	m_ECSManager->Execute(shadowMapEvaluate);
-
-	// sort by score
-	std::sort(toCastShadowLights.begin(), toCastShadowLights.end(), [](component::Light* a, component::Light* b) { return a->GetScore() > b->GetScore(); });
-
-	// link light to shadow map
-	int maxShadowMaps = m_ResourceManager->m_ShadowMaps.size();
-	for (int i = 0; i < maxShadowMaps && i < toCastShadowLights.size(); ++i) {
-		// if too low, end
-		if (toCastShadowLights[i]->GetScore() < -100.0f) break;
-
-		LightData& light = toCastShadowLights[i]->GetLightData();
-
-		light.m_CastShadow = TRUE;
-		int shadowMapIdx = -1;
-		// link lights
-		switch (static_cast<LIGHT_TYPES>(light.m_LightType)) {
-		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
-		{
-			++activeLights;
-
-			// todo 
-			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
-			auto& p = camVec[0]->GetPosition();
-
-			XMFLOAT3 up = light.m_Direction;
-			up.x *= -5000.0;
-			up.y *= -5000.0;
-			up.z *= -5000.0;
-
-			XMFLOAT3 pos = { p.x + up.x, p.y + up.y, p.z + up.z };
-			light.m_Position = pos;
-		}
-
-		// fallthrough 
-		case LIGHT_TYPES::SPOT_LIGHT:
-			// 해당 함수가 불리면 shadow mapping을 한다.
-			shadowMapIdx = res->GetUnOccupiedShadowMapRenderTarget(static_cast<LIGHT_TYPES>(light.m_LightType));
-			res->UpdateShadowMapView(shadowMapIdx, light);
-
-			// set result
-			light.m_CameraIdx = res->GetShadowMapCamIdx(shadowMapIdx);
-			light.m_ShadowMapResults[0] = shadowMapIdx + res->GetShadowMapRTVStartIdx();
-
-			// todo
-			// 현재는 shadowmap 0번이 shadowmap 렌더타겟 0번을 그대로 가리키고 있기 때문에
-			res->SetShadowMapRTVIdx(shadowMapIdx, shadowMapIdx);
-			break;
-
-		case LIGHT_TYPES::POINT_LIGHT:
-			DebugPrint("No current shadow map setting for point light now");
-			break;
-
-		};
-	}
-
-	// memcpy to gpu
-	std::function<void(component::Light*)> updateLight = [&count, data](component::Light* lightComp) {
-		LightData& light = lightComp->GetLightData();
-		memcpy(data + count++, &light, sizeof(LightData));
-		};
-	m_ECSManager->Execute(updateLight);
-
-
-	// 
-	// OMSet
-	// Render
-	// LOOP
-	// 
 	// set light map pso
-	int shadowMat = m_ResourceManager->GetShadowMappingMaterial();
-	//m_ResourceManager->SetPSO(commandList, shadowMat);
-	Material* mat = m_ResourceManager->GetMaterial(shadowMat);
-	mat->GetShader()->SetPipelineState(commandList);
-
+	Material* shadowMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::SHADOWMAPPING);
+	shadowMat->GetShader()->SetPipelineState(commandList);
 
 	// Set Resource To RTV
 	m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -343,7 +343,6 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 	const float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	m_ResourceManager->ClearShadowMaps(commandList, clearColor);
 	auto dsv = m_ResourceManager->GetShadowMapDepthStencil();
-		//m_ResourceManager->m_ShadowMapDSVHeap->GetCPUDescriptorHandleForHeapStart();
 
 	// set viewport
 	// 하드코딩 경보
@@ -418,32 +417,28 @@ void Scene::UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 }
 
-void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
+void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, component::Camera* camera)
 {
-	std::vector<component::Camera*> camVec;
-	std::function<void(component::Camera*)> getCam = [&commandList, &camVec](component::Camera* cam) {	camVec.push_back(cam); };
-	m_ECSManager->Execute(getCam);
+	int camIdx = camera->GetCameraIndex();
+	auto& camDatas = m_ResourceManager->GetCameraRenderTargetData(camIdx);
 
-	camVec[0]->SetCameraData(commandList);
-	int camIdx = camVec[0]->GetCameraIndex();
+	auto resultRtv = camDatas.m_ResultRenderTargetHeap->GetCPUDescriptorHandleForHeapStart();
 
-	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-
-	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
-	//m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_COMMON, camIdx);
-	//m_ResourceManager->SetShadowMapStates(commandList, D3D12_RESOURCE_STATE_COMMON);
+	//commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	commandList->OMSetRenderTargets(1, &resultRtv, true, nullptr);
 
 	m_ResourceManager->SetCameraToPostProcessing(camIdx);
 
-	int postMat = m_ResourceManager->GetPostProcessingMaterial();
-	Material* mat = m_ResourceManager->GetMaterial(postMat);
+	// default lighting
+	Material* lightingMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::LIGHTING);
 
-	// todo light size
-	mat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_SIZE), m_ResourceManager->m_LightSize);
-	mat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_IDX), m_ResourceManager->m_LightIdx);
-	mat->GetShader()->SetPipelineState(commandList);
-	//m_ResourceManager->SetPSO(commandList, postMat);
-	mat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
+		lightingMat->SetTexture(i, i + camDatas.m_MRTStartIdx);
+
+	lightingMat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_SIZE), m_ResourceManager->m_LightSize);
+	lightingMat->SetDataIndex(static_cast<int>(MRT_POST_ROOTCONST::LIGHT_IDX), m_ResourceManager->m_LightIdx);
+	lightingMat->GetShader()->SetPipelineState(commandList);
+	lightingMat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 	commandList->DrawInstanced(6, 1, 0, 0);
 
@@ -451,19 +446,15 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 	// test code
 	// todo 적절한 위치로 옮기도록 하자
 	if (InputManager::GetInstance().GetDebugMode()) {
-		commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-		int debugMat = m_ResourceManager->GetDebuggingMaterial();
-
-		//m_ResourceManager->SetPSO(commandList, debugMat);
-		m_ResourceManager->GetMaterial(debugMat)->GetShader()->SetPipelineState(commandList);
+		Material* debugMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::FOR_DEBUG);
+		debugMat->GetShader()->SetPipelineState(commandList);
 
 		int a[2] = { 0, 0 };
 		
 		if (GetAsyncKeyState(VK_F9) & 0x8000)
 			a[0] = m_ResourceManager->GetShadowMapRTVStartIdx();
-		else {
+		else 
 			a[0] = m_ResourceManager->GetCameraRenderTargetIndex(camIdx, MULTIPLE_RENDER_TARGETS::BaseColor);
-		}
 
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, a, 0);
 		//m_ResourceManager->m_Materials[postMat]->SetDatas(commandLists[0], static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
@@ -471,6 +462,22 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_
 		commandList->DrawInstanced(6, 1, 0, 0);
 	}
 #endif
+}
+
+void Scene::CombineResultRendertargets(ComPtr<ID3D12GraphicsCommandList> commandList, component::Camera* mainCamera, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
+{
+	int camIdx = mainCamera->GetCameraIndex();
+	auto& camDatas = m_ResourceManager->GetCameraRenderTargetData(camIdx);
+	
+	// blit to main
+	commandList->OMSetRenderTargets(1, &resultRtv, true, nullptr);
+
+	Material* blitMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::BLIT);
+	blitMat->SetDataIndex(0, camDatas.m_ResultRenderTargetIndex);
+	blitMat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+	blitMat->GetShader()->SetPipelineState(commandList);
+
+	commandList->DrawInstanced(6, 1, 0, 0);
 }
 
 void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
@@ -548,6 +555,10 @@ void Scene::Update(float deltaTime)
 void Scene::RenderSync(float deltaTime)
 {
 	m_ECSManager->UpdatePreRenderSystem(deltaTime);
+
+	// light update and evaluate
+	UpdateLightData();
+
 }
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
@@ -567,20 +578,29 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 	// wait for end here
 
+	// update light, and shadowm map 
+	BuildShadowMap(commandLists[0]);
+
 	// render on multi
 	// mrt render end
 	for (int i = 0; i < camVec.size(); ++i) {
-		if (camVec[i]->IsActive())
+		if (camVec[i]->IsActiveOnRender()) {
 			RenderOnMRT(commandLists[0], camVec[i]);
+			PostProcessing(commandLists[0], camVec[i]);
+		}
 	}
 	// wait for end
 	///////////////////////////////////////////////////////////////////////////////////////////
 
-	// update light, and shadowm map 
-	UpdateLightData(commandLists[0]);
+	component::Camera* mainCam = nullptr;
+	for (component::Camera* cam : camVec)
+		if (cam->IsMainCamera() == true)
+			mainCam = cam;
+	// 
+	CombineResultRendertargets(commandLists[0], mainCam, resultRtv, resultDsv);
 
 	// post processing
-	PostProcessing(commandLists[0], resultRtv, resultDsv);
+	//PostProcessing(commandLists[0], resultRtv, resultDsv);
 
 	DrawUI(commandLists[0], resultRtv, resultDsv);
 }

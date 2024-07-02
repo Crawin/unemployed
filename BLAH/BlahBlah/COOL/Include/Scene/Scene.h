@@ -65,6 +65,9 @@ protected:
 
 	void SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
 
+	// on sync datas
+	void UpdateLightData();
+
 	// todo 아래 이것들의 대부분을 render path같은 것으로 빼야 한다
 	// render paths
 	// render seq 01
@@ -79,11 +82,12 @@ protected:
 	// post render on mrt
 	virtual void OnPostRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv) {}
 
-	// render seq final - 2
-	void UpdateLightData(ComPtr<ID3D12GraphicsCommandList> commandList);
+	void BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList);
 
-	// render seq final - 1
-	void PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+	void PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, component::Camera* camera);
+
+	// render final
+	void CombineResultRendertargets(ComPtr<ID3D12GraphicsCommandList> commandList, component::Camera* mainCamera, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
 	// render seq final
 	void DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);

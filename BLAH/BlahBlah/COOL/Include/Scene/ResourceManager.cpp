@@ -294,21 +294,12 @@ std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, Com
 
 bool ResourceManager::LoadDefferedResource(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-	// load Postprocessing material
-	m_PostProcessingMaterial = GetMaterial(m_PostProcessing, commandList);
-	if (m_PostProcessingMaterial == -1) return false;
 
-	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
-		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + 2);
+	for (int i = 0; i < _countof(m_PreLoadedMaterials); ++i) {
+		m_PreLoadedMaterials[i] = GetMaterial(ConvertMaterialToString(static_cast<PRE_LOADED_MATERIALS>(i)), commandList);
+		CHECK_CREATE_FAILED(m_PreLoadedMaterials[i] == -1, std::format("Failed to load pre load material, idx: {}", i));
+	}
 
-#ifdef _DEBUG
-	m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
-	if (m_DebuggingMaterial == -1) return false;
-
-	// debug deffered default
-	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
-		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + 2);
-#endif
 
 	return true;
 }
@@ -520,32 +511,6 @@ bool ResourceManager::MakeShadowMaps()
 	return true;
 }
 
-bool ResourceManager::LoadShadowMappingResource(ComPtr<ID3D12GraphicsCommandList> commandList)
-{
-	// load Postprocessing material
-	m_ShadowMappingMaterial = GetMaterial(m_ShadowMapping, commandList);
-	if (m_ShadowMappingMaterial == -1) return false;
-
-
-#ifdef _DEBUG
-	
-	// debugggg
-	
-	//for (int i = 0; i < m_ShadowMapRenderTargets; ++i)
-	//	m_Materials[m_ShadowMappingMaterial]->SetTexture(i, i + m_ShadowMapRTVStartIdx);
-	
-
-	//m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
-	//if (m_DebuggingMaterial == -1) return false;
-
-	//// debug deffered default
-	//for (int i = 0; i < m_DefferedRenderTargets; ++i)
-	//	m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
-#endif
-
-	return true;
-}
-
 bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
 	// 1. 씬에 배치 될 오브젝트들을 찾는다.
@@ -629,9 +594,6 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// make lighting data
 	CHECK_CREATE_FAILED(MakeLightData(commandList), "Light Making Failed!!");
-
-	// shadow map pso
-	CHECK_CREATE_FAILED(LoadShadowMappingResource(commandList), "Load ShadowMappingResource Failed!!");
 
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
@@ -1021,19 +983,19 @@ void ResourceManager::ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const
 	}
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart(int cameraIdx) const
-{
-	return m_CameraRenderTargets[cameraIdx].m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
-}
+//D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart(int cameraIdx) const
+//{
+//	return m_CameraRenderTargets[cameraIdx].m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+//}
+//
+//D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedDSV(int cameraIdx) const
+//{
+//	return m_CameraRenderTargets[cameraIdx].m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
+//}
 
-D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedDSV(int cameraIdx) const
+Material* ResourceManager::GetPreLoadedMaterial(PRE_LOADED_MATERIALS mat) const
 {
-	return m_CameraRenderTargets[cameraIdx].m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
-}
-
-int ResourceManager::GetPostProcessingMaterial() const
-{
-	return m_PostProcessingMaterial;
+	return m_Materials[m_PreLoadedMaterials[static_cast<int>(mat)]];
 }
 
 int ResourceManager::GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARGETS rtType) const
@@ -1054,7 +1016,7 @@ int ResourceManager::GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARG
 void ResourceManager::SetCameraToPostProcessing(int camIdx)
 {
 	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
-		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_CameraRenderTargets[camIdx].m_MRTStartIdx);
+		m_Materials[m_PreLoadedMaterials[static_cast<int>(PRE_LOADED_MATERIALS::LIGHTING)]]->SetTexture(i, i + m_CameraRenderTargets[camIdx].m_MRTStartIdx);
 }
 
 void ResourceManager::SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)
@@ -1116,11 +1078,6 @@ void ResourceManager::SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdLi
 void ResourceManager::UpdateShadowMapView(int idx, const LightData& light)
 {
 	m_ShadowMaps[idx].UpdateViewMatrixByLight(light);
-}
-
-int ResourceManager::GetShadowMappingMaterial() const
-{
-	return m_ShadowMappingMaterial;
 }
 
 BoundingFrustum* ResourceManager::GetShadowMapFrustum(int idx)

@@ -237,7 +237,7 @@ namespace component {
 
 		if (m_IsMainCamera) {
 			rm->SetMainCamera(this);
-			m_Active = true;
+			m_ActiveStateOnRender = m_Active = true;
 		}
 		m_Right.x = cam["Right"][0].asFloat();
 		m_Right.y = cam["Right"][1].asFloat();

@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 
+// root signature index
 enum class ROOT_SIGNATURE_IDX{
 	DESCRIPTOR_HEAP = 0,			// 디스크립터힙
 	DESCRIPTOR_IDX_CONSTANT,		// 디스크립터를 사용할 인덱스 16개의 int
@@ -13,12 +14,25 @@ enum class ROOT_SIGNATURE_IDX{
 	ROOT_SIGNATURE_IDX_MAX
 };
 
+// for multiple render targets
 enum class MATERIAL_TYPES {
 	ALBEDO = 0,
 	ROUGHNESS,
 	METALIC,
 	SPECULAR,
 	NORMAL,
+	MATERIAL_END
+};
+
+// pre loaded shaders, lighting shader, shadowmapping shader, ...
+enum class PRE_LOADED_MATERIALS {
+	LIGHTING = 0,
+	SHADOWMAPPING,
+
+	BLIT,
+#ifdef _DEBUG
+	FOR_DEBUG,
+#endif // DEBUG
 	MATERIAL_END
 };
 
@@ -64,6 +78,8 @@ enum class GAME_INPUT {
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim);
 int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput);
+PRE_LOADED_MATERIALS ConvertStringToMaterial(const std::string& str);
+std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat);
 
 // struct
 //struct PS_MRT_OUTPUT

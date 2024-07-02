@@ -62,3 +62,35 @@ int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput)
 		return -1;
 	}
 }
+
+PRE_LOADED_MATERIALS ConvertStringToMaterial(const std::string& str)
+{
+	if (str == "_Lighting")				return PRE_LOADED_MATERIALS::LIGHTING;
+	if (str == "_ShadowMapping")		return PRE_LOADED_MATERIALS::SHADOWMAPPING;
+	if (str == "_Blit")					return PRE_LOADED_MATERIALS::BLIT;
+
+#ifdef _DEBUG
+	if (str == "_ForDebug")				return PRE_LOADED_MATERIALS::FOR_DEBUG;
+#endif
+
+	// 길에 넘어지는걸 영어로 하면?
+	// 다운로드
+	ERROR_QUIT(std::format("ERROR!!!! no material match names, name: {}, ", str));
+}
+
+std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat)
+{
+	switch (preLaodMat) {
+	case PRE_LOADED_MATERIALS::LIGHTING:		return std::string("_Lighting");
+	case PRE_LOADED_MATERIALS::SHADOWMAPPING:	return std::string("_ShadowMapping");
+	case PRE_LOADED_MATERIALS::BLIT:			return std::string("_Blit");
+
+#ifdef _DEBUG
+	case PRE_LOADED_MATERIALS::FOR_DEBUG:		return std::string("_ForDebug");
+#endif
+	}
+
+	// 이즈리얼이 사는 곳은?
+	// 비전2동
+	ERROR_QUIT(std::format("ERROR!!!! no match materials, idx: {}", static_cast<int>(preLaodMat)));
+}

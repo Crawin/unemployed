@@ -112,6 +112,8 @@ namespace ECSsystem {
 			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixLookToLH(pos, look, up));
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
 
+			// sync states to
+			cam->SyncActiveState();
 			};
 		
 		// sync with renderer world matrix

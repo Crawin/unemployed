@@ -386,19 +386,19 @@ bool Shader::CreateShader(ComPtr<ID3D12Device> device, ComPtr<ID3D12GraphicsComm
 	psoDesc.GS = CompileShaderCode(root["GS"].asString(), SHADER_TYPE::gs_5_1, m_GeometryShaderBlob);
 	psoDesc.PS = CompileShaderCode(root["PS"].asString(), SHADER_TYPE::ps_5_1, m_PixelShaderBlob);
 #endif
-	psoDesc.SampleMask = m_SampleMask;															// UINT_MAX
-	psoDesc.StreamOutput = GetStreamOutputDesc(root["StreamOutput"].asInt());					// 기본값(없음)
-	psoDesc.BlendState = GetBlendDesc(root["BlendState"].asInt());								// 기본값
-	psoDesc.RasterizerState = GetRasterizerStateDesc(root["RasterizerState"].asInt());			// 기본값
-	psoDesc.DepthStencilState = GetDepthStencilState(root["DepthStencilState"].asInt());		// 기본값
-	psoDesc.InputLayout = GetInputLayout(root["InputLayout"].asInt());							// 없음
-	psoDesc.PrimitiveTopologyType = m_PrimitiveTopologyType;									// D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-	psoDesc.NumRenderTargets = m_NumRenderTargets;												// 1
+	psoDesc.SampleMask = m_SampleMask;																	// UINT_MAX
+	psoDesc.StreamOutput = GetStreamOutputDesc(root["StreamOutput"].asInt());							// 기본값(없음)
+	psoDesc.BlendState = GetBlendDesc(root["BlendState"].asInt());										// 기본값
+	psoDesc.RasterizerState = GetRasterizerStateDesc(root["RasterizerState"].asInt());					// 기본값
+	psoDesc.DepthStencilState = GetDepthStencilState(root["DepthStencilState"].asInt());				// 기본값
+	psoDesc.InputLayout = GetInputLayout(root["InputLayout"].asInt());									// 없음
+	psoDesc.PrimitiveTopologyType = m_PrimitiveTopologyType;											// D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
+	psoDesc.NumRenderTargets = m_NumRenderTargets;														// 1
 	for (UINT i = 0; i < m_NumRenderTargets; ++i) 
 		psoDesc.RTVFormats[i] = m_RTFormats[root[std::format("RenderTargetFormat_{}", i)].asInt()];		// DXGI_FORMAT_R8G8B8A8_UNORM
-	psoDesc.DSVFormat = m_DSVFormat;															// DXGI_FORMAT_R8G8B8A8_UNORM
-	psoDesc.SampleDesc = GetSampleDesc();														// count = 1
-	psoDesc.Flags = m_PsoFlags;																	// D3D12_PIPELINE_STATE_FLAG_NONE
+	psoDesc.DSVFormat = m_DSVFormats[root["DepthStencilViewFormat"].asInt()];							// DXGI_FORMAT_R8G8B8A8_UNORM
+	psoDesc.SampleDesc = GetSampleDesc();																// count = 1
+	psoDesc.Flags = m_PsoFlags;																			// D3D12_PIPELINE_STATE_FLAG_NONE
 
 	device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(m_PipelineState.GetAddressOf()));
 	CHECK_CREATE_FAILED(m_PipelineState, "m_PipelineState Create Failed!!");
