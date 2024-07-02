@@ -20,14 +20,16 @@
 inline void DebugPrint(const std::string& str)
 {
 #ifdef _DEBUG
-	std::cout << str << "\n";
+	printf(str.c_str());
+	printf("\n");
 #endif
 }
 
 inline void DebugPrintVector(const XMFLOAT3& v, std::string str = std::string())
 {
 #ifdef _DEBUG
-	std::cout << str << std::format(": {}, {}, {}", v.x, v.y, v.z) << "\n";
+	printf(std::format("{}: {}, {}, {}\n", str, v.x, v.y, v.z).c_str());
+	//std::cout << str << std::format(": {}, {}, {}", v.x, v.y, v.z) << "\n";
 #endif
 }
 
