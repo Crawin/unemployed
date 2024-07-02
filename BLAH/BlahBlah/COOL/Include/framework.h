@@ -70,7 +70,7 @@ using Microsoft::WRL::ComPtr;
 #include "Enums.h"
 
 // component count
-#define COMPONENT_COUNT 32
+#define COMPONENT_COUNT 33
 using COMP_BITSET = std::bitset<COMPONENT_COUNT>;
 
 std::string ExtractFileName(const std::string& fullPath);

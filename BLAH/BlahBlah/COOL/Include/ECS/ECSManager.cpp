@@ -154,7 +154,7 @@ void ECSManager::DetachChild(Entity* from, Entity* targetEntity)
 
 	// when detach, set entity to world pos
 	auto selfTr = GetComponent<component::Transform>(targetEntity);
-	selfTr->SetRotation(selfTr->GetWorldRotation());
+	//selfTr->SetRotation(selfTr->GetWorldRotation());
 	selfTr->SetPosition(selfTr->GetWorldPosition());
 	selfTr->SetParentTransform(Matrix4x4::Identity());
 	

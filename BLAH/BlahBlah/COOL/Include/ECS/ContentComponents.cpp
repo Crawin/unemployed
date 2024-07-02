@@ -511,4 +511,31 @@ namespace component {
 
 	}
 
+	void Screen::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Screen::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// todo 임시이다
+		int cameraIndex = -1;
+		std::function<void(Name*, Camera*)> findCam = [&cameraIndex, manager](Name* name, Camera* cam) {
+			if (name->getName() == "CCTV_01")
+				cameraIndex = cam->GetCameraIndex();
+			};
+		manager->Execute(findCam);
+
+		if (cameraIndex != -1) {
+			const auto& data = rm->GetCameraRenderTargetData(cameraIndex);
+
+			component::Renderer* ren = manager->GetComponent<component::Renderer>(selfEntity);
+			Material* mat = rm->GetMaterial(ren->GetMaterial());
+			mat->SetDataIndex(0, data.m_ResultRenderTargetIndex);
+		}
+	}
+
+	void Screen::ShowYourself() const
+	{
+	}
+
 }

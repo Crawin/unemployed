@@ -1,0 +1,57 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "ScreenTest",
+			"Renderer" : 
+			{
+				"Material" : "ScreenMaterial",
+				"Mesh" : "ScreenTest.ScreenTest"
+			},
+			"Screen": {},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-31.900001525878906,
+					154.0,
+					679.89996337890625
+				],
+				"Rotate" : 
+				[
+					90.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					0.10000000149011612,
+					0.10000003129243851,
+					0.10000003129243851
+				]
+			}
+		}
+	],
+	"Name" : "ScreenTest_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

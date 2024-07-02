@@ -235,6 +235,7 @@ namespace component {
 
 		m_IsMainCamera = cam["IsMainCamera"].asBool();
 
+		m_Active = cam["Active"].asBool();
 		if (m_IsMainCamera) {
 			rm->SetMainCamera(this);
 			m_ActiveStateOnRender = m_Active = true;

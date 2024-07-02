@@ -185,6 +185,21 @@ namespace component {
 		
 	};
 
+#define MAX_CCTV 4
+	/////////////////////////////////////////////////////////
+	// Screen Component
+	// CCTV와 연결되는 스크린
+	//
+	class Screen : public ComponentBase<Screen> {
+		int m_CameraRenderTargets[MAX_CCTV] = { 0, };
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+	};
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI 관련 컴포넌트들
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
