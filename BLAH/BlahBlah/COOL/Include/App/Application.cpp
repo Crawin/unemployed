@@ -61,21 +61,15 @@ bool Application::InitWindow()
 
 void Application::Tick()
 {
-	static bool s_First = true;
+	// 게임 루프
+	m_SceneManager->SyncWithRender(m_Timer->GetDeltaTime());
 
 	std::thread SceneUpdateThread([this]() {
 		m_Timer->Update();
 		m_SceneManager->Update(m_Timer->GetDeltaTime());
-		});
-
-	// 게임 루프
-	if (s_First == false) {
-		m_SceneManager->SyncWithRender(m_Timer->GetDeltaTime());
-		Renderer::GetInstance().Render();
-	}
-
-	s_First = false;
-
+	});
+	Renderer::GetInstance().Render();
+	
 	SceneUpdateThread.join();
 
 #ifdef _DEBUG

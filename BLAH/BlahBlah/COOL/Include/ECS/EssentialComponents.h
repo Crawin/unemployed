@@ -269,6 +269,9 @@ namespace component {
 		float m_Near = 0.1f;
 		float m_Far = 50000.0f;
 
+		float m_Width = 1280.0f;
+		float m_Height = 720.0f;
+
 		bool m_IsMainCamera = false;
 		bool m_Active = false;
 

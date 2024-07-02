@@ -23,7 +23,7 @@ void Timer::Update()
 	QueryPerformanceCounter((LARGE_INTEGER*)&m_CurrentTime);
 	m_deltaTime = (float)(m_CurrentTime - m_LastTime) * m_Cycle;
 
-	DebugPrint(std::format("FPS: {}", 1.0f / m_deltaTime));
+	//DebugPrint(std::format("FPS: {}", 1.0f / m_deltaTime));
 
 	// fps lock
 	/*

@@ -581,7 +581,12 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 		CHECK_CREATE_FAILED(
 			Renderer::GetInstance().CreateRenderTargetView(m_CameraRenderTargets[i].m_MRTHeap, m_Resources, m_CameraRenderTargets[i].m_MRTStartIdx, m_CameraRenderTargets[i].m_MRTNum),
 			"Create MRT RTV Failed!!");
-	
+
+		// result rtv
+		CHECK_CREATE_FAILED(
+			Renderer::GetInstance().CreateRenderTargetView(m_CameraRenderTargets[i].m_ResultRenderTargetHeap, m_Resources, m_CameraRenderTargets[i].m_ResultRenderTargetIndex),
+			"Create CameraResultRenderTarget Failed!!");
+
 		// dsv
 		CHECK_CREATE_FAILED(
 			Renderer::GetInstance().CreateDepthStencilView(m_CameraRenderTargets[i].m_DsvHeap, m_CameraRenderTargets[i].m_DepthBuffer), "Create MRT DSV Failed!!"
@@ -819,6 +824,20 @@ bool ResourceManager::MakeMultipleRenderTargets(CameraRenderTargets& camData)
 		"Diff dsv");
 	camData.m_DepthBuffer->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 	camData.m_DepthBuffer->SetName("Diff dsv");
+
+	// result rendertargets
+	camData.m_ResultRenderTargetIndex = static_cast<int>(m_Resources.size());
+	m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
+		D3D12_HEAP_TYPE_DEFAULT,
+		D3D12_RESOURCE_STATE_COMMON,
+		Renderer::GetInstance().GetScreenSize(),
+		std::format("CameraResultRTV"),
+		D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+		DXGI_FORMAT_R8G8B8A8_UNORM)
+	);
+
+	m_Resources[camData.m_ResultRenderTargetIndex]->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	m_Resources[camData.m_ResultRenderTargetIndex]->SetShaderResource();
 
 	return true;
 }

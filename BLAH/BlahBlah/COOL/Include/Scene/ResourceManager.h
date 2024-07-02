@@ -71,6 +71,8 @@ struct CameraRenderTargets {
 	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
+	int m_ResultRenderTargetIndex = -1;
+	ComPtr<ID3D12DescriptorHeap> m_ResultRenderTargetHeap;
 };
 
 //struct ToLoadLightDataInfo {
