@@ -230,20 +230,20 @@ void process_packet(packet_base*& base)
 	auto& client = Client::GetInstance();
 	switch (base->getType())		// PACKET_TYPE
 	{
-	case 0:									// POSITION
+	case pPOSITION:								// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
 		client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
 		break;
 	}
-	case 1:									// LOGIN
+	case pLOGIN:									// LOGIN
 	{
 		sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
 		client.characters.try_emplace(buf->player);
 		client.setPSock(buf->player);
 		break;
 	}
-	case 2:									// make_room
+	case pMAKEROOM:									// make_room
 	{
 		sc_packet_make_room* buf = reinterpret_cast<sc_packet_make_room*>(base);
 		std::cout << buf->getGameNum() << " 방 생성 완료" << std::endl;
@@ -251,13 +251,14 @@ void process_packet(packet_base*& base)
 		
 		client.setCharType(1);
 		client.characters.try_emplace(PoliceID);
+		client.characters.try_emplace(StudentID);
 		client.vivox_state = new VIVOX_STATE;
 		client.vivox_state->game_state = true;
 		std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
 		vivox.detach();
 		break;
 	}
-	case 3:									// enter_room
+	case pENTERROOM:							// enter_room
 	{
 		sc_packet_enter_room* buf = reinterpret_cast<sc_packet_enter_room*>(base);
 		if (buf->getBool())
@@ -268,6 +269,7 @@ void process_packet(packet_base*& base)
 			//std::cout << "참가한 소켓은" << playerSock << "입니다." << std::endl;
 			client.characters.try_emplace(playerSock);
 			client.characters.try_emplace(PoliceID);
+			client.characters.try_emplace(StudentID);
 			client.setPSock(playerSock);
 			client.setCharType(2);
 			client.vivox_state = new VIVOX_STATE;
@@ -281,7 +283,7 @@ void process_packet(packet_base*& base)
 		}
 		break;
 	}
-	case 4:									// pRoomPlayer
+	case pRoomPlayer:									// pRoomPlayer
 	{
 		sc_packet_room_player* buf = reinterpret_cast<sc_packet_room_player*>(base);
 		SOCKET playerSock = buf->getPlayerSock();
@@ -289,11 +291,16 @@ void process_packet(packet_base*& base)
 		client.setPSock(playerSock);
 	}
 		break;
-	case 5:									// pLogout
+	case pLogout:									// pLogout
 	{
 		sc_packet_logout* buf = reinterpret_cast<sc_packet_logout*>(base);
 		client.characters.erase(buf->player);
 		client.logout_opponent();
+	}
+		break;
+	case pAttack:
+	{
+		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(base);
 	}
 		break;
 	}
