@@ -16,6 +16,7 @@
 #include <mutex>
 #include <chrono>
 #include <thread>
+#include <queue>
 #include "Packets.h"
 
 void print_error(const char* msg, int err_no);

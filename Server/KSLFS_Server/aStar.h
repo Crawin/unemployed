@@ -5,6 +5,7 @@ public:
 	DirectX::XMFLOAT3 pos;
 	PATH* next = nullptr;
 };
+
 class NODE {
 public:
 	int id;								// 노드의 고유 아이디
@@ -47,13 +48,15 @@ public:
 		f = 0;
 		parent = nullptr;
 	}
-
 };
 
 extern std::unordered_map<int, NODE*> g_um_graph;
 
 int find_near_NODE(DirectX::XMFLOAT3& pos);
+int find_near_NODE(DirectX::XMFLOAT3& pos, std::unordered_map<int, NODE*>& astar_graph);
 
 PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal);
+PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unordered_map<int,NODE*>& graph);
 
 void MakeGraph();
+void MakeGraph(std::unordered_map<int, NODE*>& graph);
