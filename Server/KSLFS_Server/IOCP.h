@@ -267,7 +267,7 @@ public:
 	short state = 0;				// 0: idle, 1: 이동중 , 2: 충돌 애니메이션 진행중
 	std::atomic_bool updating = false;
 	unsigned int id = NULL;
-	short m_floor = 1;
+	float m_floor = 1;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
@@ -367,7 +367,7 @@ public:
 	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	unsigned short floor_collision(cs_packet_position*& packet);
-	unsigned short floor_collision(const unsigned int& id, Game& gameRoom);
+	float floor_collision(const unsigned int& id, Game& gameRoom);
 	void command_thread();
 	void ai_thread();
 	void ai_timer();

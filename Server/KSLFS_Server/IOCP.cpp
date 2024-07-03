@@ -216,8 +216,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			gameRoom.setPlayerPR(id, position);
 
 			//short floor = floor_collision(position);
-			short floor = floor_collision(id, gameRoom);
-			if (floor >= 0)
+			float floor = floor_collision(id, gameRoom);
+			if (floor < 6)
 			{
 				if (detail.m_bLog)
 					std::cout << id << "가 " << floor << "층으로 이동" << std::endl;
@@ -440,15 +440,20 @@ unsigned short IOCP_SERVER_MANAGER::floor_collision(cs_packet_position*& packet)
 	return floor;
 }
 
-unsigned short IOCP_SERVER_MANAGER::floor_collision(const unsigned int& id, Game& gameRoom)
+float IOCP_SERVER_MANAGER::floor_collision(const unsigned int& id, Game& gameRoom)
 {
 	DirectX::BoundingOrientedBox player_obb;
 	gameRoom.getPlayerOBB(player_obb, id);
 	
 	DirectX::XMFLOAT3 trash;
-	short floor;
-	m_vMeshes[0]->m_Childs[0].m_Childs[0].floor_collision(player_obb, &trash, &trash, &floor);
-	return floor;
+	float now_floor = 0;
+	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
+	for (auto& floor : map_floors)
+	{
+		if (floor.floor_collision(player_obb, now_floor))
+			break;
+	}
+	return now_floor;
 }
 
 void Game::init(const unsigned int& i, const SOCKET& s)
@@ -759,7 +764,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	//short now_floor = 0;
 	//for (auto& mesh : m_vMeshes)
 	//	mesh->m_Childs[0].m_Childs[0].floor_collision(now_obb, &temp, &temp, &now_floor);
-	float now_floor = -1;
+	float now_floor = 0;
 	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
 	for (auto& floor : map_floors)
 	{
@@ -769,7 +774,6 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	if (now_floor <= 5.5)
 	{
 		if (m_floor != now_floor)
-			
 			std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
 		m_floor = now_floor;
 	}
@@ -856,7 +860,7 @@ void NPC::student_state_machine(Player* p)
 		player_location = DirectX::XMLoadFloat3(&p[i].position);
 		p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
 		hit = now_obb.Intersects(player_obb);
-		if (hit)
+		if (hit&& state!=2)
 		{
 			std::cout << i<<" 와 충돌" << std::endl;
 			break;
@@ -967,18 +971,24 @@ bool NPC::can_see(Player& p)
 		return false;
 
 	DirectX::XMFLOAT3 playerPos = p.position;
-	playerPos.y += 50;
+	playerPos.y += 127;
 	DirectX::XMFLOAT3 npcPos = position;
-	npcPos.y += 50;
-	for (auto& mesh : m_vMeshes)
+	npcPos.y += 127;
+	for (auto& mesh : m_vMeshes[0]->m_Childs[0].m_Childs[m_floor + 2].m_Childs)
 	{
-		if (mesh->can_see(playerPos, npcPos, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
+		if (mesh.sight_block(playerPos, npcPos))
 		{
-			//std::cout << "보인다 보여.." << std::endl;
-			return true;
+			// 하나의 벽이라도 막혀있다면 시야에 보이지 않는 것.
+			return false;
 		}
+		//if (mesh->can_see(playerPos, npcPos, m_floor))		// npc -> 플레이어로의 광선과 장애물들을 ray 충돌하여 npc가 플레이어를 볼 수 있는지 확인
+		//{
+		//	std::cout << "보인다 보여.." << std::endl;
+		//	return true;
+		//}
 	}
-	return false;
+	// 모든 벽을 다 돌아봤는데 막힌게 없으면 시야에 보이는 것.
+	return true;
 }
 
 bool NPC::can_hear(Player& p)
@@ -1026,9 +1036,11 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 			if (can_see(p[n]))
 			{
 				std::cout << n << "P 발견" << std::endl;
-				path = aStarSearch(position, destination);
-				//this->destination = path->pos;
+				//path = aStarSearch(position, destination);
 				this->destination = p[n].position;
+				reset_graph();
+				this->path = aStarSearch(position, destination, astar_graph);
+				//this->destination = path->pos;
 				this->destination.y = position.y;
 				if (nullptr != path)
 					return true;

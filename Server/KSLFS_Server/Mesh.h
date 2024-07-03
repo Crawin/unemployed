@@ -45,5 +45,6 @@ public:
 	void planeNum_intersects_direction_vector(const DirectX::BoundingOrientedBox&,DirectX::XMFLOAT3&, DirectX::XMFLOAT3*);
 	void planeNum_intersects_direction_vector_v3(const DirectX::BoundingOrientedBox&, const Mesh&, DirectX::XMFLOAT3&, DirectX::XMFLOAT3*, DirectX::XMFLOAT3* newPosition, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping);
 	bool can_see(DirectX::XMFLOAT3& playerPos, DirectX::XMFLOAT3& npcPos, const unsigned short& floor);
+	bool sight_block(DirectX::XMFLOAT3& playerPos, DirectX::XMFLOAT3& npcPos);
 	bool ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray);
 };

@@ -496,27 +496,49 @@ bool Mesh::can_see(DirectX::XMFLOAT3& playerPos,DirectX::XMFLOAT3& npcPos,const 
 	return false;
 }
 
+bool Mesh::sight_block(DirectX::XMFLOAT3& playerPos, DirectX::XMFLOAT3& npcPos)
+{
+	DirectX::XMVECTOR ray = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&playerPos), DirectX::XMLoadFloat3(&npcPos));	// 경비병 -> 플레이어의 벡터
+	if (ray_collision(npcPos, ray))
+		return true;
+	return false;
+}
+
 bool Mesh::ray_collision(DirectX::XMFLOAT3& startPos, DirectX::XMVECTOR& ray)
 {
-	DirectX::XMFLOAT4 orient(0, 0, 0, 1);
+	//DirectX::XMFLOAT4 orient(0, 0, 0, 1);
 	float ray_length = DirectX::XMVectorGetX(DirectX::XMVector3Length(ray));
-	for (auto& wall : m_Childs)
+
+	float dist = 0;
+	if (ray_length > 0)
 	{
-		DirectX::BoundingOrientedBox obb(wall.m_AABBCenter, wall.m_AABBExtents_Divide, orient);
-		float dist = 0;
-		if (ray_length > 0) {
-			if (obb.Intersects(DirectX::XMLoadFloat3(&startPos),DirectX::XMVector3Normalize(ray), dist))
+		if (this->m_ModelBoundingBox.Intersects(DirectX::XMLoadFloat3(&startPos), DirectX::XMVector3Normalize(ray), dist))
+		{
+			if (dist < ray_length)
 			{
-				if (dist < ray_length)
-				{
-					//std::cout << wall.m_Name << "때문에 안보영" << std::endl;
-					return false;
-				}
+				return true;			// 충돌했다.
 			}
-			//std::cout << "dist : "<<dist << std::endl;
 		}
 	}
-	return true;
+	return false;						// 충돌하지 않았다.
+
+	//for (auto& wall : m_Childs)
+	//{
+	//	DirectX::BoundingOrientedBox obb(wall.m_AABBCenter, wall.m_AABBExtents_Divide, orient);
+	//	float dist = 0;
+	//	if (ray_length > 0) {
+	//		if (obb.Intersects(DirectX::XMLoadFloat3(&startPos),DirectX::XMVector3Normalize(ray), dist))
+	//		{
+	//			if (dist < ray_length)
+	//			{
+	//				//std::cout << wall.m_Name << "때문에 안보영" << std::endl;
+	//				return false;
+	//			}
+	//		}
+	//		//std::cout << "dist : "<<dist << std::endl;
+	//	}
+	//}
+	//return true;
 }
 
 bool Mesh::collision_v3(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3& playerSpeed, DirectX::XMFLOAT3* newSpeed ,unsigned short* ptrFloor, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping)
@@ -579,7 +601,7 @@ const bool Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, flo
 			return true;
 		}
 	}
-	if (ptrFloor == -1)	ptrFloor = 1;
+	if (ptrFloor == 0)	ptrFloor = 1;
 	else	ptrFloor += 0.5;
 
 	return false;
