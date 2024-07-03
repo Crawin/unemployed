@@ -3,70 +3,228 @@
 
 void Mesh::LoadMeshData(std::ifstream& meshFile)
 {
-	// 메쉬 파일 구조
-// 1. 이름 길이					// int
-// 2. 이름						// char*
-// 3. 바운딩박스					// float3 x 3
-// 4. 부모 상대 변환 행렬			// float4x4
-// 5. 버텍스 타입				// int
-// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
-// 7. 인덱스 정보				// int int*int
-// 8. 서브메쉬 개수				// int
-// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
-//
+	if (false)
+	{
+		// 메쉬 파일 구조
+	// 1. 이름 길이					// int
+	// 2. 이름						// char*
+	// 3. 바운딩박스					// float3 x 3
+	// 4. 부모 상대 변환 행렬			// float4x4
+	// 5. 버텍스 타입				// int
+	// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv
+	// 7. 인덱스 정보				// int int*int
+	// 8. 서브메쉬 개수				// int
+	// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
+	//
 
-// 1. 이름 길이
-	unsigned int size;
-	meshFile.read((char*)&size, sizeof(unsigned int));
+	// 1. 이름 길이
+		unsigned int size;
+		meshFile.read((char*)&size, sizeof(unsigned int));
 
-	// 2. 이름
-	if (size > 0) {
-		char* name = new char[size + 1];
-		name[size] = '\0';
-		meshFile.read(name, size);
-		m_Name = std::string(name);
-		delete[] name;
+		// 2. 이름
+		if (size > 0) {
+			char* name = new char[size + 1];
+			name[size] = '\0';
+			meshFile.read(name, size);
+			m_Name = std::string(name);
+			delete[] name;
+		}
+
+		// 3. 바운딩박스	
+		DirectX::XMFLOAT3 min, max;
+		meshFile.read((char*)&min, sizeof(DirectX::XMFLOAT3));
+		meshFile.read((char*)&max, sizeof(DirectX::XMFLOAT3));
+		meshFile.read((char*)&m_AABBCenter, sizeof(DirectX::XMFLOAT3));
+		m_AABBExtents = DirectX::XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
+		m_AABBExtents_Divide = DirectX::XMFLOAT3(abs(m_AABBExtents.x * 0.5), abs(m_AABBExtents.y * 0.5), abs(m_AABBExtents.z * 0.5));
+		// 4. 부모 상대 변환 행렬		// float4x4
+		meshFile.read((char*)&m_LocalTransform, sizeof(DirectX::XMFLOAT4X4));
+
+		// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
+		unsigned int vtxType;
+		meshFile.read((char*)&vtxType, sizeof(unsigned int));
+
+		// 6. 버텍스 정보
+		unsigned int vertexLen = 0;
+		meshFile.read((char*)&vertexLen, sizeof(unsigned int));
+
+		if (vertexLen > 0) {
+
+			std::vector<Vertex> vertex(vertexLen);
+			meshFile.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
+
+			m_VertexNum = vertexLen;
+		}
+
+		// 8. 서브메쉬 개수
+		unsigned int childNum;
+		meshFile.read((char*)&childNum, sizeof(unsigned int));
+		m_Childs.reserve(childNum);
+
+		// 9. 서브메쉬(재귀)
+		for (unsigned int i = 0; i < childNum; ++i) {
+			Mesh newMesh;
+			DirectX::XMMATRIX root = DirectX::XMLoadFloat4x4(&m_RootTransform);
+			DirectX::XMMATRIX local = DirectX::XMLoadFloat4x4(&m_LocalTransform);
+			DirectX::XMStoreFloat4x4(&newMesh.m_RootTransform, DirectX::XMMatrixMultiply(root, local));
+			newMesh.LoadMeshData(meshFile);
+			m_Childs.push_back(newMesh);
+		}
 	}
+	else
+	{					// 24.06.27 완료 할것.
+		// 메쉬 파일 구조
+		// 1. 이름 길이					// int
+		// 2. 이름						// char*
+		// 3. 바운딩박스					// float3 x 3
+		// 4. 부모 상대 변환 행렬			// float4x4
+		// 5. 버텍스 타입				// int
+		// 6. 버텍스 정보				// int, int*(pos, nor, tan, uv)			// int pos int nor int tan int uv, + uint4(bleidng bone) + float4 (blending weight)
+		// 7. 인덱스 정보				// int int*int
+		// 8. 서브메쉬 개수				// int
+		// 9. 서브메쉬(이름길이 이름 버텍스정보 서브메쉬...개수)		// 재귀로 파고들어라
+		//
 
-	// 3. 바운딩박스	
-	DirectX::XMFLOAT3 min, max;
-	meshFile.read((char*)&min, sizeof(DirectX::XMFLOAT3));
-	meshFile.read((char*)&max, sizeof(DirectX::XMFLOAT3));
-	meshFile.read((char*)&m_AABBCenter, sizeof(DirectX::XMFLOAT3));
-	m_AABBExtents = DirectX::XMFLOAT3(max.x - min.x, max.y - min.y, max.z - min.z);
-	m_AABBExtents_Divide = DirectX::XMFLOAT3(abs(m_AABBExtents.x *0.5), abs(m_AABBExtents.y *0.5), abs(m_AABBExtents.z *0.5));
-	// 4. 부모 상대 변환 행렬		// float4x4
-	meshFile.read((char*)&m_LocalTransform, sizeof(DirectX::XMFLOAT4X4));
+		// 1. 이름 길이
+		using namespace DirectX;
+		unsigned int size;
+		meshFile.read((char*)&size, sizeof(unsigned int));
 
-	// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
-	unsigned int vtxType;
-	meshFile.read((char*)&vtxType, sizeof(unsigned int));
+		// 2. 이름
+		if (size > 0) {
+			char* name = new char[size + 1];
+			name[size] = '\0';
+			meshFile.read(name, size);
+			m_Name = std::string(name);
+			delete[] name;
+		}
 
-	// 6. 버텍스 정보
-	unsigned int vertexLen = 0;
-	meshFile.read((char*)&vertexLen, sizeof(unsigned int));
+		// 3. 바운딩박스	
+		XMFLOAT3 min, max;
+		meshFile.read((char*)&min, sizeof(XMFLOAT3));
+		meshFile.read((char*)&max, sizeof(XMFLOAT3));
+		meshFile.read((char*)&m_AABBCenter, sizeof(XMFLOAT3));
 
-	if (vertexLen > 0) {
+		XMVECTOR ext = (XMLoadFloat3(&max) - XMLoadFloat3(&min)) / 2.0f;
+		XMStoreFloat3(&m_AABBExtents, ext);
 
-		std::vector<Vertex> vertex(vertexLen);
-		meshFile.read((char*)(&vertex[0]), sizeof(Vertex) * vertexLen);
+		// 4. 부모 상대 변환 행렬		// float4x4
+		meshFile.read((char*)&m_LocalTransform, sizeof(XMFLOAT4X4));
 
-		m_VertexNum = vertexLen;
-	}
+		auto centervec = XMLoadFloat3(&m_AABBCenter);
+		auto centervec4d = XMVectorSetW(centervec, 1);
 
-	// 8. 서브메쉬 개수
-	unsigned int childNum;
-	meshFile.read((char*)&childNum, sizeof(unsigned int));
-	m_Childs.reserve(childNum);
+		auto worldmat = XMLoadFloat4x4(&m_LocalTransform);
 
-	// 9. 서브메쉬(재귀)
-	for (unsigned int i = 0; i < childNum; ++i) {
-		Mesh newMesh;
-		DirectX::XMMATRIX root = DirectX::XMLoadFloat4x4(&m_RootTransform);
-		DirectX::XMMATRIX local = DirectX::XMLoadFloat4x4(&m_LocalTransform);
-		DirectX::XMStoreFloat4x4(&newMesh.m_RootTransform, DirectX::XMMatrixMultiply(root, local));
-		newMesh.LoadMeshData(meshFile);
-		m_Childs.push_back(newMesh);
+		auto worldlocation = XMVector4Transform(centervec4d, worldmat);
+		
+		XMStoreFloat3(&m_AABBCenter, worldlocation);
+		//XMStoreFloat4x4(&m_LocalTransform, XMMatrixIdentity());
+		
+
+		// bounding box
+		m_AABBExtents.x = abs(m_AABBExtents.x);
+		m_AABBExtents.y = abs(m_AABBExtents.y);
+		m_AABBExtents.z = abs(m_AABBExtents.z);
+		m_ModelBoundingBox = BoundingOrientedBox(m_AABBCenter, m_AABBExtents, XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+		// 5. 버텍스 타입 // 사용 할 듯 하다. ex) 스킨메쉬 vs 일반메쉬
+		unsigned int vtxType;
+		meshFile.read((char*)&vtxType, sizeof(unsigned int));
+
+		// 6. 버텍스 정보
+		unsigned int vertexLen = 0;
+
+		meshFile.read((char*)&vertexLen, sizeof(unsigned int));
+		if (vertexLen > 0) {
+
+			switch (vtxType) {
+			case 0:			// NO_VERTEX
+				std::cout << "노 버텍스" << std::endl;
+				break;
+
+			case 1:			// NORMAL
+			{
+				//std::cout << "노멀" << std::endl;
+				UINT size = sizeof(Vertex) * vertexLen;
+				size = ((size + 255) & ~255);
+				char* data = new char[size];
+				meshFile.read(data, sizeof(Vertex) * vertexLen);
+				
+				vertecies = reinterpret_cast<Vertex*>(data);
+				//std::vector<DirectX::XMFLOAT3> vectex_list;
+				//for (int i = 0; i < sizeof(Vertex) * vertexLen; i += sizeof(Vertex))
+				//{
+				//	std::cout << i/sizeof(Vertex) << ": ";
+				//	auto v = reinterpret_cast<Vertex*>(&data[i]);
+				//	std::cout << "Position: (" << v->position.x << ", " << v->position.y << ", " << v->position.z << ")" << std::endl;
+				//	std::cout << "Normal: (" << v->normal.x << ", " << v->normal.y << ", " << v->normal.z << ")" << std::endl;
+				//	std::cout << "Tangent: (" << v->tangent.x << ", " << v->tangent.y << ", " << v->tangent.z << ")" << std::endl;
+				//	std::cout << "UV: (" << v->uv.x << ", " << v->uv.y << ")" << std::endl;
+				//	std::cout << std::endl;
+
+				//	bool b = true;
+				//	for (auto& l : vectex_list)
+				//	{
+				//		if (l.x == v->position.x && l.y == v->position.y && l.z == v->position.z)
+				//		{
+				//			b = false;
+				//			break;
+				//		}
+				//	}
+				//	if (b)
+				//	{
+				//		vectex_list.emplace_back(v->position);
+				//	}
+				//}
+
+				//for (auto& v : vectex_list)
+				//{
+				//	std::cout << "(" << v.x << ", " << v.y << ", " << v.z << ") ";
+				//}
+				//std::cout << std::endl;
+
+				//delete[] data;
+
+				//LoadVertices<Vertex>(commandList, file, manager, vertexLen);
+				//for (int i = 0; i < vertexLen; ++i)
+				//{
+				//	std::cout << i << ": ";
+				//	std::cout << "Position: (" << vertecies[i].position.x << ", " << vertecies[i].position.y << ", " << vertecies[i].position.z << ")" << std::endl;
+				//	std::cout << "Normal: (" << vertecies[i].normal.x << ", " << vertecies[i].normal.y << ", " << vertecies[i].normal.z << ")" << std::endl;
+				//	std::cout << "Tangent: (" << vertecies[i].tangent.x << ", " << vertecies[i].tangent.y << ", " << vertecies[i].tangent.z << ")" << std::endl;
+				//	std::cout << "UV: (" << vertecies[i].uv.x << ", " << vertecies[i].uv.y << ")" << std::endl;
+				//	std::cout << std::endl;
+				//}
+				break;
+			}
+			case 2:			// SKINNED
+				std::cout << "스킨드" << std::endl;
+				//LoadVertices<SkinnedVertex>(commandList, file, manager, vertexLen);
+				//m_BoneIdx = GetBone(commandList, fileName, manager);
+				//m_IsSkinned = true;
+				break;
+			}
+
+			m_VertexNum = vertexLen;
+		}
+
+		//manager->AddMesh(this);
+
+		// 8. 서브메쉬 개수
+		unsigned int childNum;
+		meshFile.read((char*)&childNum, sizeof(unsigned int));
+		m_Childs.reserve(childNum);
+
+		// 9. 서브메쉬(재귀)
+		for (unsigned int i = 0; i < childNum; ++i) {
+			Mesh newMesh;
+			DirectX::XMMATRIX root = DirectX::XMLoadFloat4x4(&m_RootTransform);
+			DirectX::XMMATRIX local = DirectX::XMLoadFloat4x4(&m_LocalTransform);
+			DirectX::XMStoreFloat4x4(&newMesh.m_RootTransform, DirectX::XMMatrixMultiply(root, local));
+			newMesh.LoadMeshData(meshFile);
+			m_Childs.push_back(newMesh);
+		}
 	}
 }
 
@@ -410,6 +568,21 @@ const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, Dire
 	//		return i + 1;
 	//	}
 	//}			// 층과 층 사이에 있는지
+}
+
+const bool Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, float& ptrFloor)
+{
+	for (auto& floor : this->m_Childs)
+	{
+		if (floor.m_ModelBoundingBox.Intersects(player))
+		{
+			return true;
+		}
+	}
+	if (ptrFloor == -1)	ptrFloor = 1;
+	else	ptrFloor += 0.5;
+
+	return false;
 }
 
 bool Mesh::map_collision(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3& playerSpeed, DirectX::XMFLOAT3* newSpeed, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping)
