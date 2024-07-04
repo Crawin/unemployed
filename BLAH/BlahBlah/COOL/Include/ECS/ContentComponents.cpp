@@ -24,23 +24,23 @@ namespace component {
 
 		// make conditions
 		COND idle = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp < 30.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed < 30.0f;
 			};
 
 		COND idleToWalk = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp >= 30.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed >= 30.0f;
 			};
 
 		COND walkToRun = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp >= 300.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed >= 300.0f;
 			};
 
 		COND runToWalk = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp < 300.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed < 300.0f;
 			};
 
 		COND hit = [](void* data) {
@@ -57,13 +57,13 @@ namespace component {
 
 		// insert transition (graph)
 		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
 		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
-		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::FALLINGDOWN, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::GETTING_HIT, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
 		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
 		// set start animation
@@ -117,10 +117,10 @@ namespace component {
 
 		// insert transition (graph)
 		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
 		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
 		// set start animation

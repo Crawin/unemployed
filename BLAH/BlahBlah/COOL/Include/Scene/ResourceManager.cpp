@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "ECS/ECSManager.h"
 #include "Lighting/ShadowMap.h"
+#include "Animation/AnimationTrack.h"
 #include "json/json.h"
 
 //#include "Material/Material.h"
@@ -404,18 +405,33 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 		player->m_Name = animCont.m_AnimSetName;
 		for (auto& key : root.getMemberNames()) {
 			std::string animName = root[key].asString();
-			int anim = GetAnimation(animName, commandList);
+			ANIMATION_STATE state = ConvertStringToAnimationState(key);
 
-			if (anim < 0) ERROR_QUIT("Failed To Load Animation");
+			switch (state) {
+			case ANIMATION_STATE::BLENDED_MOVING_STATE:
+				// blending states,
 
-			player->m_AnimationMap[ConvertStringToAnimationState(key)] = m_Animations[anim];
+				// load every animations for blending
+				//for (int i = 0; i < ; = ++i) {
 
-			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
-			// 나중에 꼭 꼭 고쳐야한다
-			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up" ||
-				m_Animations[anim]->m_Name == "PlayerFall" || m_Animations[anim]->m_Name == "PlayerGetUp") {
-				m_Animations[anim]->m_Loop = false;
+				//}
+
+			default:
+			{
+				int anim = GetAnimation(animName, commandList);
+				if (anim < 0) ERROR_QUIT("Failed To Load Animation");
+				
+				player->m_AnimationMap[state] = new AnimationTrackSingle(m_Animations[anim]);
+
+				// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
+				// 나중에 꼭 꼭 고쳐야한다
+				if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up" ||
+					m_Animations[anim]->m_Name == "PlayerFall" || m_Animations[anim]->m_Name == "PlayerGetUp") {
+					m_Animations[anim]->m_Loop = false;
+				}
 			}
+			}
+
 		}
 		m_AnimationPlayer.push_back(player);
 
@@ -669,8 +685,8 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// set default animation to anim executor;
 	for (auto& player : m_AnimationPlayer) {
-		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_STATE::IDLE]);
-		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_STATE::IDLE]);
+		player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+		player->ChangeToAnimation(ANIMATION_STATE::IDLE);
 	};
 
 	// Make shader for animation stream out

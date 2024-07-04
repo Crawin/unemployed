@@ -37,12 +37,19 @@ using ActionFunctionMap = std::unordered_map<Input_State_In_LongLong, ActionFunc
 // 컨텐츠 관련 컴포넌트들, 게임 컨텐츠에 필요한 ui도 포함
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct PlayerAnimation {
+	XMFLOAT3 m_Velocity;
+	XMFLOAT3 m_Heading;
+};
+
 namespace component {
 	/////////////////////////////////////////////////////////
 	// Player Animation Controll component
 	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
 	//
 	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
+		PlayerAnimation m_AnimData;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);

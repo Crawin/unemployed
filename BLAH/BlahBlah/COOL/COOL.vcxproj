@@ -161,6 +161,7 @@
     <ClInclude Include="External\Include\DDSTextureLoader12.h" />
     <ClInclude Include="Include\Animation\Animation.h" />
     <ClInclude Include="Include\Animation\AnimationPlayer.h" />
+    <ClInclude Include="Include\Animation\AnimationTrack.h" />
     <ClInclude Include="Include\App\Application.h" />
     <ClInclude Include="Include\App\InputManager.h" />
     <ClInclude Include="Include\App\Timer.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="External\Include\VIVOX\VIVOX.cpp" />
     <ClCompile Include="Include\Animation\Animation.cpp" />
     <ClCompile Include="Include\Animation\AnimationPlayer.cpp" />
+    <ClCompile Include="Include\Animation\AnimationTrack.cpp" />
     <ClCompile Include="Include\App\Application.cpp" />
     <ClCompile Include="Include\App\InputManager.cpp" />
     <ClCompile Include="Include\App\Timer.cpp" />

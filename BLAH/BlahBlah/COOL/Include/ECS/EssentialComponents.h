@@ -142,6 +142,7 @@ namespace component {
 
 		void CheckTransition(void* data);
 
+		// change animation, if call from outside, the animation will be changed
 		void ChangeAnimationTo(ANIMATION_STATE animSet);
 
 		float GetCurrentPlayTime() const;

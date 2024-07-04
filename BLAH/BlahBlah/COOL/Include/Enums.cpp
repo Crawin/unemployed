@@ -13,13 +13,25 @@
 
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 {
-	if (str == "Wait")				return ANIMATION_STATE::WAITEND;
-	if (str == "Idle")				return ANIMATION_STATE::IDLE;
-	if (str == "Walk")				return ANIMATION_STATE::WALK;
-	if (str == "Run")				return ANIMATION_STATE::RUN;
-	if (str == "FallingDown")		return ANIMATION_STATE::FALLINGDOWN;
-	if (str == "GetUp")				return ANIMATION_STATE::GETUP;
-	if (str == "Dance")				return ANIMATION_STATE::DANCE;
+	if (str == "Wait")								return ANIMATION_STATE::WAITEND;
+	if (str == "Idle")								return ANIMATION_STATE::IDLE;
+	if (str == "Walk")								return ANIMATION_STATE::WALK;
+	if (str == "Run")								return ANIMATION_STATE::RUN;
+	if (str == "Blended_Moving_State")				return ANIMATION_STATE::BLENDED_MOVING_STATE;
+	if (str == "Forward_Walk")						return ANIMATION_STATE::FORWARD_WALK;
+	if (str == "Forward_Run")						return ANIMATION_STATE::FORWARD_RUN;
+	if (str == "Backward_Walk")						return ANIMATION_STATE::BACKWARD_WALK;
+	if (str == "Backward_Run")						return ANIMATION_STATE::BACKWARD_RUN;
+	if (str == "LEFT_STRAFE_WALK")					return ANIMATION_STATE::LEFT_STRAFE_WALK;
+	if (str == "LEFT_STRAFE_RUN")					return ANIMATION_STATE::LEFT_STRAFE_RUN;
+	if (str == "RIGHT_STRAFE_WALK")					return ANIMATION_STATE::RIGHT_STRAFE_WALK;
+	if (str == "RIGHT_STRAFE_RUN")					return ANIMATION_STATE::RIGHT_STRAFE_RUN;
+	if (str == "JUMP_START")						return ANIMATION_STATE::JUMP_START;
+	if (str == "JUMP_ING")							return ANIMATION_STATE::JUMP_ING;
+	if (str == "JUMP_LAND")							return ANIMATION_STATE::JUMP_LAND;
+	if (str == "Getting_Hit")						return ANIMATION_STATE::GETTING_HIT;
+	if (str == "GetUp")								return ANIMATION_STATE::GETUP;
+	if (str == "Dance")								return ANIMATION_STATE::DANCE;
 
 	return ANIMATION_STATE::NULLANIM;
 }
@@ -27,13 +39,25 @@ ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim)
 {
 	switch (anim) {
-	case ANIMATION_STATE::WAITEND:				return std::string("Wait");
-	case ANIMATION_STATE::IDLE:					return std::string("Idle");
-	case ANIMATION_STATE::WALK:					return std::string("Walk");
-	case ANIMATION_STATE::RUN:					return std::string("RUN");
-	case ANIMATION_STATE::FALLINGDOWN:			return std::string("FallingDown");
-	case ANIMATION_STATE::GETUP:				return std::string("GetUp");
-	case ANIMATION_STATE::DANCE:				return std::string("Dance");
+	case ANIMATION_STATE::WAITEND:					return std::string("Wait");
+	case ANIMATION_STATE::IDLE:						return std::string("Idle");
+	case ANIMATION_STATE::WALK:						return std::string("Walk");
+	case ANIMATION_STATE::RUN:						return std::string("Run");
+	case ANIMATION_STATE::BLENDED_MOVING_STATE:		return std::string("Blended_Moving_State");
+	case ANIMATION_STATE::FORWARD_WALK:				return std::string("Forward_Walk");
+	case ANIMATION_STATE::FORWARD_RUN:				return std::string("Forward_Run");
+	case ANIMATION_STATE::BACKWARD_WALK:			return std::string("Backward_Walk");
+	case ANIMATION_STATE::BACKWARD_RUN:				return std::string("Backward_Run");
+	case ANIMATION_STATE::LEFT_STRAFE_WALK:			return std::string("LEFT_STRAFE_WALK");
+	case ANIMATION_STATE::LEFT_STRAFE_RUN:			return std::string("LEFT_STRAFE_RUN");
+	case ANIMATION_STATE::RIGHT_STRAFE_WALK:		return std::string("RIGHT_STRAFE_WALK");
+	case ANIMATION_STATE::RIGHT_STRAFE_RUN:			return std::string("RIGHT_STRAFE_RUN");
+	case ANIMATION_STATE::JUMP_START:				return std::string("JUMP_START");
+	case ANIMATION_STATE::JUMP_ING:					return std::string("JUMP_ING");
+	case ANIMATION_STATE::JUMP_LAND:				return std::string("JUMP_LAND");
+	case ANIMATION_STATE::GETTING_HIT:				return std::string("Getting_Hit");
+	case ANIMATION_STATE::GETUP:					return std::string("GetUp");
+	case ANIMATION_STATE::DANCE:					return std::string("Dance");
 	}
 }
 
