@@ -257,7 +257,7 @@ public:
 
 	bool operator<(const npc_info& n)const
 	{
-		return start_time < n.start_time;
+		return start_time > n.start_time;
 	}
 };
 

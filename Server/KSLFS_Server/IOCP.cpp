@@ -7,6 +7,7 @@ std::unordered_map<int, NODE*> g_um_graph;
 //concurrency::concurrent_unordered_map<int, std::atomic<std::shared_ptr>
 std::unordered_map<unsigned int, SESSION> login_players;
 std::priority_queue<npc_info> g_npc_timer;
+std::mutex g_mutex_npc_timer;
 std::mutex g_mutex_login_players;
 
 void IOCP_SERVER_MANAGER::start()
@@ -193,7 +194,9 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			if (Games[rw_byte].CAS_state(b, b))
 			{
 				using namespace std::chrono;
+				g_mutex_npc_timer.lock();
 				g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
 			}
 			break;
@@ -259,10 +262,12 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			login_players[id].send_packet(reinterpret_cast<packet_base*>(&make));
 			++currentRoom;
 			
+			g_mutex_npc_timer.lock();
 			for (int npc_id = 1; npc_id < STUDENT_SIZE + 2; ++npc_id)
 			{
 				g_npc_timer.emplace(currentRoom - 1, npc_id, std::chrono::milliseconds(0));
 			}
+			g_mutex_npc_timer.unlock();
 
 		}
 			break;
@@ -411,17 +416,24 @@ void IOCP_SERVER_MANAGER::ai_timer()
 		if (g_npc_timer.empty())
 		{
 			std::this_thread::sleep_for(0.008s);
+			//continue;
 		}
 		else
 		{
+			g_mutex_npc_timer.lock();
 			auto q = g_npc_timer.top();
 			if (q.start_time < steady_clock::now())
 			{
 				g_npc_timer.pop();
+				g_mutex_npc_timer.unlock();
 				EXP_OVER* over = new EXP_OVER;
 				over->c_op = C_TIMER;
 				PostQueuedCompletionStatus(detail.m_hIOCP, q.gameNum, q.id, &over->over);
 				/*g_npc_timer.emplace(q.gameNum, q.id, steady_clock::now() + 5s);*/				// GQCS작업이 완료되면 타이머를 추가
+			}
+			else
+			{
+				g_mutex_npc_timer.unlock();
 			}
 		}
 	}
@@ -800,9 +812,9 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 				// 가드가 사용할 astar 그래프 생성
 				//std::unordered_map<int, NODE*> guard_graph;
 				//MakeGraph(guard_graph);
-				reset_graph();
 				while (true)
 				{
+					reset_graph();
 					int des = rand() % astar_graph.size();
 					std::cout << des << "로 목적지 설정" << std::endl;
 					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
@@ -908,9 +920,9 @@ void NPC::student_state_machine(Player* p)
 				this->state = 1;
 				// 새로운 목표 위치 선정
 				// 학생이 사용할 astar 그래프 깊은 복사
-				reset_graph();
 				while (true)
 				{
+					reset_graph();
 					int des = rand() % astar_graph.size();
 					std::cout << "student[" << this->id << "] " << des << "로 목적지 설정" << std::endl;
 					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
