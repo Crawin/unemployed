@@ -102,24 +102,6 @@ namespace component {
 		m_AnimationPlayer->SetAnimationData(commandList, manager);
 	}
 
-	void Root::Create(Json::Value& v, ResourceManager* rm)
-	{
-	}
-
-	void Root::ShowYourself() const
-	{
-		DebugPrint("Root Comp");
-	}
-
-	void Children::Create(Json::Value& v, ResourceManager* rm)
-	{
-	}
-
-	void Children::ShowYourself() const
-	{
-		DebugPrint("Children Comp");
-	}
-
 	void Transform::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value trans = v["Transform"];
@@ -333,14 +315,14 @@ namespace component {
 
 	}
 
-	void Input::Create(Json::Value& v, ResourceManager* rm)
-	{
-	}
+	//void Input::Create(Json::Value& v, ResourceManager* rm)
+	//{
+	//}
 
-	void Input::ShowYourself() const
-	{
-		DebugPrint("Input Comp, nothing");
-	}
+	//void Input::ShowYourself() const
+	//{
+	//	DebugPrint("Input Comp, nothing");
+	//}
 
 	void Physics::Create(Json::Value& v, ResourceManager* rm)
 	{
@@ -734,16 +716,16 @@ namespace component {
 		// make interaction enable
 		
 		EventFunction begin = [manager](Entity* playerEnt, Entity* interaction) {
-			auto player = manager->GetComponent<component::Input>(playerEnt);
-			player->SetInteractionEntity(interaction);
+			auto pawn = manager->GetComponent<component::Pawn>(playerEnt);
+			pawn->SetInteractionEntity(interaction);
 			};
 		EventFunction ing = [manager](Entity* playerEnt, Entity* interaction) {
 			//DebugPrint("ING");
 			};
 		EventFunction end = [manager](Entity* playerEnt, Entity* interaction) {
-			auto player = manager->GetComponent<component::Input>(playerEnt);
-			if (player->GetInteractionEntity() == interaction)
-				player->SetInteractionEntity(nullptr);
+			auto pawn = manager->GetComponent<component::Pawn>(playerEnt);
+			if (pawn->GetInteractionEntity() == interaction)
+				pawn->SetInteractionEntity(nullptr);
 			};
 
 		DynamicCollider* dcol = manager->GetComponent<DynamicCollider>(selfEntity);
@@ -760,6 +742,112 @@ namespace component {
 
 	void Player::ShowYourself() const
 	{
+	}
+
+	void Pawn::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Pawn::ShowYourself() const
+	{
+	}
+
+	void Pawn::ResetInput()
+	{
+		memset(m_KeyStates, sizeof(m_KeyStates), 0);
+	}
+
+	void Pawn::TickInput()
+	{
+		// if pressing
+		for (KEY_STATE& state : m_KeyStates) {
+			switch (state) {
+			case KEY_STATE::START_PRESS:
+			case KEY_STATE::PRESSING:
+				state = KEY_STATE::END_PRESS;
+				break;
+
+			case KEY_STATE::END_PRESS:
+				state = KEY_STATE::NONE;
+				break;
+			}
+		}
+
+		m_MouseDif = { 0, 0 };
+
+	}
+
+	void Pawn::PressInput(GAME_INPUT key)
+	{
+		auto& state = m_KeyStates[static_cast<long long int>(key)];
+
+		switch (state) {
+		case KEY_STATE::START_PRESS:
+			// todo 여기를 hit 하는지 확인해보자
+			// hit 된다면 input을 두번 넣어준다는 뜻이 될 것이다.
+			DebugPrint("SHOULD NOT HIT HERE!!!");
+			[[fallthrough]];
+		case KEY_STATE::PRESSING:
+		case KEY_STATE::END_PRESS:
+			state = KEY_STATE::PRESSING;
+			break;
+
+		case KEY_STATE::NONE:
+			state = KEY_STATE::START_PRESS;
+			break;
+		}
+
+	}
+
+	bool Pawn::IsPressing(GAME_INPUT key) const
+	{
+		return
+			m_KeyStates[static_cast<long long int>(key)] == KEY_STATE::START_PRESS ||
+			m_KeyStates[static_cast<long long int>(key)] == KEY_STATE::PRESSING;
+	}
+	
+
+	void PlayerController::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value ctrl = v["PlayerController"];
+
+		m_TargetEntityName = ctrl["ControllEntity"].asString();
+
+	}
+
+	void PlayerController::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// find target entity to possess
+		bool res = Possess(manager, m_TargetEntityName);
+
+		if (res == false) 
+			ERROR_QUIT(std::format("ERROR!!, no such target to possess, name : {}", m_TargetEntityName));
+	}
+
+	void PlayerController::ShowYourself() const
+	{
+	}
+
+	bool PlayerController::Possess(ECSManager* manager, const std::string& targetName)
+	{
+		// reset inputs
+		if (m_CurrentPossess) {
+			m_CurrentPossess->ResetInput();
+			m_CurrentPossess->SetActive(false);
+		}
+		Pawn* targetPawn = nullptr;
+		std::function<void(Name*, Pawn*)> findTarget = [&targetName, &targetPawn](Name* name, Pawn* pawn) {
+			if (name->getName() == targetName)
+				targetPawn = pawn;
+			};
+
+		manager->Execute(findTarget);
+
+		if (targetPawn) targetPawn->SetActive(true);
+		m_CurrentPossess = targetPawn;
+
+		// returns success/fail
+		return (m_CurrentPossess != nullptr);
 	}
 
 }

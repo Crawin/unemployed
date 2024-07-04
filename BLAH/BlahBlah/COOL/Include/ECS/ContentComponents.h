@@ -2,6 +2,37 @@
 
 #include "Component.h"
 
+struct Input_State_In_LongLong
+{
+	long long int m_Data;
+
+	Input_State_In_LongLong(GAME_INPUT input, KEY_STATE keyState) {
+		long long int forward = static_cast<long long int>(input);
+		long long int backward = static_cast<long long int>(keyState);
+		forward <<= 32;
+
+		m_Data = forward | backward;
+	}
+
+	GAME_INPUT GetInput() const { return static_cast<GAME_INPUT>(m_Data >> 32); }
+	KEY_STATE GetState() const { return static_cast<KEY_STATE>(m_Data << 32 >> 32); }
+
+	auto operator<=>(const Input_State_In_LongLong& other) const = default;
+};
+
+namespace std {
+	template<>
+	struct hash<Input_State_In_LongLong> {
+		std::size_t operator()(const Input_State_In_LongLong& k) const {
+			return std::hash<long long int>()(k.m_Data);
+		}
+	};
+}
+
+// void func(float deltaTime);
+using ActionFunction = std::function<void(float)>;
+using ActionFunctionMap = std::unordered_map<Input_State_In_LongLong, ActionFunction>;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 컨텐츠 관련 컴포넌트들, 게임 컨텐츠에 필요한 ui도 포함
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,6 +45,7 @@ namespace component {
 	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -29,6 +61,7 @@ namespace component {
 	class DiaAnimationControl : public ComponentBase<DiaAnimationControl> {
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -66,40 +99,57 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// Throwable Component
-	// 던질 수 있는 오브젝트에 사용, 마우스 홀드로 쿠킹 후 투척
-	//
-	class Throwable : public ComponentBase<Throwable> {
-
-	};
-
-	/////////////////////////////////////////////////////////
-	// Attackable Component
-	// 공격할 수 있는 오브젝트에 사용, 
-	//
-	class Attackable : public ComponentBase<Attackable> {
-
-	};
-
-	/////////////////////////////////////////////////////////
 	// Holdable Component
 	// 손에 들 수 있는 오브젝트(손에 들 수 있다)
 	//
 	class Holdable : public ComponentBase<Holdable> {
-		// 아래는 보류하자
-		//bool m_HoldableEnable = true;	// after throw, disable
-		bool m_CurrentHolding = false;
+		ActionFunctionMap m_ActionMap;
 
-		bool m_Holding = false;
-		std::function<void()> m_OnMouseClicked;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		const ActionFunctionMap& GetActionMap() const { return m_ActionMap; }
+
+		virtual void ShowYourself() const;
 	};
 
+	/////////////////////////////////////////////////////////
+	// Attackable Component
+	//
+	//
+	class Attackable : public ComponentBase<Attackable> {
+		ActionFunctionMap m_ActionMap;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+	};
+
+#define MAX_INVENTORY 4
 	/////////////////////////////////////////////////////////
 	// Inventory Component
 	// Holdable 들을 보관한다
 	//
 	class Inventory : public ComponentBase<Inventory> {
-		Holdable* m_HoldingItem = nullptr;
+		Entity* m_Items[MAX_INVENTORY] = {nullptr, };
+		std::string m_TargetEntityNames[MAX_INVENTORY] = { "", };
+		//const char* m_TargetEntityNames[MAX_INVENTORY] = { nullptr, };
+		int m_CurrentHolding = 0;
+
+		// anim socket
+		Entity* m_HoldingSocket = nullptr;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
+		
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

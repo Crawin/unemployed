@@ -1,6 +1,7 @@
 ﻿#include "framework.h"
 #include "UIComponents.h"
 #include "Scene/ResourceManager.h"
+#include "App/InputManager.h"
 #include "json/json.h"
 
 
@@ -19,6 +20,18 @@ namespace component {
 
 	void UICanvas::ShowYourself() const
 	{
+	}
+
+	void UICanvas::ShowUI()
+	{
+		m_On = true;
+		InputManager::GetInstance().SetUIState(true);
+	}
+
+	void UICanvas::HideUI()
+	{
+		m_On = false;
+		InputManager::GetInstance().SetUIState(false);
 	}
 
 	void UITransform::Create(Json::Value& v, ResourceManager* rm)

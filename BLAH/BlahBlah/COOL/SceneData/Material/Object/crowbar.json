@@ -1,0 +1,9 @@
+{
+	"name": "crowb",
+	"BaseColor": "Object/Crowbar/crowbar_BaseColor",
+	"Roughness": "Object/Crowbar/crowbar_Roughness",
+	"Metalic": "Object/Crowbar/crowbar_Metallic",
+	"AO": "Object/Crowbar/crowbar_AO",
+	"Normal": "Object/Crowbar/crowbar_Normal",
+	"Shader": "TestMeshDiffered"
+}

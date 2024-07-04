@@ -499,10 +499,10 @@ void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESC
 
 	using namespace component;
 
-	std::function<void(UICanvas*, Children*)> forAllUICanvas = [&ecsManager, &renderUI](UICanvas* canvas, Children* cild) {
+	std::function<void(UICanvas*, SelfEntity*)> forAllUICanvas = [&ecsManager, &renderUI](UICanvas* canvas, SelfEntity* selfEntity) {
 		if (canvas->IsActive()) {
-			Entity* ent = cild->GetEntity();
-			const std::vector<Entity*>& children = ent->GetChildren();
+			Entity* ent = selfEntity->GetEntity();
+			const std::list<Entity*>& children = ent->GetChildren();
 
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();
@@ -539,6 +539,8 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 void Scene::Update(float deltaTime)
 {
 	m_ECSManager->UpdateSystem(deltaTime);
+
+	auto manager = m_ECSManager;
 }
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)

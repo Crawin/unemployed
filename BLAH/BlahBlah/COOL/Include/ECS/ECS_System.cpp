@@ -14,10 +14,10 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
-		std::function<void(/*Name*, */Transform*, Children*)> func = [&func, &manager](/*Name* name, */Transform* trans, Children* childComp) {
-			Entity* ent = childComp->GetEntity();
+		std::function<void(/*Name*, */Transform*, SelfEntity*)> func = [&func, &manager](/*Name* name, */Transform* trans, SelfEntity* self) {
+			Entity* ent = self->GetEntity();
 
-			const std::vector<Entity*>& children = ent->GetChildren();
+			const std::list<Entity*>& children = ent->GetChildren();
 
 			// build world matrix for child
 			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
@@ -53,12 +53,13 @@ namespace ECSsystem {
 
 			XMFLOAT4X4 temp;
 			XMStoreFloat4x4(&temp, parent);
-
 			tr->SetParentTransform(temp);
 			
+			parent = XMLoadFloat4x4(&tr->GetWorldTransform());
+
 			Entity* ent = self->GetEntity();
 
-			const std::vector<Entity*>& children = ent->GetChildren();
+			const std::list<Entity*>& children = ent->GetChildren();
 
 			for (Entity* child : children) {
 				auto bit = child->GetBitset();
@@ -148,25 +149,47 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
+		POINT mouseMove = InputManager::GetInstance().GetMouseMove();
+
+		// tick input
+		std::function<void(PlayerController*)> tickAndUpdateInput = [&mouseMove](PlayerController* ctrl) {
+			Pawn* curPawn = ctrl->GetControllingPawn();
+			
+			// tick first
+			curPawn->TickInput();
+
+			// update inputs
+			for (int i = 0; i < static_cast<int>(GAME_INPUT::GAME_INPUT_END); ++i) {
+				GAME_INPUT input = static_cast<GAME_INPUT>(i);
+				if (GetAsyncKeyState(ConvertGameInputEnumToKeyIntValue(input)) & 0x8000) 
+					curPawn->PressInput(input);
+			}
+
+			// set mouse input
+			curPawn->SetMouseMove(mouseMove);
+			InputManager::GetInstance().ResetMouseMove();
+			};
+
 		// input으로 pysics 업데이트
-		std::function<void(Transform*, Input*, Physics*)> inputFunc = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime, &mouseMove](Transform* tr, Pawn* pawn, Physics* sp) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
-			if (GetAsyncKeyState('W') & 0x8000) { tempMove.z += 1.0f; move = true; }
-			if (GetAsyncKeyState('S') & 0x8000) { tempMove.z -= 1.0f; move = true; }
-			if (GetAsyncKeyState('A') & 0x8000) { tempMove.x -= 1.0f; move = true; }
-			if (GetAsyncKeyState('D') & 0x8000) { tempMove.x += 1.0f; move = true; }
-			//if (GetAsyncKeyState('Q') & 0x8000) { tempMove.y -= 1.0f; move = true; }
+			if (pawn->IsPressing(GAME_INPUT::FORWARD)) { 
+				tempMove.z += 1.0f; move = true;
+			}
+			if (pawn->IsPressing(GAME_INPUT::BACKWARD)) { tempMove.z -= 1.0f; move = true; }
+			if (pawn->IsPressing(GAME_INPUT::LEFT)) { tempMove.x -= 1.0f; move = true; }
+			if (pawn->IsPressing(GAME_INPUT::RIGHT)) { tempMove.x += 1.0f; move = true; }
 
-			if (GetAsyncKeyState(VK_SPACE) & 0x0001) 
+			if (pawn->GetInputState(GAME_INPUT::SPACE_BAR) == KEY_STATE::START_PRESS)
 			{ 
 				XMFLOAT3 temp = sp->GetVelocity();
 				sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
 			}
 
 			float maxSpeed = 200.0f;
-			if (GetAsyncKeyState(VK_SHIFT) * 0x8000) maxSpeed += 400.0f;
+			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
 			sp->SetMaxSpeed(maxSpeed);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
@@ -188,69 +211,20 @@ namespace ECSsystem {
 			// mouse
 			//if (InputManager::GetInstance().GetDrag()) 
 			{
-				const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 				XMFLOAT3 rot = tr->GetRotation();
 				const float rootSpeed = 10.0f;
 				rot.y += (mouseMove.x / rootSpeed);
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
 			}
+		};
 
-			};
-
-		std::function<void(Transform*, TestInput*, Physics*)> inputFunc2 = [deltaTime](Transform* tr, TestInput* in, Physics* sp) {
-			// keyboard input
-			bool move = false;
-			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
-			if (GetAsyncKeyState(VK_UP) & 0x8000)		{ tempMove.z += 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_DOWN) & 0x8000)		{ tempMove.z -= 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_LEFT) & 0x8000)		{ tempMove.x -= 1.0f; move = true; }
-			if (GetAsyncKeyState(VK_RIGHT) & 0x8000)	{ tempMove.x += 1.0f; move = true; }
-
-			float speed = sp->GetCurrentVelocityLenOnXZ();
-
-			// update speed if key down
-			if (move) {
-				XMVECTOR vec = XMLoadFloat3(&tempMove);
-				XMFLOAT4X4 tpRot = tr->GetWorldTransform();
-				tpRot._41 = 0.0f;
-				tpRot._42 = 0.0f;
-				tpRot._43 = 0.0f;
-
-				vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-
-				XMStoreFloat3(&tempMove, vec);
-				sp->AddVelocity(tempMove, deltaTime);
-			}
-
-
-			//XMVECTOR vec = XMLoadFloat3(&tempMove) * speed * deltaTime;
-
-			//XMFLOAT4X4 tpRot = tr->GetWorldTransform();
-			//tpRot._41 = 0.0f;
-			//tpRot._42 = 0.0f;
-			//tpRot._43 = 0.0f;
-
-			//vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-			//XMStoreFloat3(&tempMove, vec);
-
-
-			//if (move)
-			//	sp->SetForce(tempMove);
-
-			////DebugPrint(std::format("speed: {}", speed));
-			//if (speed != 0)
-			//	tr->SetPosition(Vector3::Add(sp->GetForce(), tr->GetPosition()));
-
-			};
-		
-		// mouse
-		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime](Transform* tr, Camera* cam) {
+		// mouse - cameras
+		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime, &mouseMove](Transform* tr, Camera* cam) {
 			if (cam->m_IsMainCamera == false) return;
 
 			// todo rotate must not be orbit
 
-			const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 			XMFLOAT3 rot = tr->GetRotation();
 			const float rootSpeed = 10.0f;
 			//rot.y += (mouseMove.x / rootSpeed);
@@ -258,11 +232,10 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
-		// mouse
-		std::function<void(Transform*, AttachInput*)> attachinput = [deltaTime](Transform* tr, AttachInput* cam) {
+		// mouse - attachInputs
+		std::function<void(Transform*, AttachInput*)> attachinput = [deltaTime, &mouseMove](Transform* tr, AttachInput* cam) {
 			// todo rotate must not be orbit
 
-			const auto& mouseMove = InputManager::GetInstance().GetMouseMove();
 			XMFLOAT3 rot = tr->GetRotation();
 			const float rootSpeed = 10.0f;
 			//rot.y += (mouseMove.x / rootSpeed);
@@ -270,121 +243,42 @@ namespace ECSsystem {
 			tr->SetRotation(rot);
 			};
 
+		//////////////////////////////////////////
+		// Content
+		//////////////////////////////////////////
+		// Pawn Inventory Action
+		std::function<void(Pawn*, Inventory*)> pawnInvenAction = [deltaTime, manager](Pawn* pawn, Inventory* inven) {
+			Entity* holding = inven->GetCurrentHoldingItem();
 
-		manager->Execute(inputFunc);
-		//manager->Execute(inputFunc2);
-		manager->Execute(mouseInput);
-		manager->Execute(attachinput);
+			if (holding == nullptr) return;
 
-	}
+			Holdable* holdComp = manager->GetComponent<Holdable>(holding);
 
-	void ChangeAnimationTest::OnInit(ECSManager* manager)
-	{
-		// do init (make state machine)
-		
-		using namespace component;
+			if (holdComp == nullptr) {
+				Name* name = manager->GetComponent<Name>(holding);
+				DebugPrint(std::format("ERROR!! no holdable component on this entity, name: {}", name->getName()));
+				return;
+			}
 
-		// dia
-		std::function<void(AnimationController*, DiaAnimationControl*)> diaBuildGraph =
-			[](AnimationController* ctrl, DiaAnimationControl* dia) {
+			auto& maps = holdComp->GetActionMap();
+			//auto& inputState = pawn->GetInputState();
+
+			for (auto& [actionKey, actionFunc] : maps) 
+				if (actionKey.GetState() == pawn->GetInputState(actionKey.GetInput()))
+					actionFunc(deltaTime);
 			
-			using COND = std::function<bool(void*)>;
-
-			// make conditions
-			COND idle = [](void* data) {
-				float* sp = reinterpret_cast<float*>(data);
-				return *sp < 30.0f;
-				};
-
-			COND walk = [](void* data) {
-				float* sp = reinterpret_cast<float*>(data);
-				return *sp >= 30.0f;
-			};
-
-			COND hit = [](void* data) {
-				return GetAsyncKeyState(VK_END) & 0x8000;
-				};
-
-			COND falldown = [ctrl](void* data) {
-				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
-				};
-
-			COND getup = [ctrl](void* data) {
-				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
-				};
-
-			// insert transition (graph)
-			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
-			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
-			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
-			ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
-			ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
-
-			// set start animation
-			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
 
 			};
 
-		// PlayerAnimControll
-		std::function<void(AnimationController*, PlayerAnimControll*)> playerbuildGraph =
-			[](AnimationController* ctrl, PlayerAnimControll* ply) {
-
-			using COND = std::function<bool(void*)>;
-
-			// make conditions
-			COND idle = [](void* data) {
-				float* sp = reinterpret_cast<float*>(data);
-				return *sp < 30.0f;
-				};
-
-			COND idleToWalk = [](void* data) {
-				float* sp = reinterpret_cast<float*>(data);
-				return *sp >= 30.0f;
-				};
-
-			COND walkToRun = [](void* data) {
-				float* sp = reinterpret_cast<float*>(data);
-				return *sp >= 300.0f;
-				};
-
-			COND runToWalk = [](void* data) {
-				float* sp = reinterpret_cast<float*>(data);
-				return *sp < 300.0f;
-				};
-
-			COND hit = [](void* data) {
-				return GetAsyncKeyState(VK_END) & 0x8000;
-				};
-
-			COND falldown = [ctrl](void* data) {
-				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
-				};
-
-			COND getup = [ctrl](void* data) {
-				return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
-				};
-
-			// insert transition (graph)
-			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
-			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
-			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
-			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
-			ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
-			ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::FALLINGDOWN, hit);
-			ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
-			ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
-
-			// set start animation
-			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
-			ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
-
-			};
-
-		manager->Execute(diaBuildGraph);
-		manager->Execute(playerbuildGraph);
-
+		manager->Execute(tickAndUpdateInput);
+	
+		// if ui state, no more update
+		if (InputManager::GetInstance().IsUIState() == false) {
+			manager->Execute(inputFunc);
+			manager->Execute(mouseInput);
+			manager->Execute(attachinput);
+			manager->Execute(pawnInvenAction);
+		}
 	}
 
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
@@ -912,11 +806,11 @@ namespace ECSsystem {
 		using namespace component;
 
 		// interaction
-		std::function<void(Input*, SelfEntity*)> interactionFunc = [manager](Input* in, SelfEntity* self) {
+		std::function<void(Pawn*, SelfEntity*)> interactionFunc = [manager](Pawn* pawn, SelfEntity* self) {
 			Entity* interactionEntity = nullptr;
 
 			// if press 'E'
-			if (GetAsyncKeyState('E') & 0x0001) interactionEntity = in->GetInteractionEntity();
+			if (pawn->GetInputState(GAME_INPUT::INTERACTION) == KEY_STATE::START_PRESS) interactionEntity = interactionEntity = pawn->GetInteractionEntity();
 			if (interactionEntity == nullptr) return;
 
 			Interaction* interaction = manager->GetComponent<Interaction>(interactionEntity);
@@ -937,7 +831,14 @@ namespace ECSsystem {
 
 		using namespace component;
 
-		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [](Button* but, UITransform* trans, SelfEntity* self) {
+		Pawn* controlledPawn = nullptr;
+
+		std::function<void(PlayerController*)> getController = [&controlledPawn](PlayerController* control) {
+			controlledPawn = control->GetControllingPawn();
+			};
+		manager->Execute(getController);
+
+		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [controlledPawn](Button* but, UITransform* trans, SelfEntity* self) {
 			POINT mousePos =  InputManager::GetInstance().GetMouseCurrentPosition();
 			ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
 
@@ -952,7 +853,7 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			if (PtInRect(&rect, mousePos) && InputManager::GetInstance().IsMouseLeftReleased()) {
+			if (PtInRect(&rect, mousePos) && controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT) == KEY_STATE::END_PRESS) {
 
 				const ButtonEventFunction& butEvent = but->GetButtonReleaseEvent();
 				if (butEvent != nullptr) {
@@ -965,10 +866,10 @@ namespace ECSsystem {
 
 			};
 
-		std::function<void(UICanvas*, Children*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, Children* childComp) {
+		std::function<void(UICanvas*, SelfEntity*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, SelfEntity* selfEntity) {
 			if (canvas->IsActive() == false) return;
 
-			Entity* self = childComp->GetEntity();
+			Entity* self = selfEntity->GetEntity();
 			auto& children = self->GetChildren();
 
 			for (Entity* child : children) 
@@ -984,11 +885,11 @@ namespace ECSsystem {
 	{
 		using namespace component;
 		// send
-		std::function<void(Transform*, Input*, Physics*)> send = [deltaTime](Transform* tr, Input* in, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*)> send = [deltaTime](Transform* tr, Pawn* pawn, Physics* sp) {
 			auto& client = Client::GetInstance();
-			if (client.getRoomNum())
+			if (client.getRoomNum() && pawn->IsActive() == true)
 			{
-				if (sp->GetCurrentVelocityLen() > 0 || InputManager::GetInstance().GetDrag())
+				if (sp->GetCurrentVelocityLen() > 0 || pawn->IsPressing(GAME_INPUT::MOUSE_LEFT))
 					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
 			}
 			};

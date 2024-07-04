@@ -24,8 +24,8 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		void ShowUI() { m_On = true; }
-		void HideUI() { m_On = false; }
+		void ShowUI();
+		void HideUI();
 
 		bool IsActive() const { return m_On; }
 	};

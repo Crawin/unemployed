@@ -18,13 +18,14 @@ enum PACKET_TYPE
 	pMAKEROOM,
 	pENTERROOM,
 	pRoomPlayer,
-	pLogout
+	pLogout,
+	pAttack
 };
 
 class packet_base
 {
 protected:
-	int size;
+	char size;
 	PACKET_TYPE type;
 public:
 	const unsigned char getSize() { return size; }
@@ -112,6 +113,17 @@ public:
 		type = pRoomPlayer;
 	}
 	const SOCKET getPlayerSock() { return player; }
+};
+
+class sc_packet_npc_attack : public packet_base
+{
+	unsigned int npc_id;
+public:
+	sc_packet_npc_attack(const unsigned int& id) : npc_id(id)
+	{
+		type = pAttack;
+		size = sizeof(sc_packet_npc_attack);
+	}
 };
 
 //--------------------------------------------------------------------------------------------------------------------

@@ -133,10 +133,8 @@ bool ResourceManager::LoadObjectFile(const std::string& fileName, bool isCam)
 	if (entptr == nullptr) 
 		return false;
 
-	// add root component
-	component::Root* cmp = new component::Root;
-	cmp->SetEntity(entptr);
-	entptr->AddComponent(cmp);
+	// add to root
+	m_ECSManager->AddToRoot(entptr);
 
 	delete reader;
 
@@ -180,6 +178,8 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 	ent->AddComponent(cmp);
 	ent->AddBit(cmp->GetBitset());
 
+	cmp->SetParent(parent);
+
 	// if Children
 	if (root[CHILDREN].isNull() == false) {
 		for (auto& val : root[CHILDREN]) 
@@ -188,10 +188,6 @@ Entity* ResourceManager::LoadObjectJson(Json::Value& root, Entity* parent)
 			if (child == nullptr)
 				return nullptr;
 		}
-		component::Children* cmp = new component::Children;
-		cmp->SetEntity(ent);
-		ent->AddComponent(cmp);
-		ent->AddBit(cmp->GetBitset());
 	}
 	
 	// 여기서 ECS Manager에 entity를 삽입하지 않는다.

@@ -76,7 +76,6 @@ namespace ECSsystem {
 	class ChangeAnimationTest : public System {
 
 	public:
-		virtual void OnInit(ECSManager* manager);
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};
 

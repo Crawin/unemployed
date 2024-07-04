@@ -91,14 +91,26 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 					continue;
 				}
 
-				if (!Games[gameNum].erasePlayer(my_id))
+				if (Games[gameNum].erasePlayer(my_id))
 				{
-					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
-					continue;
+					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+					auto players = Games[gameNum].getPlayers();
+					if (players[0].id == NULL && players[1].id == NULL)
+					{
+						std::cout << gameNum << "에 플레이어가 존재하지 않습니다. 방을 삭제합니다." << std::endl;
+						while (true)
+						{
+							bool before = true;
+							bool after = false;
+							if (Games[gameNum].CAS_state(before, after))
+								break;
+						}
+					}
 				}
 				else
 				{
-					std::cout << gameNum << "방의 " << my_id << " 플레이어를 삭제하였습니다." << std::endl;
+					std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
+					continue;
 				}
 				g_mutex_login_players.lock();
 				login_players.erase(my_id);
@@ -138,13 +150,13 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			while (current_size < total_recv_packet_size)
 			{
 				auto base = reinterpret_cast<packet_base*>(&e_over->buf[current_size]);
-				int packet_size = base->getSize();
+				char packet_size = base->getSize();
 				if (packet_size + current_size > total_recv_packet_size)
 				{
-					login_players[my_id].set_prev_packet_size(packet_size);
+					login_players[my_id].set_prev_packet_size(total_recv_packet_size - current_size);
 					login_players[my_id].pull_recv_buf(current_size);
 					login_players[my_id].do_recv();
-					break;
+					continue;
 				}
 				else
 				{
@@ -169,7 +181,11 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			delete e_over;
 			for (auto& game : Games)
 			{
-				game.second.update(detail.m_bNPC);
+				bool b = true;
+				if (game.second.CAS_state(b, b))
+				{
+					game.second.update(detail.m_bNPC);
+				}
 			}
 			break;
 		}
@@ -181,51 +197,24 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 	packet_base* base = reinterpret_cast<packet_base*>(over->buf);
 	switch (base->getType())
 	{
-		case 0:										//		pPOSITION,
+		case pPOSITION:										//		pPOSITION,
 		{
 			cs_packet_position* position = reinterpret_cast<cs_packet_position*>(base);
 			auto ping = std::chrono::high_resolution_clock::now() - position->sendTime;
 			auto& gameRoom = Games[position->getNum()];
-			//if (!world_collision(position))
-			//	gameRoom.setPlayerPR(id, position);
-			//else
-			//{
-			//	std::cout << "[" << id << ", " << login_players[id].getSock() << "] 충돌" << std::endl;
-			//	gameRoom.setPlayerRot(id, position);
-			//}
-
-			//DirectX::XMFLOAT3 newSpeed = { 0,0,0 };
-			//if (!world_collision_v2(position, &newSpeed))
-			//	gameRoom.setPlayerPR_v2(id, position, newSpeed);
-			//else
-			//{
-			//	std::cout << "[" << id << ", " << login_players[id].getSock() << "] 충돌" << std::endl;
-			//	std::cout << "("<<position->getSpeed().x <<","<<position->getSpeed().y<<","<<position->getSpeed().z<<") -> (" << newSpeed.x << "," << newSpeed.y << "," << newSpeed.z << ")" << std::endl;
-			//	gameRoom.setPlayerRotSpeed(id, position, newSpeed);
-			//}
-
-			//DirectX::XMFLOAT3 newPosition = gameRoom.getPlayerPos(id);
-			//DirectX::XMFLOAT3 newSpeed = position->getSpeed();
-			//DirectX::XMFLOAT3 rot = position->getRotation();
-
-			//unsigned short floor;
-			//world_collision_v3(position, &newPosition, &newSpeed, &floor, ping);
-			//gameRoom.setPlayerPR_v3(id, newPosition, newSpeed, rot, floor);
-
-
-			//// 충돌 이후 좌표 패킷을 만든 후
-			//sc_packet_position after_pos(login_players[id].getSock(), gameRoom.getPlayerPos(id), gameRoom.getPlayerRot(id),gameRoom.getPlayerSp(id));
-		
 			
 			// 충돌체크 하지 않고 위치 전달
-			short floor = floor_collision(position);
+			gameRoom.setPlayerPR(id, position);
+
+			//short floor = floor_collision(position);
+			short floor = floor_collision(id, gameRoom);
 			if (floor >= 0)
 			{
-				if(detail.m_bLog)
+				if (detail.m_bLog)
 					std::cout << id << "가 " << floor << "층으로 이동" << std::endl;
 				gameRoom.setFloor(id, floor);
 			}
-			gameRoom.setPlayerPR(id, position);
+
 			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
 
 			// 게임 방 내의 플레이어들 모두에게 패킷 전송
@@ -246,10 +235,10 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			
 		}
 			break;
-		case 1:										//		pLOGIN,
+		case pLOGIN:										//		pLOGIN,
 			std::cout << "오류 발생 ["<<id<<" , "<<login_players[id].getSock()<<"] 로 부터 pLOGIN 형태의 패킷 수신" << std::endl;
 			break;
-		case 2:										//		pMAKEROOM
+		case pMAKEROOM:										//		pMAKEROOM
 		{
 			Games.try_emplace(currentRoom, currentRoom);
 			Games[currentRoom].init(id, login_players[id].getSock());
@@ -262,7 +251,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			++currentRoom;
 		}
 			break;
-		case 3:										//		pENTERROOM
+		case pENTERROOM:										//		pENTERROOM
 		{
 			cs_packet_enter_room* cs_enter = reinterpret_cast<cs_packet_enter_room*>(base);
 			const unsigned n = cs_enter->getRoomNum();
@@ -290,41 +279,17 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			}
 		}
 			break;
-		case 4:
+		case pRoomPlayer:
 			std::cout << "오류: 게임에 들어가있는 멤버들을 전송하는 패킷이 서버로 들어왔습니다." << std::endl;
 			break;
+		case pLogout:
+			break;
+		case pAttack:
+			break;
+		default:
+			std::cout << "정의되지 않은 패킷 타입" << std::endl;
+			break;
 	}
-}
-
-bool IOCP_SERVER_MANAGER::world_collision(cs_packet_position*& player)
-{
-	DirectX::XMFLOAT3 pos = player->getPosition();
-	DirectX::XMFLOAT3 rot = player->getRotation();
-
-	float randianX = DirectX::XMConvertToRadians(rot.x);
-	float randianY = DirectX::XMConvertToRadians(rot.y);
-	DirectX::XMVECTOR quaternionX = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1, 0, 0, 0), randianX);
-	DirectX::XMVECTOR quaternionY = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), randianY);
-	//DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 0, 1, 0), rot.z);
-
-	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionX, quaternionY);
-
-	DirectX::XMFLOAT4 quaternionValues;
-	DirectX::XMStoreFloat4(&quaternionValues, quaternion);
-
-	DirectX::XMFLOAT3 temp_extents = { 1,1,1 };
-	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
-	//std::cout << "Player : (" << pOBB.Center.x << "," << pOBB.Center.y << "," << pOBB.Center.z << "), Extents: ("
-	//	<< pOBB.Extents.x << "," << pOBB.Extents.y << "," << pOBB.Extents.z << ")" << std::endl;
-	for (auto& world : m_vMeshes)
-	{
-		if (world->collision(pOBB))
-		{
-			//std::cout << "충돌" << std::endl;
-			return true;
-		}
-	}
-	return false;
 }
 
 void IOCP_SERVER_MANAGER::LoadResources()
@@ -350,77 +315,6 @@ void IOCP_SERVER_MANAGER::LoadResources()
 	//	std::cout << node.first << " 노드 생성 완료" << std::endl;
 	//}
 	std::cout << "A* NODE 로드 완료" << std::endl;
-}
-
-bool IOCP_SERVER_MANAGER::world_collision_v2(cs_packet_position*& player, DirectX::XMFLOAT3* newSpeed)
-{
-	DirectX::XMFLOAT3 pos = player->getPosition();
-	DirectX::XMFLOAT3 rot = player->getRotation();
-	DirectX::XMFLOAT3 spd = player->getSpeed();
-	*newSpeed = spd;
-
-	float randianX = DirectX::XMConvertToRadians(rot.x);
-	float randianY = DirectX::XMConvertToRadians(rot.y);
-	DirectX::XMVECTOR quaternionX = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1, 0, 0, 0), randianX);
-	DirectX::XMVECTOR quaternionY = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), randianY);
-
-	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionX, quaternionY);
-
-	DirectX::XMFLOAT4 quaternionValues;
-	DirectX::XMStoreFloat4(&quaternionValues, quaternion);
-
-	DirectX::XMFLOAT3 temp_extents = { 1,1,1 };
-	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
-
-
-
-	for (auto& world : m_vMeshes)
-	{
-		if (world->collision_v2(pOBB, spd, newSpeed))
-		{
-			//std::cout << "충돌" << std::endl;
-			//바닥 충돌
-			if (pos.y <= 0) newSpeed->y = 0;
-			return true;
-		}
-	}
-	//바닥 충돌
-	if (pos.y <= 0) newSpeed->y = 0;
-	return false;
-}
-
-bool IOCP_SERVER_MANAGER::world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* ptrFloor, std::chrono::nanoseconds& ping)
-{
-	DirectX::XMFLOAT3 pos = player->getPosition();
-	pos.y += 50;
-	DirectX::XMFLOAT3 rot = player->getRotation();
-	DirectX::XMFLOAT3 spd = player->getSpeed();
-	auto sendTime = player->sendTime;
-
-	float randianX = DirectX::XMConvertToRadians(rot.x);
-	float randianY = DirectX::XMConvertToRadians(rot.y);
-	DirectX::XMVECTOR quaternionX = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(1, 0, 0, 0), randianX);
-	DirectX::XMVECTOR quaternionY = DirectX::XMQuaternionRotationAxis(DirectX::XMVectorSet(0, 1, 0, 0), randianY);
-
-	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionX, quaternionY);
-
-	DirectX::XMFLOAT4 quaternionValues;
-	DirectX::XMStoreFloat4(&quaternionValues, quaternion);
-
-	DirectX::XMFLOAT3 temp_extents = { 40,50,40 };
-	DirectX::BoundingOrientedBox pOBB(pos, temp_extents, quaternionValues);
-
-	for (auto& world : m_vMeshes)
-	{
-		if (world->collision_v3(pOBB, newPosition, spd, newSpeed, ptrFloor, sendTime, ping))
-		{
-			return true;
-		}
-	}
-	//충돌하지 않았다면 위치를 패킷으로 받은 위치로
-	newPosition->x = player->getPosition().x;
-	newPosition->z = player->getPosition().z;
-	return false;
 }
 
 void IOCP_SERVER_MANAGER::command_thread()
@@ -499,9 +393,21 @@ unsigned short IOCP_SERVER_MANAGER::floor_collision(cs_packet_position*& packet)
 	DirectX::XMFLOAT3 temp_extents = { 40,50,40 };
 	DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
 	DirectX::BoundingOrientedBox player(pivot, temp_extents, temp_quarta);
+	
 	DirectX::XMFLOAT3 trash;
 	short floor;
 	m_vMeshes[0]->m_Childs[0].m_Childs[0].floor_collision(player, &trash, &trash, &floor);
+	return floor;
+}
+
+unsigned short IOCP_SERVER_MANAGER::floor_collision(const unsigned int& id, Game& gameRoom)
+{
+	DirectX::BoundingOrientedBox player_obb;
+	gameRoom.getPlayerOBB(player_obb, id);
+	
+	DirectX::XMFLOAT3 trash;
+	short floor;
+	m_vMeshes[0]->m_Childs[0].m_Childs[0].floor_collision(player_obb, &trash, &trash, &floor);
 	return floor;
 }
 
@@ -511,14 +417,14 @@ void Game::init(const unsigned int& i, const SOCKET& s)
 	{
 		player[0].id = i;
 		player[0].sock = s;
+		player[0].make_obb();
 	}
 	else
 	{
 		player[1].id = i;
 		player[1].sock = s;
+		player[1].make_obb();
 	}
-	if (guard.id == NULL)
-		guard.id = 1;
 }
 
 const DirectX::XMFLOAT3 Game::getPlayerPos(const unsigned int& id)
@@ -643,20 +549,26 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 
 void Game::update(const bool& npc_state)
 {
-	guard.state_machine(player,npc_state);
+	guard.guard_state_machine(player, npc_state);
 	//std::cout << "npc 회전: " << guard.rotation.y << std::endl;
-	sc_packet_position npc(guard.id, guard.position, guard.rotation, guard.speed);
+	for (auto& student : students)
+	{
+		student.student_state_machine(player);
+	}
+	sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
 	for (auto& p : player)
 	{
 		if (p.sock != NULL)
 		{
 			if (login_players.end() != login_players.find(p.id))
-				login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&npc));
+			{
+				login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
+
+			}
 			else
 				p.sock = NULL;
 		}
 	}
-	
 }
 
 bool Game::erasePlayer(const unsigned int& id)
@@ -666,6 +578,7 @@ bool Game::erasePlayer(const unsigned int& id)
 		if (player[i].id == id)
 		{
 			sc_packet_logout logout(player[i].sock);
+
 			login_players[player[1 - i].id].send_packet(reinterpret_cast<packet_base*>(&logout));
 			player[i].reset();
 			return true;
@@ -696,15 +609,54 @@ bool Game::hasEmpty()
 	return false;
 }
 
-void NPC::state_machine(Player* p,const bool& npc_state)
+bool Game::CAS_state(bool& before, bool& after)
+{
+	return std::atomic_compare_exchange_strong(&state, &before, after);
+}
+
+bool Game::getPlayerOBB(DirectX::BoundingOrientedBox& out, const unsigned int& id)
+{
+	for (auto& p : player)
+	{
+		if (p.id == id)
+		{
+			float pitch = DirectX::XMConvertToRadians(p.rotation.x); // x축을 기준으로 회전
+			float yaw = DirectX::XMConvertToRadians(p.rotation.y);   // y축을 기준으로 회전
+			float roll = DirectX::XMConvertToRadians(p.rotation.z);  // z축을 기준으로 회전
+			DirectX::XMVECTOR player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+			DirectX::XMVECTOR player_location = DirectX::XMLoadFloat3(&p.position);
+			p.obb.Transform(out, 1, player_rotation, player_location);
+			return true;
+		}
+	}
+	return false;
+}
+
+void NPC::guard_state_machine(Player* p,const bool& npc_state)
 {
 	for (auto& node : g_um_graph)
 		node.second->init();
-	DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
+	//DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
+	//DirectX::XMFLOAT3 temp;
+
+	//short now_floor = 0;
+	//for (auto& mesh : m_vMeshes)
+	//	mesh->m_Childs[0].m_Childs[0].floor_collision(obb, &temp, &temp, &now_floor);
+
+	DirectX::BoundingOrientedBox now_obb;
+
+	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
+	float yaw = DirectX::XMConvertToRadians(this->rotation.y);   // y축을 기준으로 회전
+	float roll = DirectX::XMConvertToRadians(this->rotation.z);  // z축을 기준으로 회전
+	DirectX::XMVECTOR guard_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+
+	DirectX::XMVECTOR guard_location = DirectX::XMLoadFloat3(&this->position);
+	this->obb.Transform(now_obb, 1, guard_rotation, guard_location);
 	DirectX::XMFLOAT3 temp;
+
 	short now_floor = 0;
 	for (auto& mesh : m_vMeshes)
-		mesh->m_Childs[0].m_Childs[0].floor_collision(obb, &temp, &temp, &now_floor);
+		mesh->m_Childs[0].m_Childs[0].floor_collision(now_obb, &temp, &temp, &now_floor);
 	if (now_floor >= 0)
 	{
 		//std::cout << "npc가 " << now_floor << "로 이동" << std::endl;
@@ -739,6 +691,77 @@ void NPC::state_machine(Player* p,const bool& npc_state)
 
 	if(state == 1)
 		move();
+}
+
+void NPC::student_state_machine(Player* p)
+{
+	DirectX::BoundingOrientedBox now_obb;
+
+	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
+	float yaw = DirectX::XMConvertToRadians(this->rotation.y);   // y축을 기준으로 회전
+	float roll = DirectX::XMConvertToRadians(this->rotation.z);  // z축을 기준으로 회전
+	DirectX::XMVECTOR student_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+
+	DirectX::XMVECTOR student_location = DirectX::XMLoadFloat3(&this->position);
+	this->obb.Transform(now_obb, 1, student_rotation, student_location);
+	// 다른 캐릭터와 충돌했나?
+	bool hit = false;
+	DirectX::BoundingOrientedBox player_obb;
+	float player_pitch;
+	float player_yaw;
+	float player_roll;
+	DirectX::XMVECTOR player_rotation;
+	DirectX::XMVECTOR player_location;
+	for (int i = 0; i < 2; ++i)
+	{
+		if (p[i].sock == NULL)
+			continue;
+		player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
+		player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
+		player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
+		player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
+		player_location = DirectX::XMLoadFloat3(&p[i].position);
+		p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
+		hit = now_obb.Intersects(player_obb);
+		if (hit)
+		{
+			std::cout << i<<" 와 충돌" << std::endl;
+			break;
+		}
+	}
+
+	if (hit)
+	{
+		using namespace std::chrono;
+		attacked_time = steady_clock::now();
+
+		sc_packet_npc_attack attack_student(this->id);
+		for (int i = 0; i < 2; ++i)
+		{
+			if(p[i].sock != NULL)
+				login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
+		}
+	}
+	else
+	{
+		if (this->state == 0)			// 목적지 도착한 상태
+		{
+			// 2초동안 대기
+			int stop = 2;
+			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
+			if (duration > 2)			// 2초 대기 이후
+			{
+				// 새로운 목표 위치 선정
+				int des = rand() % g_um_graph.size();
+				std::cout <<"student["<<this->id<<"] "<< des << "로 목적지 설정" << std::endl;
+				this->state = 1;
+			}
+		}
+		else if (this->state == 1)		// 목적지로 이동하는 중
+		{
+			move();		// 목표 위치로 이동
+		}
+	}
 }
 
 bool NPC::can_see(Player& p)
@@ -858,7 +881,7 @@ void NPC::move()
 	XMVECTOR ActorPos = XMLoadFloat3(&position);
 	XMVECTOR DestPos = XMLoadFloat3(&destination);
 	XMVECTOR direction = XMVector3Normalize(XMVectorSubtract(DestPos, ActorPos));
-	XMVECTOR movement = XMVectorScale(direction, 5);
+	XMVECTOR movement = XMVectorScale(direction, movement_speed);
 	XMStoreFloat3(&position, XMVectorAdd(ActorPos, movement));
 	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
 	

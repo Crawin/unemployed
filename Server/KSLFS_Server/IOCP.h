@@ -1,6 +1,6 @@
 #pragma once
 constexpr short PORT = 9000;
-constexpr int BUFSIZE = 256;
+constexpr int BUFSIZE = 512;
 
 class packet_base;
 class sc_packet_position;
@@ -107,7 +107,7 @@ public:
 	{
 		switch (base->getType())
 		{
-			case 0:				// POSITION
+			case 0:				// POSITION 
 			{
 				auto position = reinterpret_cast<sc_packet_position*>(base);
 				auto sendOver = new EXP_OVER(position);
@@ -116,9 +116,9 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-			}
 				break;
-			case 1:				// LOGIN
+			}
+			case pLOGIN:				// LOGIN
 			{
 				auto login = reinterpret_cast<sc_packet_login*>(base);
 				auto sendOver = new EXP_OVER(login);
@@ -127,9 +127,9 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-			}
 				break;
-			case 2:				//	pMAKEROOM
+			}
+			case pMAKEROOM:				//	pMAKEROOM
 			{
 				auto room = reinterpret_cast<sc_packet_make_room*>(base);
 				auto sendOver = new EXP_OVER(room);
@@ -138,9 +138,9 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-			}
 				break;
-			case 3:				// pENTERROOM
+			}
+			case pENTERROOM:				// pENTERROOM
 			{
 				auto enter = reinterpret_cast<sc_packet_enter_room*>(base);
 				auto sendOver = new EXP_OVER(enter);
@@ -149,9 +149,9 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-			}
 				break;
-			case 4:				//	pRoomPlayer
+			}
+			case pRoomPlayer:				//	pRoomPlayer
 			{
 				auto player = reinterpret_cast<sc_packet_room_player*>(base);
 				auto sendOver = new EXP_OVER(player);
@@ -160,9 +160,9 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-			}
 				break;
-			case 5:				// logout
+			}
+			case pLogout:				// logout
 			{
 				auto logout = reinterpret_cast<sc_packet_logout*>(base);
 				auto sendOver = new EXP_OVER(logout);
@@ -171,8 +171,20 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-			}
 				break;
+			}
+			case pAttack:
+			{
+				//std::cout << "attack send" << std::endl;
+				auto attack = reinterpret_cast<sc_packet_npc_attack*>(base);
+				auto sendOver = new EXP_OVER(attack);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+				break;
+			}
 		}
 	}
 
@@ -199,6 +211,8 @@ class Lobby
 {
 };
 
+constexpr DirectX::XMFLOAT3 basic_extents = { 26,86,26 };		// 클라상에서 이미 충돌을 하고 서버에 전송하기에 클라의 충돌 범위인 25,85,25 보다 크게 해야 서버에서 충돌이 발생
+
 class Player
 {
 public:
@@ -209,7 +223,7 @@ public:
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
-
+	DirectX::BoundingOrientedBox obb;
 	void reset()
 	{
 		id = NULL;
@@ -219,6 +233,13 @@ public:
 		position = { 0,0,0 };
 		rotation = { 0,0,0 };
 		speed = { 0,0,0 };
+		obb = DirectX::BoundingOrientedBox();
+	}
+	void make_obb()
+	{
+		DirectX::XMFLOAT3 temp_extents = basic_extents;
+		DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
+		obb = DirectX::BoundingOrientedBox(DirectX::XMFLOAT3(0, 85, 0), temp_extents, temp_quarta);
 	}
 };
 
@@ -230,13 +251,25 @@ public:
 	short state = 0;				// 0: idle, 1: 이동중
 	unsigned int id = NULL;
 	short m_floor = 1;
-	DirectX::XMFLOAT3 position = { 3160,0,-400 };
+	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
 	DirectX::XMFLOAT3 destination = { 0,0,0 };
 	std::chrono::steady_clock::time_point arrive_time;
+	std::chrono::steady_clock::time_point attacked_time;
 	PATH* path = nullptr;
-	void state_machine(Player*, const bool& npc_state);
+	DirectX::BoundingOrientedBox obb;
+	float movement_speed;
+public:
+	NPC() {
+		DirectX::XMFLOAT3 basic_obb_position = { 0,85,0 };
+		DirectX::XMFLOAT3 basic_obb_extents = basic_extents;
+		DirectX::XMFLOAT4 basic_obb_orients = { 0,0,0,1 };
+		obb = DirectX::BoundingOrientedBox(basic_obb_position, basic_obb_extents, basic_obb_orients);
+		movement_speed = 5;
+	}
+	void guard_state_machine(Player*, const bool& npc_state);
+	void student_state_machine(Player*);
 	bool can_see(Player&);
 	bool can_hear(Player&);
 	float distance(Player&);
@@ -244,6 +277,7 @@ public:
 	bool set_destination(Player*&, const bool& npc_state);
 	void move();
 	const short find_near_player(Player*&);
+
 };
 
 //struct GameDetails
@@ -254,13 +288,27 @@ public:
 
 class Game
 {
+	std::atomic_bool state;				// 0 = 삭제된애, 1 = 돌아가고있는애
 	unsigned int GameNum;
 	Player player[2];
 	NPC guard;
+	NPC students[1];
 	
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
-	Game(const unsigned int& n) : GameNum(n) {}
+	Game(const unsigned int& n) : GameNum(n), state(true) {
+		// 가드 초기위치 설정
+		guard.position = DirectX::XMFLOAT3(3160, 0, -400);
+		guard.id = 1;
+		
+		// npc 초기위치를 어떻게 설정할깝쇼
+		// 노가다로 설정해둘까
+		for (int i = 0; i < 1; ++i)
+		{
+			students[i].id = i+1;
+			students[i].position = DirectX::XMFLOAT3(500.0, 0.0, 1000.0);
+		}
+	}
 	void init(const unsigned int& i, const SOCKET& s);
 	Player* getPlayers() { return player; };
 	void setPlayerPR(const unsigned int&, cs_packet_position*&);
@@ -275,6 +323,8 @@ public:
 	void setFloor(const unsigned int& id, const unsigned short& floor);
 	void update(const bool& npc_state);
 	bool hasEmpty();
+	bool CAS_state(bool& before, bool& after);
+	bool getPlayerOBB(DirectX::BoundingOrientedBox& out, const unsigned int& id);
 };
 
 struct ServerDetails
@@ -300,9 +350,7 @@ public:
 	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	unsigned short floor_collision(cs_packet_position*& packet);
-	bool world_collision(cs_packet_position*&);
-	bool world_collision_v2(cs_packet_position*&, DirectX::XMFLOAT3*);
-	bool world_collision_v3(cs_packet_position*& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed,unsigned short* floor, std::chrono::nanoseconds& ping);
+	unsigned short floor_collision(const unsigned int& id, Game& gameRoom);
 	void command_thread();
 	void ai_thread();
 };
