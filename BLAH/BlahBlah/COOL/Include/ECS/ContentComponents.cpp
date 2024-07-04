@@ -68,6 +68,7 @@ namespace component {
 					kpd->SetCurrent(0);
 
 					can->ShowUI();
+
 					};
 
 				manager->Execute(openUI);
@@ -97,19 +98,25 @@ namespace component {
 
 		if (canvas == nullptr || keypad == nullptr) 
 			ERROR_QUIT("ERRIR!!!! no canvas or keypad on current entity");
-		
 
-		for (Entity* child : children) {
+		for (Entity* child : children) { 
 			Name* childName = manager->GetComponent<Name>(child);
+
 			// 확인 버튼
 			if (childName != nullptr) {
 				std::string name = childName->getName();
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas](Entity* ent) {
+						canvas->HideUI();
+						};
+					button->SetButtonReleaseEvent(exit);
+				}
 
 				if (name == "Check") {
 					Button* button = manager->GetComponent<Button>(child);
 					ButtonEventFunction check = [canvas, keypad, manager](Entity* ent) {
 						// hide ui;
-						canvas->HideUI();
 						DebugPrint("check");
 
 						DebugPrint(std::format("pw: {}", keypad->GetCurrent()));
@@ -118,6 +125,7 @@ namespace component {
 							Entity* door = keypad->GetDoor();
 							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 							doorCtrl->SetLock(false);
+							canvas->HideUI();
 						}
 
 						};
@@ -132,6 +140,7 @@ namespace component {
 								int current = keypad->GetCurrent();
 								current = current * 10 + i;
 								keypad->SetCurrent(current);
+
 								};
 							button->SetButtonReleaseEvent(password);
 						}

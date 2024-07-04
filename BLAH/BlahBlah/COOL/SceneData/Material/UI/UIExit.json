@@ -1,0 +1,9 @@
+{
+	"name": "UIExit",
+	"BaseColor": "UI/ExitButton",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}
