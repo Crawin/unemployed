@@ -82,6 +82,37 @@ XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 	return XMMatrixTranspose(res);
 }
 
+XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int point) const
+{
+	auto animation = m_AnimationSpace[point].second;
+
+	int endFrame = animation->GetEndFrame();
+	float playTime = std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);;
+
+	int currentFrame = floor(playTime * animation->GetFrame());
+	float interpolWeight = ceil(playTime * animation->GetFrame()) - playTime * animation->GetFrame();
+	int amimFrame = endFrame + 1;
+	int idx = boneIdx * amimFrame + currentFrame;
+
+	//// todo 고쳐야한다......
+	XMFLOAT4X4 left =
+	{
+		-1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+
+	XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+
+	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&animation->GetBone(idx + 1));
+
+	res = res * convertLeft;
+	//printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
+		//lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWeight));
+	return XMMatrixTranspose(res);
+}
+
 void AnimationTrackBlendingSpace2D::Update(float deltaTime)
 {
 	if (m_UpdateFunction == nullptr) 
@@ -93,6 +124,13 @@ void AnimationTrackBlendingSpace2D::Update(float deltaTime)
 	else {
 		m_UpdateFunction(deltaTime, &m_CurrentPoint);
 	}
+
+	DebugPrint(std::format("Angle: {}, Speed: {}", m_CurrentPoint.m_Angle, m_CurrentPoint.m_Speed));
+
+	m_CurPlayTime += deltaTime * m_AnimSpeed;
+
+	// find animations by
+	// changed x,y
 
 
 }
@@ -108,7 +146,12 @@ void AnimationTrackBlendingSpace2D::SetAnimationData(ComPtr<ID3D12GraphicsComman
 
 XMMATRIX AnimationTrackBlendingSpace2D::GetAnimatedBoneMat(int boneIdx) const
 {
-	return XMMATRIX();
+	XMMATRIX res = XMMatrixIdentity();
+
+	for (int i = 0; i < _countof(m_BlendingWeights); ++i) 
+		res += EvaluateFromAnimation(boneIdx, i) * m_BlendingWeights[i];
+
+	return res;
 }
 
 void AnimationTrackBlendingSpace2D::InsertAnimation(float atSpeed, float atAngle, std::shared_ptr<Animation> anim)

@@ -63,6 +63,11 @@ XMMATRIX& AnimationPlayer::GetAnimatedBone(int boneIdx) const
 	return animRes;
 }
 
+void AnimationPlayer::SetUpdateFunctionTo(ANIMATION_STATE state, std::function<void(float, void*)> func)
+{
+	m_AnimationMap[state]->SetUpdateFunction(func);
+}
+
 float AnimationPlayer::GetCurrentPlayTime() const
 {
 	return m_CurrentAnimation->GetCurrentPlayTime();

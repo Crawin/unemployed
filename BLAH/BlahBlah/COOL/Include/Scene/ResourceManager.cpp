@@ -403,40 +403,66 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 		// name
 		AnimationPlayer* player = new AnimationPlayer;
 		player->m_Name = animCont.m_AnimSetName;
-		for (auto& key : root.getMemberNames()) {
-			std::string animName = root[key].asString();
-			ANIMATION_STATE state = ConvertStringToAnimationState(key);
+		bool blendOn = false;
+		for (auto& stateString : root.getMemberNames()) {
+			ANIMATION_STATE state = ConvertStringToAnimationState(stateString);
 
 			switch (state) {
 			case ANIMATION_STATE::BLENDED_MOVING_STATE:
+			{
+				blendOn = true;
 				// blending states,
+				AnimationTrackBlendingSpace2D* newAnimTrack = new AnimationTrackBlendingSpace2D();
+				auto& curState = root[stateString];
+				for (auto& toBlendState : curState.getMemberNames()) {
+					auto& inState = curState[toBlendState];
+					int anim = GetAnimation(inState["Name"].asString(), commandList);
+					if (anim < 0) ERROR_QUIT("Failed To Load Animation");
 
+					newAnimTrack->InsertAnimation(inState["x"].asFloat(), inState["y"].asFloat(), m_Animations[anim]);
+
+					// set bool state of animation
+					m_Animations[anim]->m_Loop = inState["Loop"].asBool();
+					if (m_Animations[anim]->m_Loop == false) {
+						ERROR_QUIT("In BLENDED_MOVING_STATE animation should be loop mode");
+					}
+				}
+
+				player->m_AnimationMap[state] = newAnimTrack;
 				// load every animations for blending
 				//for (int i = 0; i < ; = ++i) {
 
 				//}
-
+				break;
+			}
 			default:
 			{
+				std::string animName = root[stateString]["Name"].asString();
 				int anim = GetAnimation(animName, commandList);
 				if (anim < 0) ERROR_QUIT("Failed To Load Animation");
-				
-				player->m_AnimationMap[state] = new AnimationTrackSingle(m_Animations[anim]);
 
-				// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
-				// 나중에 꼭 꼭 고쳐야한다
-				if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up" ||
-					m_Animations[anim]->m_Name == "PlayerFall" || m_Animations[anim]->m_Name == "PlayerGetUp") {
-					m_Animations[anim]->m_Loop = false;
-				}
+				// set bool state of animation
+				m_Animations[anim]->m_Loop = root[stateString]["Loop"].asBool();
+
+				player->m_AnimationMap[state] = new AnimationTrackSingle(m_Animations[anim]);
 			}
 			}
+
 
 		}
 		m_AnimationPlayer.push_back(player);
-
 		animCont.m_Controller->SetPlayer(player);
 		DebugPrint(std::format("loaded animset file name: {}", player->m_Name));
+
+		if (blendOn) {
+			player->ChangeToAnimation(ANIMATION_STATE::BLENDED_MOVING_STATE);
+			player->ChangeToAnimation(ANIMATION_STATE::BLENDED_MOVING_STATE);
+		}
+		else {
+			player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+			player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+		}
+
 	}
 
 	// set animation executer
@@ -682,12 +708,18 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	m_ECSManager->Execute(setBox);
 
-
+	// todo
+	// todo
+	// todo
+	// todo
+	// todo
+	// todo
+	// 
 	// set default animation to anim executor;
-	for (auto& player : m_AnimationPlayer) {
-		player->ChangeToAnimation(ANIMATION_STATE::IDLE);
-		player->ChangeToAnimation(ANIMATION_STATE::IDLE);
-	};
+	//for (auto& player : m_AnimationPlayer) {
+	//	player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+	//	player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+	//};
 
 	// Make shader for animation stream out
 	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);

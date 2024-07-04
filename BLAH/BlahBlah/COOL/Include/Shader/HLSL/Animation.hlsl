@@ -34,6 +34,20 @@ cbuffer MaterialAnim : register(b0)
 	int boneDataIdx;
 };
 
+//cbuffer MaterialAnim2 : register(b3)
+//{
+//	float anim1PlayTime;
+//	float anim2PlayTime;
+//	float animBlend;
+
+//	int anim1Frame;
+//	int anim2Frame;
+
+//	int anim1Idx;
+//	int anim2Idx;
+//	int boneDataIdx;
+//};
+
 #define ANIMATION_FPS 24.0f
 
 //StructuredBuffer<matrix> Bone : register(t1, space8);

@@ -36,6 +36,9 @@ public:
 	// for attach pos
 	XMMATRIX& GetAnimatedBone(int boneIdx) const;
 
+	bool IsStateOwn(ANIMATION_STATE state) const { return m_AnimationMap.contains(state); }
+	void SetUpdateFunctionTo(ANIMATION_STATE state, std::function<void(float, void*)> func);
+
 public:
 	float GetCurrentPlayTime() const;
 	float GetCurrentPlayEndTime() const;

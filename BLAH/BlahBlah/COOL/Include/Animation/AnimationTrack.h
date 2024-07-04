@@ -52,12 +52,17 @@ struct Point2D {
 class AnimationTrackBlendingSpace2D : public AnimationTrackBase {
 	Point2D m_CurrentPoint = { 0,0 };
 	std::vector<std::pair<Point2D, std::shared_ptr<Animation>>> m_AnimationSpace;
+	int m_ClosePoints[4] = { 0,0,0,0 };
+	int m_BlendingWeights[4] = { 1,0,0,0 };
+
+	XMMATRIX EvaluateFromAnimation(int boneIdx, int point) const;
 
 public:
 	virtual void Update(float deltaTime);
 	virtual void ResetAnimationTrack();
 	virtual void SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isBefore);
 	virtual XMMATRIX GetAnimatedBoneMat(int boneIdx) const;
+
 
 	void InsertAnimation(float atSpeed, float atAngle, std::shared_ptr<Animation> anim);
 

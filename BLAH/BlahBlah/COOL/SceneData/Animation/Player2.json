@@ -1,7 +1,106 @@
 {
-	"Idle": "PlayerIdle",
-	"Walk": "PlayerWalk",
-	"Run": "PlayerRun",
-	"FallingDown": "PlayerFall",
-	"GetUp": "PlayerGetUp"
+	"FallingDown": 
+	{
+		"Loop" : false,
+	 	"Name": "Player/Player_Fall"
+	},
+	
+	"GetUp": 
+	{
+		"Loop" : false,
+		"Name": "Player/Player_GetUp"
+	},
+
+	"Jump_Start":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Jump_Start"
+	},
+
+	"Jump_Ing":
+	{
+		"Loop": true,
+		"Name": "Player/Player_Jump_Falling"
+	},
+
+	"Jump_Land":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Jump_Land"
+	},
+
+	"Blended_Moving_State":
+	{
+		"Idle":
+		{
+			"x" : 0,
+			"y" : 0,
+			"Loop": true,
+			"Name": "Player/Player_Idle"
+		},
+
+		"Forward_Walk":
+		{
+			"x" : 30,
+			"y" : 0,
+			"Loop": true,
+			"Name": "Player/Player_Walking_Front"
+		},
+
+		"Forward_Run":
+		{
+			"x" : 300,
+			"y" : 0,
+			"Loop": true,
+			"Name": "Player/Player_Running_Front"
+		},
+
+		"Left_Walk_Strafe":
+		{
+			"x" : 30,
+			"y" : 90,
+			"Loop": true,
+			"Name": "Player/Player_Walking_Strafe_Left"
+		},
+
+		"Left_Run_Strafe":
+		{
+			"x" : 300,
+			"y" : 90,
+			"Loop": true,
+			"Name": "Player/Player_Running_Left_Strafe"
+		},
+
+		"Backward_Walk":
+		{
+			"x" : 30,
+			"y" : 180,
+			"Loop": true,
+			"Name": "Player/Player_Walking_Back"
+		},
+
+		"Backward_Run":
+		{
+			"x" : 300,
+			"y" : 180,
+			"Loop": true,
+			"Name": "Player/Player_Running_Back"
+		},
+
+		"Right_Walk_Strafe":
+		{
+			"x" : 30,
+			"y" : 270,
+			"Loop": true,
+			"Name": "Player/Player_Walking_Strafe_Right"
+		},
+
+		"Right_Run_Strafe":
+		{
+			"x" : 300,
+			"y" : 270,
+			"Loop": true,
+			"Name": "Player/Player_Running_Right_Strafe"
+		}
+	}
 }

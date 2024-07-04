@@ -1,7 +1,0 @@
-{
-	"Idle": "dia_Idle",
-	"Walk": "dia_Walking",
-	"Dance": "dia_Dance",
-	"FallingDown": "dia_falling_back",
-	"GetUp": "dia_getting_up"
-}

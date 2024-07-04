@@ -152,6 +152,8 @@ namespace component {
 
 		void InsertOnEnter(ANIMATION_STATE st, std::function<void(void)> cond) { m_OnEnter[st] = cond; }
 		void InsertCondition(ANIMATION_STATE from, ANIMATION_STATE to, std::function<bool(void*)> cond) { InsertTransition(from, to); m_ChangeCondition[std::pair(from, to)] = cond; }
+
+		AnimationPlayer* GetPlayer() const { return m_AnimationPlayer; }
 	};
 
 	/////////////////////////////////////////////////////////

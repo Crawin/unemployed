@@ -2,6 +2,7 @@
 #include "ContentComponents.h"
 #include "Scene/ResourceManager.h"
 #include "ECS/ECSManager.h"
+#include "Animation/AnimationTrack.h"
 #include "json/json.h"
 
 
@@ -19,6 +20,43 @@ namespace component {
 			const std::string& name = manager->GetComponent<Name>(selfEntity)->getName();
 			ERROR_QUIT(std::format("ERROR!! no anim controller on this entity, name: {}", name));
 		}
+
+		// set update function
+		AnimationPlayer* player = ctrl->GetPlayer();
+		if (player->IsStateOwn(ANIMATION_STATE::BLENDED_MOVING_STATE)) {
+			player->SetUpdateFunctionTo(ANIMATION_STATE::BLENDED_MOVING_STATE, [manager, selfEntity](float deltaTime, void* data) {
+				Point2D* pt = reinterpret_cast<Point2D*>(data);
+
+				Physics* py = manager->GetComponent<Physics>(selfEntity);
+				Transform* tr = manager->GetComponent<Transform>(selfEntity);
+				XMVECTOR lookDir{ 0, 0, 1, 0 };
+				XMVECTOR up{ 0, 1, 0 };
+				XMMATRIX world = XMLoadFloat4x4(&tr->GetWorldTransform());
+				lookDir = XMVector3Normalize(XMVector4Transform(lookDir, world));
+
+				XMVECTOR movingDir = XMVector3Normalize(XMLoadFloat3(&py->GetVelocity()));
+
+				// 스칼라 삼중적
+				float dot = XMVectorGetX(XMVector3Dot(lookDir, movingDir));
+				float angle = XMConvertToDegrees(acos(dot));
+				float scalarTriPro = XMVectorGetX(XMVector3Dot(XMVector3Cross(lookDir, movingDir), up));
+				if (scalarTriPro < 0)
+					angle = 360.0f - angle;
+				
+				pt->m_Speed = py->GetCurrentVelocityLenOnXZ();
+				pt->m_Angle = angle;
+
+				if (IsZero(pt->m_Speed)) {
+					pt->m_Speed = 0;
+					pt->m_Angle = 0;
+				}
+
+				});
+
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+		}
+
 
 		using COND = std::function<bool(void*)>;
 
@@ -67,8 +105,8 @@ namespace component {
 		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
 		// set start animation
-		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
-		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
 
 	}
 
@@ -124,7 +162,7 @@ namespace component {
 		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
 		// set start animation
-		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
 	}
 
 	void DiaAnimationControl::ShowYourself() const

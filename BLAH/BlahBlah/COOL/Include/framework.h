@@ -68,6 +68,7 @@ using Microsoft::WRL::ComPtr;
 //#pragma comment(lib, "jsoncpp.lib")
 
 #include "Enums.h"
+#include "mymath.h"
 
 // component count
 #define COMPONENT_COUNT 33
