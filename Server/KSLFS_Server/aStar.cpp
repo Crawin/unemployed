@@ -325,8 +325,8 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[7] = new NODE(7, 27.15, 0, -9.13);
 	graph[8] = new NODE(8, 0.84, 0, 10.98);
 	graph[9] = new NODE(9, -0.49, 0, 6.65);
-	graph[10] = new NODE(10, -4.03, 0, 6.77);
 
+	graph[10] = new NODE(10, -4.03, 0, 6.77);
 	graph[11] = new NODE(11, -4.29, 0, 12.36);
 	graph[12] = new NODE(12, -4.137, 0, -6.713);
 	graph[13] = new NODE(13, -4.214, 2.84, -13.746);
@@ -336,8 +336,8 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[17] = new NODE(17, -1.89, 5.08, -8);
 	graph[18] = new NODE(18, -4.26, 5.08, -5.15);
 	graph[19] = new NODE(19, -33.3, 5.08, -5.17);
-	graph[20] = new NODE(20, -4.18, 5.08, 6.08);
 
+	graph[20] = new NODE(20, -4.18, 5.08, 6.08);
 	graph[21] = new NODE(21, -26.72, 5.08, 5.83);
 	graph[22] = new NODE(22, 16.38, 5.08, 6.14);
 	graph[23] = new NODE(23, 22.48, 5.08, 6.14);
@@ -347,9 +347,60 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[27] = new NODE(27, 22.62, 5.08, -4.5);
 	graph[28] = new NODE(28, 27.72, 5.08, -9.69);
 	graph[29] = new NODE(29, 20.73, 5.08, -0.77);
+
 	graph[30] = new NODE(30, 27.369, 5.08, -0.873);
 	graph[31] = new NODE(31, 12.9, 0, 11.11);
+	graph[32] = new NODE(32, -4.205, 5.08, -8.518);
+	graph[33] = new NODE(33, -4.205, 6.919, -12.363);
+	graph[34] = new NODE(34, -6.214, 6.919, -13.36);
+	graph[35] = new NODE(35, -2.013, 6.919, -13.36);
+	graph[36] = new NODE(36, -6.214, 8.648, -7.357);
+	graph[37] = new NODE(37, -2.24, 8.648, -7.357);
+	graph[38] = new NODE(38, -4.013, 8.648, -8.376);
+	graph[39] = new NODE(39, -4.013, 8.648, -5.062);
 
+	graph[40] = new NODE(40, -33.422, 8.648, -5.062);
+	graph[41] = new NODE(41, -4.013, 8.648, 6.265);
+	graph[42] = new NODE(42, 14.2, 8.648, 6.265);
+	graph[43] = new NODE(43, 26.149, 8.648, 6.265);
+	graph[44] = new NODE(44, 14.2, 8.648, -5.06);
+	graph[45] = new NODE(45, 24.08, 8.648, -5.06);
+	graph[46] = new NODE(46, 27.386, 8.648, -9.672);
+	graph[47] = new NODE(47, -26.676, 8.648, 6.265);
+	graph[48] = new NODE(48, -4.013, 10.505, -12.439);
+	graph[49] = new NODE(49, -6.347, 10.505, -13.807);
+
+	graph[50] = new NODE(50, -1.984, 10.505, -13.807);
+	graph[51] = new NODE(51, -6.347, 12.306, -8.708);
+	graph[52] = new NODE(52, -4.261, 14.113, -12.242);
+	graph[53] = new NODE(53, -2.026, 12.306, -8.554);
+	graph[54] = new NODE(54, -4.261, 12.306, 6.153);
+	graph[55] = new NODE(55, -33.529, 12.306, -5.05);
+	graph[56] = new NODE(56, -4.261, 12.306, -5.05);
+	graph[57] = new NODE(57, -26.703, 12.306, 6.153);
+	graph[58] = new NODE(58, 25.78, 12.306, 6.153);
+	graph[59] = new NODE(59, 24.6, 12.306, -5.05);
+
+	graph[60] = new NODE(60, 26.33, 12.306, -9.356);
+	graph[61] = new NODE(61, -4.261, 12.306, -8.554);
+	graph[62] = new NODE(62, -6.576, 14.113, -13.549);
+	graph[63] = new NODE(63, -1.927, 14.113, -13.549);
+	graph[64] = new NODE(64, -6.576, 15.908, -8.343);
+	graph[65] = new NODE(65, -1.867, 15.908, -8.343);
+	graph[66] = new NODE(66, -4.27, 15.908, -8.343);
+	graph[67] = new NODE(67, -4.27, 15.908, -5.195);
+	graph[68] = new NODE(68, -4.27, 15.908, 6.06);
+	graph[69] = new NODE(69, -33.673, 15.908, -5.195);
+
+	graph[70] = new NODE(70, -26.62, 15.908, 6.06);
+	graph[71] = new NODE(71, 14.14, 15.908, 6.06);
+	graph[72] = new NODE(72, 25.73, 15.908, 6.06);
+	graph[73] = new NODE(73, 13.99, 15.908, -5.195);
+	graph[74] = new NODE(74, 24.83, 15.908, -5.195);
+	graph[75] = new NODE(75, 27.28, 15.908, -9.49);
+	graph[76] = new NODE(76, -4.27, 17.698, -12.491);
+	graph[77] = new NODE(77, -6.354, 17.698, -13.565);
+	graph[78] = new NODE(78, -1.832, 17.698, -13.565);
 
 	graph[0]->neighbors.emplace_back(graph[1]);
 
@@ -404,16 +455,19 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[16]->neighbors.emplace_back(graph[15]);
 	graph[16]->neighbors.emplace_back(graph[17]);
 	graph[16]->neighbors.emplace_back(graph[18]);
+	graph[16]->neighbors.emplace_back(graph[32]);
 
 	graph[17]->neighbors.emplace_back(graph[14]);
 	graph[17]->neighbors.emplace_back(graph[16]);
 	graph[17]->neighbors.emplace_back(graph[18]);
+	graph[16]->neighbors.emplace_back(graph[32]);
 
 	graph[18]->neighbors.emplace_back(graph[16]);
 	graph[18]->neighbors.emplace_back(graph[17]);
 	graph[18]->neighbors.emplace_back(graph[19]);
 	graph[18]->neighbors.emplace_back(graph[20]);
 	graph[18]->neighbors.emplace_back(graph[26]);
+	graph[18]->neighbors.emplace_back(graph[32]);
 
 	graph[19]->neighbors.emplace_back(graph[18]);
 
@@ -459,4 +513,179 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 
 	graph[31]->neighbors.emplace_back(graph[3]);
 	graph[31]->neighbors.emplace_back(graph[8]);
+
+	graph[32]->neighbors.emplace_back(graph[16]);
+	graph[32]->neighbors.emplace_back(graph[17]);
+	graph[32]->neighbors.emplace_back(graph[26]);
+	graph[32]->neighbors.emplace_back(graph[33]);
+
+	graph[33]->neighbors.emplace_back(graph[32]);
+	graph[33]->neighbors.emplace_back(graph[34]);
+	graph[33]->neighbors.emplace_back(graph[35]);
+
+	graph[34]->neighbors.emplace_back(graph[33]);
+	graph[34]->neighbors.emplace_back(graph[35]);
+	graph[34]->neighbors.emplace_back(graph[36]);
+
+	graph[35]->neighbors.emplace_back(graph[33]);
+	graph[35]->neighbors.emplace_back(graph[34]);
+	graph[35]->neighbors.emplace_back(graph[37]);
+
+	graph[36]->neighbors.emplace_back(graph[37]);
+	graph[36]->neighbors.emplace_back(graph[38]);
+	graph[36]->neighbors.emplace_back(graph[37]);
+	graph[36]->neighbors.emplace_back(graph[39]);
+
+	graph[37]->neighbors.emplace_back(graph[35]);
+	graph[37]->neighbors.emplace_back(graph[38]);
+	graph[37]->neighbors.emplace_back(graph[36]);
+	graph[37]->neighbors.emplace_back(graph[39]);
+
+	graph[38]->neighbors.emplace_back(graph[36]);
+	graph[38]->neighbors.emplace_back(graph[37]);
+	graph[38]->neighbors.emplace_back(graph[39]);
+	graph[38]->neighbors.emplace_back(graph[48]);
+
+	graph[39]->neighbors.emplace_back(graph[41]);
+	graph[39]->neighbors.emplace_back(graph[40]);
+	graph[39]->neighbors.emplace_back(graph[44]);
+	graph[39]->neighbors.emplace_back(graph[36]);
+	graph[39]->neighbors.emplace_back(graph[37]);
+	graph[39]->neighbors.emplace_back(graph[38]);
+
+	graph[40]->neighbors.emplace_back(graph[39]);
+
+	graph[41]->neighbors.emplace_back(graph[39]);
+	graph[41]->neighbors.emplace_back(graph[42]);
+	graph[41]->neighbors.emplace_back(graph[47]);
+
+	graph[42]->neighbors.emplace_back(graph[41]);
+	graph[42]->neighbors.emplace_back(graph[43]);
+	graph[42]->neighbors.emplace_back(graph[44]);
+
+	graph[43]->neighbors.emplace_back(graph[42]);
+
+	graph[44]->neighbors.emplace_back(graph[39]);
+	graph[44]->neighbors.emplace_back(graph[42]);
+	graph[44]->neighbors.emplace_back(graph[45]);
+
+	graph[45]->neighbors.emplace_back(graph[44]);
+	graph[45]->neighbors.emplace_back(graph[46]);
+
+	graph[46]->neighbors.emplace_back(graph[45]);
+
+	graph[47]->neighbors.emplace_back(graph[41]);
+
+	graph[48]->neighbors.emplace_back(graph[38]);
+	graph[48]->neighbors.emplace_back(graph[49]);
+	graph[48]->neighbors.emplace_back(graph[50]);
+
+	graph[49]->neighbors.emplace_back(graph[48]);
+	graph[49]->neighbors.emplace_back(graph[50]);
+	graph[49]->neighbors.emplace_back(graph[51]);
+
+	graph[50]->neighbors.emplace_back(graph[48]);
+	graph[50]->neighbors.emplace_back(graph[49]);
+	graph[50]->neighbors.emplace_back(graph[53]);
+
+	graph[51]->neighbors.emplace_back(graph[49]);
+	graph[51]->neighbors.emplace_back(graph[61]);
+	graph[51]->neighbors.emplace_back(graph[56]);
+
+	graph[52]->neighbors.emplace_back(graph[61]);
+	graph[52]->neighbors.emplace_back(graph[62]);
+	graph[52]->neighbors.emplace_back(graph[63]);
+
+	graph[53]->neighbors.emplace_back(graph[50]);
+	graph[53]->neighbors.emplace_back(graph[56]);
+	graph[53]->neighbors.emplace_back(graph[61]);
+
+	graph[54]->neighbors.emplace_back(graph[56]);
+	graph[54]->neighbors.emplace_back(graph[57]);
+	graph[54]->neighbors.emplace_back(graph[58]);
+
+	graph[55]->neighbors.emplace_back(graph[56]);
+
+	graph[56]->neighbors.emplace_back(graph[51]);
+	graph[56]->neighbors.emplace_back(graph[53]);
+	graph[56]->neighbors.emplace_back(graph[61]);
+	graph[56]->neighbors.emplace_back(graph[55]);
+	graph[56]->neighbors.emplace_back(graph[54]);
+	graph[56]->neighbors.emplace_back(graph[59]);
+
+	graph[57]->neighbors.emplace_back(graph[54]);
+
+	graph[58]->neighbors.emplace_back(graph[54]);
+
+	graph[59]->neighbors.emplace_back(graph[56]);
+	graph[59]->neighbors.emplace_back(graph[60]);
+
+	graph[60]->neighbors.emplace_back(graph[59]);
+
+	graph[61]->neighbors.emplace_back(graph[51]);
+	graph[61]->neighbors.emplace_back(graph[53]);
+	graph[61]->neighbors.emplace_back(graph[56]);
+	graph[61]->neighbors.emplace_back(graph[52]);
+
+	graph[62]->neighbors.emplace_back(graph[52]);
+	graph[62]->neighbors.emplace_back(graph[63]);
+	graph[62]->neighbors.emplace_back(graph[64]);
+
+	graph[63]->neighbors.emplace_back(graph[52]);
+	graph[63]->neighbors.emplace_back(graph[62]);
+	graph[63]->neighbors.emplace_back(graph[65]);
+
+	graph[64]->neighbors.emplace_back(graph[62]);
+	graph[64]->neighbors.emplace_back(graph[66]);
+	graph[64]->neighbors.emplace_back(graph[67]);
+
+	graph[65]->neighbors.emplace_back(graph[63]);
+	graph[65]->neighbors.emplace_back(graph[66]);
+	graph[65]->neighbors.emplace_back(graph[67]);
+
+	graph[66]->neighbors.emplace_back(graph[64]);
+	graph[66]->neighbors.emplace_back(graph[65]);
+	graph[66]->neighbors.emplace_back(graph[67]);
+	graph[66]->neighbors.emplace_back(graph[76]);
+	
+	graph[67]->neighbors.emplace_back(graph[64]);
+	graph[67]->neighbors.emplace_back(graph[65]);
+	graph[67]->neighbors.emplace_back(graph[66]);
+	graph[67]->neighbors.emplace_back(graph[68]);
+	graph[67]->neighbors.emplace_back(graph[69]);
+	graph[67]->neighbors.emplace_back(graph[73]);
+
+	graph[68]->neighbors.emplace_back(graph[67]);
+	graph[68]->neighbors.emplace_back(graph[70]);
+	graph[68]->neighbors.emplace_back(graph[71]);
+
+	graph[69]->neighbors.emplace_back(graph[67]);
+
+	graph[70]->neighbors.emplace_back(graph[68]);
+
+	graph[71]->neighbors.emplace_back(graph[68]);
+	graph[71]->neighbors.emplace_back(graph[73]);
+	graph[71]->neighbors.emplace_back(graph[72]);
+
+	graph[72]->neighbors.emplace_back(graph[71]);
+
+	graph[73]->neighbors.emplace_back(graph[67]);
+	graph[73]->neighbors.emplace_back(graph[71]);
+	graph[73]->neighbors.emplace_back(graph[74]);
+
+	graph[74]->neighbors.emplace_back(graph[73]);
+	graph[74]->neighbors.emplace_back(graph[75]);
+
+	graph[75]->neighbors.emplace_back(graph[74]);
+
+	graph[76]->neighbors.emplace_back(graph[66]);
+	graph[76]->neighbors.emplace_back(graph[77]);
+	graph[76]->neighbors.emplace_back(graph[78]);
+
+	graph[77]->neighbors.emplace_back(graph[76]);
+	graph[77]->neighbors.emplace_back(graph[78]);
+
+	graph[78]->neighbors.emplace_back(graph[76]);
+	graph[78]->neighbors.emplace_back(graph[77]);
+
 }
