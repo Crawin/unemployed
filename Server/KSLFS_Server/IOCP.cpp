@@ -195,7 +195,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			{
 				using namespace std::chrono;
 				g_mutex_npc_timer.lock();
-				g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+				g_npc_timer.emplace(rw_byte, my_id, milliseconds(17));
 				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
 			}
@@ -329,6 +329,7 @@ void IOCP_SERVER_MANAGER::LoadResources()
 	}
 	std::cout << "장애물 로드 완료" << std::endl;
 	//------------------------------------------------------------------------------------------
+	// astar 노드 npc마다 적용하기 위해 노드를 멤버변수로 할당
 	//std::cout << "A* NODE 로드 시작" << std::endl;
 	//MakeGraph();
 	////for (auto& node : g_um_graph)
@@ -415,8 +416,8 @@ void IOCP_SERVER_MANAGER::ai_timer()
 	{
 		if (g_npc_timer.empty())
 		{
-			std::this_thread::sleep_for(0.008s);
-			//continue;
+			//std::this_thread::sleep_for(0.008s);
+			continue;
 		}
 		else
 		{
@@ -778,11 +779,36 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	//	mesh->m_Childs[0].m_Childs[0].floor_collision(now_obb, &temp, &temp, &now_floor);
 	float now_floor = 0;
 	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
-	for (auto& floor : map_floors)
+	
+	bool b_floor = false;
+	auto map_floors_cnt = map_floors.size();
+	for (int i = 0; i < map_floors_cnt - 1; ++i)
 	{
-		if (floor.floor_collision(now_obb, now_floor))
+		auto& floor = map_floors[i];
+		if (floor.floor_collision(now_obb, now_floor, this->position.y))
+		{
+			b_floor = true;
 			break;
+		}
 	}
+
+	if (b_floor == false)		// 바닥과 충돌하지 못했다면 계단과 충돌중인지 확인
+	{
+		auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
+
+		for (int i = 0; i < 4; ++i)
+		{	// 계단의 방향 +Z, -Z, +X, -X
+			if (stairs[i].stair_collision(now_obb, this->position.y, i))
+				break;
+		}
+		std::cout << "계단" << std::endl;
+	}
+
+	//for (auto& floor : map_floors)
+	//{
+	//	if (floor.floor_collision(now_obb, now_floor, this->position.y))
+	//		break;
+	//}
 	if (now_floor <= 5.5)
 	{
 		if (m_floor != now_floor)
@@ -1019,7 +1045,7 @@ float NPC::distance(Player& p)
 
 bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 {
-	float error_value = 5;
+	float error_value = 10;
 	if (this->position.x >= pos.x - error_value && this->position.x <= pos.x + error_value)
 		if (this->position.y >= pos.y - error_value && this->position.y <= pos.y + error_value)
 			if (this->position.z >= pos.z - error_value && this->position.z <= pos.z + error_value)

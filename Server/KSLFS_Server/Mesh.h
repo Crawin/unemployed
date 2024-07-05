@@ -40,7 +40,9 @@ public:
 	bool collision_v2(const DirectX::BoundingOrientedBox&,DirectX::XMFLOAT3&, DirectX::XMFLOAT3*);
 	bool collision_v3(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3& playerSpeed, DirectX::XMFLOAT3* newSpeed, unsigned short* ptrFloor, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping);
 	const int floor_collision(const DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3* newSpeed, short* ptrFloor);
+	const bool floor_collision(const DirectX::BoundingOrientedBox& player, float& ptrFloor, float& posY);
 	const bool floor_collision(const DirectX::BoundingOrientedBox& player, float& ptrFloor);
+	const bool stair_collision(const DirectX::BoundingOrientedBox& player, float& posY, const int& i);
 	bool map_collision(DirectX::BoundingOrientedBox& player, DirectX::XMFLOAT3* newPosition, DirectX::XMFLOAT3& playerSpeed, DirectX::XMFLOAT3* newSpeed, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping);
 	void planeNum_intersects_direction_vector(const DirectX::BoundingOrientedBox&,DirectX::XMFLOAT3&, DirectX::XMFLOAT3*);
 	void planeNum_intersects_direction_vector_v3(const DirectX::BoundingOrientedBox&, const Mesh&, DirectX::XMFLOAT3&, DirectX::XMFLOAT3*, DirectX::XMFLOAT3* newPosition, std::chrono::steady_clock::time_point& sendTime, std::chrono::nanoseconds& ping);

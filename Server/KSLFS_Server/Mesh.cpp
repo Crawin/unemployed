@@ -152,41 +152,6 @@ void Mesh::LoadMeshData(std::ifstream& meshFile)
 				meshFile.read(data, sizeof(Vertex) * vertexLen);
 				
 				vertecies = reinterpret_cast<Vertex*>(data);
-				//std::vector<DirectX::XMFLOAT3> vectex_list;
-				//for (int i = 0; i < sizeof(Vertex) * vertexLen; i += sizeof(Vertex))
-				//{
-				//	std::cout << i/sizeof(Vertex) << ": ";
-				//	auto v = reinterpret_cast<Vertex*>(&data[i]);
-				//	std::cout << "Position: (" << v->position.x << ", " << v->position.y << ", " << v->position.z << ")" << std::endl;
-				//	std::cout << "Normal: (" << v->normal.x << ", " << v->normal.y << ", " << v->normal.z << ")" << std::endl;
-				//	std::cout << "Tangent: (" << v->tangent.x << ", " << v->tangent.y << ", " << v->tangent.z << ")" << std::endl;
-				//	std::cout << "UV: (" << v->uv.x << ", " << v->uv.y << ")" << std::endl;
-				//	std::cout << std::endl;
-
-				//	bool b = true;
-				//	for (auto& l : vectex_list)
-				//	{
-				//		if (l.x == v->position.x && l.y == v->position.y && l.z == v->position.z)
-				//		{
-				//			b = false;
-				//			break;
-				//		}
-				//	}
-				//	if (b)
-				//	{
-				//		vectex_list.emplace_back(v->position);
-				//	}
-				//}
-
-				//for (auto& v : vectex_list)
-				//{
-				//	std::cout << "(" << v.x << ", " << v.y << ", " << v.z << ") ";
-				//}
-				//std::cout << std::endl;
-
-				//delete[] data;
-
-				//LoadVertices<Vertex>(commandList, file, manager, vertexLen);
 				//for (int i = 0; i < vertexLen; ++i)
 				//{
 				//	std::cout << i << ": ";
@@ -592,6 +557,25 @@ const int Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, Dire
 	//}			// 층과 층 사이에 있는지
 }
 
+const bool Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, float& ptrFloor, float& posY)
+{
+	for (auto& floor : this->m_Childs)
+	{
+		if (floor.m_ModelBoundingBox.Intersects(player))
+		{
+			if (ptrFloor != 6)
+				posY = floor.m_AABBCenter.y + floor.m_AABBExtents.y;
+			else
+				posY = floor.m_AABBCenter.y;
+			return true;
+		}
+	}
+	if (ptrFloor == 0)	ptrFloor = 1;
+	else	ptrFloor += 0.5;
+
+	return false;
+}
+
 const bool Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, float& ptrFloor)
 {
 	for (auto& floor : this->m_Childs)
@@ -604,6 +588,34 @@ const bool Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, flo
 	if (ptrFloor == 0)	ptrFloor = 1;
 	else	ptrFloor += 0.5;
 
+	return false;
+}
+
+const bool Mesh::stair_collision(const DirectX::BoundingOrientedBox& player, float& posY, const int& i)
+{
+	for (auto& stair : this->m_Childs)
+	{
+		if (stair.m_ModelBoundingBox.Intersects(player))
+		{
+			switch (i)
+			{
+			case 0:				// +Z
+				posY = (stair.m_AABBExtents.y / stair.m_AABBExtents.z) * (player.Center.z - (stair.m_AABBCenter.z - stair.m_AABBExtents.z)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				break;
+			case 1:				// -Z
+				posY = (-stair.m_AABBExtents.y / stair.m_AABBExtents.z) * (player.Center.z - (stair.m_AABBCenter.z + stair.m_AABBExtents.z)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				break;
+			case 2:				// +X
+				posY = (stair.m_AABBExtents.y / stair.m_AABBExtents.x) * (player.Center.x - (stair.m_AABBCenter.x - stair.m_AABBExtents.x)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				break;
+			case 3:				// -X
+				posY = (-stair.m_AABBExtents.y / stair.m_AABBExtents.x) * (player.Center.x - (stair.m_AABBCenter.x + stair.m_AABBExtents.x)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				break;
+			}
+			std::cout << "경비 y : " << posY << std::endl;
+			return true;
+		}
+	}
 	return false;
 }
 
