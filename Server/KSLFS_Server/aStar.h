@@ -20,6 +20,11 @@ public:
 	bool operator<(const NODE* n) const {
 		return this->f > n->f;
 	}
+	
+	bool operator==(const NODE* n)const {
+		return (this->pos.x == n->pos.x && this->pos.y == n->pos.y && this->pos.z == n->pos.z);
+	}
+
 	void heuristic(NODE* goal) {
 		this->h = (goal->pos.x - this->pos.x) * (goal->pos.x - this->pos.x) + (goal->pos.y - this->pos.y) * (goal->pos.y - this->pos.y) + (goal->pos.z - this->pos.z) * (goal->pos.z - this->pos.z);
 		this->f = this->g + this->h;
@@ -56,7 +61,7 @@ int find_near_NODE(DirectX::XMFLOAT3& pos);
 int find_near_NODE(DirectX::XMFLOAT3& pos, std::unordered_map<int, NODE*>& astar_graph);
 
 PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal);
-PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unordered_map<int,NODE*>& graph);
+PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unordered_map<int, NODE*>& graph);
 
 void MakeGraph();
 void MakeGraph(std::unordered_map<int, NODE*>& graph);

@@ -112,7 +112,6 @@ PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unorder
 	//std::cout << "가장 가까운 시작 노드는 [" << start_id << "] 입니다." << std::endl;
 	int goal_id = find_near_NODE(goal, graph);
 	//std::cout << "가장 가까운 도착 노드는 [" << goal_id << "] 입니다." << std::endl;
-
 	std::priority_queue<NODE*> openList;
 
 	NODE* startNode = graph[start_id];
