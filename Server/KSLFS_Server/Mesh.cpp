@@ -600,19 +600,23 @@ const bool Mesh::stair_collision(const DirectX::BoundingOrientedBox& player, flo
 			switch (i)
 			{
 			case 0:				// +Z
-				posY = (stair.m_AABBExtents.y / stair.m_AABBExtents.z) * (player.Center.z - (stair.m_AABBCenter.z - stair.m_AABBExtents.z)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				if (player.Center.z <= stair.m_AABBCenter.z + stair.m_AABBExtents.z && player.Center.z >= stair.m_AABBCenter.z - stair.m_AABBExtents.z)
+					posY = (stair.m_AABBExtents.y / stair.m_AABBExtents.z) * (player.Center.z - (stair.m_AABBCenter.z - stair.m_AABBExtents.z)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y) + 10;
 				break;
 			case 1:				// -Z
-				posY = (-stair.m_AABBExtents.y / stair.m_AABBExtents.z) * (player.Center.z - (stair.m_AABBCenter.z + stair.m_AABBExtents.z)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				if (player.Center.z <= stair.m_AABBCenter.z + stair.m_AABBExtents.z && player.Center.z >= stair.m_AABBCenter.z - stair.m_AABBExtents.z)
+					posY = (-stair.m_AABBExtents.y / stair.m_AABBExtents.z) * (player.Center.z - (stair.m_AABBCenter.z + stair.m_AABBExtents.z)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y) + 10;
 				break;
 			case 2:				// +X
-				posY = (stair.m_AABBExtents.y / stair.m_AABBExtents.x) * (player.Center.x - (stair.m_AABBCenter.x - stair.m_AABBExtents.x)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				if (player.Center.x <= stair.m_AABBCenter.x + stair.m_AABBExtents.x && player.Center.x >= stair.m_AABBCenter.x - stair.m_AABBExtents.x)
+					posY = (stair.m_AABBExtents.y / stair.m_AABBExtents.x) * (player.Center.x - (stair.m_AABBCenter.x - stair.m_AABBExtents.x)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y) + 10;
 				break;
 			case 3:				// -X
-				posY = (-stair.m_AABBExtents.y / stair.m_AABBExtents.x) * (player.Center.x - (stair.m_AABBCenter.x + stair.m_AABBExtents.x)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y);
+				if (player.Center.x <= stair.m_AABBCenter.x + stair.m_AABBExtents.x && player.Center.x >= stair.m_AABBCenter.x - stair.m_AABBExtents.x)
+					posY = (-stair.m_AABBExtents.y / stair.m_AABBExtents.x) * (player.Center.x - (stair.m_AABBCenter.x + stair.m_AABBExtents.x)) + (stair.m_AABBCenter.y - stair.m_AABBExtents.y) + 10;
 				break;
 			}
-			std::cout << "경비 y : " << posY << std::endl;
+			//std::cout << "경비 y : " << posY << std::endl;
 			return true;
 		}
 	}

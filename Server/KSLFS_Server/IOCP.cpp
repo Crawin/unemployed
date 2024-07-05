@@ -780,28 +780,36 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	float now_floor = 0;
 	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
 	
-	bool b_floor = false;
+	bool b_stair = false;
 	auto map_floors_cnt = map_floors.size();
-	for (int i = 0; i < map_floors_cnt - 1; ++i)
-	{
-		auto& floor = map_floors[i];
-		if (floor.floor_collision(now_obb, now_floor, this->position.y))
+
+	auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
+
+	for (int i = 0; i < 4; ++i)
+	{	// 계단의 방향 +Z, -Z, +X, -X
+		if (stairs[i].stair_collision(now_obb, this->position.y, i))
 		{
-			b_floor = true;
+			b_stair = true;
 			break;
 		}
+
 	}
+	//std::cout << "계단" << std::endl;
 
-	if (b_floor == false)		// 바닥과 충돌하지 못했다면 계단과 충돌중인지 확인
+	if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
 	{
-		auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
-
-		for (int i = 0; i < 4; ++i)
-		{	// 계단의 방향 +Z, -Z, +X, -X
-			if (stairs[i].stair_collision(now_obb, this->position.y, i))
+		for (int i = 0; i < map_floors_cnt - 1; ++i)
+		{
+			auto& floor = map_floors[i];
+			if (floor.floor_collision(now_obb, now_floor, this->position.y))
 				break;
 		}
-		std::cout << "계단" << std::endl;
+		if (now_floor <= 5.5)
+		{
+			if (m_floor != now_floor)
+				std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
+			m_floor = now_floor;
+		}
 	}
 
 	//for (auto& floor : map_floors)
@@ -809,12 +817,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	//	if (floor.floor_collision(now_obb, now_floor, this->position.y))
 	//		break;
 	//}
-	if (now_floor <= 5.5)
-	{
-		if (m_floor != now_floor)
-			std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
-		m_floor = now_floor;
-	}
+
 
 	//if (now_floor >= 0)
 	//{
@@ -1076,10 +1079,12 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				std::cout << n << "P 발견" << std::endl;
 				//path = aStarSearch(position, destination);
 				this->destination = p[n].position;
-				reset_graph();
-				this->path = aStarSearch(position, destination, astar_graph);
+				//reset_graph();
+				//this->path = aStarSearch(position, p[n].position, astar_graph, this->goalNode);	// 쫓아온 후 노드를 어떻게 할 것인가
 				//this->destination = path->pos;
-				this->destination.y = position.y;
+				this->destination.y = this->position.y;
+				this->path = nullptr;
+				return true;
 				if (nullptr != path)
 					return true;
 				else

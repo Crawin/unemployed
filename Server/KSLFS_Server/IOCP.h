@@ -277,6 +277,7 @@ public:
 	PATH* path = nullptr;
 	DirectX::BoundingOrientedBox obb;
 	float movement_speed;
+	NODE* goalNode = nullptr;
 
 	std::unordered_map<int, NODE*> astar_graph;
 public:
