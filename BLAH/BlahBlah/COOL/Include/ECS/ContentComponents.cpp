@@ -37,7 +37,7 @@ namespace component {
 				XMVECTOR movingDir = XMVector3Normalize(XMLoadFloat3(&py->GetVelocity()));
 
 				// 스칼라 삼중적
-				float dot = XMVectorGetX(XMVector3Dot(lookDir, movingDir));
+				float dot = std::clamp(XMVectorGetX(XMVector3Dot(lookDir, movingDir)), -1.0f, 1.0f);
 				float angle = XMConvertToDegrees(acos(dot));
 				float scalarTriPro = XMVectorGetX(XMVector3Dot(XMVector3Cross(lookDir, movingDir), up));
 				if (scalarTriPro < 0)

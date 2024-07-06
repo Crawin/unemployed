@@ -8,6 +8,8 @@ void AnimationTrackBase::ResetAnimationTrack()
 
 AnimationTrackSingle::AnimationTrackSingle(std::shared_ptr<Animation> newAnim)
 {
+	m_Mode = 0;
+
 	m_Animation = newAnim;
 	m_AnimSpeed = 1.0f;
 	m_CurPlayTime = 0.0f;
@@ -36,27 +38,27 @@ void AnimationTrackSingle::ResetAnimationTrack()
 	m_CurPlayTime = 0;
 }
 
-void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isBefore)
+void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isCurrent)
 {
-	float animPlayTime = std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);
+	float animPlayTime = m_CurPlayTime;// std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);
 	int animFrame = m_Animation->GetEndFrame() + 1;
 	int animIndex = m_Animation->GetDataIdx();
 
-	int playTimeRootIdx = isBefore ? static_cast<int>(ANIM_ROOTCONST::ANI_2_PLAYTIME) : static_cast<int>(ANIM_ROOTCONST::ANI_1_PLAYTIME);
-	int frameRootIdx = isBefore ? static_cast<int>(ANIM_ROOTCONST::ANI_2_FRAME) : static_cast<int>(ANIM_ROOTCONST::ANI_1_FRAME);
-	int animIndexRootIdx = isBefore ? static_cast<int>(ANIM_ROOTCONST::ANI_2_INDEX) : static_cast<int>(ANIM_ROOTCONST::ANI_1_INDEX);
+	int targetParameter = isCurrent ? static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT) : static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_EXTRA);
 
+	float dummy = 1;
 
-	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &animPlayTime, playTimeRootIdx);
-	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &animFrame, frameRootIdx);
-	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &animIndex, animIndexRootIdx);
-
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &dummy, static_cast<int>(ANIM_ROOTCONST::SPACE_BLEND_WEIGHTS));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &animFrame, static_cast<int>(ANIM_ROOTCONST::FRAMES));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &animIndex, static_cast<int>(ANIM_ROOTCONST::INDICES));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &animPlayTime, static_cast<int>(ANIM_ROOTCONST::PLAYTIME));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &m_Mode, static_cast<int>(ANIM_ROOTCONST::MODE));
 }
 
 XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 {
 	int endFrame = m_Animation->GetEndFrame();
-	float playTime = std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);;
+	float playTime = std::min(m_CurPlayTime, m_MaxTime);
 
 	int currentFrame = floor(playTime * m_Animation->GetFrame());
 	float interpolWeight = ceil(playTime * m_Animation->GetFrame()) - playTime * m_Animation->GetFrame();
@@ -74,7 +76,7 @@ XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 
 	XMMATRIX convertLeft = XMLoadFloat4x4(&left);
 
-	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&m_Animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&m_Animation->GetBone(idx + 1));
+	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&m_Animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&m_Animation->GetBone((idx + 1) % endFrame));
 
 	res = res * convertLeft;
 	//printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
@@ -85,16 +87,31 @@ XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int point) const
 {
 	auto animation = m_AnimationSpace[point].second;
-
 	int endFrame = animation->GetEndFrame();
-	float playTime = std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);;
 
-	int currentFrame = floor(playTime * animation->GetFrame());
-	float interpolWeight = ceil(playTime * animation->GetFrame()) - playTime * animation->GetFrame();
-	int amimFrame = endFrame + 1;
-	int idx = boneIdx * amimFrame + currentFrame;
+	int frameFloor = (int)floor(m_CurPlayTime * animation->GetFrame()) % endFrame;
+	int frameCeil = (frameFloor + 1) % endFrame;
 
-	//// todo 고쳐야한다......
+	float interpolWeight = ceil(m_CurPlayTime * animation->GetFrame()) - m_CurPlayTime * animation->GetFrame();
+
+	int idx = boneIdx * endFrame + frameFloor;
+	int idxNext = boneIdx * endFrame + frameCeil;
+
+	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&animation->GetBone(idxNext));
+
+
+	//return mul(Bone[boneIdx], lerp(animation[idxNext], animation[idx], interpolWeight));
+
+
+	//int endFrame = animation->GetEndFrame();
+	//float playTime = std::min(m_CurPlayTime, animation->GetEndTime()/* - 1.0f / 24.0f*/);
+
+	//int currentFrame = floor(playTime * animation->GetFrame());
+	//float interpolWeight = ceil(playTime * animation->GetFrame()) - playTime * animation->GetFrame();
+	//int amimFrame = endFrame + 1;
+	//int idx = boneIdx * amimFrame + currentFrame;
+
+	////// todo 고쳐야한다......
 	XMFLOAT4X4 left =
 	{
 		-1,0,0,0,
@@ -105,12 +122,31 @@ XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int p
 
 	XMMATRIX convertLeft = XMLoadFloat4x4(&left);
 
-	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&animation->GetBone(idx + 1));
+	////XMMATRIX res = interpolWeight * XMLoadFloat4x4(&animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&animation->GetBone((idx + 1) % endFrame));
 
 	res = res * convertLeft;
-	//printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
-		//lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWeight));
+	////printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
+	//	//lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWeight));
+	//return XMMatrixTranspose(res);
+
 	return XMMatrixTranspose(res);
+
+}
+
+AnimationTrackBlendingSpace2D::AnimationTrackBlendingSpace2D()
+{
+	m_Mode = 2;
+}
+
+void AnimationTrackBlendingSpace2D::UpdateTime(float deltaTime)
+{
+	// todo
+	// 1. blend weight가 가장 큰 animation을 찾는다.
+	// 2. 바뀔 animation에 맞게 시간(m_CurPlayTime)을 수정한다.
+	// 3. beforeAnim = 1번의 animation으로 바꾼다
+	// 시간 ++
+	m_CurPlayTime += deltaTime * m_AnimSpeed / 2.0f;
+	//DebugPrint(std::format("time: {}", m_CurPlayTime));
 }
 
 void AnimationTrackBlendingSpace2D::Update(float deltaTime)
@@ -125,14 +161,93 @@ void AnimationTrackBlendingSpace2D::Update(float deltaTime)
 		m_UpdateFunction(deltaTime, &m_CurrentPoint);
 	}
 
-	DebugPrint(std::format("Angle: {}, Speed: {}", m_CurrentPoint.m_Angle, m_CurrentPoint.m_Speed));
+	if (m_CurrentPoint.m_Angle >= 360.0f) m_CurrentPoint.m_Angle -= 360.0f;
 
-	m_CurPlayTime += deltaTime * m_AnimSpeed;
+
 
 	// find animations by
 	// changed x,y
+	Point2D leftBottom = { -FLT_MAX, -FLT_MAX };
+	Point2D leftTop = { -FLT_MAX, FLT_MAX };
+	Point2D rightBottom = { FLT_MAX, -FLT_MAX };
+	Point2D rightTop = { FLT_MAX, FLT_MAX };
+	int startIdx = 0;
+
+	m_ClosePoints[0] = -1;
+	m_ClosePoints[1] = -1;
+	m_ClosePoints[2] = -1;
+	m_ClosePoints[3] = -1;
+
+	// left bottom
+	for (int i = m_AnimationSpace.size() - 1; i >= 0; --i) {
+		const auto& point = m_AnimationSpace[i].first;
+
+		startIdx = i;
+		m_ClosePoints[0] = i;
+		leftBottom = point;
+		if (m_CurrentPoint.m_Angle >= point.m_Angle &&
+			m_CurrentPoint.m_Speed >= point.m_Speed)
+			break;
+	}
+
+	// left top(go up)
+	const auto& point1 = m_AnimationSpace[m_ClosePoints[0] + 1].first;
+
+	if (point1.m_Angle > leftBottom.m_Angle) {
+		// its on high speed
+		m_ClosePoints[1] = m_ClosePoints[0];
+		leftTop = leftBottom;
+	}
+	else {
+		// can step
+		m_ClosePoints[1] = m_ClosePoints[0] + 1;
+		leftTop = point1;
+	}
+
+	// right top
+	for (int i = 0; i < m_AnimationSpace.size(); ++i) {
+		const auto& point = m_AnimationSpace[i].first;
+
+		m_ClosePoints[3] = i;
+		rightTop = point;
+		if (leftTop.m_Angle < point.m_Angle &&
+			leftTop.m_Speed <= point.m_Speed)
+			break;
+	}
+
+	// right bottom(go down)
+	const auto& point2 = m_AnimationSpace[m_ClosePoints[3] - 1].first;
+
+	if (point2.m_Angle < rightTop.m_Angle || leftBottom.m_Speed > point2.m_Speed) {
+		// its on low speed
+		m_ClosePoints[2] = m_ClosePoints[3];
+		rightBottom = rightTop;
+	}
+	else {
+		// can step
+		m_ClosePoints[2] = m_ClosePoints[3] - 1;
+		rightBottom = point2;
+	}
 
 
+	float xBlend = 1.0f - std::clamp((rightBottom.m_Angle - m_CurrentPoint.m_Angle) / (rightBottom.m_Angle - leftBottom.m_Angle), 0.0f, 1.0f);
+	float yBlend = 1.0f - std::clamp((leftTop.m_Speed - m_CurrentPoint.m_Speed) / (leftTop.m_Speed - leftBottom.m_Speed), 0.0f, 1.0f);
+
+	m_BlendingWeights = {
+		(1.0f - xBlend) * (1.0f - yBlend),
+		(1.0f - xBlend) * (yBlend),
+		(xBlend) * (1.0f - yBlend),
+		(xBlend) * (yBlend)
+	};
+
+	//if (m_CurrentPoint.m_Angle != 0 || m_CurrentPoint.m_Speed > 0.5f) {
+	//	DebugPrint(std::format("Angle: {}, Speed: {}", m_CurrentPoint.m_Angle, m_CurrentPoint.m_Speed));
+	//	printf("%d, %d, %d, %d\n", m_ClosePoints[0], m_ClosePoints[1], m_ClosePoints[2], m_ClosePoints[3]);
+	//	printf("%.2f, %.2f, %.2f, %.2f\n", m_BlendingWeights.x, m_BlendingWeights.y, m_BlendingWeights.z, m_BlendingWeights.w);
+	//	printf("\n");
+	//}
+
+	UpdateTime(deltaTime);
 }
 
 void AnimationTrackBlendingSpace2D::ResetAnimationTrack()
@@ -140,21 +255,55 @@ void AnimationTrackBlendingSpace2D::ResetAnimationTrack()
 	m_CurPlayTime = 0;
 }
 
-void AnimationTrackBlendingSpace2D::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isBefore)
+void AnimationTrackBlendingSpace2D::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isCurrent)
 {
+	//float animPlayTime = m_CurPlayTime;// std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);
+	
+	XMUINT4 frames{
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[0]].second->GetEndFrame() + 1),
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[1]].second->GetEndFrame() + 1),
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[2]].second->GetEndFrame() + 1),
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[3]].second->GetEndFrame() + 1)
+	};
+
+	XMUINT4 indices{
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[0]].second->GetDataIdx()),
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[1]].second->GetDataIdx()),
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[2]].second->GetDataIdx()),
+		static_cast<uint32_t>(m_AnimationSpace[m_ClosePoints[3]].second->GetDataIdx())
+	};
+
+	int targetParameter = isCurrent ? static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT) : static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_EXTRA);
+
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 4, &m_BlendingWeights, static_cast<int>(ANIM_ROOTCONST::SPACE_BLEND_WEIGHTS));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 4, &frames, static_cast<int>(ANIM_ROOTCONST::FRAMES));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 4, &indices, static_cast<int>(ANIM_ROOTCONST::INDICES));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &m_CurPlayTime, static_cast<int>(ANIM_ROOTCONST::PLAYTIME));
+	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &m_Mode, static_cast<int>(ANIM_ROOTCONST::MODE));
 }
 
 XMMATRIX AnimationTrackBlendingSpace2D::GetAnimatedBoneMat(int boneIdx) const
 {
 	XMMATRIX res = XMMatrixIdentity();
 
-	for (int i = 0; i < _countof(m_BlendingWeights); ++i) 
-		res += EvaluateFromAnimation(boneIdx, i) * m_BlendingWeights[i];
+	res += EvaluateFromAnimation(boneIdx, m_ClosePoints[0]) * m_BlendingWeights.x;
+	res += EvaluateFromAnimation(boneIdx, m_ClosePoints[1]) * m_BlendingWeights.y;
+	res += EvaluateFromAnimation(boneIdx, m_ClosePoints[2]) * m_BlendingWeights.z;
+	res += EvaluateFromAnimation(boneIdx, m_ClosePoints[3]) * m_BlendingWeights.w;
 
 	return res;
 }
 
-void AnimationTrackBlendingSpace2D::InsertAnimation(float atSpeed, float atAngle, std::shared_ptr<Animation> anim)
+void AnimationTrackBlendingSpace2D::InsertAnimation(float atAngle, float atSpeed, std::shared_ptr<Animation> anim)
 {
-	m_AnimationSpace.emplace_back(Point2D(atSpeed, atAngle), anim);
+	m_AnimationSpace.emplace_back(Point2D(atAngle, atSpeed), anim);
+
+	// todo 추후에 나중에 정렬하게 하자
+	std::sort(m_AnimationSpace.begin(), m_AnimationSpace.end(), [](const auto& a, const auto& b){
+		if (a.first.m_Angle == b.first.m_Angle)
+			return a.first.m_Speed < b.first.m_Speed;
+
+		return a.first.m_Angle < b.first.m_Angle;
+		});
+
 }

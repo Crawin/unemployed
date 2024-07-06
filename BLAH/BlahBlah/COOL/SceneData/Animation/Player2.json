@@ -41,64 +41,96 @@
 
 		"Forward_Walk":
 		{
-			"x" : 30,
-			"y" : 0,
+			"x" : 0,
+			"y" : 30,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Front"
 		},
 
 		"Forward_Run":
 		{
-			"x" : 300,
-			"y" : 0,
+			"x" : 0,
+			"y" : 300,
 			"Loop": true,
 			"Name": "Player/Player_Running_Front"
 		},
 
 		"Left_Walk_Strafe":
 		{
-			"x" : 30,
-			"y" : 90,
+			"x" : 90,
+			"y" : 30,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Strafe_Left"
 		},
 
 		"Left_Run_Strafe":
 		{
-			"x" : 300,
-			"y" : 90,
+			"x" : 90,
+			"y" : 300,
 			"Loop": true,
 			"Name": "Player/Player_Running_Left_Strafe"
 		},
 
 		"Backward_Walk":
 		{
-			"x" : 30,
-			"y" : 180,
+			"x" : 180,
+			"y" : 30,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Back"
 		},
 
 		"Backward_Run":
 		{
-			"x" : 300,
-			"y" : 180,
+			"x" : 180,
+			"y" : 300,
 			"Loop": true,
 			"Name": "Player/Player_Running_Back"
 		},
 
 		"Right_Walk_Strafe":
 		{
-			"x" : 30,
-			"y" : 270,
+			"x" : 270,
+			"y" : 30,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Strafe_Right"
 		},
 
 		"Right_Run_Strafe":
 		{
-			"x" : 300,
-			"y" : 270,
+			"x" : 270,
+			"y" : 300,
+			"Loop": true,
+			"Name": "Player/Player_Running_Right_Strafe"
+		},
+
+		"Forward_Walk_Looped":
+		{
+			"x" : 360,
+			"y" : 30,
+			"Loop": true,
+			"Name": "Player/Player_Walking_Front"
+		},
+
+		"Forward_Run_Looped":
+		{
+			"x" : 360,
+			"y" : 300,
+			"Loop": true,
+			"Name": "Player/Player_Running_Front"
+		},
+
+		"Right_Walk_Strafe_Looped":
+		{
+			"x" : -90,
+			"y" : 30,
+			"Loop": true,
+			"Name": "Player/Player_Walking_Strafe_Right"
+		},
+
+		"Right_Run_Strafe_Looped":
+		{
+			"x" : -90,
+			"y" : 300,
 			"Loop": true,
 			"Name": "Player/Player_Running_Right_Strafe"
 		}

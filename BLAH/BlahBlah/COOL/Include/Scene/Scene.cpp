@@ -220,15 +220,18 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			D3D12_STREAM_OUTPUT_BUFFER_VIEW bufView[] = { view };
 			commandList->SOSetTargets(0, _countof(bufView), bufView);
 
-			// set bone here
+			////////////////////////////////////////////////
+			// animate here
+			//
+			mesh->SetVertexBuffer(commandList);
+			
+			// set bone
 			int boneIdx = manager->GetBone(mesh->GetBoneIdx())->GetBoneDataIdx();
 			commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &boneIdx, static_cast<int>(ANIM_ROOTCONST::BONE_INDEX));
 
-			// set animation here
+			// set animation
 			executor->SetData(commandList, manager);
 
-			// animate here
-			mesh->SetVertexBuffer(commandList);
 			mesh->Animate(commandList);
 
 			// 완료 후 Vertex Buffer로 변경

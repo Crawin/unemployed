@@ -43,11 +43,11 @@ void AnimationPlayer::ChangeToAnimation(ANIMATION_STATE animSet)
 
 void AnimationPlayer::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, ResourceManager* manager) const
 {
-	m_CurrentAnimation->SetAnimationData(commandList, false);
-	m_BeforeAnimation->SetAnimationData(commandList, true);
+	m_CurrentAnimation->SetAnimationData(commandList, true);
+	m_BeforeAnimation->SetAnimationData(commandList, false);
 	
 	commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 
-		1, &m_BeforeAnimWeight, static_cast<int>(ANIM_ROOTCONST::ANI_BLEND));
+		1, &m_BeforeAnimWeight, static_cast<int>(ANIM_ROOTCONST::BEFORE_ANIM_BLEND_WEIGHT));
 }
 
 XMMATRIX& AnimationPlayer::GetAnimatedBone(int boneIdx) const
