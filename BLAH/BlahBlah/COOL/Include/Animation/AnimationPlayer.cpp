@@ -24,7 +24,7 @@ void AnimationPlayer::Update(float deltaTime)
 
 	// anim play time
 	m_CurrentAnimation->Update(deltaTime);
-	m_BeforeAnimation->Update(deltaTime);
+	if (m_BeforeAnimWeight > 0 ) m_BeforeAnimation->Update(deltaTime);
 }
 
 void AnimationPlayer::ChangeToAnimation(ANIMATION_STATE animSet)

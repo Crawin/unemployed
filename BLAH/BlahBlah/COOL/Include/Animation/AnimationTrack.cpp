@@ -136,7 +136,7 @@ void AnimationTrackBlendingSpace2D::UpdateTime(float deltaTime)
 	// 2. 바뀔 animation에 맞게 시간(m_CurPlayTime)을 수정한다.
 	// 3. beforeAnim = 1번의 animation으로 바꾼다
 	// 시간 ++
-	m_CurPlayTime += deltaTime * m_AnimSpeed / 2.0f;
+	m_CurPlayTime += deltaTime * m_AnimSpeed;// / 2.0f;
 	//DebugPrint(std::format("time: {}", m_CurPlayTime));
 }
 
