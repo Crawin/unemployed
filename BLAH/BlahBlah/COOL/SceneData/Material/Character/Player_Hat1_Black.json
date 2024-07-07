@@ -1,9 +1,9 @@
 {
 	"name": "Player_Hat1_Black",
-	"BaseColor": "Character/Mat_Hat_Base_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
-	"Normal": null,
+	"BaseColor": "Character/Player/Hat/Mat_Hat_Base_Color",
+	"Roughness": "Character/Player/Hat/Mat_Hat_Roughness",
+	"Metalic": "Black",
+	"AO": "Character/Player/Hat/Mat_Hat_AO",
+	"Normal": "Character/Player/Hat/Mat_Hat_Normal",
 	"Shader": "TestMeshDiffered"
 }

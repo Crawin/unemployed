@@ -1,9 +1,9 @@
 {
 	"name": "Player_Pants_Black",
-	"BaseColor": "Character/Mat_pants_Base_Color_2",
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
-	"Normal": null,
+	"BaseColor": "Character/Player/Pants/Mat_pants_Base_Color_2",
+	"Roughness": "Character/Player/Pants/Mat_pants_Roughness",
+	"Metalic": "Black",
+	"AO": "Character/Player/Pants/Mat_pants_AO",
+	"Normal": "Character/Player/Pants/Mat_pants_Normal",
 	"Shader": "TestMeshDiffered"
 }

@@ -1,9 +1,9 @@
 {
 	"name": "Player_Head1",
-	"BaseColor": "Character/Mat_Head_Base_Color",
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
-	"Normal": null,
+	"BaseColor": "Character/Player/Head/Mat_Head_Base_Color",
+	"Roughness": "Character/Player/Head/Mat_Head_Roughness",
+	"Metalic": "Black",
+	"AO": "Character/Player/Head/Mat_Head_AO",
+	"Normal": "Character/Player/Head/Mat_Head_Normal",
 	"Shader": "TestMeshDiffered"
 }

@@ -13,13 +13,13 @@
 
 #define SCENE_PATH			"SceneData\\Scene\\"
 
-#define MESH_PATH			"SceneData\\Mesh\\"
-#define SHADER_PATH			"SceneData\\Shader\\"
-#define TEXTURE_PATH		"SceneData\\Material\\Texture\\"
-#define MATERIAL_PATH		"SceneData\\Material\\"
-#define BONE_PATH			"SceneData\\Mesh\\bone_"
-#define ANIMATION_SET_PATH	"SceneData\\Animation\\"
-#define ANIMATION_PATH		"SceneData\\Animation\\Data\\"
+#define MESH_PATH			"SceneData/Mesh/"
+#define SHADER_PATH			"SceneData/Shader/"
+#define TEXTURE_PATH		"SceneData/Material/Texture/"
+#define MATERIAL_PATH		"SceneData/Material/"
+#define BONE_PATH			"SceneData/Mesh/bone_"
+#define ANIMATION_SET_PATH	"SceneData/Animation/"
+#define ANIMATION_PATH		"SceneData/Animation/Data/"
 
 
 ResourceManager::ResourceManager()
