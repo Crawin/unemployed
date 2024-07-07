@@ -42,7 +42,7 @@
 		"Forward_Walk":
 		{
 			"x" : 0,
-			"y" : 30,
+			"y" : 150,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Front"
 		},
@@ -66,7 +66,7 @@
 		"Right_Walk_Strafe":
 		{
 			"x" : 90,
-			"y" : 30,
+			"y" : 150,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Strafe_Right"
 		},
@@ -90,7 +90,7 @@
 		"Backward_Walk":
 		{
 			"x" : 180,
-			"y" : 30,
+			"y" : 150,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Back"
 		},
@@ -114,7 +114,7 @@
 		"Left_Walk_Strafe":
 		{
 			"x" : 270,
-			"y" : 30,
+			"y" : 150,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Strafe_Left"
 		},
@@ -138,7 +138,7 @@
 		"Forward_Walk_Looped":
 		{
 			"x" : 360,
-			"y" : 30,
+			"y" : 150,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Front"
 		},
@@ -162,7 +162,7 @@
 		"Left_Walk_Strafe_Looped":
 		{
 			"x" : -90,
-			"y" : 30,
+			"y" : 150,
 			"Loop": true,
 			"Name": "Player/Player_Walking_Strafe_Left"
 		},
