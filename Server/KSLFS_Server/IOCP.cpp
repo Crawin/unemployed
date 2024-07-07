@@ -755,14 +755,6 @@ NPC::NPC()
 
 void NPC::guard_state_machine(Player* p,const bool& npc_state)
 {
-
-	//DirectX::BoundingOrientedBox obb(this->position, { 1,1,1 }, { 0,0,0,1 });
-	//DirectX::XMFLOAT3 temp;
-
-	//short now_floor = 0;
-	//for (auto& mesh : m_vMeshes)
-	//	mesh->m_Childs[0].m_Childs[0].floor_collision(obb, &temp, &temp, &now_floor);
-
 	DirectX::BoundingOrientedBox now_obb;
 
 	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
@@ -774,9 +766,6 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	this->obb.Transform(now_obb, 1, guard_rotation, guard_location);
 	DirectX::XMFLOAT3 temp;
 
-	//short now_floor = 0;
-	//for (auto& mesh : m_vMeshes)
-	//	mesh->m_Childs[0].m_Childs[0].floor_collision(now_obb, &temp, &temp, &now_floor);
 	float now_floor = 0;
 	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
 	
@@ -794,7 +783,6 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 		}
 
 	}
-	//std::cout << "계단" << std::endl;
 
 	if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
 	{
@@ -811,19 +799,6 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 			m_floor = now_floor;
 		}
 	}
-
-	//for (auto& floor : map_floors)
-	//{
-	//	if (floor.floor_collision(now_obb, now_floor, this->position.y))
-	//		break;
-	//}
-
-
-	//if (now_floor >= 0)
-	//{
-	//	//std::cout << "npc가 " << now_floor << "로 이동" << std::endl;
-	//	m_floor = now_floor;
-	//}
 
 	if (this->state == 0)				// 두리번 두리번 상태
 	{
@@ -1077,13 +1052,21 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 			if (can_see(p[n]))
 			{
 				std::cout << n << "P 발견" << std::endl;
-				//path = aStarSearch(position, destination);
-				this->destination = p[n].position;
-				//reset_graph();
-				//this->path = aStarSearch(position, p[n].position, astar_graph, this->goalNode);	// 쫓아온 후 노드를 어떻게 할 것인가
-				//this->destination = path->pos;
+				//this->destination = p[n].position;
+				reset_graph();
+				reset_path();
+				this->path = aStarSearch(position, p[n].position, astar_graph);
+				compare_length_next_path(path, this->position, p[n].position);
+				if (path == nullptr)				// 가까운 노드보다 플레이어가 더 가깝다
+				{
+					this->destination = p[n].position;
+				}
+				else
+				{
+					this->destination = path->pos;
+				}
 				this->destination.y = this->position.y;
-				this->path = nullptr;
+
 				return true;
 				if (nullptr != path)
 					return true;
@@ -1119,7 +1102,9 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 		}
 		else
 		{
-			path = path->next;
+			PATH* next = path->next;
+			delete path;
+			path = next;
 			destination = path->pos;
 		}
 
@@ -1190,5 +1175,16 @@ void NPC::reset_graph()
 	for (auto& graph : astar_graph)
 	{
 		graph.second->init();
+	}
+}
+
+void NPC::reset_path()
+{
+	PATH* next = this->path;
+	while (this->path != nullptr)
+	{
+		next = next->next;
+		delete this->path;
+		this->path = next;
 	}
 }

@@ -292,7 +292,7 @@ public:
 	void move();
 	const short find_near_player(Player*&);
 	void reset_graph();
-
+	void reset_path();
 };
 
 //struct GameDetails

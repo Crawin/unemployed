@@ -128,7 +128,7 @@ PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unorder
 		openList.pop();
 
 		if (currentNode == goalNode) {
-			return currentNode->printPath();
+			return currentNode->printPath(goal);
 		}
 
 		// 현재 노드를 닫힌 목록에 추가
@@ -163,6 +163,25 @@ PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unorder
 	std::cout << "목표 노드에 도달할 수 없습니다." << std::endl;
 	return nullptr;
 }
+
+void compare_length_next_path(PATH*& path, const DirectX::XMFLOAT3 NPC, const DirectX::XMFLOAT3 goal)
+{
+	float goal_npc_length = (NPC.x - goal.x) * (NPC.x - goal.x) + (NPC.z - goal.z) * (NPC.z - goal.z);
+	while (goal_npc_length < (path->pos.x - goal.x) * (path->pos.x - goal.x) + (path->pos.z - goal.z) * (path->pos.z - goal.z))	// 목적지 - npc 까지의 거리보다, 목적지 - 시작노드 까지의 거리다 더 길다 == npc가 시작노드로 되돌아 가야한다.
+	{
+		PATH* next = path->next;
+		delete path;
+		path = next;
+		if (path == nullptr)
+			break;
+	}
+}
+
+//void compare_length_next_path(const DirectX::XMFLOAT3& NPC, const DirectX::XMFLOAT3& goal)
+//{
+
+//}
+
 
 void MakeGraph()
 {

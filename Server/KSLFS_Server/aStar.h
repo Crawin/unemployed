@@ -46,6 +46,24 @@ public:
 		return path;
 	}
 
+	PATH* printPath(const DirectX::XMFLOAT3& goal)
+	{
+		PATH* path = new PATH;
+		path->pos = goal;
+		path->next = nullptr;
+		NODE* node = this;
+		while (node) {
+			PATH* newpath = new PATH;
+			newpath->pos = node->pos;
+			newpath->next = path;
+			path = newpath;
+			std::cout << "<= " << node->id;
+			node = node->parent;
+		}
+		std::cout << std::endl;
+		return path;
+	}
+
 	void init()
 	{
 		g = 0;
@@ -62,6 +80,8 @@ int find_near_NODE(DirectX::XMFLOAT3& pos, std::unordered_map<int, NODE*>& astar
 
 PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal);
 PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unordered_map<int, NODE*>& graph);
+
+void compare_length_next_path(PATH*& path, const DirectX::XMFLOAT3 NPC, const DirectX::XMFLOAT3 goal);
 
 void MakeGraph();
 void MakeGraph(std::unordered_map<int, NODE*>& graph);
