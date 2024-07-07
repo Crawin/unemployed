@@ -58,14 +58,17 @@ void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> co
 XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 {
 	int endFrame = m_Animation->GetEndFrame();
-	float playTime = std::min(m_CurPlayTime, m_MaxTime);
+	int animFrameRate = m_Animation->GetFrame();
+	int animStride = endFrame + 1;
 
-	int currentFrame = floor(playTime * m_Animation->GetFrame());
-	float interpolWeight = ceil(playTime * m_Animation->GetFrame()) - playTime * m_Animation->GetFrame();
-	int amimFrame = endFrame + 1;
-	int idx = boneIdx * amimFrame + currentFrame;
+	int frameFloor = (int)floor(m_CurPlayTime * animFrameRate) % animStride;
+	int frameCeil = (frameFloor + 1) % animStride;
 
-	//// todo 고쳐야한다......
+	float weightInterpol = ceil(m_CurPlayTime * animFrameRate) - (m_CurPlayTime * animFrameRate);
+
+	int idx1 = boneIdx * animStride + frameFloor;
+	int idx2 = boneIdx * animStride + frameCeil;
+
 	XMFLOAT4X4 left =
 	{
 		-1,0,0,0,
@@ -75,43 +78,32 @@ XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 	};
 
 	XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+	XMMATRIX anim1 = XMLoadFloat4x4(&m_Animation->GetBone(idx1));
+	XMMATRIX anim2 = XMLoadFloat4x4(&m_Animation->GetBone(idx2));
 
-	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&m_Animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&m_Animation->GetBone((idx + 1) % endFrame));
+	XMMATRIX result = anim1 * weightInterpol + anim2 * (1.0f - weightInterpol);
 
-	res = res * convertLeft;
+	result = result * convertLeft;
 	//printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
 		//lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWeight));
-	return XMMatrixTranspose(res);
+	return XMMatrixTranspose(result);
 }
 
 XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int point) const
 {
-	auto animation = m_AnimationSpace[point].second;
+	auto& animation = m_AnimationSpace[point].second;
 	int endFrame = animation->GetEndFrame();
+	int animFrameRate = animation->GetFrame();
+	int animStride = endFrame + 1;
 
-	int frameFloor = (int)floor(m_CurPlayTime * animation->GetFrame()) % endFrame;
-	int frameCeil = (frameFloor + 1) % endFrame;
+	int frameFloor = (int)floor(m_CurPlayTime * animFrameRate) % animStride;
+	int frameCeil = (frameFloor + 1) % animStride;
 
-	float interpolWeight = ceil(m_CurPlayTime * animation->GetFrame()) - m_CurPlayTime * animation->GetFrame();
+	float weightInterpol = ceil(m_CurPlayTime * animFrameRate) - (m_CurPlayTime * animFrameRate);
 
-	int idx = boneIdx * endFrame + frameFloor;
-	int idxNext = boneIdx * endFrame + frameCeil;
+	int idx1 = boneIdx * animStride + frameFloor;
+	int idx2 = boneIdx * animStride + frameCeil;
 
-	XMMATRIX res = interpolWeight * XMLoadFloat4x4(&animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&animation->GetBone(idxNext));
-
-
-	//return mul(Bone[boneIdx], lerp(animation[idxNext], animation[idx], interpolWeight));
-
-
-	//int endFrame = animation->GetEndFrame();
-	//float playTime = std::min(m_CurPlayTime, animation->GetEndTime()/* - 1.0f / 24.0f*/);
-
-	//int currentFrame = floor(playTime * animation->GetFrame());
-	//float interpolWeight = ceil(playTime * animation->GetFrame()) - playTime * animation->GetFrame();
-	//int amimFrame = endFrame + 1;
-	//int idx = boneIdx * amimFrame + currentFrame;
-
-	////// todo 고쳐야한다......
 	XMFLOAT4X4 left =
 	{
 		-1,0,0,0,
@@ -121,16 +113,15 @@ XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int p
 	};
 
 	XMMATRIX convertLeft = XMLoadFloat4x4(&left);
+	XMMATRIX anim1 = XMLoadFloat4x4(&animation->GetBone(idx1));
+	XMMATRIX anim2 = XMLoadFloat4x4(&animation->GetBone(idx2));
 
-	////XMMATRIX res = interpolWeight * XMLoadFloat4x4(&animation->GetBone(idx)) + (1 - interpolWeight) * XMLoadFloat4x4(&animation->GetBone((idx + 1) % endFrame));
+	XMMATRIX result = anim1 * weightInterpol + anim2 * (1.0f - weightInterpol);
 
-	res = res * convertLeft;
-	////printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
-	//	//lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWeight));
-	//return XMMatrixTranspose(res);
-
-	return XMMatrixTranspose(res);
-
+	result = result * convertLeft;
+	//printf("frame: %3d, idx1: %d. idx2: %d \t weight: %.1f\n", currentFrame, idx, idx + 1, interpolWeight);
+		//lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], interpolWeight));
+	return XMMatrixTranspose(result);
 }
 
 AnimationTrackBlendingSpace2D::AnimationTrackBlendingSpace2D()
@@ -284,7 +275,9 @@ void AnimationTrackBlendingSpace2D::SetAnimationData(ComPtr<ID3D12GraphicsComman
 
 XMMATRIX AnimationTrackBlendingSpace2D::GetAnimatedBoneMat(int boneIdx) const
 {
-	XMMATRIX res = XMMatrixIdentity();
+	XMMATRIX res{
+		0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	};
 
 	res += EvaluateFromAnimation(boneIdx, m_ClosePoints[0]) * m_BlendingWeights.x;
 	res += EvaluateFromAnimation(boneIdx, m_ClosePoints[1]) * m_BlendingWeights.y;
