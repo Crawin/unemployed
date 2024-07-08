@@ -80,6 +80,8 @@ namespace component {
 
 		bool m_Locked = true;
 		int m_Answer = 0;
+		int m_Length = 0;
+
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -95,6 +97,24 @@ namespace component {
 		void SetLock(bool lock) { m_Locked = lock; }
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
+
+	};
+
+	class DoorKey : public ComponentBase<DoorKey> {
+		Entity* m_DoorEntity = nullptr;
+		int m_Length = 0;
+		int m_Current = 0;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		Entity* GetDoor() { return m_DoorEntity; }
+
+		void SetDoor(Entity* door) { m_DoorEntity = door; }
+		void SetAnswer(int len) { m_Length = len; }
+		int GetAnswer() const { return m_Length; }
 
 	};
 

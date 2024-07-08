@@ -1,0 +1,9 @@
+{
+	"name": "Knob",
+	"BaseColor": "Texture/Door/Knob/Knob_Albedo",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": "Texture/Door/Knob/Knob_Normal",
+	"Shader": "TestMeshDiffered"
+}

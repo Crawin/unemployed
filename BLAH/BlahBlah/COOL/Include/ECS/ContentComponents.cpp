@@ -134,9 +134,13 @@ namespace component {
 
 	void DoorControl::Create(Json::Value& v, ResourceManager* rm)
 	{
-		Json::Value door = v["Door"];
+		//Json::Value door = v["Door"];
 
-		m_Answer = door["Answer"].asInt();
+		//m_Answer = door["Answer"].asInt();
+
+		Json::Value length = v["DoorLength"];
+
+		m_Length = length["Length"].asInt();
 	}
 
 	void DoorControl::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -174,15 +178,55 @@ namespace component {
 
 					kpd->SetCurrent(0);
 
-					can->ShowUI();
+					if(kpd->GetCurrent() == 0) can->ShowUI();
 
 					};
 
-				manager->Execute(openUI);
+				manager->Execute(openUI);	
+
+				std::function<void(component::DoorKey*, component::Inventory*)> openKey = [door, doorCtrl](component::DoorKey* key, component::Inventory* inven) {
+					DebugPrint("KEY SHOW");
+
+					key->SetAnswer(doorCtrl->GetAnswer());
+					key->SetDoor(door);
+
+
+					};
+
+				manager->Execute(openKey);
 			}
 			};
 
 		interaction->SetInteractionFunction(withDoor);
+	}
+
+	void DoorKey::Create(Json::Value& v, ResourceManager* rm)
+	{
+
+	}
+
+	void DoorKey::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		DoorKey* key = manager->GetComponent<DoorKey>(selfEntity);
+		Inventory* inven = manager->GetComponent<Inventory>(selfEntity);
+
+		ButtonEventFunction check = [key, inven, manager](Entity* ent) {
+			// hide ui;
+			DebugPrint("check");
+
+			DebugPrint(std::format("pw: {}", key->GetAnswer()));
+			if (key->GetAnswer()){ //== inven->GetCurrent()) {
+				// open door
+				Entity* door = key->GetDoor();
+				DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+				doorCtrl->SetLock(false);
+			}
+
+			};
+	}
+
+	void DoorKey::ShowYourself() const
+	{
 	}
 
 	void DoorControl::ShowYourself() const

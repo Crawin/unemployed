@@ -1,0 +1,61 @@
+{
+	"Children" : 
+	[
+		{
+			"Collider" : 
+			{
+				"AutoMesh" : true,
+				"Static" : true
+			},
+			"Name" : "safe_door",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "safe_door.safe_door"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-3.8743019104003906e-07,
+					0.58139026165008545,
+					0.57330405712127686
+				],
+				"Rotate" : 
+				[
+					90.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "safe_door_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

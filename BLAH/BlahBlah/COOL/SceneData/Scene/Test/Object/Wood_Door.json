@@ -1,0 +1,95 @@
+{
+	"Children" : 
+	[
+		{
+			"Collider" : 
+			{
+				"AutoMesh" : true,
+				"Static" : true
+			},
+			"Name" : "Door",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "Wood_Door.Door"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					50.000011444091797,
+					7.5101852416992188e-06,
+					0.48449993133544922
+				],
+				"Rotate" : 
+				[
+					90.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		},
+		{
+			"Collider" : 
+			{
+				"AutoMesh" : true,
+				"Static" : true
+			},
+			"Name" : "Frame",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "Wood_Door.Frame"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					107.82762145996094,
+					-7.62939453125e-06
+				],
+				"Rotate" : 
+				[
+					90.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Wood_Door_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
