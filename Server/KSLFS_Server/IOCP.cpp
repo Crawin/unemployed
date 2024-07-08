@@ -195,7 +195,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			{
 				using namespace std::chrono;
 				g_mutex_npc_timer.lock();
-				g_npc_timer.emplace(rw_byte, my_id, milliseconds(17));
+				g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
 				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
 			}
@@ -654,7 +654,7 @@ bool Game::erasePlayer(const unsigned int& id)
 	return false;
 }
 
-void Game::setFloor(const unsigned int& id, const unsigned short& floor)
+void Game::setFloor(const unsigned int& id, const float &floor)
 {
 	for (auto& p : player)
 	{
@@ -745,7 +745,7 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 
 NPC::NPC()
 {
-	DirectX::XMFLOAT3 basic_obb_position = { 0,85,0 };
+	DirectX::XMFLOAT3 basic_obb_position = { 0,0,0 };	//0, 85, 0
 	DirectX::XMFLOAT3 basic_obb_extents = basic_extents;
 	DirectX::XMFLOAT4 basic_obb_orients = { 0,0,0,1 };
 	obb = DirectX::BoundingOrientedBox(basic_obb_position, basic_obb_extents, basic_obb_orients);
@@ -792,6 +792,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 			if (floor.floor_collision(now_obb, now_floor, this->position.y))
 				break;
 		}
+		std::cout << "npc: " << now_floor << std::endl;
 		if (now_floor <= 5.5)
 		{
 			if (m_floor != now_floor)
@@ -981,16 +982,36 @@ void NPC::student_state_machine(Player* p)
 	}
 }
 
-bool NPC::can_see(Player& p)
+bool NPC::can_see(Player& p, bool& floor_gap)
 {
+	float npc_floor = m_floor;
 	if (p.m_floor != m_floor)
-		return false;
+	{
+		if (p.m_floor - m_floor == 0.5)			// 플레이어가 .5층에 있고 npc가 온전한 층에 있을때
+		{
+			floor_gap = true;
+		}
+		else if (m_floor - p.m_floor == 0.5)	// 플레이어가 온전한 층에 있고, npc가 .5층에 있을때
+		{
+			npc_floor = p.m_floor;
+			floor_gap = true;
+		}
+		else {
+			return false;
+		}
+	}
+	else if ((m_floor - (int)m_floor) == 0.5)			// 계단 사이 .5층에 존재
+	{
+		floor_gap = false;
+		return true;
+	}
+
 
 	DirectX::XMFLOAT3 playerPos = p.position;
-	playerPos.y += 127;
+	playerPos.y += 50; //127
 	DirectX::XMFLOAT3 npcPos = position;
-	npcPos.y += 127;
-	for (auto& mesh : m_vMeshes[0]->m_Childs[0].m_Childs[m_floor + 2].m_Childs)
+	npcPos.y += 50;
+	for (auto& mesh : m_vMeshes[0]->m_Childs[0].m_Childs[npc_floor + 2].m_Childs)
 	{
 		if (mesh.sight_block(playerPos, npcPos))
 		{
@@ -1048,36 +1069,47 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				n = 1 - n;
 				continue;
 			}
-
-			if (can_see(p[n]))
-			{
-				std::cout << n << "P 발견" << std::endl;
-				//this->destination = p[n].position;
+			bool floor_gap = false;
+			if (can_see(p[n], floor_gap))
+			{	// 보이면 그냥 돌진
+				//std::cout << n << "P 발견" << std::endl;
+				if (floor_gap)			// 계단을 거쳐 가야함으로 astar 사용
+				{
+					reset_path();
+					reset_graph();
+					this->path = aStarSearch(position, p[n].position, astar_graph);
+					compare_length_next_path(path, this->position, p[n].position);
+					if (this->path == nullptr)
+						state = 0;
+					else
+					{
+						this->destination = this->path->pos;
+					}
+				}
+				else
+				{
+					reset_path();
+					reset_graph();
+					this->path = aStarSearch(position, p[n].position, astar_graph);
+					compare_length_next_path(path, this->position, p[n].position);
+					if (this->path == nullptr)
+						state = 0;
+					else
+					{
+						this->destination = this->path->pos;
+					}
+					//reset_path();
+					//this->destination = p[n].position;
+				}
+				return true;
+			}
+			else if (can_hear(p[n]))
+			{	// 다른 층에 있는게 들릴 수 있으니 노드 따라서 그 위치로 이동
 				reset_graph();
 				reset_path();
 				this->path = aStarSearch(position, p[n].position, astar_graph);
 				compare_length_next_path(path, this->position, p[n].position);
-				if (path == nullptr)				// 가까운 노드보다 플레이어가 더 가깝다
-				{
-					this->destination = p[n].position;
-				}
-				else
-				{
-					this->destination = path->pos;
-				}
-				this->destination.y = this->position.y;
-
-				return true;
-				if (nullptr != path)
-					return true;
-				else
-					state = 0;
-			}
-			else if (can_hear(p[n]))
-			{
-				this->destination = p[n].position;
-				this->destination.y = position.y;
-				path = aStarSearch(position, destination);
+				this->destination = this->path->pos;
 				if (nullptr != path)
 					return true;
 				else
@@ -1117,27 +1149,24 @@ void NPC::move()
 	using namespace DirectX;
 	XMVECTOR ActorPos = XMLoadFloat3(&position);
 	XMVECTOR DestPos = XMLoadFloat3(&destination);
-	XMVECTOR direction = XMVector3Normalize(XMVectorSubtract(DestPos, ActorPos));
+	XMVECTOR direction = XMVectorSubtract(DestPos, ActorPos);
+	direction = XMVectorSetY(direction, 0);
+	direction = XMVector3Normalize(direction);
 	XMVECTOR movement = XMVectorScale(direction, movement_speed);
 	XMStoreFloat3(&position, XMVectorAdd(ActorPos, movement));
 	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
 	
-	XMFLOAT3 temp;
-	XMStoreFloat3(&temp, direction);
-	temp.y = 0;
-	XMVECTOR direction_xz = XMVector3Normalize(XMLoadFloat3(&temp));
 	XMFLOAT3 basic_head(0, 0, 1);
 	XMVECTOR basic = XMLoadFloat3(&basic_head);
 	XMMATRIX rotationMatrix = XMMatrixRotationY(XMConvertToRadians(rotation.y));
 	XMVECTOR dir = XMVector3Transform(basic, rotationMatrix);
 
-	//float costheta = XMVectorGetX(XMVector3Dot(basic, direction_xz));
-	float costheta = XMVectorGetX(XMVector3Dot(dir, direction_xz));
+	float costheta = XMVectorGetX(XMVector3Dot(dir, direction));
 	float radian = acos(costheta);
 	float degree = XMConvertToDegrees(radian);
 
-	//XMVECTOR cross = XMVector3Cross(basic, direction_xz);
-	XMVECTOR cross = XMVector3Cross(dir, direction_xz);
+	XMVECTOR cross = XMVector3Cross(dir, direction);
+
 
 	float wise = XMVectorGetY(cross);
 	if (wise < 0)

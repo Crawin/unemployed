@@ -563,10 +563,8 @@ const bool Mesh::floor_collision(const DirectX::BoundingOrientedBox& player, flo
 	{
 		if (floor.m_ModelBoundingBox.Intersects(player))
 		{
-			if (ptrFloor != 6)
+			if (ptrFloor != 6)		//6 Àº °è´Ü
 				posY = floor.m_AABBCenter.y + floor.m_AABBExtents.y;
-			else
-				posY = floor.m_AABBCenter.y;
 			return true;
 		}
 	}

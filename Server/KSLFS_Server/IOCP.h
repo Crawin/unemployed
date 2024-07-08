@@ -213,14 +213,14 @@ class Lobby
 {
 };
 
-constexpr DirectX::XMFLOAT3 basic_extents = { 26,86,26 };		// 클라상에서 이미 충돌을 하고 서버에 전송하기에 클라의 충돌 범위인 25,85,25 보다 크게 해야 서버에서 충돌이 발생
+constexpr DirectX::XMFLOAT3 basic_extents = { 26,20,26 };		// 클라상에서 이미 충돌을 하고 서버에 전송하기에 클라의 충돌 범위인 25,85,25 보다 크게 해야 서버에서 충돌이 발생
 
 class Player
 {
 public:
 	unsigned int id = NULL;
 	SOCKET sock = NULL;
-	unsigned short m_floor = 0;
+	float m_floor = 0;
 	std::atomic_bool sound;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
@@ -241,7 +241,7 @@ public:
 	{
 		DirectX::XMFLOAT3 temp_extents = basic_extents;
 		DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
-		obb = DirectX::BoundingOrientedBox(DirectX::XMFLOAT3(0, 85, 0), temp_extents, temp_quarta);
+		obb = DirectX::BoundingOrientedBox(DirectX::XMFLOAT3(0, 0, 0), temp_extents, temp_quarta);		// 0, 85, 0
 	}
 };
 
@@ -284,7 +284,7 @@ public:
 	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
 	void student_state_machine(Player*);
-	bool can_see(Player&);
+	bool can_see(Player&,bool& floor_gap);
 	bool can_hear(Player&);
 	float distance(Player&);
 	bool compare_position(DirectX::XMFLOAT3&);
@@ -336,7 +336,7 @@ public:
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
 	bool erasePlayer(const unsigned int& id);
-	void setFloor(const unsigned int& id, const unsigned short& floor);
+	void setFloor(const unsigned int& id, const float& floor);
 	void update(const bool& npc_state);
 	bool hasEmpty();
 	bool CAS_state(bool& before, bool& after);
