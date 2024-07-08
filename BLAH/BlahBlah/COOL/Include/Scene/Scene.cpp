@@ -48,6 +48,7 @@ bool Scene::AddSystem()
 	// 999. 부모에 따라 transform을 바꾸는 system(LocalToWorldTransform)
 	
 	// sync position by server
+	m_ECSManager->InsertSystem(new ECSsystem::AllocateServer);
 	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
 	
 	// move collide check, handle simulate, move and send

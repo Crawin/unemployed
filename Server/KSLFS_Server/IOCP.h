@@ -1,11 +1,13 @@
 #pragma once
 constexpr short PORT = 9000;
 constexpr int BUFSIZE = 512;
+constexpr int STUDENT_SIZE = 1;
 
 class packet_base;
 class sc_packet_position;
 class sc_packet_login;
 class Mesh;
+class NODE;
 
 extern std::vector<Mesh*> m_vMeshes;
 
@@ -211,14 +213,14 @@ class Lobby
 {
 };
 
-constexpr DirectX::XMFLOAT3 basic_extents = { 26,86,26 };		// 클라상에서 이미 충돌을 하고 서버에 전송하기에 클라의 충돌 범위인 25,85,25 보다 크게 해야 서버에서 충돌이 발생
+constexpr DirectX::XMFLOAT3 basic_extents = { 26,20,26 };		// 클라상에서 이미 충돌을 하고 서버에 전송하기에 클라의 충돌 범위인 25,85,25 보다 크게 해야 서버에서 충돌이 발생
 
 class Player
 {
 public:
 	unsigned int id = NULL;
 	SOCKET sock = NULL;
-	unsigned short m_floor = 0;
+	float m_floor = 0;
 	std::atomic_bool sound;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
@@ -239,18 +241,33 @@ public:
 	{
 		DirectX::XMFLOAT3 temp_extents = basic_extents;
 		DirectX::XMFLOAT4 temp_quarta = { 0,0,0,1 };
-		obb = DirectX::BoundingOrientedBox(DirectX::XMFLOAT3(0, 85, 0), temp_extents, temp_quarta);
+		obb = DirectX::BoundingOrientedBox(DirectX::XMFLOAT3(0, 0, 0), temp_extents, temp_quarta);		// 0, 85, 0
 	}
 };
 
 class PATH;
 
+class npc_info
+{
+public:
+	unsigned int gameNum;
+	unsigned int id;
+	std::chrono::steady_clock::time_point start_time;
+	npc_info(const unsigned int& npc_gamenum, const unsigned int& npc_id, const std::chrono::milliseconds& wake_time) :gameNum(npc_gamenum), id(npc_id) { start_time = std::chrono::steady_clock::now() + wake_time; }
+
+	bool operator<(const npc_info& n)const
+	{
+		return start_time > n.start_time;
+	}
+};
+
 class NPC
 {
 public:
-	short state = 0;				// 0: idle, 1: 이동중
+	short state = 0;				// 0: idle, 1: 이동중 , 2: 충돌 애니메이션 진행중
+	std::atomic_bool updating = false;
 	unsigned int id = NULL;
-	short m_floor = 1;
+	float m_floor = 1;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
 	DirectX::XMFLOAT3 rotation = { 0,0,0 };
 	DirectX::XMFLOAT3 speed = { 0,0,0 };
@@ -260,24 +277,22 @@ public:
 	PATH* path = nullptr;
 	DirectX::BoundingOrientedBox obb;
 	float movement_speed;
+	NODE* goalNode = nullptr;
+
+	std::unordered_map<int, NODE*> astar_graph;
 public:
-	NPC() {
-		DirectX::XMFLOAT3 basic_obb_position = { 0,85,0 };
-		DirectX::XMFLOAT3 basic_obb_extents = basic_extents;
-		DirectX::XMFLOAT4 basic_obb_orients = { 0,0,0,1 };
-		obb = DirectX::BoundingOrientedBox(basic_obb_position, basic_obb_extents, basic_obb_orients);
-		movement_speed = 5;
-	}
+	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
 	void student_state_machine(Player*);
-	bool can_see(Player&);
+	bool can_see(Player&,bool& floor_gap);
 	bool can_hear(Player&);
 	float distance(Player&);
 	bool compare_position(DirectX::XMFLOAT3&);
 	bool set_destination(Player*&, const bool& npc_state);
 	void move();
 	const short find_near_player(Player*&);
-
+	void reset_graph();
+	void reset_path();
 };
 
 //struct GameDetails
@@ -292,7 +307,7 @@ class Game
 	unsigned int GameNum;
 	Player player[2];
 	NPC guard;
-	NPC students[1];
+	NPC students[STUDENT_SIZE];
 	
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
@@ -303,10 +318,11 @@ public:
 		
 		// npc 초기위치를 어떻게 설정할깝쇼
 		// 노가다로 설정해둘까
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < STUDENT_SIZE; ++i)
 		{
-			students[i].id = i+1;
+			students[i].id = i+2;
 			students[i].position = DirectX::XMFLOAT3(500.0, 0.0, 1000.0);
+			students[i].movement_speed = 1;
 		}
 	}
 	void init(const unsigned int& i, const SOCKET& s);
@@ -320,11 +336,13 @@ public:
 	const DirectX::XMFLOAT3 getPlayerRot(const unsigned int&);
 	const DirectX::XMFLOAT3 getPlayerSp(const unsigned int&);
 	bool erasePlayer(const unsigned int& id);
-	void setFloor(const unsigned int& id, const unsigned short& floor);
+	void setFloor(const unsigned int& id, const float& floor);
 	void update(const bool& npc_state);
 	bool hasEmpty();
 	bool CAS_state(bool& before, bool& after);
 	bool getPlayerOBB(DirectX::BoundingOrientedBox& out, const unsigned int& id);
+	void update(const bool& npc_state, const unsigned int& npc_id);
+	
 };
 
 struct ServerDetails
@@ -350,7 +368,8 @@ public:
 	void worker(SOCKET server_s);
 	void process_packet(const unsigned int&, EXP_OVER*&);
 	unsigned short floor_collision(cs_packet_position*& packet);
-	unsigned short floor_collision(const unsigned int& id, Game& gameRoom);
+	float floor_collision(const unsigned int& id, Game& gameRoom);
 	void command_thread();
 	void ai_thread();
+	void ai_timer();
 };
