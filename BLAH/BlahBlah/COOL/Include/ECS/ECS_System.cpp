@@ -725,7 +725,6 @@ namespace ECSsystem {
 					if (angle < 40.0f && player->IsAir() == true) {
 						player->SetJumping(false);
 						player->SetOnGround(true);
-						DebugPrint(std::format("angle: {}", angle));
 
 						AnimationController* ctrl = manager->GetComponent<AnimationController>(self->GetEntity());
 						ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_LAND);
