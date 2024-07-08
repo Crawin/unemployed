@@ -91,6 +91,9 @@ ECSManager::~ECSManager()
 	for (auto& sys : m_Systems)
 		delete sys;
 
+	for (auto& sys : m_PreRenderSystem)
+		delete sys;
+
 	// component엔 동적할당 하지 않았음
 }
 
@@ -149,7 +152,12 @@ void ECSManager::DetachChild(Entity* from, Entity* targetEntity)
 	// erase from its entity ch
 	from->EraseChild(targetEntity);
 
-	// 
+	// when detach, set entity to world pos
+	auto selfTr = GetComponent<component::Transform>(targetEntity);
+	//selfTr->SetRotation(selfTr->GetWorldRotation());
+	selfTr->SetPosition(selfTr->GetWorldPosition());
+	selfTr->SetParentTransform(Matrix4x4::Identity());
+	
 	auto selfEntComp = GetComponent<component::SelfEntity>(targetEntity);
 	selfEntComp->SetParent(nullptr);
 }
@@ -159,11 +167,22 @@ void ECSManager::InitSystem()
 	for (auto& system : m_Systems) {
 		system->OnInit(this);
 	}
+
+	for (auto& system : m_PreRenderSystem) {
+		system->OnInit(this);
+	}
 }
 
 void ECSManager::UpdateSystem(float deltaTime)
 {
 	for (auto& system : m_Systems) {
+		system->Update(this, deltaTime);
+	}
+}
+
+void ECSManager::UpdatePreRenderSystem(float deltaTime)
+{
+	for (auto& system : m_PreRenderSystem) {
 		system->Update(this, deltaTime);
 	}
 }

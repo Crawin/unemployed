@@ -13,13 +13,25 @@
 
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 {
-	if (str == "Wait")				return ANIMATION_STATE::WAITEND;
-	if (str == "Idle")				return ANIMATION_STATE::IDLE;
-	if (str == "Walk")				return ANIMATION_STATE::WALK;
-	if (str == "Run")				return ANIMATION_STATE::RUN;
-	if (str == "FallingDown")		return ANIMATION_STATE::FALLINGDOWN;
-	if (str == "GetUp")				return ANIMATION_STATE::GETUP;
-	if (str == "Dance")				return ANIMATION_STATE::DANCE;
+	if (str == "Wait")								return ANIMATION_STATE::WAITEND;
+	if (str == "Idle")								return ANIMATION_STATE::IDLE;
+	if (str == "Walk")								return ANIMATION_STATE::WALK;
+	if (str == "Run")								return ANIMATION_STATE::RUN;
+	if (str == "Blended_Moving_State")				return ANIMATION_STATE::BLENDED_MOVING_STATE;
+	if (str == "Forward_Walk")						return ANIMATION_STATE::FORWARD_WALK;
+	if (str == "Forward_Run")						return ANIMATION_STATE::FORWARD_RUN;
+	if (str == "Backward_Walk")						return ANIMATION_STATE::BACKWARD_WALK;
+	if (str == "Backward_Run")						return ANIMATION_STATE::BACKWARD_RUN;
+	if (str == "Left_Walk_Strafe")					return ANIMATION_STATE::LEFT_WALK_STRAFE;
+	if (str == "Left_Run_Strafe")					return ANIMATION_STATE::LEFT_RUN_STRAFE;
+	if (str == "Right_Walk_Strafe")					return ANIMATION_STATE::RIGHT_WALK_STRAFE;
+	if (str == "Right_Run_Strafe")					return ANIMATION_STATE::RIGHT_RUN_STRAFE;
+	if (str == "Jump_Start")						return ANIMATION_STATE::JUMP_START;
+	if (str == "Jump_Ing")							return ANIMATION_STATE::JUMP_ING;
+	if (str == "Jump_Land")							return ANIMATION_STATE::JUMP_LAND;
+	if (str == "Getting_Hit")						return ANIMATION_STATE::GETTING_HIT;
+	if (str == "GetUp")								return ANIMATION_STATE::GETUP;
+	if (str == "Dance")								return ANIMATION_STATE::DANCE;
 
 	return ANIMATION_STATE::NULLANIM;
 }
@@ -27,13 +39,25 @@ ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim)
 {
 	switch (anim) {
-	case ANIMATION_STATE::WAITEND:				return std::string("Wait");
-	case ANIMATION_STATE::IDLE:					return std::string("Idle");
-	case ANIMATION_STATE::WALK:					return std::string("Walk");
-	case ANIMATION_STATE::RUN:					return std::string("RUN");
-	case ANIMATION_STATE::FALLINGDOWN:			return std::string("FallingDown");
-	case ANIMATION_STATE::GETUP:				return std::string("GetUp");
-	case ANIMATION_STATE::DANCE:				return std::string("Dance");
+	case ANIMATION_STATE::WAITEND:					return std::string("Wait");
+	case ANIMATION_STATE::IDLE:						return std::string("Idle");
+	case ANIMATION_STATE::WALK:						return std::string("Walk");
+	case ANIMATION_STATE::RUN:						return std::string("Run");
+	case ANIMATION_STATE::BLENDED_MOVING_STATE:		return std::string("Blended_Moving_State");
+	case ANIMATION_STATE::FORWARD_WALK:				return std::string("Forward_Walk");
+	case ANIMATION_STATE::FORWARD_RUN:				return std::string("Forward_Run");
+	case ANIMATION_STATE::BACKWARD_WALK:			return std::string("Backward_Walk");
+	case ANIMATION_STATE::BACKWARD_RUN:				return std::string("Backward_Run");
+	case ANIMATION_STATE::LEFT_WALK_STRAFE:			return std::string("Left_Walk_Strafe");
+	case ANIMATION_STATE::LEFT_RUN_STRAFE:			return std::string("Left_Run_Strafe");
+	case ANIMATION_STATE::RIGHT_WALK_STRAFE:		return std::string("Right_Walk_Strafe");
+	case ANIMATION_STATE::RIGHT_RUN_STRAFE:			return std::string("Right_Run_Strafe");
+	case ANIMATION_STATE::JUMP_START:				return std::string("Jump_Start");
+	case ANIMATION_STATE::JUMP_ING:					return std::string("Jump_Ing");
+	case ANIMATION_STATE::JUMP_LAND:				return std::string("Jump_Land");
+	case ANIMATION_STATE::GETTING_HIT:				return std::string("Getting_Hit");
+	case ANIMATION_STATE::GETUP:					return std::string("GetUp");
+	case ANIMATION_STATE::DANCE:					return std::string("Dance");
 	}
 }
 
@@ -61,4 +85,36 @@ int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput)
 		DebugPrint("ERRPR!! no such input defined");
 		return -1;
 	}
+}
+
+PRE_LOADED_MATERIALS ConvertStringToMaterial(const std::string& str)
+{
+	if (str == "_Lighting")				return PRE_LOADED_MATERIALS::LIGHTING;
+	if (str == "_ShadowMapping")		return PRE_LOADED_MATERIALS::SHADOWMAPPING;
+	if (str == "_Blit")					return PRE_LOADED_MATERIALS::BLIT;
+
+#ifdef _DEBUG
+	if (str == "_ForDebug")				return PRE_LOADED_MATERIALS::FOR_DEBUG;
+#endif
+
+	// 길에 넘어지는걸 영어로 하면?
+	// 다운로드
+	ERROR_QUIT(std::format("ERROR!!!! no material match names, name: {}, ", str));
+}
+
+std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat)
+{
+	switch (preLaodMat) {
+	case PRE_LOADED_MATERIALS::LIGHTING:		return std::string("_Lighting");
+	case PRE_LOADED_MATERIALS::SHADOWMAPPING:	return std::string("_ShadowMapping");
+	case PRE_LOADED_MATERIALS::BLIT:			return std::string("_Blit");
+
+#ifdef _DEBUG
+	case PRE_LOADED_MATERIALS::FOR_DEBUG:		return std::string("_ForDebug");
+#endif
+	}
+
+	// 이즈리얼이 사는 곳은?
+	// 비전2동
+	ERROR_QUIT(std::format("ERROR!!!! no match materials, idx: {}", static_cast<int>(preLaodMat)));
 }

@@ -37,12 +37,19 @@ using ActionFunctionMap = std::unordered_map<Input_State_In_LongLong, ActionFunc
 // 컨텐츠 관련 컴포넌트들, 게임 컨텐츠에 필요한 ui도 포함
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+struct PlayerAnimation {
+	XMFLOAT3 m_Velocity;
+	XMFLOAT3 m_Heading;
+};
+
 namespace component {
 	/////////////////////////////////////////////////////////
 	// Player Animation Controll component
 	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
 	//
 	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
+		PlayerAnimation m_AnimData;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -125,27 +132,55 @@ namespace component {
 	class Holdable : public ComponentBase<Holdable> {
 		ActionFunctionMap m_ActionMap;
 
+		// entity를 들고 있는 주체
+		Entity* m_HoldingMaster = nullptr;
+
+		// 원래 있던 곳, (사용하지 않는 Holdable들은 안보이는곳에 보관
+		Entity* m_OriginalParent = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
+		void SetAction(const Input_State_In_LongLong& keyCond, const ActionFunction& act) { m_ActionMap[keyCond] = act; }
 		const ActionFunctionMap& GetActionMap() const { return m_ActionMap; }
+
+		void SetMaster(Entity* master) { m_HoldingMaster = master; }
+		Entity* GetMaster() const { return m_HoldingMaster; }
+		Entity* GetOriginParent() const { return m_OriginalParent; }
+
+		virtual void ShowYourself() const {};
+	};
+
+	/////////////////////////////////////////////////////////
+	// Attackable Component
+	// 공격 아이템 
+	//
+	class Attackable : public ComponentBase<Attackable> {
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 	};
 
 	/////////////////////////////////////////////////////////
-	// Attackable Component
+	// Throwable Component
+	// CCTV, drinks
 	//
-	//
-	class Attackable : public ComponentBase<Attackable> {
-		ActionFunctionMap m_ActionMap;
+	class Throwable : public ComponentBase<Throwable> {
+		XMFLOAT3 m_DirectionOrigin = { 0.0f, 0.0f, 1.0f };
+		XMFLOAT3 m_DirectionResult = { 0.0f, 0.0f, 1.0f };
+		float m_ThrowBakeTime = 0.0f;
+		float m_ThrowBakeTimeMax = 3.0f;
+		float m_ThrowSpeed = 2000.0f;			// abuot 70km/h, our unit ->cm/s
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
-		virtual void ShowYourself() const;
+		virtual void ShowYourself() const {}
 	};
 
 #define MAX_INVENTORY 4
@@ -168,8 +203,28 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
+		bool ChangeHoldingItem(int idx, ECSManager* manager);
+
 		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
+		const Entity* GetHoldingSocket() const { return m_HoldingSocket; }
+
+		void EraseCurrentHolding() { m_Items[m_CurrentHolding] = nullptr; }
 		
+	};
+
+#define MAX_CCTV 4
+	/////////////////////////////////////////////////////////
+	// Screen Component
+	// CCTV와 연결되는 스크린
+	//
+	class Screen : public ComponentBase<Screen> {
+		int m_CameraRenderTargets[MAX_CCTV] = { 0, };
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

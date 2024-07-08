@@ -20,25 +20,55 @@ struct VS_OUTPUT
 	float2 uv : TEXCOORD;
 };
 
+// current animation + extra datas
 cbuffer MaterialAnim : register(b0)
 {
-	float anim1PlayTime;
-	float anim2PlayTime;
-	float animBlend;
+	// anim data
+	float4 anim1_BlendingWeights;
+	int4 anim1_Frames;
+	int4 anim1_Indices;
 
-	int anim1Frame;
-	int anim2Frame;
+	float anim1_PlayTime;
+	int anim1_AnimationMode;
 
-	int anim1Idx;
-	int anim2Idx;
-	int boneDataIdx;
+	float animationBlendWeight;
+	int boneDataIndex;
 };
+
+// before animation
+cbuffer MaterialAnimExtra : register(b2)
+{
+	float4 anim2_BlendingWeights;
+	int4 anim2_Frames;
+	int4 anim2_Indices;
+
+	float anim2_PlayTime;
+	int anim2_AnimationMode;
+};
+
+// animation mode: single anim, blend1dSpace, blend2dspace
 
 #define ANIMATION_FPS 24.0f
 
 //StructuredBuffer<matrix> Bone : register(t1, space8);
 //StructuredBuffer<matrix> Animation_cur : register(t2, space9);
 //StructuredBuffer<matrix> Animation_bef : register(t3, space10);
+
+matrix CalculateAnimation(int bondIndex, int animDataIndex, float playTime, int animationFrame)
+{
+	StructuredBuffer<matrix> Bone = BonAnimDataList[boneDataIndex];
+	StructuredBuffer<matrix> animation = BonAnimDataList[animDataIndex];
+
+	int frameFloor = floor(playTime * ANIMATION_FPS) % animationFrame;
+	int frameCeil = (frameFloor + 1) % animationFrame;
+
+	float interpolWeight = ceil(playTime * ANIMATION_FPS) - playTime * ANIMATION_FPS;
+
+	int idx = bondIndex * animationFrame + frameFloor;
+	int idxNext = bondIndex * animationFrame + frameCeil;
+
+	return mul(Bone[bondIndex], lerp(animation[idxNext], animation[idx], interpolWeight));
+}
 
 VS_OUTPUT vs(VS_INPUT input)
 {
@@ -50,38 +80,58 @@ VS_OUTPUT vs(VS_INPUT input)
 	output.tangent = float3(0.0f, 0.0f, 0.0f);
 	output.uv = input.uv;
 	
-	StructuredBuffer<matrix> Bone = BonAnimDataList[boneDataIdx];
-	StructuredBuffer<matrix> Animation_cur = BonAnimDataList[anim1Idx];
-	StructuredBuffer<matrix> Animation_bef = BonAnimDataList[anim2Idx];
+	StructuredBuffer<matrix> Bone = BonAnimDataList[boneDataIndex];
 
 	matrix boneToWorld = 0;
-	matrix animByFrame;
-
-	float anim1InterpolWegith = ceil(anim1PlayTime * ANIMATION_FPS) - anim1PlayTime * ANIMATION_FPS;
-	float anim2InterpolWegith = ceil(anim2PlayTime * ANIMATION_FPS) - anim2PlayTime * ANIMATION_FPS;
-
-	float weight;
-
-	int currentFrame_cur = floor(anim1PlayTime * ANIMATION_FPS);
-	int currentFrame_bef = floor(anim2PlayTime * ANIMATION_FPS);
 
 	// for first anim
+	[unroll]
 	for (int i = 0; i < 4; ++i)
 	{
 		// animation interpolation
-		float weight = input.boneWeights[i];
 		int boneIdx = input.boneIndexs[i];
-		int idx1 = boneIdx * anim1Frame + currentFrame_cur;
-		int idx2 = boneIdx * anim2Frame + currentFrame_bef;
-		
-		matrix anim1 = mul(Bone[boneIdx], lerp(Animation_cur[idx1 + 1], Animation_cur[idx1], anim1InterpolWegith));
+		matrix anim1 = 0;
 
-		if (animBlend > 0){
-			matrix anim2 = mul(Bone[boneIdx], lerp(Animation_bef[idx2 + 1], Animation_bef[idx2], anim2InterpolWegith));
-			boneToWorld += weight * lerp(anim1, anim2, animBlend);
+		switch(anim1_AnimationMode)
+		{
+		case 2:
+			anim1 += (float)anim1_BlendingWeights.x * CalculateAnimation(boneIdx, anim1_Indices.x, anim1_PlayTime, anim1_Frames.x);
+			anim1 += (float)anim1_BlendingWeights.y * CalculateAnimation(boneIdx, anim1_Indices.y, anim1_PlayTime, anim1_Frames.y);
+			anim1 += (float)anim1_BlendingWeights.z * CalculateAnimation(boneIdx, anim1_Indices.z, anim1_PlayTime, anim1_Frames.z);
+			anim1 += (float)anim1_BlendingWeights.w * CalculateAnimation(boneIdx, anim1_Indices.w, anim1_PlayTime, anim1_Frames.w);
+			break;
+		case 1:
+			anim1 += (float)anim1_BlendingWeights.x * CalculateAnimation(boneIdx, anim1_Indices.x, anim1_PlayTime, anim1_Frames.x);
+			anim1 += (float)anim1_BlendingWeights.y * CalculateAnimation(boneIdx, anim1_Indices.y, anim1_PlayTime, anim1_Frames.y);
+			break;
+		case 0:
+			anim1 += (float)anim1_BlendingWeights.x * CalculateAnimation(boneIdx, anim1_Indices.x, anim1_PlayTime, anim1_Frames.x);
+			break;
+		}
+
+		if (animationBlendWeight > 0) {
+			matrix anim2 = 0;
+			switch(anim2_AnimationMode)
+			{
+			case 2:
+				anim2 += (float)anim2_BlendingWeights.x * CalculateAnimation(boneIdx, anim2_Indices.x, anim2_PlayTime, anim2_Frames.x);
+				anim2 += (float)anim2_BlendingWeights.y * CalculateAnimation(boneIdx, anim2_Indices.y, anim2_PlayTime, anim2_Frames.y);
+				anim2 += (float)anim2_BlendingWeights.z * CalculateAnimation(boneIdx, anim2_Indices.z, anim2_PlayTime, anim2_Frames.z);
+				anim2 += (float)anim2_BlendingWeights.w * CalculateAnimation(boneIdx, anim2_Indices.w, anim2_PlayTime, anim2_Frames.w);
+				break;
+			case 1:
+				anim2 += (float)anim2_BlendingWeights.x * CalculateAnimation(boneIdx, anim2_Indices.x, anim2_PlayTime, anim2_Frames.x);
+				anim2 += (float)anim2_BlendingWeights.y * CalculateAnimation(boneIdx, anim2_Indices.y, anim2_PlayTime, anim2_Frames.y);
+				break;
+			case 0:
+				anim2 += (float)anim2_BlendingWeights.x * CalculateAnimation(boneIdx, anim2_Indices.x, anim2_PlayTime, anim2_Frames.x);
+				break;
+			}
+
+			boneToWorld += input.boneWeights[i] * lerp(anim1, anim2, animationBlendWeight);
 		}
 		else
-			boneToWorld += weight * anim1;	
+			boneToWorld += input.boneWeights[i] * anim1;	
 	}
 
 	output.position = mul(float4(input.position, 1.0f), boneToWorld).xyz;

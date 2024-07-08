@@ -198,6 +198,9 @@
     <ClInclude Include="Include\ECS\ContentComponents.h">
       <Filter>소스 파일\ECS\Component\Content</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Animation\AnimationTrack.h">
+      <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -292,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="External\Include\jsoncpp.cpp">
       <Filter>외부\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\Animation\AnimationTrack.cpp">
+      <Filter>소스 파일\Scene\SceneData\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

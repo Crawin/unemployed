@@ -1,9 +1,9 @@
 {
-	"name": "NoMaterial",
-	"BaseColor": "Character/Mat_Hoodie_Base_Color_3",
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
-	"Normal": null,
+	"name": "Player_Hoodie_Yellow",
+	"BaseColor": "Character/Player/Hoodie/Mat_Hoodie_Base_Color_3",
+	"Roughness": "Character/Player/Hoodie/Mat_Hoodie_Roughness",
+	"Metalic": "Character/Player/Hoodie/Mat_Hoodie_Metallic",
+	"AO": "Character/Player/Hoodie/Mat_Hoodie_AO",
+	"Normal": "Character/Player/Hoodie/Mat_Hoodie_Normal",
 	"Shader": "TestMeshDiffered"
 }

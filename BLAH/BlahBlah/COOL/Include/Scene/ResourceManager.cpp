@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "ECS/ECSManager.h"
 #include "Lighting/ShadowMap.h"
+#include "Animation/AnimationTrack.h"
 #include "json/json.h"
 
 //#include "Material/Material.h"
@@ -12,13 +13,13 @@
 
 #define SCENE_PATH			"SceneData\\Scene\\"
 
-#define MESH_PATH			"SceneData\\Mesh\\"
-#define SHADER_PATH			"SceneData\\Shader\\"
-#define TEXTURE_PATH		"SceneData\\Material\\Texture\\"
-#define MATERIAL_PATH		"SceneData\\Material\\"
-#define BONE_PATH			"SceneData\\Mesh\\bone_"
-#define ANIMATION_SET_PATH	"SceneData\\Animation\\"
-#define ANIMATION_PATH		"SceneData\\Animation\\Data\\"
+#define MESH_PATH			"SceneData/Mesh/"
+#define SHADER_PATH			"SceneData/Shader/"
+#define TEXTURE_PATH		"SceneData/Material/Texture/"
+#define MATERIAL_PATH		"SceneData/Material/"
+#define BONE_PATH			"SceneData/Mesh/bone_"
+#define ANIMATION_SET_PATH	"SceneData/Animation/"
+#define ANIMATION_PATH		"SceneData/Animation/Data/"
 
 
 ResourceManager::ResourceManager()
@@ -294,21 +295,12 @@ std::shared_ptr<Shader> ResourceManager::LoadShader(const std::string& name, Com
 
 bool ResourceManager::LoadDefferedResource(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
-	// load Postprocessing material
-	m_PostProcessingMaterial = GetMaterial(m_PostProcessing, commandList);
-	if (m_PostProcessingMaterial == -1) return false;
 
-	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
-		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + 2);
+	for (int i = 0; i < _countof(m_PreLoadedMaterials); ++i) {
+		m_PreLoadedMaterials[i] = GetMaterial(ConvertMaterialToString(static_cast<PRE_LOADED_MATERIALS>(i)), commandList);
+		CHECK_CREATE_FAILED(m_PreLoadedMaterials[i] == -1, std::format("Failed to load pre load material, idx: {}", i));
+	}
 
-#ifdef _DEBUG
-	m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
-	if (m_DebuggingMaterial == -1) return false;
-
-	// debug deffered default
-	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
-		m_Materials[m_DebuggingMaterial]->SetTexture(i, i + 2);
-#endif
 
 	return true;
 }
@@ -411,25 +403,66 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 		// name
 		AnimationPlayer* player = new AnimationPlayer;
 		player->m_Name = animCont.m_AnimSetName;
-		for (auto& key : root.getMemberNames()) {
-			std::string animName = root[key].asString();
-			int anim = GetAnimation(animName, commandList);
+		bool blendOn = false;
+		for (auto& stateString : root.getMemberNames()) {
+			ANIMATION_STATE state = ConvertStringToAnimationState(stateString);
 
-			if (anim < 0) ERROR_QUIT("Failed To Load Animation");
+			switch (state) {
+			case ANIMATION_STATE::BLENDED_MOVING_STATE:
+			{
+				blendOn = true;
+				// blending states,
+				AnimationTrackBlendingSpace2D* newAnimTrack = new AnimationTrackBlendingSpace2D();
+				auto& curState = root[stateString];
+				for (auto& toBlendState : curState.getMemberNames()) {
+					auto& inState = curState[toBlendState];
+					int anim = GetAnimation(inState["Name"].asString(), commandList);
+					if (anim < 0) ERROR_QUIT("Failed To Load Animation");
 
-			player->m_AnimationMap[ConvertStringToAnimationState(key)] = m_Animations[anim];
+					newAnimTrack->InsertAnimation(inState["x"].asFloat(), inState["y"].asFloat(), m_Animations[anim]);
 
-			// todo 하드코딩 경고!!!!!!!!!!!!!!!!!!!!
-			// 나중에 꼭 꼭 고쳐야한다
-			if (m_Animations[anim]->m_Name == "dia_falling_back" || m_Animations[anim]->m_Name == "dia_getting_up" ||
-				m_Animations[anim]->m_Name == "PlayerFall" || m_Animations[anim]->m_Name == "PlayerGetUp") {
-				m_Animations[anim]->m_Loop = false;
+					// set bool state of animation
+					m_Animations[anim]->m_Loop = inState["Loop"].asBool();
+					if (m_Animations[anim]->m_Loop == false) {
+						ERROR_QUIT("In BLENDED_MOVING_STATE animation should be loop mode");
+					}
+				}
+
+				player->m_AnimationMap[state] = newAnimTrack;
+				// load every animations for blending
+				//for (int i = 0; i < ; = ++i) {
+
+				//}
+				break;
 			}
+			default:
+			{
+				std::string animName = root[stateString]["Name"].asString();
+				int anim = GetAnimation(animName, commandList);
+				if (anim < 0) ERROR_QUIT("Failed To Load Animation");
+
+				// set bool state of animation
+				m_Animations[anim]->m_Loop = root[stateString]["Loop"].asBool();
+
+				player->m_AnimationMap[state] = new AnimationTrackSingle(m_Animations[anim]);
+			}
+			}
+
+
 		}
 		m_AnimationPlayer.push_back(player);
-
 		animCont.m_Controller->SetPlayer(player);
 		DebugPrint(std::format("loaded animset file name: {}", player->m_Name));
+
+		if (blendOn) {
+			player->ChangeToAnimation(ANIMATION_STATE::BLENDED_MOVING_STATE);
+			player->ChangeToAnimation(ANIMATION_STATE::BLENDED_MOVING_STATE);
+		}
+		else {
+			player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+			player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+		}
+
 	}
 
 	// set animation executer
@@ -520,32 +553,6 @@ bool ResourceManager::MakeShadowMaps()
 	return true;
 }
 
-bool ResourceManager::LoadShadowMappingResource(ComPtr<ID3D12GraphicsCommandList> commandList)
-{
-	// load Postprocessing material
-	m_ShadowMappingMaterial = GetMaterial(m_ShadowMapping, commandList);
-	if (m_ShadowMappingMaterial == -1) return false;
-
-
-#ifdef _DEBUG
-	
-	// debugggg
-	
-	//for (int i = 0; i < m_ShadowMapRenderTargets; ++i)
-	//	m_Materials[m_ShadowMappingMaterial]->SetTexture(i, i + m_ShadowMapRTVStartIdx);
-	
-
-	//m_DebuggingMaterial = GetMaterial(m_Debuggging, commandList);
-	//if (m_DebuggingMaterial == -1) return false;
-
-	//// debug deffered default
-	//for (int i = 0; i < m_DefferedRenderTargets; ++i)
-	//	m_Materials[m_DebuggingMaterial]->SetTexture(i, i + m_DefferedRTVStartIdx);
-#endif
-
-	return true;
-}
-
 bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
 	// 1. 씬에 배치 될 오브젝트들을 찾는다.
@@ -581,7 +588,12 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 		CHECK_CREATE_FAILED(
 			Renderer::GetInstance().CreateRenderTargetView(m_CameraRenderTargets[i].m_MRTHeap, m_Resources, m_CameraRenderTargets[i].m_MRTStartIdx, m_CameraRenderTargets[i].m_MRTNum),
 			"Create MRT RTV Failed!!");
-	
+
+		// result rtv
+		CHECK_CREATE_FAILED(
+			Renderer::GetInstance().CreateRenderTargetView(m_CameraRenderTargets[i].m_ResultRenderTargetHeap, m_Resources, m_CameraRenderTargets[i].m_ResultRenderTargetIndex),
+			"Create CameraResultRenderTarget Failed!!");
+
 		// dsv
 		CHECK_CREATE_FAILED(
 			Renderer::GetInstance().CreateDepthStencilView(m_CameraRenderTargets[i].m_DsvHeap, m_CameraRenderTargets[i].m_DepthBuffer), "Create MRT DSV Failed!!"
@@ -624,9 +636,6 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// make lighting data
 	CHECK_CREATE_FAILED(MakeLightData(commandList), "Light Making Failed!!");
-
-	// shadow map pso
-	CHECK_CREATE_FAILED(LoadShadowMappingResource(commandList), "Load ShadowMappingResource Failed!!");
 
 	for (auto& ent : m_Entities)
 		m_ECSManager->AddEntity(ent);
@@ -699,12 +708,18 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	m_ECSManager->Execute(setBox);
 
-
+	// todo
+	// todo
+	// todo
+	// todo
+	// todo
+	// todo
+	// 
 	// set default animation to anim executor;
-	for (auto& player : m_AnimationPlayer) {
-		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_STATE::IDLE]);
-		player->ChangeToAnimation(player->m_AnimationMap[ANIMATION_STATE::IDLE]);
-	};
+	//for (auto& player : m_AnimationPlayer) {
+	//	player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+	//	player->ChangeToAnimation(ANIMATION_STATE::IDLE);
+	//};
 
 	// Make shader for animation stream out
 	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
@@ -819,6 +834,20 @@ bool ResourceManager::MakeMultipleRenderTargets(CameraRenderTargets& camData)
 		"Diff dsv");
 	camData.m_DepthBuffer->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
 	camData.m_DepthBuffer->SetName("Diff dsv");
+
+	// result rendertargets
+	camData.m_ResultRenderTargetIndex = static_cast<int>(m_Resources.size());
+	m_Resources.emplace_back(Renderer::GetInstance().CreateEmpty2DResource(
+		D3D12_HEAP_TYPE_DEFAULT,
+		D3D12_RESOURCE_STATE_COMMON,
+		Renderer::GetInstance().GetScreenSize(),
+		std::format("CameraResultRTV"),
+		D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET,
+		DXGI_FORMAT_R8G8B8A8_UNORM)
+	);
+
+	m_Resources[camData.m_ResultRenderTargetIndex]->SetDimension(D3D12_SRV_DIMENSION_TEXTURE2D);
+	m_Resources[camData.m_ResultRenderTargetIndex]->SetShaderResource();
 
 	return true;
 }
@@ -1002,19 +1031,19 @@ void ResourceManager::ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const
 	}
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart(int cameraIdx) const
-{
-	return m_CameraRenderTargets[cameraIdx].m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
-}
+//D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedRenderTargetStart(int cameraIdx) const
+//{
+//	return m_CameraRenderTargets[cameraIdx].m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
+//}
+//
+//D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedDSV(int cameraIdx) const
+//{
+//	return m_CameraRenderTargets[cameraIdx].m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
+//}
 
-D3D12_CPU_DESCRIPTOR_HANDLE ResourceManager::GetDefferedDSV(int cameraIdx) const
+Material* ResourceManager::GetPreLoadedMaterial(PRE_LOADED_MATERIALS mat) const
 {
-	return m_CameraRenderTargets[cameraIdx].m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
-}
-
-int ResourceManager::GetPostProcessingMaterial() const
-{
-	return m_PostProcessingMaterial;
+	return m_Materials[m_PreLoadedMaterials[static_cast<int>(mat)]];
 }
 
 int ResourceManager::GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARGETS rtType) const
@@ -1035,7 +1064,7 @@ int ResourceManager::GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARG
 void ResourceManager::SetCameraToPostProcessing(int camIdx)
 {
 	for (int i = 0; i < static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END); ++i)
-		m_Materials[m_PostProcessingMaterial]->SetTexture(i, i + m_CameraRenderTargets[camIdx].m_MRTStartIdx);
+		m_Materials[m_PreLoadedMaterials[static_cast<int>(PRE_LOADED_MATERIALS::LIGHTING)]]->SetTexture(i, i + m_CameraRenderTargets[camIdx].m_MRTStartIdx);
 }
 
 void ResourceManager::SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState)
@@ -1097,11 +1126,6 @@ void ResourceManager::SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdLi
 void ResourceManager::UpdateShadowMapView(int idx, const LightData& light)
 {
 	m_ShadowMaps[idx].UpdateViewMatrixByLight(light);
-}
-
-int ResourceManager::GetShadowMappingMaterial() const
-{
-	return m_ShadowMappingMaterial;
 }
 
 BoundingFrustum* ResourceManager::GetShadowMapFrustum(int idx)

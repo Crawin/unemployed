@@ -40,6 +40,7 @@ public:
 	bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);
 
 	void Update(float deltaTime);
+	void SyncWithRender(float deltaTime);
 
 	void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 

@@ -1,11 +1,13 @@
 ﻿#pragma once
 
 
+// root signature index
 enum class ROOT_SIGNATURE_IDX{
 	DESCRIPTOR_HEAP = 0,			// 디스크립터힙
 	DESCRIPTOR_IDX_CONSTANT,		// 디스크립터를 사용할 인덱스 16개의 int
 	CAMERA_DATA_CBV,				// 카메라행렬 4x4 x2
-	WORLD_MATRIX,
+	WORLD_MATRIX = 3,
+	ANIMATION_EXTRA = 3,
 	SHADER_DATAS_CBV,				// 뭐 대충 나머지들 (delta time, 등등)
 	//BONE,
 	//ANIMATION_FIRST,
@@ -13,6 +15,7 @@ enum class ROOT_SIGNATURE_IDX{
 	ROOT_SIGNATURE_IDX_MAX
 };
 
+// for multiple render targets
 enum class MATERIAL_TYPES {
 	ALBEDO = 0,
 	ROUGHNESS,
@@ -22,12 +25,36 @@ enum class MATERIAL_TYPES {
 	MATERIAL_END
 };
 
+// pre loaded shaders, lighting shader, shadowmapping shader, ...
+enum class PRE_LOADED_MATERIALS {
+	LIGHTING = 0,
+	SHADOWMAPPING,
+
+	BLIT,
+#ifdef _DEBUG
+	FOR_DEBUG,
+#endif // DEBUG
+	MATERIAL_END
+};
+
 enum class ANIMATION_STATE {
 	WAITEND = 0,
 	IDLE,
 	WALK,
 	RUN,
-	FALLINGDOWN,
+	BLENDED_MOVING_STATE,
+	FORWARD_WALK,
+	FORWARD_RUN,
+	BACKWARD_WALK,
+	BACKWARD_RUN,
+	LEFT_WALK_STRAFE,
+	LEFT_RUN_STRAFE,
+	RIGHT_WALK_STRAFE,
+	RIGHT_RUN_STRAFE,
+	JUMP_START,
+	JUMP_ING,
+	JUMP_LAND,
+	GETTING_HIT,
 	GETUP,
 	DANCE,
 	NULLANIM
@@ -64,6 +91,8 @@ enum class GAME_INPUT {
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim);
 int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput);
+PRE_LOADED_MATERIALS ConvertStringToMaterial(const std::string& str);
+std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat);
 
 // struct
 //struct PS_MRT_OUTPUT
@@ -114,13 +143,12 @@ enum class RESOURCE_TYPES {
 };
 
 enum class ANIM_ROOTCONST {
-	ANI_1_PLAYTIME = 0,
-	ANI_2_PLAYTIME,
-	ANI_BLEND,
-	ANI_1_FRAME,
-	ANI_2_FRAME,
-	ANI_1_INDEX,
-	ANI_2_INDEX,
+	SPACE_BLEND_WEIGHTS = 0,
+	FRAMES = 4,
+	INDICES = 8,
+	PLAYTIME = 12,
+	MODE,
+	BEFORE_ANIM_BLEND_WEIGHT,
 	BONE_INDEX
 };
 

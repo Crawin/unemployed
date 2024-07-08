@@ -2,6 +2,7 @@
 	"name": "ShadowMapping",
 	"NumRenderTargets": 1,
 	"RenderTargetFormat_0": 6,
+	"DepthStencilViewFormat": 0,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
 	"VS": "ShadowMapping.hlsl",

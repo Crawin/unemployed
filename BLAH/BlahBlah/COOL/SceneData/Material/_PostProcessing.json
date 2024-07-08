@@ -1,9 +1,0 @@
-{
-	"name": "PostProcessing",
-	"BaseColor": null,
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
-	"Normal": null,
-	"Shader": "_PostProcessing"
-}

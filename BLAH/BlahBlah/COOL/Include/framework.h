@@ -34,6 +34,7 @@
 #include <functional>
 #include <bitset>
 #include <any>
+#include <thread>
 
 // DirectX 12 Headers
 #include <d3d12.h>
@@ -67,9 +68,10 @@ using Microsoft::WRL::ComPtr;
 //#pragma comment(lib, "jsoncpp.lib")
 
 #include "Enums.h"
+#include "mymath.h"
 
 // component count
-#define COMPONENT_COUNT 31
+#define COMPONENT_COUNT 33
 using COMP_BITSET = std::bitset<COMPONENT_COUNT>;
 
 std::string ExtractFileName(const std::string& fullPath);

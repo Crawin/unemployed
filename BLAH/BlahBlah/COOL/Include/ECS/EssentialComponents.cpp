@@ -167,13 +167,31 @@ namespace component {
 
 	const XMFLOAT3& Transform::GetWorldRotation() const
 	{
-		XMFLOAT3 temp;
-		XMStoreFloat3(&temp, XMVector3Transform(XMLoadFloat3(&m_Rotate), XMLoadFloat4x4(&m_ParentTransform)));
+		XMMATRIX mat = XMLoadFloat4x4(&GetWorldTransform());
+		
+		XMVECTOR s, r, t;
+		XMMatrixDecompose(&s, &r, &t, mat);
 
-		return temp;
+		float angle;
+		XMVECTOR axis;
+
+		XMQuaternionToAxisAngle(&axis, &angle, r);
+
+		XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(r);
+
+		XMFLOAT3 euler;
+		euler.x = asinf(-rotationMatrix.r[1].m128_f32[2]); // Pitch
+		euler.y = atan2f(rotationMatrix.r[0].m128_f32[2], rotationMatrix.r[2].m128_f32[2]); // Yaw
+		euler.z = atan2f(rotationMatrix.r[1].m128_f32[0], rotationMatrix.r[1].m128_f32[1]); // Roll
+
+		euler.x = XMConvertToDegrees(euler.x);
+		euler.y = XMConvertToDegrees(euler.y);
+		euler.z = XMConvertToDegrees(euler.z);
+
+		return euler;
 	}
 
-	XMFLOAT4X4& Transform::GetWorldTransform()
+	const XMFLOAT4X4& Transform::GetWorldTransform() const
 	{
 		XMFLOAT3 rotRad;
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
@@ -190,7 +208,7 @@ namespace component {
 		return worldMat;
 	}
 
-	XMFLOAT4X4& Transform::GetLocalTransform()
+	const XMFLOAT4X4& Transform::GetLocalTransform() const
 	{
 		XMFLOAT3 rotRad;
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
@@ -217,8 +235,11 @@ namespace component {
 
 		m_IsMainCamera = cam["IsMainCamera"].asBool();
 
-		if (m_IsMainCamera) rm->SetMainCamera(this);
-
+		m_Active = cam["Active"].asBool();
+		if (m_IsMainCamera) {
+			rm->SetMainCamera(this);
+			m_ActiveStateOnRender = m_Active = true;
+		}
 		m_Right.x = cam["Right"][0].asFloat();
 		m_Right.y = cam["Right"][1].asFloat();
 		m_Right.z = cam["Right"][2].asFloat();
@@ -336,6 +357,7 @@ namespace component {
 		m_Acceleration.z = s["Acceleration"][2].asFloat();
 
 		m_CalculatePhysics = s["Calculate"].asBool();
+		m_Friction = s["Friction"].asBool();
 		//m_CurrentVelocity = s["MaxSpeed"].asFloat();
 	}
 
@@ -607,6 +629,8 @@ namespace component {
 		// if true on create, load collider by its mesh
 		// else create here
 		m_Collided = col["AutoMesh"].asBool();
+
+		m_ColideWithDynamic = col["ColideWithDynamic"].asBool();
 
 		if (m_Collided == false) {
 			XMFLOAT3 center;

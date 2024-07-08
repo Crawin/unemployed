@@ -62,10 +62,15 @@ bool Application::InitWindow()
 void Application::Tick()
 {
 	// 게임 루프
-	m_Timer->Update();
-	m_SceneManager->Update(m_Timer->GetDeltaTime());
-	Renderer::GetInstance().Render();
+	m_SceneManager->SyncWithRender(m_Timer->GetDeltaTime());
 
+	std::thread SceneUpdateThread([this]() {
+		m_Timer->Update();
+		m_SceneManager->Update(m_Timer->GetDeltaTime());
+	});
+	Renderer::GetInstance().Render();
+	
+	SceneUpdateThread.join();
 
 #ifdef _DEBUG
 	TCHAR szTitle[30];
@@ -143,8 +148,8 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_WINDOWPOSCHANGING:
-		if (Application::GetInstance().m_SceneManager)
-			Application::GetInstance().Tick();
+		//if (Application::GetInstance().m_SceneManager)
+		//	Application::GetInstance().Tick();
 		break;
 
 	case WM_SYSKEYDOWN:

@@ -49,6 +49,9 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::DoorKey, "Key");
 	REGISTER_COMPONENT(component::Inventory, "Inventory");
 	REGISTER_COMPONENT(component::Holdable, "Holdable");
+	REGISTER_COMPONENT(component::Attackable, "Attackable");
+	REGISTER_COMPONENT(component::Throwable, "Throwable");
+	REGISTER_COMPONENT(component::Screen, "Screen");
 
 
 	// ui content
@@ -122,6 +125,11 @@ bool SceneManager::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
 void SceneManager::Update(float deltaTime)
 {
 	if (m_CurrentScene) m_CurrentScene->Update(deltaTime);
+}
+
+void SceneManager::SyncWithRender(float deltaTime)
+{
+	if (m_CurrentScene) m_CurrentScene->RenderSync(deltaTime);
 }
 
 void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
