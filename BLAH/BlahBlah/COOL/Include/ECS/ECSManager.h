@@ -111,6 +111,7 @@ class ECSManager
 
 	// system
 	std::vector<ECSsystem::System*> m_Systems;
+	std::vector<ECSsystem::System*> m_PreRenderSystem;
 
 	bool m_Started = false;
 public:
@@ -127,9 +128,11 @@ public:
 	void DetachChild(Entity* from, Entity* targetEntity);
 
 	void InsertSystem(ECSsystem::System* system) { m_Systems.push_back(system); }
+	void InsertPreRenderSystem(ECSsystem::System* system) { m_PreRenderSystem.push_back(system); }
 
 	void InitSystem();
 	void UpdateSystem(float deltaTime);
+	void UpdatePreRenderSystem(float deltaTime);
 
 	void OnStart(ResourceManager* rm);
 

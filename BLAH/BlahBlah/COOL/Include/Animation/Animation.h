@@ -2,6 +2,7 @@
 
 class ResourceManager;
 
+// Animation 데이터 그 자체
 class Animation
 {
 	friend class ResourceManager;

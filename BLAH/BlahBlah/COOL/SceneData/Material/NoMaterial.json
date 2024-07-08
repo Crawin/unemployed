@@ -1,9 +1,9 @@
 {
 	"name": "NoMaterial",
 	"BaseColor": "uv_checker",
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
+	"Roughness": "Gray",
+	"Metalic": "Gray",
+	"AO": "White",
 	"Normal": null,
 	"Shader": "TestMeshDiffered"
 }

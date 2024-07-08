@@ -2,6 +2,7 @@
 #include "ContentComponents.h"
 #include "Scene/ResourceManager.h"
 #include "ECS/ECSManager.h"
+#include "Animation/AnimationTrack.h"
 #include "json/json.h"
 
 
@@ -20,27 +21,64 @@ namespace component {
 			ERROR_QUIT(std::format("ERROR!! no anim controller on this entity, name: {}", name));
 		}
 
+		// set update function
+		AnimationPlayer* player = ctrl->GetPlayer();
+		if (player->IsStateOwn(ANIMATION_STATE::BLENDED_MOVING_STATE)) {
+			player->SetUpdateFunctionTo(ANIMATION_STATE::BLENDED_MOVING_STATE, [manager, selfEntity](float deltaTime, void* data) {
+				Point2D* pt = reinterpret_cast<Point2D*>(data);
+
+				Physics* py = manager->GetComponent<Physics>(selfEntity);
+				Transform* tr = manager->GetComponent<Transform>(selfEntity);
+				XMVECTOR lookDir{ 0, 0, 1, 0 };
+				XMVECTOR up{ 0, 1, 0 };
+				XMMATRIX world = XMLoadFloat4x4(&tr->GetWorldTransform());
+				lookDir = XMVector3Normalize(XMVector4Transform(lookDir, world));
+
+				XMVECTOR movingDir = XMVector3Normalize(XMLoadFloat3(&py->GetVelocity()));
+
+				// 스칼라 삼중적
+				float dot = std::clamp(XMVectorGetX(XMVector3Dot(lookDir, movingDir)), -1.0f, 1.0f);
+				float angle = XMConvertToDegrees(acos(dot));
+				float scalarTriPro = XMVectorGetX(XMVector3Dot(XMVector3Cross(lookDir, movingDir), up));
+				if (scalarTriPro < 0)
+					angle = 360.0f - angle;
+				
+				pt->m_Speed = py->GetCurrentVelocityLenOnXZ();
+				pt->m_Angle = angle;
+
+				if (IsZero(pt->m_Speed)) {
+					pt->m_Speed = 0;
+					pt->m_Angle = 0;
+				}
+
+				});
+
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+		}
+
+
 		using COND = std::function<bool(void*)>;
 
 		// make conditions
 		COND idle = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp < 30.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed < 30.0f;
 			};
 
 		COND idleToWalk = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp >= 30.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed >= 30.0f;
 			};
 
 		COND walkToRun = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp >= 300.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed >= 300.0f;
 			};
 
 		COND runToWalk = [](void* data) {
-			float* sp = reinterpret_cast<float*>(data);
-			return *sp < 300.0f;
+			float* sleed = reinterpret_cast<float*>(data);
+			return *sleed < 300.0f;
 			};
 
 		COND hit = [](void* data) {
@@ -57,18 +95,18 @@ namespace component {
 
 		// insert transition (graph)
 		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
 		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
-		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::FALLINGDOWN, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::GETTING_HIT, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
 		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
 		// set start animation
-		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
-		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
 
 	}
 
@@ -117,14 +155,14 @@ namespace component {
 
 		// insert transition (graph)
 		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::FALLINGDOWN, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::FALLINGDOWN, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::FALLINGDOWN, ANIMATION_STATE::GETUP, falldown);
+		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
+		ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
 		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
 		// set start animation
-		ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
 	}
 
 	void DiaAnimationControl::ShowYourself() const
@@ -288,6 +326,7 @@ namespace component {
 					Holdable* hold = manager->GetComponent<Holdable>(target);
 					if (hold == nullptr) ERROR_QUIT(std::format("ERROR!! no holdable component in this entity, name: {}", m_TargetEntityNames[i]));
 
+					hold->SetMaster(selfEntity);
 					m_Items[i] = target;
 				}
 			}
@@ -296,6 +335,7 @@ namespace component {
 		m_CurrentHolding = 0;
 		if (m_Items[m_CurrentHolding] != nullptr) 
 		{
+			
 			manager->AttachChild(m_HoldingSocket, m_Items[m_CurrentHolding]);
 		}
 	}
@@ -305,35 +345,234 @@ namespace component {
 
 	}
 
+	bool Inventory::ChangeHoldingItem(int idx, ECSManager* manager)
+	{
+		// if same item, no chagne
+		if (idx == m_CurrentHolding) return true;
+
+		// attach bef item to origin parent;
+		if (m_Items[m_CurrentHolding] != nullptr) {
+			Holdable* curHold = manager->GetComponent<Holdable>(m_Items[m_CurrentHolding]);
+			manager->AttachChild(curHold->GetOriginParent(), m_Items[m_CurrentHolding]);
+		}
+
+		m_CurrentHolding = idx;
+		// if no item, just return
+		if (m_Items[idx] == nullptr) {
+			return true;
+		}
+
+		// attach new item to inven socket
+		// dont have to nullcheck
+		manager->AttachChild(m_HoldingSocket, m_Items[idx]);
+		m_CurrentHolding = idx;
+
+		return true;
+	}
+
 	void Holdable::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value hold = v["Holdable"];
 
-		std::string action = hold["Action"].asString();
-
-		if (action == "Attack") {
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS)] = [](float deltaTime) {
-				DebugPrint("START");
-				};
-
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING)] = [](float deltaTime) {
-				DebugPrint("PRESSING");
-				};
-
-			m_ActionMap[Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS)] = [](float deltaTime) {
-				DebugPrint("END");
-				};
-		}
-		else if (action == "Throw") {
-
-		}
 	}
 
 	void Holdable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
+		m_OriginalParent = selfEntity->GetParent();
 	}
 
-	void Holdable::ShowYourself() const
+	void Attackable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value attack = v["Attackable"];
+	}
+
+	void Attackable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		if (holdable == nullptr) {
+			Name* name = manager->GetComponent<Name>(selfEntity);
+			ERROR_QUIT(std::format("ERROR!!! no Holdable component in this entity, entity name: {}\n태양이 두개면 시원한 이유는?\nsun sun 해지니까", name->getName()));
+		}
+
+		// todo
+		// find self's dynamic collider
+		// collide event with self -> other player or Guard, Get DAMAGE
+
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity](float deltaTime) {
+			Entity* master = holdable->GetMaster();
+			
+			// todo
+			// change player chara animation to attack
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+
+			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
+			//selfCollider->SetActive(true);
+
+			DebugPrint("Todo: PlayAttackAnimation and Weapon Collider On");
+		});
+	}
+
+	void Attackable::ShowYourself() const
+	{
+	}
+
+	void Throwable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value thr = v["Throwable"];
+
+		m_ThrowBakeTimeMax = thr["BakeTime"].asFloat();
+		m_ThrowSpeed = thr["ThrowSpeed"].asFloat();
+
+		XMStoreFloat3(&m_DirectionOrigin, XMVector3Normalize(XMLoadFloat3(&m_DirectionOrigin)));
+	}
+
+	void Throwable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		if (holdable == nullptr) {
+			Name* name = manager->GetComponent<Name>(selfEntity);
+			ERROR_QUIT(std::format("ERROR!!! no Holdable component in this entity, entity name: {}\n차가 놀라면?\n앗 차가!", name->getName()));
+		}
+
+		// km/h -> cm/s
+		float speed = m_ThrowSpeed * 27.7778f;
+		float maxBakeTime = m_ThrowBakeTimeMax;
+		float& bakeTime = m_ThrowBakeTime;
+		XMFLOAT3& directionOrigin = m_DirectionOrigin;
+		XMFLOAT3& directionResult = m_DirectionResult;
+
+		// set collide event
+		EventFunction cctvHitEvent = [manager](Entity* self, Entity* other) {
+
+			Name* name = manager->GetComponent<Name>(other);
+
+			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+			};
+
+		DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
+		dc->InsertEvent<Collider>(cctvHitEvent, COLLIDE_EVENT_TYPE::ING);
+
+		// todo
+		// find self's dynamic collider
+		// collide event with self -> other wall, stick to wall
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity, &bakeTime](float deltaTime) {
+			bakeTime = 0;
+
+			Entity* master = holdable->GetMaster();
+
+			// todo
+			// change player chara animation to throw ready
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROWREADY);
+
+			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
+			//selfCollider->SetActive(true);
+
+			DebugPrint("Todo: PlayAttackAnimation and Weapon Collider On");
+		});
+	
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::PRESSING), [&directionOrigin, &directionResult, &bakeTime, manager, holdable](float deltaTime) {
+			Inventory* masterInv = manager->GetComponent<Inventory>(holdable->GetMaster());
+			Transform* masterTr = manager->GetComponent<Transform>(masterInv->GetHoldingSocket()->GetParent());
+
+			XMVECTOR dir{ directionOrigin.x, directionOrigin.y, directionOrigin.z, 0 };
+			XMMATRIX world = XMLoadFloat4x4(&masterTr->GetWorldTransform());
+
+			// vector4 transform으로 방향벡터 transform
+			XMVECTOR resDir = XMVector3Normalize(XMVector4Transform(dir, world));
+			XMStoreFloat3(&directionResult, resDir);
+
+			bakeTime += deltaTime;
+
+		});
+	
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), [&directionResult, &bakeTime, maxBakeTime, speed, manager, selfEntity, holdable](float deltaTime) {
+			XMStoreFloat3(&directionResult, XMVector3Normalize(XMLoadFloat3(&directionResult)));
+			DebugPrintVector(directionResult, "realDir");
+			bakeTime = std::min(maxBakeTime, bakeTime);
+
+			DebugPrint(std::format("bakeTime: {}, speed: {}, result: {}", bakeTime, speed, ((bakeTime / maxBakeTime)*speed) / 27.7778f));
+
+
+			float resultSpeed = speed * (bakeTime / maxBakeTime);
+			// detach
+			manager->DetachChild(selfEntity->GetParent(), selfEntity);
+
+			// erase itself from Inventory
+			Inventory* masterInv = manager->GetComponent<Inventory>(holdable->GetMaster());
+			masterInv->EraseCurrentHolding();
+
+			Physics* py = manager->GetComponent<Physics>(selfEntity);
+			DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
+
+		
+			// add force, calculate physics true
+			directionResult.x *= resultSpeed;
+			directionResult.y *= resultSpeed;
+			directionResult.z *= resultSpeed;
+
+			py->SetVelocity(directionResult);
+			py->SetCalculateState(true);
+
+			DebugPrintVector(py->GetVelocity(), "velocity");
+			// set collider on
+			dc->SetActive(true);
+
+			// set collide event
+			EventFunction cctvHitEvent = [manager](Entity* self, Entity* other) {
+				DynamicCollider* dc = manager->GetComponent<DynamicCollider>(self);
+				Physics* py = manager->GetComponent<Physics>(self);
+
+				// set velocity calculate false
+				py->SetCalculateState(false);
+				py->SetVelocity({ 0,0,0 });
+
+				// collider off
+				dc->SetActive(false);
+
+				Name* name = manager->GetComponent<Name>(other);
+				Transform* otherTrans = manager->GetComponent<Transform>(other);
+				Collider* otherCol = manager->GetComponent<Collider>(other);
+
+				DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+				};
+
+
+			dc->InsertEvent<Collider>(cctvHitEvent, COLLIDE_EVENT_TYPE::BEGIN);
+
+			DebugPrint("Throw");
+		});
+
+	}
+
+	void Screen::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void Screen::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// todo 임시이다
+		int cameraIndex = -1;
+		std::function<void(Name*, Camera*)> findCam = [&cameraIndex, manager](Name* name, Camera* cam) {
+			if (name->getName() == "CCTV_01")
+				cameraIndex = cam->GetCameraIndex();
+			};
+		manager->Execute(findCam);
+
+		if (cameraIndex != -1) {
+			const auto& data = rm->GetCameraRenderTargetData(cameraIndex);
+
+			component::Renderer* ren = manager->GetComponent<component::Renderer>(selfEntity);
+			Material* mat = rm->GetMaterial(ren->GetMaterial());
+			mat->SetDataIndex(0, data.m_ResultRenderTargetIndex);
+		}
+	}
+
+	void Screen::ShowYourself() const
 	{
 	}
 

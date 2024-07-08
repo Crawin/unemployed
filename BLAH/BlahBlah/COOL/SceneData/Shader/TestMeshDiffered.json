@@ -7,6 +7,7 @@
 	"RenderTargetFormat_3": 0,
 	"RenderTargetFormat_4": 5,
 	"RenderTargetFormat_5": 5,
+	"DepthStencilViewFormat": 0,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
 	"VS": "TestMeshShaderMRT.hlsl",

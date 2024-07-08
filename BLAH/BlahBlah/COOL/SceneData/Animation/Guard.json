@@ -1,5 +1,19 @@
 {
-	"Idle": "Guard_Idle",
-	"Walk": "Guard_Running",
-	"Run": "Guard_Running"
+	"Idle": 
+	{
+		"Loop": true,
+		"Name": "Guard/Guard_Idle"
+	},
+	
+	"Walk":
+	{
+		"Loop": true,
+		"Name": "Guard/Guard_Running"
+	},
+
+	"Run": 
+	{
+		"Loop": true,
+		"Name": "Guard/Guard_Running"
+	}
 }

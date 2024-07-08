@@ -51,6 +51,7 @@ private:
 
 	bool m_ShowGrid = false;
 	bool m_GameLoop = true;
+	bool m_Rendering = false;
 
 	//FMOD_SYSTEM* m_pSoundSystem;
 	SceneManager* m_SceneManager = nullptr;

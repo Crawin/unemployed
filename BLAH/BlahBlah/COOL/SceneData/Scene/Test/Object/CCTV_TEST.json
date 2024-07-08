@@ -1,0 +1,109 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "CCTV_TEST",
+			"Renderer" : 
+			{
+				"Material" : "NoMaterial",
+				"Mesh" : "Sphere.Sphere"
+			},
+
+			"Holdable": 
+			{
+			},
+
+			"Throwable":
+			{
+				"BakeTime": 2.0,
+				"ThrowSpeed": 70.0
+			},
+
+			"Physics": 
+			{
+				"MaxVelocity": 20000.0,
+				"Acceleration" : [2000.0, 2000.0, 2000.0],
+				"Calculate" : false,
+				"Friction": false
+			},
+
+			"DynamicCollider":
+			{
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [50.0, 50, 50]
+			},
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					0.5,
+					0.5,
+					0.5
+				]
+			},
+			"Children":
+			[
+				{
+					"Name": "CCTV_01",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Camera":
+					{
+						"Active": true,
+						"IsMainCamera": false,
+						"Right": 	[1.0, 0.0, 0.0],
+						"Up": 		[0.0, 1.0, 0.0],
+						"Look": 	[0.0, 0.0, 1.0],
+						"Position": [0.0, 0.0, 0.0],
+				
+						"Fov": 75.0,
+						"Aspect": 1.777,
+						"Near": 0.1,
+						"Far": 10000.0
+					}
+				}
+			]
+		}
+	],
+	"Name" : "Sphere_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			-1000.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

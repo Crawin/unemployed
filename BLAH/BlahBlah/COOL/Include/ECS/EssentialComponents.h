@@ -71,15 +71,16 @@ namespace component {
 
 		const XMFLOAT3& GetPosition() const { return m_Position; }
 		const XMFLOAT3& GetRotation() const { return m_Rotate; }
+		const XMFLOAT3& GetScale() const { return m_Scale; }
+
 		const XMFLOAT3& GetWorldPosition() const;
 		const XMFLOAT3& GetWorldRotation() const;
 
-		const XMFLOAT3& GetScale() const { return m_Scale; }
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 
 		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
-		XMFLOAT4X4& GetWorldTransform();
-		XMFLOAT4X4& GetLocalTransform();
+		const XMFLOAT4X4& GetWorldTransform() const;
+		const XMFLOAT4X4& GetLocalTransform() const;
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
@@ -141,6 +142,7 @@ namespace component {
 
 		void CheckTransition(void* data);
 
+		// change animation, if call from outside, the animation will be changed
 		void ChangeAnimationTo(ANIMATION_STATE animSet);
 
 		float GetCurrentPlayTime() const;
@@ -150,6 +152,8 @@ namespace component {
 
 		void InsertOnEnter(ANIMATION_STATE st, std::function<void(void)> cond) { m_OnEnter[st] = cond; }
 		void InsertCondition(ANIMATION_STATE from, ANIMATION_STATE to, std::function<bool(void*)> cond) { InsertTransition(from, to); m_ChangeCondition[std::pair(from, to)] = cond; }
+
+		AnimationPlayer* GetPlayer() const { return m_AnimationPlayer; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -268,7 +272,14 @@ namespace component {
 		float m_Near = 0.1f;
 		float m_Far = 50000.0f;
 
+		float m_Width = 1280.0f;
+		float m_Height = 720.0f;
+
 		bool m_IsMainCamera = false;
+		bool m_Active = false;
+
+		// on off상태를 이분화
+		bool m_ActiveStateOnRender = false;
 
 		// camera matrix
 		XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
@@ -318,6 +329,14 @@ namespace component {
 
 		int GetCameraIndex() const { return m_RenderTargetDataIndex; }
 
+		void SetActive(bool state) { m_Active = state; }
+
+		void SyncActiveState() { m_ActiveStateOnRender = m_Active; }
+
+		bool IsMainCamera() const { return m_IsMainCamera; }
+		bool IsActive() const { return m_Active; }
+		bool IsActiveOnRender() const { return m_ActiveStateOnRender; }
+
 	private:
 		// 행렬 재생성
 		void BuildProjectionMatrix();
@@ -354,6 +373,7 @@ namespace component {
 		float m_Elasticity = 1.1f;
 
 		bool m_CalculatePhysics = false;
+		bool m_Friction = true;
 
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
@@ -380,7 +400,11 @@ namespace component {
 
 		float GetElasticity() const { return m_Elasticity; }
 
+		void SetCalculateState(bool state) { m_CalculatePhysics = state; }
 		bool IsToCalculate() const { return m_CalculatePhysics; }
+
+		void SetActiveFriction(bool state) { m_Friction = state; }
+		bool IsFrictionActive() const { return m_Friction; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -535,6 +559,8 @@ namespace component {
 		bool m_Trigger = false;
 		bool m_IsCapsule = false;
 		bool m_Collided = false;
+		bool m_Active = true;
+		bool m_ColideWithDynamic = true;
 
 		CollideEvents m_EventFunctions;
 
@@ -549,6 +575,7 @@ namespace component {
 		void SetCollided(bool col) { m_Collided = col; }
 		void SetOriginBox(const BoundingOrientedBox& box) { m_BoundingBoxOriginal = box; }
 		void SetBoundingBox(const BoundingOrientedBox& box) { m_CurrentBox = box; }
+		void SetActive(bool active) { m_Active = active; }
 
 		const BoundingOrientedBox& GetOriginalBox() const { return m_BoundingBoxOriginal; }
 		const BoundingOrientedBox& GetBoundingBox() const { return m_CurrentBox; }
@@ -556,7 +583,7 @@ namespace component {
 		bool IsStaticObject() const { return m_StaticObject; }
 		bool IsCapsule() const { return m_IsCapsule; }
 		bool IsTrigger() const { return m_Trigger; }
-
+		bool IsActive() const { return m_Active; }
 
 		void UpdateBoundingBox(const XMMATRIX& transMat);
 

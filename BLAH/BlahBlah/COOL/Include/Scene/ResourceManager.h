@@ -71,6 +71,8 @@ struct CameraRenderTargets {
 	ComPtr<ID3D12DescriptorHeap> m_MRTHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
+	int m_ResultRenderTargetIndex = -1;
+	ComPtr<ID3D12DescriptorHeap> m_ResultRenderTargetHeap;
 };
 
 //struct ToLoadLightDataInfo {
@@ -154,7 +156,6 @@ private:
 	bool LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> commandList);
 	bool MakeLightData(ComPtr<ID3D12GraphicsCommandList> commandList);					// todo 카메라마다 만들어줘야 할지 고민해보자
 	bool MakeShadowMaps();
-	bool LoadShadowMappingResource(ComPtr<ID3D12GraphicsCommandList> commandList);
 
 	// mesh/material 에 로드 할 것들이 남아 있다면 로드
 	bool LateInit(ComPtr<ID3D12GraphicsCommandList> commandList);
@@ -221,12 +222,15 @@ public:
 	// for multiple render target / post processing
 	void SetMRTStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState, int cameraIdx);
 	void ClearMRTS(ComPtr<ID3D12GraphicsCommandList> cmdList, const float color[4], int cameraIdx);
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart(int cameraIdx) const;
-	D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedDSV(int cameraIdx) const;
+	//D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedRenderTargetStart(int cameraIdx) const;
+	//D3D12_CPU_DESCRIPTOR_HANDLE GetDefferedDSV(int cameraIdx) const;
+	const CameraRenderTargets& GetCameraRenderTargetData(int cameraIdx) const { return m_CameraRenderTargets[cameraIdx]; }
 
-	int GetPostProcessingMaterial() const;
+	Material* GetPreLoadedMaterial(PRE_LOADED_MATERIALS mat) const;
+	//int GetPostProcessingMaterial() const;
 	int GetCameraRenderTargetIndex(int camIdx, MULTIPLE_RENDER_TARGETS rtType) const;
 	void SetCameraToPostProcessing(int camIdx);
+	
 
 	// for shadowmap
 	void SetShadowMapStates(ComPtr<ID3D12GraphicsCommandList> cmdList, D3D12_RESOURCE_STATES toState);
@@ -238,7 +242,6 @@ public:
 	int GetShadowMapCamIdx(int idx);
 	void SetShadowMapCamera(ComPtr<ID3D12GraphicsCommandList> cmdList, int idx) const;
 	void UpdateShadowMapView(int idx, const LightData& light);
-	int GetShadowMappingMaterial() const;
 	BoundingFrustum* GetShadowMapFrustum(int idx);
 
 	int GetShadowMapRTVIdx(int idx);
@@ -252,10 +255,6 @@ public:
 
 	void SetMainCamera(component::Camera* cam) { m_MainCamera = cam; }
 	
-#ifdef _DEBUG
-	int GetDebuggingMaterial() const { return m_DebuggingMaterial; };
-#endif
-
 private:
 	// 메시 데이터
 	std::vector<COOLResourcePtr> m_VertexIndexDatas;
@@ -322,18 +321,24 @@ private:
 	int m_ShadowMapRTVStartIdx = -1;
 	int m_ShadowMapDSVStartIdx = -1;
 
-	// postProcessingMaterial;
-	const char* m_PostProcessing = "_PostProcessing";
-	int m_PostProcessingMaterial = -1;
+	int m_PreLoadedMaterials[static_cast<int>(PRE_LOADED_MATERIALS::MATERIAL_END)] = { 0 };
 
-	// shadowMappingMaterial;
-	const char* m_ShadowMapping = "_ShadowMapping";
-	int m_ShadowMappingMaterial = -1;
-
-#ifdef _DEBUG
-	const char* m_Debuggging = "_ForDebug";
-	int m_DebuggingMaterial = -1;
-#endif
+//	// postProcessingMaterial;
+//	const char* m_PostProcessing = "_PostProcessing";
+//	int m_PostProcessingMaterial = -1;
+//
+//	// shadowMappingMaterial;
+//	const char* m_ShadowMapping = "_ShadowMapping";
+//	int m_ShadowMappingMaterial = -1;
+//
+//	// blit;
+//	const char* m_Blit = "_Blit";
+//	int m_BlitMaterial = -1;
+//
+//#ifdef _DEBUG
+//	const char* m_Debuggging = "_ForDebug";
+//	int m_DebuggingMaterial = -1;
+//#endif
 
 public:
 	// light datas

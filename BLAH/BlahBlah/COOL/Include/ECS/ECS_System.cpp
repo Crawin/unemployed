@@ -20,6 +20,8 @@ namespace ECSsystem {
 			const std::list<Entity*>& children = ent->GetChildren();
 
 			// build world matrix for child
+			if (self->GetEntity()->GetParent() == nullptr)
+				trans->SetParentTransform(Matrix4x4::Identity());
 			XMFLOAT4X4 parentMatrix = trans->GetWorldTransform();
 
 			for (Entity* child : children) {
@@ -110,6 +112,8 @@ namespace ECSsystem {
 			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixLookToLH(pos, look, up));
 			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
 
+			// sync states to
+			cam->SyncActiveState();
 			};
 		
 		// sync with renderer world matrix
@@ -248,8 +252,19 @@ namespace ECSsystem {
 		//////////////////////////////////////////
 		// Pawn Inventory Action
 		std::function<void(Pawn*, Inventory*)> pawnInvenAction = [deltaTime, manager](Pawn* pawn, Inventory* inven) {
-			Entity* holding = inven->GetCurrentHoldingItem();
+			// holding change
+			for (int i = 0; i < MAX_INVENTORY; ++i) {
+				int start = static_cast<int>(GAME_INPUT::NUM_1);
 
+				GAME_INPUT key = static_cast<GAME_INPUT>(i + start);
+				if (pawn->GetInputState(key) == KEY_STATE::START_PRESS) {
+					inven->ChangeHoldingItem(i, manager);
+					break;
+				}
+			}
+
+			// go with holding action
+			Entity* holding = inven->GetCurrentHoldingItem();
 			if (holding == nullptr) return;
 
 			Holdable* holdComp = manager->GetComponent<Holdable>(holding);
@@ -260,6 +275,7 @@ namespace ECSsystem {
 				return;
 			}
 
+			// action
 			auto& maps = holdComp->GetActionMap();
 			//auto& inputState = pawn->GetInputState();
 
@@ -493,6 +509,8 @@ namespace ECSsystem {
 		// collide check
 		std::function<void(DynamicCollider*, SelfEntity*)> dynamicWithStatic =
 			[&circleBoxCol, manager](DynamicCollider* a, SelfEntity* aEnt) {
+			if (a->IsActive() == false) return;
+
 			auto& boxA = a->GetBoundingBox();
 			auto& originBoxA = a->GetOriginalBox();
 
@@ -539,6 +557,8 @@ namespace ECSsystem {
 
 			// if both static, skip
 			if (a->IsStaticObject() && b->IsStaticObject()) return;
+
+			if (a->IsActive() == false || b->IsActive() == false) return;
 
 			auto& boxA = a->GetBoundingBox();
 			auto& boxB = b->GetBoundingBox();
@@ -726,7 +746,7 @@ namespace ECSsystem {
 
 		// friction on xz
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
-			if (sp->IsToCalculate() == false) return;
+			if (sp->IsToCalculate() == false || sp->IsFrictionActive() == false) return;
 
 			const float friction = 1100.0f;
 			// if moving

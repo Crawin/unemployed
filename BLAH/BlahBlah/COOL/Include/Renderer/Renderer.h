@@ -59,7 +59,7 @@ public:
 	bool CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources);
 
 	// create rtv
-	bool CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources, int startIdx, int numOfIdx);
+	bool CreateRenderTargetView(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources, int startIdx, int numOfIdx = 1);
 
 	// create dsv
 	bool CreateDepthStencilView(ComPtr<ID3D12DescriptorHeap>& heap, COOLResourcePtr& resources);
@@ -123,10 +123,7 @@ public:
 	// 커맨드 리스트 execute 하고 업로드힙의 내용을 지운다.
 	void ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
 
-	// render, 씬의 렌더러로 바꿀 예정이니 얘는 삭제 예정
 	void Render();
-
-	//Renderer* GetRendererPtr();
 
 private:
 	static const UINT m_NumSwapChainBuffers = 2;

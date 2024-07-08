@@ -2,6 +2,7 @@
 	"name": "UIBaseShader",
 	"NumRenderTargets": 1,
 	"RenderTargetFormat_0": 0,
+	"DepthStencilViewFormat": 0,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
 	"VS": "UIBaseShader.hlsl",
