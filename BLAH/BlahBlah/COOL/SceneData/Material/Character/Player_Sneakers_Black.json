@@ -2,7 +2,7 @@
 	"name": "Player_Sneakers_Black",
 	"BaseColor": "Character/Player/Sneakers/Mat_Sneakers_Base_Color_6",
 	"Roughness": "Character/Player/Sneakers/Mat_Sneakers_Roughness",
-	"Metalic": "Black",
+	"Metalic": "ZeroOneBlack",
 	"AO": "Character/Player/Sneakers/Mat_Sneakers_AO",
 	"Normal": "Character/Player/Sneakers/Mat_Sneakers_Normal",
 	"Shader": "TestMeshDiffered"

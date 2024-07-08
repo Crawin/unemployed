@@ -2,7 +2,7 @@
 	"name": "Player_Hands",
 	"BaseColor": "Character/Player/Hands/Mat_hands_Base_Color_1",
 	"Roughness": "Character/Player/Hands/Mat_hands_Roughness",
-	"Metalic": "Black",
+	"Metalic": "ZeroOneBlack",
 	"AO": "Character/Player/Hands/Mat_hands_AO",
 	"Normal": "Character/Player/Hands/Mat_hands_Normal",
 	"Shader": "TestMeshDiffered"

@@ -1,9 +1,9 @@
 {
 	"name": "Guard",
 	"BaseColor": "Character/Guard_Dif",
-	"Roughness": null,
-	"Metalic": null,
-	"AO": null,
+	"Roughness": "White",
+	"Metalic": "AllmostBlack",
+	"AO": "White",
 	"Normal": null,
 	"Shader": "TestMeshDiffered"
 }
