@@ -175,7 +175,7 @@ namespace ECSsystem {
 			};
 
 		// input으로 pysics 업데이트
-		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime, &mouseMove](Transform* tr, Pawn* pawn, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*, SelfEntity*)> inputFunc = [deltaTime, &mouseMove, manager](Transform* tr, Pawn* pawn, Physics* sp, SelfEntity* self) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
@@ -188,8 +188,18 @@ namespace ECSsystem {
 
 			if (pawn->GetInputState(GAME_INPUT::SPACE_BAR) == KEY_STATE::START_PRESS)
 			{ 
-				XMFLOAT3 temp = sp->GetVelocity();
-				sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
+				Entity* ent = self->GetEntity();
+				Player* pl = manager->GetComponent<Player>(ent);
+				if (ent != nullptr && pl->IsAir() == false) {
+					XMFLOAT3 temp = sp->GetVelocity();
+					sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
+
+					pl->SetJumping(true);
+					AnimationController* ctrl = manager->GetComponent<AnimationController>(ent);
+					ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_START);
+				}
+
+
 			}
 
 			float maxSpeed = 200.0f;
@@ -598,6 +608,7 @@ namespace ECSsystem {
 
 			};
 
+
 		XMVECTOR faces[6] = {
 			{ 1.0f, 0.0f, 0.0f },
 			{ 0.0f, 1.0f, 0.0f },
@@ -641,8 +652,8 @@ namespace ECSsystem {
 			};
 
 		// handle collide (move back, reduce speed)
-		std::function<void(DynamicCollider*, Physics*, Transform*)> collideHandle =
-			[&faces, deltaTime, manager](DynamicCollider* col, Physics* sp, Transform* tr) {
+		std::function<void(DynamicCollider*, Physics*, Transform*, SelfEntity*)> collideHandle =
+			[&faces, deltaTime, manager](DynamicCollider* col, Physics* sp, Transform* tr, SelfEntity* self) {
 			if (col->GetCollided() == false || col->IsTrigger()) return;
 
 			auto& colVec = col->GetCollidedEntitiesList();
@@ -700,6 +711,26 @@ namespace ECSsystem {
 				XMStoreFloat3(&backedPos, newPos);
 				tr->SetPosition(backedPos);
 
+				// if player
+				Player* player = manager->GetComponent<Player>(self->GetEntity());
+				if (player != nullptr) {
+					XMVECTOR up{ 0,1,0 };
+					float dot = XMVectorGetX(XMVector3Dot(up, hitFace));
+					float angle = XMConvertToDegrees(acos(dot));
+
+
+					player->SetOnGround(false);
+
+					// if hit angle degree smaller than 40, it's land
+					if (angle < 40.0f && player->IsAir() == true) {
+						player->SetJumping(false);
+						player->SetOnGround(true);
+						DebugPrint(std::format("angle: {}", angle));
+
+						AnimationController* ctrl = manager->GetComponent<AnimationController>(self->GetEntity());
+						ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_LAND);
+					}
+				}
 
 				//DebugPrint(std::format("hit face: {}", idx));
 				//DebugPrint(std::format("\t{}, {}, {}", XMVectorGetX(hitFace), XMVectorGetY(hitFace), XMVectorGetZ(hitFace)));
@@ -708,9 +739,33 @@ namespace ECSsystem {
 			}
 			};
 
+		// set players to falling if they are on air
+		std::function<void(Physics*, Player*, AnimationController*)> goFall = [](Physics* py, Player* pl, AnimationController* ctrl) {
+			float ySpeed = py->GetVelocity().y;
+
+			// if should start falling
+
+			if (pl->IsAir() == false && ySpeed < -150.0f) {
+				pl->SetJumping(true);
+
+				ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_ING);
+			}
+
+
+			//// landing
+			//if (pl->IsAir() == true && ySpeed >= -15.0f) {
+			//	pl->SetJumping(false);
+
+			//	ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_LAND);
+			//}
+
+
+			};
+
+
 		manager->Execute(syncStatic);
 		manager->Execute(syncDynamic);
-
+		
 		manager->Execute(dynamicWithStatic);
 		manager->ExecuteSquare<component::DynamicCollider, component::SelfEntity>(dynamicWithDynamic);
 
@@ -718,6 +773,8 @@ namespace ECSsystem {
 		manager->Execute(handleEventDynamic);
 
 		manager->Execute(collideHandle);
+
+		manager->Execute(goFall);
 	}
 
 	void SimulatePhysics::Update(ECSManager* manager, float deltaTime)
