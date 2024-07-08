@@ -419,6 +419,17 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[76] = new NODE(76, -4.27, 17.698, -12.491);
 	graph[77] = new NODE(77, -6.354, 17.698, -13.565);
 	graph[78] = new NODE(78, -1.832, 17.698, -13.565);
+	graph[79] = new NODE(79, -1.731, 8.648, -5.254);
+
+	graph[80] = new NODE(80, -0.185, 8.648, -5.254);
+	graph[81] = new NODE(81, 14.2, 8.648, -1.76);
+	graph[82] = new NODE(82, 9.452, 8.648, -5.06);
+	graph[83] = new NODE(83, 4.245, 8.648, -5.06);
+	graph[84] = new NODE(84, -1.731, 8.648, -1.898);
+	graph[85] = new NODE(85, -1.731, 8.648, 2.173);
+	graph[86] = new NODE(86, -1.731, 8.648, 6.032);
+	graph[87] = new NODE(87, 3.32, 8.648, 6.032);
+	graph[88] = new NODE(88, 9.19, 8.648, 6.032);
 
 	graph[0]->neighbors.emplace_back(graph[1]);
 
@@ -558,6 +569,7 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[37]->neighbors.emplace_back(graph[38]);
 	graph[37]->neighbors.emplace_back(graph[36]);
 	graph[37]->neighbors.emplace_back(graph[39]);
+	graph[37]->neighbors.emplace_back(graph[79]);
 
 	graph[38]->neighbors.emplace_back(graph[36]);
 	graph[38]->neighbors.emplace_back(graph[37]);
@@ -566,25 +578,27 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 
 	graph[39]->neighbors.emplace_back(graph[41]);
 	graph[39]->neighbors.emplace_back(graph[40]);
-	graph[39]->neighbors.emplace_back(graph[44]);
+	graph[39]->neighbors.emplace_back(graph[79]);
 	graph[39]->neighbors.emplace_back(graph[36]);
 	graph[39]->neighbors.emplace_back(graph[37]);
 	graph[39]->neighbors.emplace_back(graph[38]);
+	graph[39]->neighbors.emplace_back(graph[84]);
 
 	graph[40]->neighbors.emplace_back(graph[39]);
 
 	graph[41]->neighbors.emplace_back(graph[39]);
-	graph[41]->neighbors.emplace_back(graph[42]);
+	graph[41]->neighbors.emplace_back(graph[86]);
 	graph[41]->neighbors.emplace_back(graph[47]);
+	graph[41]->neighbors.emplace_back(graph[85]);
 
-	graph[42]->neighbors.emplace_back(graph[41]);
+	graph[42]->neighbors.emplace_back(graph[88]);
 	graph[42]->neighbors.emplace_back(graph[43]);
-	graph[42]->neighbors.emplace_back(graph[44]);
+	graph[42]->neighbors.emplace_back(graph[80]);
 
 	graph[43]->neighbors.emplace_back(graph[42]);
 
-	graph[44]->neighbors.emplace_back(graph[39]);
-	graph[44]->neighbors.emplace_back(graph[42]);
+	graph[44]->neighbors.emplace_back(graph[82]);
+	graph[44]->neighbors.emplace_back(graph[81]);
 	graph[44]->neighbors.emplace_back(graph[45]);
 
 	graph[45]->neighbors.emplace_back(graph[44]);
@@ -706,4 +720,38 @@ void MakeGraph(std::unordered_map<int, NODE*>& graph)
 	graph[78]->neighbors.emplace_back(graph[76]);
 	graph[78]->neighbors.emplace_back(graph[77]);
 
+	graph[79]->neighbors.emplace_back(graph[83]);
+	graph[79]->neighbors.emplace_back(graph[39]);
+	graph[79]->neighbors.emplace_back(graph[37]);
+	graph[79]->neighbors.emplace_back(graph[84]);
+
+	graph[80]->neighbors.emplace_back(graph[42]);
+	graph[80]->neighbors.emplace_back(graph[81]);
+
+	graph[81]->neighbors.emplace_back(graph[80]);
+	graph[81]->neighbors.emplace_back(graph[44]);
+
+	graph[82]->neighbors.emplace_back(graph[44]);
+	graph[82]->neighbors.emplace_back(graph[83]);
+
+	graph[83]->neighbors.emplace_back(graph[79]);
+	graph[83]->neighbors.emplace_back(graph[82]);
+
+	graph[84]->neighbors.emplace_back(graph[79]);
+	graph[84]->neighbors.emplace_back(graph[39]);
+	graph[84]->neighbors.emplace_back(graph[85]);
+
+	graph[85]->neighbors.emplace_back(graph[84]);
+	graph[85]->neighbors.emplace_back(graph[86]);
+	graph[85]->neighbors.emplace_back(graph[41]);
+
+	graph[86]->neighbors.emplace_back(graph[41]);
+	graph[86]->neighbors.emplace_back(graph[85]);
+	graph[86]->neighbors.emplace_back(graph[87]);
+
+	graph[87]->neighbors.emplace_back(graph[86]);
+	graph[87]->neighbors.emplace_back(graph[88]);
+
+	graph[88]->neighbors.emplace_back(graph[87]);
+	graph[88]->neighbors.emplace_back(graph[42]);
 }
