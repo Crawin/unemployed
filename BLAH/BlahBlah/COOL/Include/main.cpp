@@ -44,10 +44,10 @@ static std::wstring GetLatestWinPixGpuCapturerPath()
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 #ifdef _DEBUG
-    if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0)
-    {
-        LoadLibrary(GetLatestWinPixGpuCapturerPath().c_str());
-    }
+    //if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0)
+    //{
+    //    LoadLibrary(GetLatestWinPixGpuCapturerPath().c_str());
+    //}
 #endif
 
 	SIZE temp = { 1280, 720 };

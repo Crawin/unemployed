@@ -12,7 +12,9 @@
 	{
 		"MaxAngle": 120.0,
 		"Locked": true,
-		"Answer": 1234
+		"Answer": 1234,
+		"Game": 1,
+		"FailCount":3
 	},
 
 	"Collider": 

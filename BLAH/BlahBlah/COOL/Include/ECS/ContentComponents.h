@@ -87,7 +87,7 @@ namespace component {
 
 		bool m_Locked = true;
 		int m_Answer = 0;
-		int m_Length = 0;
+		int m_Gamemode = 0;
 
 
 	public:
@@ -100,6 +100,7 @@ namespace component {
 		float GetMaxAngle() const { return m_MaxAngle; }
 		float GetCurAngle() const { return m_CurrentAngle; }
 		int GetAnswer() const { return m_Answer; }
+		int GetGamemode() const { return m_Gamemode; }
 
 		void SetLock(bool lock) { m_Locked = lock; }
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
@@ -107,23 +108,6 @@ namespace component {
 
 	};
 
-	class DoorKey : public ComponentBase<DoorKey> {
-		Entity* m_DoorEntity = nullptr;
-		int m_Length = 0;
-		int m_Current = 0;
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
-		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
-
-		virtual void ShowYourself() const;
-
-		Entity* GetDoor() { return m_DoorEntity; }
-
-		void SetDoor(Entity* door) { m_DoorEntity = door; }
-		void SetAnswer(int len) { m_Length = len; }
-		int GetAnswer() const { return m_Length; }
-
-	};
 
 	/////////////////////////////////////////////////////////
 	// Holdable Component
@@ -254,5 +238,24 @@ namespace component {
 
 		void SetCurrent(int Current) { m_Current = Current; }
 		int GetCurrent() const { return m_Current; }
+	};
+
+	// 열쇠 미니게임의 결과
+	class UIDoorKey : public ComponentBase<UIDoorKey> {
+		Entity* m_DoorEntity = nullptr;
+		int m_Length = 0;
+		int m_Current = 0;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		Entity* GetDoor() { return m_DoorEntity; }
+
+		void SetDoor(Entity* door) { m_DoorEntity = door; }
+		void SetAnswer(int len) { m_Length = len; }
+		int GetAnswer() const { return m_Length; }
+
 	};
 }

@@ -1,5 +1,5 @@
 {
-	"Name" : "Knob_1_Root",
+	"Name": "Knob_1_Root",
 
 	"Transform" : 
 	{
@@ -8,11 +8,13 @@
 		"Scale" : [ 1.0, 1.0, 1.0 ]
 	},
 
-	"DoorLength": 
+	"Door": 
 	{
 		"MaxAngle": 120.0,
 		"Locked": true,
-		"Length": 5
+		"Answer": 5,
+		"Game": 2,
+		"FailCount":3
 	},
 
 	"Collider": 
@@ -32,7 +34,7 @@
 			"Name" : "Knob_1",
 			"Renderer" : 
 			{
-				"Material" : "NoMaterial",
+				"Material" : "Object/Knob",
 				"Mesh" : "Knob_1.Knob_1"
 			},
 			"Transform" : 
