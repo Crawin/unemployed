@@ -51,6 +51,15 @@ namespace ECSsystem {
 	};
 
 	/////////////////////////////////////////////////////////
+// Allocate ServerID When player login or npc start
+//
+	class AllocateServer : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
+
+	/////////////////////////////////////////////////////////
 	// input to update physics
 	//
 	class UpdateInput : public System {

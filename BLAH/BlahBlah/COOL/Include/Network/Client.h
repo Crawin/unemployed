@@ -22,6 +22,7 @@
 
 #define BUFSIZE    512
 constexpr int PoliceID = 1;
+constexpr int StudentID = 2;
 
 void print_error(const char* msg, int err_no);
 
@@ -88,8 +89,6 @@ private:
 	const float m_SendFrame = 1.0f / 60.0f;
 
 public:
-	//std::list<char> over_buf;
-	//char* overbuf;
 	std::unordered_map<int, GameCharacters> characters;
 	VIVOX_STATE* vivox_state;
 

@@ -79,6 +79,7 @@ namespace component {
 	//
 	class Button : public ComponentBase<Button> {
 		ButtonEventFunction m_OnButtonDown = nullptr;
+		ButtonEventFunction m_OnButtonPressing = nullptr;
 		ButtonEventFunction m_OnButtonRelease = nullptr;
 
 		bool m_Pressing = false;
@@ -90,9 +91,11 @@ namespace component {
 		virtual void ShowYourself() const;
 
 		const ButtonEventFunction& GetButtonDownEvent() const { return m_OnButtonDown; }
+		const ButtonEventFunction& GetButtonPressingEvent() const { return m_OnButtonPressing; }
 		const ButtonEventFunction& GetButtonReleaseEvent() const { return m_OnButtonRelease; }
 
 		void SetButtonDownEvent(const ButtonEventFunction& e) { m_OnButtonDown = e; }
+		void SetButtonPressingEvent(const ButtonEventFunction& e) { m_OnButtonPressing = e; }
 		void SetButtonReleaseEvent(const ButtonEventFunction& e) { m_OnButtonRelease = e; }
 	};
 

@@ -250,5 +250,5 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	//normalW -= 1;
 	float4 positionW = float4(Tex2DList[g_PositionIndex].Sample(samplerWarp, input.uv));
 	
-	return Lighting(albedoColor, roughness.r, metalic.r, ao.r, normalize(normalW.rgb), positionW.xyz);
+	return Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
 }

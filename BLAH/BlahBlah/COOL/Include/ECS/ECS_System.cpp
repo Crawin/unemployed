@@ -175,7 +175,7 @@ namespace ECSsystem {
 			};
 
 		// input으로 pysics 업데이트
-		std::function<void(Transform*, Pawn*, Physics*)> inputFunc = [deltaTime, &mouseMove](Transform* tr, Pawn* pawn, Physics* sp) {
+		std::function<void(Transform*, Pawn*, Physics*, SelfEntity*)> inputFunc = [deltaTime, &mouseMove, manager](Transform* tr, Pawn* pawn, Physics* sp, SelfEntity* self) {
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
@@ -188,8 +188,18 @@ namespace ECSsystem {
 
 			if (pawn->GetInputState(GAME_INPUT::SPACE_BAR) == KEY_STATE::START_PRESS)
 			{ 
-				XMFLOAT3 temp = sp->GetVelocity();
-				sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
+				Entity* ent = self->GetEntity();
+				Player* pl = manager->GetComponent<Player>(ent);
+				if (ent != nullptr && pl->IsAir() == false) {
+					XMFLOAT3 temp = sp->GetVelocity();
+					sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
+
+					pl->SetJumping(true);
+					AnimationController* ctrl = manager->GetComponent<AnimationController>(ent);
+					ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_START);
+				}
+
+
 			}
 
 			float maxSpeed = 200.0f;
@@ -371,10 +381,10 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
-	void SyncPosition::Update(ECSManager* manager, float deltaTime)
+	void AllocateServer::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
-		(component::Server* server, component::Name* name, component::Transform* tr, component::Physics* sp) {
+		std::function<void(component::Server*, component::Name*)> allocate = []
+		(component::Server* server, component::Name* name) {
 			auto& client = Client::GetInstance();
 			const SOCKET* playerSock = client.getPSock();
 			short type = client.getCharType();
@@ -400,51 +410,20 @@ namespace ECSsystem {
 			}
 			if (n.compare("Guard") == 0 && server->getID() == NULL)
 				server->setID(1);
+			if (n.compare("Student1") == 0 && server->getID() == NULL)
+				server->setID(2);
+			};
+		manager->Execute(allocate);
+	}
 
-			//if (playerSock[0])				// 클라 본인의 캐릭터가 할당되었을 때
-			//{
-			//	switch (type)				// 클라 본인이 호스트인가 게스트인가?
-			//	{
-			//	case 0:
-			//		// 아직 방 생성 전
-			//		break;
-			//	case 1:						// 호스트
-			//		if (server->getID() == NULL && n.compare("Player1") == 0)
-			//			server->setID(playerSock[0]);
-			//		break;
-			//	case 2:						// 게스트
-			//		if (server->getID() == NULL && n.compare("Player2") == 0)
-			//		{
-			//			server->setID(playerSock[0]);
-			//		}
-			//		break;
-			//	default:
-			//		std::cout << "클라이언트 주인의 캐릭터 타입 오류" << std::endl;
-			//		while (1);
-			//		break;
-			//	}
-			//}
-			//if (playerSock[1])				// 상대편의 클라가 할당되었을 때
-			//{
-			//	switch (type)				// 클라 본인이 호스트인가 게스트인가?
-			//	{
-			//	case 1:						// 클라 본인이 호스트이므로, 상대편 클라는 게스트로 할당
-			//		if (server->getID() == NULL && n.compare("Player2") == 0)
-			//			server->setID(playerSock[1]);
-			//		break;
-			//	case 2:						// 클라 본인이 게스트이므로, 상대편 클라는 호스트로 할당
-			//		if (server->getID() == NULL && n.compare("Player1") == 0)
-			//		{
-			//			server->setID(playerSock[1]);
-			//		}
-			//		break;
-			//	default:
-			//		std::cout << "클라이언트 주인의 캐릭터 타입 오류" << std::endl;
-			//		while (1);
-			//		break;
-			//	}
-			//}
-			// client의 1P, 2P 소켓 아이디 적용
+	void SyncPosition::Update(ECSManager* manager, float deltaTime)
+	{
+		std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
+		(component::Server* server, component::Name* name, component::Transform* tr, component::Physics* sp) {
+			auto& client = Client::GetInstance();
+			const SOCKET* playerSock = client.getPSock();
+			short type = client.getCharType();
+			auto& n = name->getName();
 
 			auto id = server->getID();
 			if (id && client.characters[id].IsUpdated())
@@ -598,6 +577,7 @@ namespace ECSsystem {
 
 			};
 
+
 		XMVECTOR faces[6] = {
 			{ 1.0f, 0.0f, 0.0f },
 			{ 0.0f, 1.0f, 0.0f },
@@ -641,8 +621,8 @@ namespace ECSsystem {
 			};
 
 		// handle collide (move back, reduce speed)
-		std::function<void(DynamicCollider*, Physics*, Transform*)> collideHandle =
-			[&faces, deltaTime, manager](DynamicCollider* col, Physics* sp, Transform* tr) {
+		std::function<void(DynamicCollider*, Physics*, Transform*, SelfEntity*)> collideHandle =
+			[&faces, deltaTime, manager](DynamicCollider* col, Physics* sp, Transform* tr, SelfEntity* self) {
 			if (col->GetCollided() == false || col->IsTrigger()) return;
 
 			auto& colVec = col->GetCollidedEntitiesList();
@@ -700,6 +680,25 @@ namespace ECSsystem {
 				XMStoreFloat3(&backedPos, newPos);
 				tr->SetPosition(backedPos);
 
+				// if player
+				Player* player = manager->GetComponent<Player>(self->GetEntity());
+				if (player != nullptr) {
+					XMVECTOR up{ 0,1,0 };
+					float dot = XMVectorGetX(XMVector3Dot(up, hitFace));
+					float angle = XMConvertToDegrees(acos(dot));
+
+
+					player->SetOnGround(false);
+
+					// if hit angle degree smaller than 40, it's land
+					if (angle < 40.0f && player->IsAir() == true) {
+						player->SetJumping(false);
+						player->SetOnGround(true);
+
+						AnimationController* ctrl = manager->GetComponent<AnimationController>(self->GetEntity());
+						ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_LAND);
+					}
+				}
 
 				//DebugPrint(std::format("hit face: {}", idx));
 				//DebugPrint(std::format("\t{}, {}, {}", XMVectorGetX(hitFace), XMVectorGetY(hitFace), XMVectorGetZ(hitFace)));
@@ -708,9 +707,33 @@ namespace ECSsystem {
 			}
 			};
 
+		// set players to falling if they are on air
+		std::function<void(Physics*, Player*, AnimationController*)> goFall = [](Physics* py, Player* pl, AnimationController* ctrl) {
+			float ySpeed = py->GetVelocity().y;
+
+			// if should start falling
+
+			if (pl->IsAir() == false && ySpeed < -150.0f) {
+				pl->SetJumping(true);
+
+				ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_ING);
+			}
+
+
+			//// landing
+			//if (pl->IsAir() == true && ySpeed >= -15.0f) {
+			//	pl->SetJumping(false);
+
+			//	ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_LAND);
+			//}
+
+
+			};
+
+
 		manager->Execute(syncStatic);
 		manager->Execute(syncDynamic);
-
+		
 		manager->Execute(dynamicWithStatic);
 		manager->ExecuteSquare<component::DynamicCollider, component::SelfEntity>(dynamicWithDynamic);
 
@@ -718,6 +741,8 @@ namespace ECSsystem {
 		manager->Execute(handleEventDynamic);
 
 		manager->Execute(collideHandle);
+
+		manager->Execute(goFall);
 	}
 
 	void SimulatePhysics::Update(ECSManager* manager, float deltaTime)
@@ -873,17 +898,32 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			if (PtInRect(&rect, mousePos) && controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT) == KEY_STATE::END_PRESS) {
+			
+			if (PtInRect(&rect, mousePos)) {
+				const ButtonEventFunction* buttonFunc = nullptr;
+				switch (controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT)) {
 
-				const ButtonEventFunction& butEvent = but->GetButtonReleaseEvent();
-				if (butEvent != nullptr) {
-					butEvent(self->GetEntity());
-					DebugPrint("Button Hit!!");
+				case KEY_STATE::START_PRESS:
+					buttonFunc = &but->GetButtonDownEvent();
+					DebugPrint("Button Down");
+					break;
 
+				case KEY_STATE::PRESSING:
+					buttonFunc = &but->GetButtonPressingEvent();
+					DebugPrint("Button Down");
+					break;
+
+				case KEY_STATE::END_PRESS:
+					buttonFunc = &but->GetButtonReleaseEvent();
+					DebugPrint("Button Up");
+					break;
 
 				}
-			}
 
+				if (buttonFunc != nullptr) {
+					(*buttonFunc)(self->GetEntity());
+				}
+			}
 			};
 
 		std::function<void(UICanvas*, SelfEntity*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, SelfEntity* selfEntity) {

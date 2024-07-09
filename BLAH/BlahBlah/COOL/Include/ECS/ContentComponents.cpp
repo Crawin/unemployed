@@ -23,40 +23,6 @@ namespace component {
 
 		// set update function
 		AnimationPlayer* player = ctrl->GetPlayer();
-		if (player->IsStateOwn(ANIMATION_STATE::BLENDED_MOVING_STATE)) {
-			player->SetUpdateFunctionTo(ANIMATION_STATE::BLENDED_MOVING_STATE, [manager, selfEntity](float deltaTime, void* data) {
-				Point2D* pt = reinterpret_cast<Point2D*>(data);
-
-				Physics* py = manager->GetComponent<Physics>(selfEntity);
-				Transform* tr = manager->GetComponent<Transform>(selfEntity);
-				XMVECTOR lookDir{ 0, 0, 1, 0 };
-				XMVECTOR up{ 0, 1, 0 };
-				XMMATRIX world = XMLoadFloat4x4(&tr->GetWorldTransform());
-				lookDir = XMVector3Normalize(XMVector4Transform(lookDir, world));
-
-				XMVECTOR movingDir = XMVector3Normalize(XMLoadFloat3(&py->GetVelocity()));
-
-				// 스칼라 삼중적
-				float dot = std::clamp(XMVectorGetX(XMVector3Dot(lookDir, movingDir)), -1.0f, 1.0f);
-				float angle = XMConvertToDegrees(acos(dot));
-				float scalarTriPro = XMVectorGetX(XMVector3Dot(XMVector3Cross(lookDir, movingDir), up));
-				if (scalarTriPro < 0)
-					angle = 360.0f - angle;
-				
-				pt->m_Speed = py->GetCurrentVelocityLenOnXZ();
-				pt->m_Angle = angle;
-
-				if (IsZero(pt->m_Speed)) {
-					pt->m_Speed = 0;
-					pt->m_Angle = 0;
-				}
-
-				});
-
-			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
-			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
-		}
-
 
 		using COND = std::function<bool(void*)>;
 
@@ -89,24 +55,63 @@ namespace component {
 			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
 			};
 
-		COND getup = [ctrl](void* data) {
+		COND endPlaying = [ctrl](void* data) {
 			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
 			};
 
-		// insert transition (graph)
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
-		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
-		ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::GETTING_HIT, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
-		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
 
-		// set start animation
-		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
-		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		if (player->IsStateOwn(ANIMATION_STATE::BLENDED_MOVING_STATE)) {
+			player->SetUpdateFunctionTo(ANIMATION_STATE::BLENDED_MOVING_STATE, [manager, selfEntity](float deltaTime, void* data) {
+				Point2D* pt = reinterpret_cast<Point2D*>(data);
+
+				Physics* py = manager->GetComponent<Physics>(selfEntity);
+				Transform* tr = manager->GetComponent<Transform>(selfEntity);
+				XMVECTOR lookDir{ 0, 0, 1, 0 };
+				XMVECTOR up{ 0, 1, 0 };
+				XMMATRIX world = XMLoadFloat4x4(&tr->GetWorldTransform());
+				lookDir = XMVector3Normalize(XMVector4Transform(lookDir, world));
+
+				XMVECTOR movingDir = XMVector3Normalize(XMLoadFloat3(&py->GetVelocity()));
+
+				// 스칼라 삼중적
+				float dot = std::clamp(XMVectorGetX(XMVector3Dot(lookDir, movingDir)), -1.0f, 1.0f);
+				float angle = XMConvertToDegrees(acos(dot));
+				float scalarTriPro = XMVectorGetX(XMVector3Dot(XMVector3Cross(lookDir, movingDir), up));
+				if (scalarTriPro < 0)
+					angle = 360.0f - angle;
+
+				pt->m_Speed = py->GetCurrentVelocityLenOnXZ();
+				pt->m_Angle = angle;
+
+				if (IsZero(pt->m_Speed)) {
+					pt->m_Speed = 0;
+					pt->m_Angle = 0;
+				}
+
+				});
+
+			ctrl->InsertCondition(ANIMATION_STATE::JUMP_START, ANIMATION_STATE::JUMP_ING, endPlaying);
+			ctrl->InsertCondition(ANIMATION_STATE::JUMP_LAND, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
+
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+		}
+
+		else {
+			// insert transition (graph)
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, idleToWalk);
+			ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::RUN, walkToRun);
+			ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::WALK, runToWalk);
+			ctrl->InsertCondition(ANIMATION_STATE::RUN, ANIMATION_STATE::GETTING_HIT, hit);
+			ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
+			ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, endPlaying);
+			// set start animation
+			//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+			//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);
+		}
 
 	}
 

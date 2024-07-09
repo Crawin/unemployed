@@ -2,7 +2,7 @@
 	"name": "Player_Pants_Black",
 	"BaseColor": "Character/Player/Pants/Mat_pants_Base_Color_2",
 	"Roughness": "Character/Player/Pants/Mat_pants_Roughness",
-	"Metalic": "Black",
+	"Metalic": "ZeroOneBlack",
 	"AO": "Character/Player/Pants/Mat_pants_AO",
 	"Normal": "Character/Player/Pants/Mat_pants_Normal",
 	"Shader": "TestMeshDiffered"

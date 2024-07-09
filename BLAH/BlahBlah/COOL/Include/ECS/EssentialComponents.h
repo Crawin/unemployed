@@ -642,10 +642,18 @@ namespace component {
 	// 플레이어 컴포넌트
 	//
 	class Player : public ComponentBase<Player> {
+		bool m_Jumping = false;
+		bool m_OnGround = false;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 		virtual void ShowYourself() const;
+
+		void SetJumping(bool jumpst) { m_Jumping = jumpst; }
+		void SetOnGround(bool state) { m_OnGround = state; }
+
+		bool IsAir() const { return m_Jumping && !m_OnGround; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -657,7 +665,7 @@ namespace component {
 		Entity* m_InteractionEntity = nullptr;
 		bool m_Active = false;
 		POINT m_MouseDif = { 0, 0 };
-
+		
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void ShowYourself() const;
