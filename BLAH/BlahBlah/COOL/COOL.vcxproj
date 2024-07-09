@@ -159,6 +159,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="External\Include\DDSTextureLoader12.h" />
+    <ClInclude Include="FmodSound.h" />
     <ClInclude Include="Include\Animation\Animation.h" />
     <ClInclude Include="Include\Animation\AnimationPlayer.h" />
     <ClInclude Include="Include\App\Application.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp" />
     <ClCompile Include="External\Include\jsoncpp.cpp" />
     <ClCompile Include="External\Include\VIVOX\VIVOX.cpp" />
+    <ClCompile Include="FmodSound.cpp" />
     <ClCompile Include="Include\Animation\Animation.cpp" />
     <ClCompile Include="Include\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="Include\App\Application.cpp" />

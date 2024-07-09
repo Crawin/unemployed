@@ -94,6 +94,9 @@
     <Filter Include="외부\Json">
       <UniqueIdentifier>{0b69166a-b7eb-4e8c-8369-a19446822c44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\App\FMOD">
+      <UniqueIdentifier>{0d23d05e-8423-41fa-aaf6-4d183ac50095}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -198,6 +201,9 @@
     <ClInclude Include="Include\ECS\ContentComponents.h">
       <Filter>소스 파일\ECS\Component\Content</Filter>
     </ClInclude>
+    <ClInclude Include="FmodSound.h">
+      <Filter>소스 파일\App\FMOD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -292,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="External\Include\jsoncpp.cpp">
       <Filter>외부\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="FmodSound.cpp">
+      <Filter>소스 파일\App\FMOD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

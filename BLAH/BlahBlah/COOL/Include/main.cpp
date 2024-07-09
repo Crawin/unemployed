@@ -2,6 +2,7 @@
 //
 #include "framework.h"
 #include "App/Application.h"
+#include "../FmodSound.h"
 
 #ifdef _DEBUG
 // PIX 구글 검색 ㄱ
@@ -57,7 +58,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lp
 		return 1;
 	}
 
-
+    start_fmod();
 
 	Application::GetInstance().StartProgram();
 
