@@ -78,9 +78,7 @@ namespace component {
 	// 버튼이 down, released 되면 실행되는 함수를 가짐
 	//
 	class Button : public ComponentBase<Button> {
-		ButtonEventFunction m_OnButtonDown = nullptr;
-		ButtonEventFunction m_OnButtonPressing = nullptr;
-		ButtonEventFunction m_OnButtonRelease = nullptr;
+		std::map<KEY_STATE, ButtonEventFunction> m_ButtonActions;
 
 		bool m_Pressing = false;
 		bool m_On = false;
@@ -90,13 +88,11 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		const ButtonEventFunction& GetButtonDownEvent() const { return m_OnButtonDown; }
-		const ButtonEventFunction& GetButtonPressingEvent() const { return m_OnButtonPressing; }
-		const ButtonEventFunction& GetButtonReleaseEvent() const { return m_OnButtonRelease; }
+		bool IsContain(KEY_STATE keySt) const { return m_ButtonActions.contains(keySt); }
 
-		void SetButtonDownEvent(const ButtonEventFunction& e) { m_OnButtonDown = e; }
-		void SetButtonPressingEvent(const ButtonEventFunction& e) { m_OnButtonPressing = e; }
-		void SetButtonReleaseEvent(const ButtonEventFunction& e) { m_OnButtonRelease = e; }
+		const ButtonEventFunction& GetButtonEvent(KEY_STATE keySt) { return m_ButtonActions[keySt]; }
+
+		void SetButtonDownEvent(KEY_STATE keySt, const ButtonEventFunction& e) { m_ButtonActions[keySt] = e; }
 	};
 
 
