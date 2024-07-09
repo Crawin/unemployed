@@ -109,9 +109,13 @@ void Scene::UpdateLightData()
 	// prepare for light evaluate
 	int& activeLights = m_ActiveLightSize;
 	activeLights = 0;
-	component::Camera* cam = camVec[0];
-	XMFLOAT3 camPos = cam->GetWorldPosition();
-	XMFLOAT3 camDir = cam->GetWorldDirection();
+	component::Camera* mainCamera = nullptr;
+	for (int i = 0; i < camVec.size(); ++i)
+		if (camVec[i]->IsMainCamera())
+			mainCamera = camVec[i];
+
+	XMFLOAT3 camPos = mainCamera->GetWorldPosition();
+	XMFLOAT3 camDir = mainCamera->GetWorldDirection();
 	std::vector<component::Light*> toCastShadowLights;
 	toCastShadowLights.reserve(m_ResourceManager->m_ShadowMaps.size());
 
@@ -119,7 +123,7 @@ void Scene::UpdateLightData()
 	std::function<void(component::Light*)> shadowMapEvaluate = [&camPos, &camDir, &toCastShadowLights](component::Light* lightComp) {
 		// unlink first
 		lightComp->GetLightData().m_CameraIdx = -1;
-
+		lightComp->RefreshScore();
 		// if allways not cast, return
 		if (lightComp->IsCastShadow() == false) return;
 
@@ -153,7 +157,7 @@ void Scene::UpdateLightData()
 
 			// todo 
 			// 하드코딩 경고!!!!!!!!!!!!!!!!!!!!!!!!!
-			auto& p = camVec[0]->GetPosition();
+			auto& p = mainCamera->GetPosition();
 
 			XMFLOAT3 up = light.m_Direction;
 			up.x *= -5000.0;

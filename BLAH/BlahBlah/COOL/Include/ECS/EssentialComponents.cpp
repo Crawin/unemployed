@@ -423,22 +423,27 @@ namespace component {
 
 		switch (static_cast<LIGHT_TYPES>(m_LightData.m_LightType)) {
 		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
-			if (m_LightData.m_Direction.y > 0) m_Score = -1000;
-			else m_Score = 100000;
+			if (m_LightData.m_Direction.y > 0) m_Score = -10000.0f;
+			else m_Score = 10000000000;
 			break;
 
 		case LIGHT_TYPES::SPOT_LIGHT:
 		{
-			XMVECTOR lightDirVec = XMLoadFloat3(&m_LightData.m_Direction);
-			XMVECTOR camDirVec = XMLoadFloat3(&camDir);
+			// if the light is down
+			if (camPos.y > m_LightData.m_Position.y) {
+				m_Score = -10000.0f;
+				break;
+			}
+			XMVECTOR camDirVec = XMVector3Normalize(XMLoadFloat3(&camDir));
+			XMVECTOR lightDirVec = XMVector3Normalize(XMLoadFloat3(&m_LightData.m_Direction));
 			XMVECTOR camToLight = XMLoadFloat3(&m_LightData.m_Position) - XMLoadFloat3(&camPos);
+			XMVECTOR camLightDirAdd = XMVector3Normalize(lightDirVec + XMVector3Normalize(camToLight));
 
-			float distFactor = 1.0f / std::max(XMVectorGetX(XMVector3Length(camToLight)), 0.1f);
-
-			float dotFactor = (XMVectorGetX(XMVector3Dot(lightDirVec, camDirVec)) + 1.0f) * 2.0f;
-			float dotToLight = (XMVectorGetX(XMVector3Dot(XMVector3Normalize(camToLight), camDirVec)) + 1.0f) * 2.0f;
-
-			m_Score = dotToLight * dotFactor * distFactor;
+			float distFactor = std::clamp(700.0f / std::max(XMVectorGetX(XMVector3Length(camToLight)), 0.1f), 0.0f, 1.0f);
+			float dotFactor = XMVectorGetX(XMVector3Dot(camLightDirAdd, camDirVec));
+			dotFactor = pow(dotFactor, 2.0f);
+			m_Score = distFactor + dotFactor;
+			//DebugPrint(std::format("distFactor: {}\ndotFactor: {}\n", distFactor, dotFactor));
 			break;
 		}
 

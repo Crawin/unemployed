@@ -432,6 +432,7 @@ namespace component {
 
 		void CalculateScore(const XMFLOAT3& camPos, const XMFLOAT3& camDir);
 
+		void RefreshScore() { m_Score = -100; }
 		float GetScore() const { return m_Score; }
 	};
 
