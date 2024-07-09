@@ -345,7 +345,7 @@ namespace component {
 						}
 
 						};
-					button->SetButtonReleaseEvent(check);
+					button->SetButtonDownEvent(KEY_STATE::END_PRESS, check);
 				}
 				else {
 					for (int i = 1; i <= 9; ++i) {
@@ -358,7 +358,7 @@ namespace component {
 								keypad->SetCurrent(current);
 
 								};
-							button->SetButtonReleaseEvent(password);
+							button->SetButtonDownEvent(KEY_STATE::END_PRESS, password);
 						}
 					}
 				}

@@ -900,29 +900,10 @@ namespace ECSsystem {
 
 			
 			if (PtInRect(&rect, mousePos)) {
-				const ButtonEventFunction* buttonFunc = nullptr;
-				switch (controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT)) {
+				KEY_STATE leftMouseState = controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT);
 
-				case KEY_STATE::START_PRESS:
-					buttonFunc = &but->GetButtonDownEvent();
-					DebugPrint("Button Down");
-					break;
-
-				case KEY_STATE::PRESSING:
-					buttonFunc = &but->GetButtonPressingEvent();
-					DebugPrint("Button Down");
-					break;
-
-				case KEY_STATE::END_PRESS:
-					buttonFunc = &but->GetButtonReleaseEvent();
-					DebugPrint("Button Up");
-					break;
-
-				}
-
-				if (buttonFunc != nullptr) {
-					(*buttonFunc)(self->GetEntity());
-				}
+				if (but->IsContain(leftMouseState))
+					but->GetButtonEvent(leftMouseState)(self->GetEntity());
 			}
 			};
 
