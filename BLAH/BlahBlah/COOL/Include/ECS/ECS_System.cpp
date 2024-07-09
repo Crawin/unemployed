@@ -898,17 +898,32 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			if (PtInRect(&rect, mousePos) && controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT) == KEY_STATE::END_PRESS) {
+			
+			if (PtInRect(&rect, mousePos)) {
+				const ButtonEventFunction* buttonFunc = nullptr;
+				switch (controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT)) {
 
-				const ButtonEventFunction& butEvent = but->GetButtonReleaseEvent();
-				if (butEvent != nullptr) {
-					butEvent(self->GetEntity());
-					DebugPrint("Button Hit!!");
+				case KEY_STATE::START_PRESS:
+					buttonFunc = &but->GetButtonDownEvent();
+					DebugPrint("Button Down");
+					break;
 
+				case KEY_STATE::PRESSING:
+					buttonFunc = &but->GetButtonPressingEvent();
+					DebugPrint("Button Down");
+					break;
+
+				case KEY_STATE::END_PRESS:
+					buttonFunc = &but->GetButtonReleaseEvent();
+					DebugPrint("Button Up");
+					break;
 
 				}
-			}
 
+				if (buttonFunc != nullptr) {
+					(*buttonFunc)(self->GetEntity());
+				}
+			}
 			};
 
 		std::function<void(UICanvas*, SelfEntity*)> forAliveCanvas = [manager, &checkButtonPos](UICanvas* canvas, SelfEntity* selfEntity) {
