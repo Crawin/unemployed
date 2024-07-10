@@ -705,6 +705,7 @@ namespace component {
 		virtual void ShowYourself() const;
 
 		bool Possess(ECSManager* manager, const std::string& targetName);
+		bool Possess(Pawn* target);
 
 		Pawn* GetControllingPawn() const { return m_CurrentPossess; }
 	};

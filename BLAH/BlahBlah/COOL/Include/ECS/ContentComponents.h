@@ -170,6 +170,8 @@ namespace component {
 	//
 	class Inventory : public ComponentBase<Inventory> {
 		Entity* m_Items[MAX_INVENTORY] = {nullptr, };
+
+		std::string m_InventorySocketName;
 		std::string m_TargetEntityNames[MAX_INVENTORY] = { "", };
 		//const char* m_TargetEntityNames[MAX_INVENTORY] = { nullptr, };
 		int m_CurrentHolding = 0;
@@ -190,6 +192,21 @@ namespace component {
 
 		void EraseCurrentHolding() { m_Items[m_CurrentHolding] = nullptr; }
 		
+	};
+
+	/////////////////////////////////////////////////////////
+	// Sittable Component
+	// 앉을 수 있는 곳
+	//
+	class Sittable : public ComponentBase<Sittable> {
+		XMFLOAT3 m_AttachPosition = { 0,0,0 };
+		bool m_CurrentSit = false;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
 	};
 
 #define MAX_CCTV 4

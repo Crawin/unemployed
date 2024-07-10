@@ -864,6 +864,7 @@ namespace component {
 			m_CurrentPossess->ResetInput();
 			m_CurrentPossess->SetActive(false);
 		}
+
 		Pawn* targetPawn = nullptr;
 		std::function<void(Name*, Pawn*)> findTarget = [&targetName, &targetPawn](Name* name, Pawn* pawn) {
 			if (name->getName() == targetName)
@@ -877,6 +878,22 @@ namespace component {
 
 		// returns success/fail
 		return (m_CurrentPossess != nullptr);
+	}
+
+	bool PlayerController::Possess(Pawn* target)
+	{
+		// reset inputs
+		if (m_CurrentPossess) {
+			m_CurrentPossess->ResetInput();
+			m_CurrentPossess->SetActive(false);
+		}
+
+		if (target == nullptr) return false;
+
+		m_CurrentPossess = target;
+		m_CurrentPossess->SetActive(true);
+
+		return true;
 	}
 
 }

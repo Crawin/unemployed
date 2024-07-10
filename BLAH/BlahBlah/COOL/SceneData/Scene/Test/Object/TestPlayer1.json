@@ -43,6 +43,7 @@
 
 	"Inventory":
 	{
+		"SocketName": "PlayerCamera/InventoryHand",
 		"Slot_0": "CCTV_TEST",
 		"Slot_1": "crowbar",
 		"Slot_2": "",

@@ -300,25 +300,36 @@ namespace component {
 	{
 		Json::Value inven = v["Inventory"];
 
+		m_InventorySocketName = inven["SocketName"].asString();
+
 		for(int i = 0; i < MAX_INVENTORY; ++i)
 			m_TargetEntityNames[i] = inven[std::format("Slot_{}", i)].asString().c_str();
 	}
 
 	void Inventory::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
-		Name* childNameComp = nullptr;
+		Name* childNameComp = manager->GetComponent<Name>(selfEntity);
 
+		// 계층마다 Inventory 소켓의 위치가 다를 수도 있다.
 		const char* playerCam = "PlayerCamera";
 		const char* invenSocketName = "InventoryHand";
 
-		// inventory hand is in Root/PlayerCamera/InventoryHand
-		// 
-		// find inventory socket from self's child
-		Entity* parent = manager->GetEntityInChildren(playerCam, selfEntity);
-		if (parent == nullptr)
-			ERROR_QUIT("ERROR!!! hierachy error");
+		Entity* entityTarget = selfEntity;
 
-		m_HoldingSocket = manager->GetEntityInChildren(invenSocketName, parent);
+		size_t start = 0;
+		size_t end = m_InventorySocketName.find('/');
+
+		while (end != std::string::npos) {
+			entityTarget = manager->GetEntityInChildren(m_InventorySocketName.substr(start, end - start), entityTarget);
+
+			if (entityTarget == nullptr)
+				ERROR_QUIT("ERROR!!! hierachy error");
+
+			start = end + 1;
+			end = m_InventorySocketName.find('/', start);
+		}
+
+		m_HoldingSocket = manager->GetEntityInChildren(m_InventorySocketName.substr(start), entityTarget);
 		if (m_HoldingSocket == nullptr) 
 			ERROR_QUIT("ERROR!! no holding hand in current child, inventory component error");
 		
@@ -579,6 +590,49 @@ namespace component {
 
 	void Screen::ShowYourself() const
 	{
+	}
+
+	void Sittable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value sit = v["Sittable"];
+
+		m_AttachPosition.x = sit["AttachPosition"][0].asFloat();
+		m_AttachPosition.y = sit["AttachPosition"][1].asFloat();
+		m_AttachPosition.z = sit["AttachPosition"][2].asFloat();
+	}
+
+	void Sittable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Interaction* interaction = manager->GetComponent<Interaction>(selfEntity);
+
+		if (interaction == nullptr)
+			ERROR_QUIT("ERROR!! no interaction component on current Sittable entity");
+
+		auto& sitState = m_CurrentSit;
+		InteractionFuncion withSittable = [manager, &sitState](Entity* player, Entity* sittableEntity) {
+			AnimationController* animCtrl = manager->GetComponent<AnimationController>(player);
+
+			PlayerController* playerCtrl = nullptr;
+			std::function<void(PlayerController*)> getPlayerCtrl = [&playerCtrl](PlayerController* playerCtrl) { playerCtrl = playerCtrl; };
+			manager->Execute(getPlayerCtrl);
+
+			// possess to current sittable
+			Pawn* sitPawn = manager->GetComponent<Pawn>(sittableEntity);
+			playerCtrl->Possess(sitPawn);
+			
+			// play sit start
+			animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_START);
+
+			
+			if (sitState == true) {
+				DebugPrint("aaaaa");
+				return;
+			}
+
+
+			};
+		interaction->SetInteractionFunction(withSittable);
+
 	}
 
 }
