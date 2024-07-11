@@ -1,11 +1,11 @@
 ﻿#include "framework.h"
 #include "ECS_System.h"
-#include "Entity.h"
-#include "Component.h"
-#include "ECSManager.h"
+#include "ECS/Entity/Entity.h"
+#include "ECS/Component/Component.h"
+#include "ECS/ECSManager.h"
+#include "ECS/ECSMacro.h"
 #include "App/InputManager.h"
 #include "Network/Client.h"
-#include "ECSMacro.h"
 #include "App/Application.h"
 
 namespace ECSsystem {
