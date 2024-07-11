@@ -73,6 +73,10 @@ namespace component {
 		const XMFLOAT3& GetRotation() const { return m_Rotate; }
 		const XMFLOAT3& GetScale() const { return m_Scale; }
 
+		XMFLOAT3* GetPositionPtr() { return &m_Position; }
+		XMFLOAT3* GetRotationPtr() { return &m_Rotate; }
+		XMFLOAT3* GetScalePtr() { return &m_Scale; }
+
 		const XMFLOAT3& GetWorldPosition() const;
 		const XMFLOAT3& GetWorldRotation() const;
 

@@ -56,8 +56,8 @@ public:
 
 		for (size_t i = 0; i < m_KeyFrames.size() - 1; ++i) {
 			if (m_CurrentTime >= m_KeyFrames[i].m_Time && m_CurrentTime <= m_KeyFrames[i + 1].m_Time) {
-				float t = (m_CurrentTime - m_KeyFrames[i].m_Time) / (m_KeyFrames[i + 1].m_Time - m_KeyFrames[i + 1].m_Time);
-				m_CurrentValue = m_LerpFunction(m_KeyFrames[i].m_Value, m_KeyFrames[i + 1].m_Value, t);
+				float t = (m_CurrentTime - m_KeyFrames[i].m_Time) / (m_KeyFrames[i + 1].m_Time - m_KeyFrames[i].m_Time);
+				m_CurrentValue = LerpValue(m_KeyFrames[i].m_Value, m_KeyFrames[i + 1].m_Value, t);
 				break;
 			}
 		}

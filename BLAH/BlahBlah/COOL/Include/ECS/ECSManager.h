@@ -243,6 +243,8 @@ public:
 		return nullptr;
 	}
 
+	void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLineSystem->AddTimeLine(entity, timeLine); }
+
 private:
 	template<class ...COMPONENTS>
 	COMP_BITSET GetBitset()

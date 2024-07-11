@@ -4,7 +4,7 @@
 #include "ECS/ECSManager.h"
 #include "Animation/AnimationTrack.h"
 #include "json/json.h"
-
+#include "ECS/TimeLine/TimeLine.h"
 
 
 namespace component {
@@ -197,8 +197,13 @@ namespace component {
 			auto trans = manager->GetComponent<component::Transform>(door);
 			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
 				auto rot = trans->GetRotation();
-				rot.y -= 90.0f;
-				trans->SetRotation(rot);
+				XMFLOAT3 rotAfter = rot;
+				rotAfter.y -= 90.0f;
+				TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(trans->GetRotationPtr());
+				openDoor->AddKeyFrame(rot, 0);
+				openDoor->AddKeyFrame(rotAfter, 1);
+
+				manager->AddTimeLine(door, openDoor);
 			}
 			else {
 				// todo

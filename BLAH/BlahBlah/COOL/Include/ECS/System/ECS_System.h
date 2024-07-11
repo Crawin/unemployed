@@ -226,6 +226,8 @@ namespace ECSsystem {
 
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
+
+		void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLines.emplace(entity, timeLine); }
 	};
 }
 
