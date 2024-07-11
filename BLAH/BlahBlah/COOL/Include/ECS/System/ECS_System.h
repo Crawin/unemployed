@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 class ECSManager;
+class ITimeLine;
+class Entity;
 
 namespace ECSsystem {
 
@@ -212,6 +214,16 @@ namespace ECSsystem {
 	// Send To Server
 	// 
 	class SendToServer : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
+
+	/////////////////////////////////////////////////////////
+	// TimeLine Managing
+	// 
+	class TimeLineManaging : public System {
+		std::map<Entity*, ITimeLine*> m_TimeLines;
+
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 	};

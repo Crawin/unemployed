@@ -94,7 +94,7 @@
     <Filter Include="외부\Json">
       <UniqueIdentifier>{0b69166a-b7eb-4e8c-8369-a19446822c44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\ECS\System\TimeLine">
+    <Filter Include="소스 파일\ECS\TimeLine">
       <UniqueIdentifier>{f7f304d0-f132-4f50-b8e4-80d315968221}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -204,6 +204,9 @@
     <ClInclude Include="Include\ECS\System\ECS_System.h">
       <Filter>소스 파일\ECS\System</Filter>
     </ClInclude>
+    <ClInclude Include="Include\ECS\TimeLine\TimeLine.h">
+      <Filter>소스 파일\ECS\TimeLine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -301,6 +304,12 @@
     </ClCompile>
     <ClCompile Include="Include\ECS\System\ECS_System.cpp">
       <Filter>소스 파일\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\TimeLine\TimeLine.cpp">
+      <Filter>소스 파일\ECS\TimeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\mymath.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

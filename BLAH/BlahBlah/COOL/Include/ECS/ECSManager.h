@@ -110,8 +110,7 @@ class ECSManager
 	std::unordered_map<COMP_BITSET, ComponentSet> m_ComponentSets;
 
 	// system
-
-	ECSsystem::System* m_TimeLineSystem;
+	ECSsystem::TimeLineManaging* m_TimeLineSystem = nullptr;
 
 	std::vector<ECSsystem::System*> m_Systems;
 	std::vector<ECSsystem::System*> m_PreRenderSystem;

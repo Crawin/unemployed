@@ -7,6 +7,7 @@
 #include "App/InputManager.h"
 #include "Network/Client.h"
 #include "App/Application.h"
+#include "ECS/TimeLine/TimeLine.h"
 
 namespace ECSsystem {
 
@@ -971,5 +972,19 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(send);
+	}
+	void TimeLineManaging::Update(ECSManager* manager, float deltaTime)
+	{
+		for (auto& [entity, timeline] : m_TimeLines) {
+			timeline->Update(deltaTime);
+			timeline->SyncData();
+		}
+
+		for (auto iter = m_TimeLines.begin(); iter != m_TimeLines.end();) {
+			if (iter->second->IsPlaying() == false)
+				iter = m_TimeLines.erase(iter);
+			else
+				++iter;
+		}
 	}
 }
