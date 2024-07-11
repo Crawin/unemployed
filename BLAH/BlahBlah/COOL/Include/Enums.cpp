@@ -32,6 +32,9 @@ ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 	if (str == "Getting_Hit")						return ANIMATION_STATE::GETTING_HIT;
 	if (str == "GetUp")								return ANIMATION_STATE::GETUP;
 	if (str == "Dance")								return ANIMATION_STATE::DANCE;
+	if (str == "Sit_Start")							return ANIMATION_STATE::SIT_START;
+	if (str == "Sit_Loop")							return ANIMATION_STATE::SIT_LOOP;
+	if (str == "Sit_End")							return ANIMATION_STATE::SIT_END;
 
 	return ANIMATION_STATE::NULLANIM;
 }
@@ -58,6 +61,9 @@ std::string ConvertAnimationStateToString(ANIMATION_STATE anim)
 	case ANIMATION_STATE::GETTING_HIT:				return std::string("Getting_Hit");
 	case ANIMATION_STATE::GETUP:					return std::string("GetUp");
 	case ANIMATION_STATE::DANCE:					return std::string("Dance");
+	case ANIMATION_STATE::SIT_START:				return std::string("Sit_Start");
+	case ANIMATION_STATE::SIT_LOOP:					return std::string("Sit_Loop");
+	case ANIMATION_STATE::SIT_END:					return std::string("Sit_End");
 	}
 }
 

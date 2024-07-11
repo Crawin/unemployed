@@ -80,6 +80,8 @@ void ComponentSet::OnStart(Entity* ent, ECSManager* manager, ResourceManager* rm
 
 ECSManager::ECSManager()
 {
+	m_TimeLineSystem = new ECSsystem::TimeLineManaging;
+	InsertSystem(m_TimeLineSystem);
 }
 
 ECSManager::~ECSManager()

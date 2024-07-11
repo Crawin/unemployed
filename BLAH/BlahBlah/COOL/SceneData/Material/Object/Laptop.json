@@ -1,0 +1,9 @@
+{
+	"name": "Laptop",
+	"BaseColor": "Object/Laptop/laptop_diffuseOriginal",
+	"Roughness": "Object/Laptop/laptop_roughness",
+	"Metalic": "Object/Laptop/laptop_metallic",
+	"AO": "Object/Laptop/laptop_ao",
+	"Normal": "Object/Laptop/laptop_normal",
+	"Shader": "TestMeshDiffered"
+}

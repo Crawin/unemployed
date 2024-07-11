@@ -29,7 +29,7 @@ cbuffer PostMaterial : register(b0)
 	int g_MetallicIndex;
 	int g_AOIndex;
 	int g_NormalIndex;
-	int g_PositionIndex;
+	int g_PositionIndex; 
 	int g_LightSize;
 	int g_LightDataIndex;
 };
@@ -48,11 +48,11 @@ float ShadowCalculate(float4 worldPos, float dotNormal, int camIdx, int mapIdx)
 	ndc.y = 1 - ndc.y;
 	float shadow = 0.0;
 
-	float bias = max(0.00005 * (1.0 - dotNormal), 0.000005);
+	float bias = max((1.0f - dotNormal) * 0.001f, 0.0001f);
 
-	[unroll]
+	[unroll(3)]
 	for (int i = -1; i <= 1; ++i) {
-		[unroll]
+		[unroll(3)]
 		for (int j = -1; j <= 1; ++j) {
 			float depth = Tex2DList[mapIdx].Sample(samplerClamp, ndc.xy/*).r;// */+ (float2(i, j) / 8192.0f)).r;
 			shadow += (depth + bias) < ndc.z ? 0.0 : 1.0;  
@@ -137,7 +137,7 @@ float3 PBRLighting(int idx, float3 normal, float3 viewDir, float3 lightDir, floa
 	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
 	float shadowFactor = 1;
-	if (lights[idx].m_CameraIdx > 0) {
+	if (lights[idx].m_CameraIdx >= 0) {
 		float dotNormal = dot(normal, -lights[idx].m_Direction);
 		shadowFactor = ShadowCalculate(
 							float4(worldPosition, 1.0f), 
@@ -152,7 +152,7 @@ float3 PBRLighting(int idx, float3 normal, float3 viewDir, float3 lightDir, floa
 					* lights[idx].m_Intensity
 					* shadowFactor;
 
-	//if (shadowFactor == 1 && lights[idx].m_LightType == 0) return float3(1,0,0);
+	//if (shadowFactor == 1 && lights[idx].m_LightType == 0) return float3(0,0,1);
 
 	return diff + spec;
 }
@@ -210,6 +210,7 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 	float3 viewDir = normalize(cameraPosition - worldPosition);
 	float4 result = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
+	[loop]
 	for (int i = 0; i < g_LightSize; ++i) {
 		LIGHT light = lights[i];
 
@@ -217,7 +218,6 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 
 		if (lights[i].m_LightType == 0) {
 			result.rgb += 
-				//light.m_LightColor.rgb * light.m_Intensity *
 				PBRLighting(i, worldNormal, viewDir, -light.m_Direction, albedo, roughness, metalic, ao, worldPosition);
 		}		
 		else if (lights[i].m_LightType == 1) {
@@ -238,6 +238,140 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 	return result;
 }
 
+#define ONLY_MAIN_LIGHT
+
+#ifndef ONLY_MAIN_LIGHT
+
+#define REVERSE_LOOP
+#define MAX_DISTANCE 1000.0f
+#define STEP_PER_LOOP 5.0f
+#define ADD_PER_LOOP float4(0.3f, 0.3f, 0.3f, 0.0f) * STEP_PER_LOOP / MAX_DISTANCE
+#define MAX_SHAFT_LIGHTS 6
+
+#else
+#define MAX_DISTANCE 2000.0f
+#define STEP_PER_LOOP 5.0f
+#define ADD_PER_LOOP float4(0.3f, 0.3f, 0.3f, 0.0f) * STEP_PER_LOOP / MAX_DISTANCE
+
+#endif
+
+
+float4 LightShaft(float3 startPosition, float3 endPosition)
+{
+	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
+
+	float4 result = float4(0,0,0,0);
+
+	float3 toVector = normalize(endPosition - startPosition);
+	float dist = distance(endPosition, startPosition);
+	float goal = min(dist, MAX_DISTANCE);
+
+	// find lights to for light shaft
+	// which cast shadows
+#ifndef ONLY_MAIN_LIGHT
+	int indices[MAX_SHAFT_LIGHTS] = {-1,-1,-1,-1,-1,-1};
+	int count = 0;
+
+	for (int i = 0; i < g_LightSize; ++i) {
+		if (lights[i].m_CameraIdx >= 0) {
+			indices[count++] = i;
+			if (count >= MAX_SHAFT_LIGHTS) break;
+		}
+	}
+
+#ifndef REVERSE_LOOP
+	[loop]
+	for (float step = 0; step <= goal; step += STEP_PER_LOOP * count) {
+		float3 pos = startPosition + (toVector * step);
+
+		[loop]
+		for (int i = 0; i < count; ++i) {
+			float shadowFactor = 1;
+			float etcFactor = 0;
+
+			shadowFactor = ShadowCalculate(float4(pos, 1.0f), 
+				1, 
+				lights[indices[i]].m_CameraIdx, 
+				lights[indices[i]].m_ShadowMapResults.x);
+
+			switch (lights[indices[i]].m_LightType) {
+			case 0:
+				etcFactor = 1;
+				break;
+			case 1:
+				etcFactor = CalculateSpotLightFactor(indices[i], pos);
+				break;
+			case 2:
+				etcFactor = CalculatePointLightFactor(indices[i], pos);
+				break;
+			}
+
+			result += etcFactor * shadowFactor * ADD_PER_LOOP;
+		}
+
+	}
+#else
+	[loop]
+	for (int i = 0; i < count; ++i) {
+		[loop]
+		for (float step = 0; step <= goal; step += STEP_PER_LOOP * count) {
+			float3 pos = startPosition + (toVector * step);
+
+			float shadowFactor = 1;
+			float etcFactor = 0;
+
+			shadowFactor = ShadowCalculate(float4(pos, 1.0f), 
+				1, 
+				lights[indices[i]].m_CameraIdx, 
+				lights[indices[i]].m_ShadowMapResults.x);
+
+			switch (lights[indices[i]].m_LightType) {
+			case 0:
+				etcFactor = 1;
+				break;
+			case 1:
+				etcFactor = CalculateSpotLightFactor(indices[i], pos);
+				break;
+			case 2:
+				etcFactor = CalculatePointLightFactor(indices[i], pos);
+				break;
+			}
+			result += etcFactor * shadowFactor * ADD_PER_LOOP;
+		}
+	}
+
+
+#endif
+
+
+#else
+	LIGHT light;
+	for (int i = 0; i < g_LightSize; ++i) {
+
+		if (lights[i].m_LightType == 0) {
+			light = lights[i];
+			break;
+		}
+	}
+	[loop]
+	for (float step = 0; step < goal; step += STEP_PER_LOOP) {
+		float3 pos = startPosition + (toVector * step);
+
+		float shadowFactor = ShadowCalculate(float4(pos, 1.0f), 
+			1, 
+			light.m_CameraIdx, 
+			light.m_ShadowMapResults.x);
+
+		result += shadowFactor * ADD_PER_LOOP;
+	}
+
+
+#endif
+
+
+	return result;
+}
+
 float4 ps(VS_OUTPUT input) : SV_Target
 {
 	// sample all
@@ -250,5 +384,9 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	//normalW -= 1;
 	float4 positionW = float4(Tex2DList[g_PositionIndex].Sample(samplerWarp, input.uv));
 	
-	return Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
+	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
+
+	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
+
+	return lightShaftResult + lightingResult;
 }

@@ -57,6 +57,9 @@ enum class ANIMATION_STATE {
 	GETTING_HIT,
 	GETUP,
 	DANCE,
+	SIT_START,
+	SIT_LOOP,
+	SIT_END,		// stand up
 	NULLANIM
 };
 
