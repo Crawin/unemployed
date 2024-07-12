@@ -51,6 +51,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Attackable, "Attackable");
 	REGISTER_COMPONENT(component::Throwable, "Throwable");
 	REGISTER_COMPONENT(component::Screen, "Screen");
+	REGISTER_COMPONENT(component::Sittable, "Sittable");
 
 
 	// ui content
@@ -72,7 +73,6 @@ SceneManager::~SceneManager()
 
 bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const char* firstScene)
 {
-	// todo 여기에다 둬도 될지 다시 생각해보자
 	// Register Components
 	RegisterComponents();
 

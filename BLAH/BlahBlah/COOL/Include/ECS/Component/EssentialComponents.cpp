@@ -349,7 +349,7 @@ namespace component {
 	{
 		Json::Value s = v["Physics"];
 
-		m_MaxVelocity = s["MaxVelocity"].asFloat();
+		m_CurrentMaxVelocity = m_OriginalMaxVelocity = s["MaxVelocity"].asFloat();
 		//m_Acceleration = s["Acceleration"].asFloat();
 
 		m_Acceleration.x = s["Acceleration"][0].asFloat();
@@ -364,7 +364,7 @@ namespace component {
 	void Physics::ShowYourself() const
 	{
 		DebugPrint("Speed Comp");
-		DebugPrint(std::format("\tcur speed: ({}, {}, {}), max speed: {}, acc : {}", m_Velocity.x, m_Velocity.y, m_Velocity.z, m_MaxVelocity, m_Acceleration.x));
+		DebugPrint(std::format("\tcur speed: ({}, {}, {}), max speed: {}, acc : {}", m_Velocity.x, m_Velocity.y, m_Velocity.z, m_OriginalMaxVelocity, m_Acceleration.x));
 
 	}
 

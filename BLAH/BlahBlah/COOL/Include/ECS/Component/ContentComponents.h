@@ -200,7 +200,6 @@ namespace component {
 	//
 	class Sittable : public ComponentBase<Sittable> {
 		XMFLOAT3 m_AttachPosition = { 0,0,0 };
-		bool m_CurrentSit = false;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);

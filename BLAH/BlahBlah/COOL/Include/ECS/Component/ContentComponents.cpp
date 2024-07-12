@@ -93,6 +93,9 @@ namespace component {
 			ctrl->InsertCondition(ANIMATION_STATE::JUMP_START, ANIMATION_STATE::JUMP_ING, endPlaying);
 			ctrl->InsertCondition(ANIMATION_STATE::JUMP_LAND, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
 
+			ctrl->InsertCondition(ANIMATION_STATE::SIT_START, ANIMATION_STATE::SIT_LOOP, endPlaying);
+			ctrl->InsertCondition(ANIMATION_STATE::SIT_END, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
+
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 		}
@@ -613,25 +616,26 @@ namespace component {
 		if (interaction == nullptr)
 			ERROR_QUIT("ERROR!! no interaction component on current Sittable entity");
 
-		auto& sitState = m_CurrentSit;
-		InteractionFuncion withSittable = [manager, &sitState](Entity* player, Entity* sittableEntity) {
+		InteractionFuncion withSittable = [manager](Entity* player, Entity* sittableEntity) {
 			AnimationController* animCtrl = manager->GetComponent<AnimationController>(player);
+			Player* playerComp = manager->GetComponent<Player>(player);
 
-			PlayerController* playerCtrl = nullptr;
-			std::function<void(PlayerController*)> getPlayerCtrl = [&playerCtrl](PlayerController* playerCtrl) { playerCtrl = playerCtrl; };
-			manager->Execute(getPlayerCtrl);
-
-			// possess to current sittable
-			Pawn* sitPawn = manager->GetComponent<Pawn>(sittableEntity);
-			playerCtrl->Possess(sitPawn);
 			
+			DebugPrint("Interaction");
+
 			// play sit start
-			animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_START);
+			if (playerComp->IsSitting() == false) {
 
-			
-			if (sitState == true) {
-				DebugPrint("aaaaa");
-				return;
+				// todo
+				// attach player? 0rotation here
+				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_START);
+				playerComp->SetSit(true);
+				DebugPrint("goSit");
+			}
+			else {
+				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_END);
+				playerComp->SetSit(false);
+				DebugPrint("standUp");
 			}
 
 

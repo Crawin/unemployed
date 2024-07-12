@@ -21,7 +21,7 @@
 
 	"Physics": 
 	{
-		"MaxVelocity": 1000.0,
+		"MaxVelocity": 200.0,
 		"Acceleration" : [2000.0, 2000.0, 2000.0],
 		"Calculate" : false,
 		"Friction": true

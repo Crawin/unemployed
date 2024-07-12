@@ -372,7 +372,8 @@ namespace component {
 	// 최고속도, 가속도, 등등
 	//
 	class Physics : public ComponentBase<Physics> {
-		float m_MaxVelocity = 300.0f;
+		float m_OriginalMaxVelocity = 300.0f;
+		float m_CurrentMaxVelocity = 300.0f;
 
 		float m_Elasticity = 1.1f;
 
@@ -387,7 +388,8 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		float GetMaxVelocity() const { return m_MaxVelocity; }
+		float GetOriginalMaxVelocity() const { return m_OriginalMaxVelocity; }
+		float GetMaxVelocity() const { return m_CurrentMaxVelocity; }
 
 		float GetCurrentVelocityLen() const { return Vector3::Length(m_Velocity); }
 		float GetCurrentVelocityLenOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return Vector3::Length(temp); }
@@ -395,7 +397,8 @@ namespace component {
 		const XMFLOAT3& GetVelocityOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return temp; }
 		const XMFLOAT3 GetAcceleration() const { return m_Acceleration; }
 
-		void SetMaxSpeed(float maxSpeed) { m_MaxVelocity = maxSpeed; }
+		void SetOriginalMaxVelocity(float maxVel) { m_OriginalMaxVelocity = maxVel; }
+		void SetMaxVelocity(float maxVel) { m_CurrentMaxVelocity = maxVel; }
 		void SetVelocity(const XMFLOAT3& vel) { m_Velocity = vel; }
 		void SetVelocityOnXZ(const XMFLOAT3& vel) { m_Velocity.x = vel.x; m_Velocity.z = vel.z; }
 		void SetAcceleration(const XMFLOAT3& acc) { m_Acceleration = acc; }
@@ -651,6 +654,7 @@ namespace component {
 	class Player : public ComponentBase<Player> {
 		bool m_Jumping = false;
 		bool m_OnGround = false;
+		bool m_Sitting = false;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -659,8 +663,10 @@ namespace component {
 
 		void SetJumping(bool jumpst) { m_Jumping = jumpst; }
 		void SetOnGround(bool state) { m_OnGround = state; }
+		void SetSit(bool state) { m_Sitting = state; }
 
 		bool IsAir() const { return m_Jumping && !m_OnGround; }
+		bool IsSitting() const { return m_Sitting; }
 	};
 
 	/////////////////////////////////////////////////////////

@@ -175,52 +175,61 @@ namespace ECSsystem {
 			InputManager::GetInstance().ResetMouseMove();
 			};
 
-		// input으로 pysics 업데이트
-		std::function<void(Transform*, Pawn*, Physics*, SelfEntity*)> inputFunc = [deltaTime, &mouseMove, manager](Transform* tr, Pawn* pawn, Physics* sp, SelfEntity* self) {
+		// input으로 pysics 업데이트 - player
+		std::function<void(Transform*, Pawn*, Physics*, SelfEntity*, Player*, AnimationController*)> inputFunc = 
+			[deltaTime, &mouseMove, manager](Transform* tr, Pawn* pawn, Physics* sp, SelfEntity* self, Player* pl, AnimationController* ctrl) {
+			Entity* ent = self->GetEntity();
+
 			// keyboard input
 			XMFLOAT3 tempMove = { 0.0f, 0.0f, 0.0f };
 			bool move = false;
-			if (pawn->IsPressing(GAME_INPUT::FORWARD)) { 
-				tempMove.z += 1.0f; move = true;
-			}
-			if (pawn->IsPressing(GAME_INPUT::BACKWARD)) { tempMove.z -= 1.0f; move = true; }
-			if (pawn->IsPressing(GAME_INPUT::LEFT)) { tempMove.x -= 1.0f; move = true; }
-			if (pawn->IsPressing(GAME_INPUT::RIGHT)) { tempMove.x += 1.0f; move = true; }
+			
+			// if sitting, cant move
+			if (pl->IsSitting() == false) {
+				if (pawn->IsPressing(GAME_INPUT::FORWARD)) { tempMove.z += 1.0f; move = true; }
+				if (pawn->IsPressing(GAME_INPUT::BACKWARD)) { tempMove.z -= 1.0f; move = true; }
+				if (pawn->IsPressing(GAME_INPUT::LEFT)) { tempMove.x -= 1.0f; move = true; }
+				if (pawn->IsPressing(GAME_INPUT::RIGHT)) { tempMove.x += 1.0f; move = true; }
 
-			if (pawn->GetInputState(GAME_INPUT::SPACE_BAR) == KEY_STATE::START_PRESS)
-			{ 
-				Entity* ent = self->GetEntity();
-				Player* pl = manager->GetComponent<Player>(ent);
-				if (ent != nullptr && pl->IsAir() == false) {
-					XMFLOAT3 temp = sp->GetVelocity();
-					sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
+				if (pawn->GetInputState(GAME_INPUT::SPACE_BAR) == KEY_STATE::START_PRESS)
+				{ 
+					if (pl->IsAir() == false) {
+						XMFLOAT3 temp = sp->GetVelocity();
+						sp->SetVelocity(XMFLOAT3(temp.x, temp.y + 400.0f, temp.z));
 
-					pl->SetJumping(true);
-					AnimationController* ctrl = manager->GetComponent<AnimationController>(ent);
-					ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_START);
+						pl->SetJumping(true);
+						ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_START);
+					}
 				}
-
-
 			}
 
-			float maxSpeed = 200.0f;
+			float maxSpeed = sp->GetOriginalMaxVelocity();
 			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
-			sp->SetMaxSpeed(maxSpeed);
+			sp->SetMaxVelocity(maxSpeed);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
 
 			// update speed if key down
 			if (move) {
-				XMVECTOR vec = XMLoadFloat3(&tempMove);
-				XMFLOAT4X4 tpRot = tr->GetLocalTransform();
-				tpRot._41 = 0.0f;
-				tpRot._42 = 0.0f;
-				tpRot._43 = 0.0f;
+				XMVECTOR vel = XMLoadFloat3(&sp->GetVelocityOnXZ());
 
-				vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+				float maxSpeed = sp->GetMaxVelocity();
+				float curSpeed = XMVectorGetX(XMVector3Length(vel));
 				
-				XMStoreFloat3(&tempMove, vec);
-				sp->AddVelocity(tempMove, deltaTime);
+				// limit max speed
+				if (curSpeed <= maxSpeed)
+				{
+					XMVECTOR vec = XMLoadFloat3(&tempMove);
+					XMFLOAT4X4 tpRot = tr->GetLocalTransform();
+					tpRot._41 = 0.0f;
+					tpRot._42 = 0.0f;
+					tpRot._43 = 0.0f;
+
+					vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+
+					XMStoreFloat3(&tempMove, vec);
+					sp->AddVelocity(tempMove, deltaTime);
+				}
 			}
 
 			// mouse
@@ -750,26 +759,6 @@ namespace ECSsystem {
 	{
 		using namespace component;
 
-		// limit max speed
-		std::function<void(Physics*)> spLimit = [](Physics* py) {
-			if (py->IsToCalculate() == false) return;
-
-			XMVECTOR vel = XMLoadFloat3(&py->GetVelocityOnXZ());
-
-			float maxSpeed = py->GetMaxVelocity();
-			float curSpeed = XMVectorGetX(XMVector3Length(vel));
-
-			if (curSpeed > maxSpeed)
-			{
-				vel *= maxSpeed / curSpeed;
-				XMFLOAT3 t;
-				XMStoreFloat3(&t, vel);
-				py->SetVelocityOnXZ(t);
-			}
-
-			};
-
-
 		// friction on xz
 		std::function<void(Physics*)> friction = [deltaTime](Physics* sp) {
 			if (sp->IsToCalculate() == false || sp->IsFrictionActive() == false) return;
@@ -822,7 +811,6 @@ namespace ECSsystem {
 			py->SetVelocity(temp);
 			};
 
-		manager->Execute(spLimit);
 		manager->Execute(friction);
 		manager->Execute(gravity);
 
