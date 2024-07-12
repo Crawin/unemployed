@@ -1,0 +1,25 @@
+{
+	"Name": "ChairTest",
+
+	"Transform": 
+	{
+		"Position": [-200.0, 30.0, 0.0],
+		"Rotate": [0.0, 180.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Renderer" : 
+	{
+		"Material" : "NoMaterial",
+		"Mesh" : "Sphere.Sphere"
+	},
+
+	"Children": [
+		{
+			"Name": "SitSocket"
+
+		}
+	]
+
+
+}

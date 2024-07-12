@@ -96,6 +96,10 @@ XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int p
 	int animFrameRate = animation->GetFrame();
 	int animStride = endFrame + 1;
 
+	//float playTime = m_CurPlayTime;
+	//playTime /= m_AnimationSpace[m_CurrentSuperiorPoint].second->GetEndTime();
+	//playTime *= m_AnimationSpace[point].second->GetEndTime();
+
 	int frameFloor = (int)floor(m_CurPlayTime * animFrameRate) % animStride;
 	int frameCeil = (frameFloor + 1) % animStride;
 
@@ -124,6 +128,27 @@ XMMATRIX AnimationTrackBlendingSpace2D::EvaluateFromAnimation(int boneIdx, int p
 	return XMMatrixTranspose(result);
 }
 
+int AnimationTrackBlendingSpace2D::GetMaxIndex(const XMFLOAT4 vec4)
+{
+	float maxWeight = vec4.x;
+	int maxIndex = 0;
+
+	if (vec4.y > maxWeight) {
+		maxWeight = vec4.y;
+		maxIndex = 1;
+	}
+	if (vec4.z > maxWeight) {
+		maxWeight = vec4.z;
+		maxIndex = 2;
+	}
+	if (vec4.w > maxWeight) {
+		maxWeight = vec4.w;
+		maxIndex = 3;
+	}
+
+	return maxIndex;
+}
+
 AnimationTrackBlendingSpace2D::AnimationTrackBlendingSpace2D()
 {
 	m_Mode = 2;
@@ -137,7 +162,23 @@ void AnimationTrackBlendingSpace2D::UpdateTime(float deltaTime)
 	// 3. beforeAnim = 1번의 animation으로 바꾼다
 	// 시간 ++
 	m_CurPlayTime += deltaTime * m_AnimSpeed;// / 2.0f;
-	//DebugPrint(std::format("time: {}", m_CurPlayTime));
+
+	int animIdx = m_ClosePoints[m_CurrentSuperiorPoint];
+	float endTime = m_AnimationSpace[animIdx].second->GetEndTime();
+	//if (m_CurPlayTime >= endTime) m_CurPlayTime = 0.0f;
+
+	int maxIdx = GetMaxIndex(m_BlendingWeights);
+
+	if (maxIdx != m_CurrentSuperiorPoint) {
+		//m_CurPlayTime = 0;
+		//DebugPrint(std::format("idx: {}/beftime: {}", m_CurrentSuperiorPoint, m_CurPlayTime));
+		//m_CurPlayTime /= m_AnimationSpace[m_CurrentSuperiorPoint].second->GetEndTime();
+		//m_CurPlayTime *= m_AnimationSpace[maxIdx].second->GetEndTime();
+		//m_CurrentSuperiorPoint = maxIdx;
+		//DebugPrint(std::format("idx: {}/aftTime: {}\n", m_CurrentSuperiorPoint, m_CurPlayTime));
+	}
+	
+
 }
 
 void AnimationTrackBlendingSpace2D::Update(float deltaTime)

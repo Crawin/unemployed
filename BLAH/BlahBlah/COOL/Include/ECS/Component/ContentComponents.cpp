@@ -316,30 +316,7 @@ namespace component {
 
 	void Inventory::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
-		Name* childNameComp = manager->GetComponent<Name>(selfEntity);
-
-		// 계층마다 Inventory 소켓의 위치가 다를 수도 있다.
-		const char* playerCam = "PlayerCamera";
-		const char* invenSocketName = "InventoryHand";
-
-		Entity* entityTarget = selfEntity;
-
-		size_t start = 0;
-		size_t end = m_InventorySocketName.find('/');
-
-		while (end != std::string::npos) {
-			entityTarget = manager->GetEntityInChildren(m_InventorySocketName.substr(start, end - start), entityTarget);
-
-			if (entityTarget == nullptr)
-				ERROR_QUIT("ERROR!!! hierachy error");
-
-			start = end + 1;
-			end = m_InventorySocketName.find('/', start);
-		}
-
-		m_HoldingSocket = manager->GetEntityInChildren(m_InventorySocketName.substr(start), entityTarget);
-		if (m_HoldingSocket == nullptr) 
-			ERROR_QUIT("ERROR!! no holding hand in current child, inventory component error");
+		m_HoldingSocket = manager->GetEntityFromRoute(m_InventorySocketName, selfEntity);
 		
 		// find targets here
 		for (int i = 0; i < MAX_INVENTORY; ++i) {
@@ -607,33 +584,103 @@ namespace component {
 		m_AttachPosition.x = sit["AttachPosition"][0].asFloat();
 		m_AttachPosition.y = sit["AttachPosition"][1].asFloat();
 		m_AttachPosition.z = sit["AttachPosition"][2].asFloat();
+
+		m_SittableSocketName = sit["SocketName"].asString();
 	}
 
 	void Sittable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
+		m_SittableSocket = manager->GetEntityFromRoute(m_SittableSocketName, selfEntity);
+		Entity* sittableSocket = m_SittableSocket;
+
 		Interaction* interaction = manager->GetComponent<Interaction>(selfEntity);
 
 		if (interaction == nullptr)
 			ERROR_QUIT("ERROR!! no interaction component on current Sittable entity");
 
-		InteractionFuncion withSittable = [manager](Entity* player, Entity* sittableEntity) {
+		InteractionFuncion withSittable = [manager, sittableSocket](Entity* player, Entity* sittableEntity) {
 			AnimationController* animCtrl = manager->GetComponent<AnimationController>(player);
 			Player* playerComp = manager->GetComponent<Player>(player);
 
 			
 			DebugPrint("Interaction");
 
+			Transform* tr = manager->GetComponent<Transform>(player);
+
 			// play sit start
 			if (playerComp->IsSitting() == false) {
+				// attach first
+				tr->SetPosition({ 0,0,0 });
+				tr->SetRotation({ 0,0,0 });
+				manager->AttachChild(sittableSocket, player);
 
-				// todo
-				// attach player? 0rotation here
+				// set animation
 				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_START);
+				float endTime = animCtrl->GetCurrentPlayEndTime();
+
+				// set player position
+				TimeLine<XMFLOAT3>* trMove = new TimeLine<XMFLOAT3>(tr->GetPositionPtr());
+				trMove->AddKeyFrame({ 0, 0, 37.9f }, 0.0f);
+				trMove->AddKeyFrame({ 0, 0, 37.9f }, endTime);
+				trMove->AddKeyFrame({ 0, 0, 0 }, endTime);
+				manager->AddTimeLine(player, trMove);
+
+				// set player camera position
+				Entity* camera = manager->GetEntityInChildren("PlayerCamera", player);
+				Transform* camTr = manager->GetComponent<Transform>(camera);
+				TimeLine<XMFLOAT3>* camMove = new TimeLine<XMFLOAT3>(camTr->GetPositionPtr());
+				XMFLOAT3 curPos = camTr->GetPosition();
+				XMFLOAT3 aftPos = curPos;
+				aftPos.y -= 50.0f;
+				camMove->AddKeyFrame(curPos, 0.0f);
+				camMove->AddKeyFrame(aftPos, endTime);
+				manager->AddTimeLine(camera, camMove);
+
+				// set inventory also
+				Entity* inven = manager->GetEntityInChildren("InvenParent", camera);
+				Transform* invTr = manager->GetComponent<Transform>(inven);
+				TimeLine<XMFLOAT3>* invMove = new TimeLine<XMFLOAT3>(invTr->GetPositionPtr());
+				curPos = invTr->GetPosition();
+				aftPos = curPos;
+				aftPos.y += 50.0f;
+				invMove->AddKeyFrame(curPos, 0.0f);
+				invMove->AddKeyFrame(aftPos, endTime);
+				manager->AddTimeLine(inven, invMove);
+
+				// sit
 				playerComp->SetSit(true);
 				DebugPrint("goSit");
 			}
 			else {
+				// detach
+				manager->DetachChild(sittableEntity, player);
+
+				// set animation
 				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_END);
+				float endTime = animCtrl->GetCurrentPlayEndTime();
+
+				// set player camera position
+				Entity* camera = manager->GetEntityInChildren("PlayerCamera", player);
+				Transform* camTr = manager->GetComponent<Transform>(camera);
+				TimeLine<XMFLOAT3>* camMove = new TimeLine<XMFLOAT3>(camTr->GetPositionPtr());
+				XMFLOAT3 curPos = camTr->GetPosition();
+				XMFLOAT3 aftPos = curPos;
+				aftPos.y += 50.0f;
+				camMove->AddKeyFrame(curPos, 0.0f);
+				camMove->AddKeyFrame(aftPos, endTime);
+				manager->AddTimeLine(camera, camMove);
+
+				// set inventory also
+				Entity* inven = manager->GetEntityInChildren("InvenParent", camera);
+				Transform* invTr = manager->GetComponent<Transform>(inven);
+				TimeLine<XMFLOAT3>* invMove = new TimeLine<XMFLOAT3>(invTr->GetPositionPtr());
+				curPos = invTr->GetPosition();
+				aftPos = curPos;
+				aftPos.y -= 50.0f;
+				invMove->AddKeyFrame(curPos, 0.0f);
+				invMove->AddKeyFrame(aftPos, endTime);
+				manager->AddTimeLine(inven, invMove);
+
 				playerComp->SetSit(false);
 				DebugPrint("standUp");
 			}

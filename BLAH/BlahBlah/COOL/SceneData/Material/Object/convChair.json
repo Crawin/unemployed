@@ -1,0 +1,9 @@
+{
+	"name": "ConvChair",
+	"BaseColor": "Red",
+	"Roughness": "Gray",
+	"Metalic": "ZeroOneBlack",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

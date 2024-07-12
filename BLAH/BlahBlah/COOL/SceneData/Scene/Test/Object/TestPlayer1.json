@@ -43,10 +43,10 @@
 
 	"Inventory":
 	{
-		"SocketName": "PlayerCamera/InventoryHand",
+		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
 		"Slot_0": "CCTV_TEST",
 		"Slot_1": "crowbar",
-		"Slot_2": "",
+		"Slot_2": "Laptop_ScreenDetached",
 		"Slot_3": ""
 	},
 
@@ -78,46 +78,57 @@
 			"Children":
 			[
 				{
-					"Name": "InventoryHand",
+					"Name": "InvenParent",
 					"Transform": 
 					{
-						"Position": [176.4, -40.9 , 23.8],
-						"Rotate": [-11.716, -87.62, 48.249],
+						"Position": [1.6, -160.0, 34.0],
+						"Rotate": [0.0, 0.0, 0.0],
 						"Scale": [1.0, 1.0, 1.0]
 					},
-					"Attach":
-					{
-						"Mesh": "Player_01",
-						"BoneIDX": 48,
-						"Player": "Player1"
-					}
-				},
-				{
-					"Name": "FlashLight",
-					"Transform":
-					{
-						"Position": [100.0, 10.0, 0.0],
-						"Rotate": [90.0, 0.0, 0.0],
-						"Scale": [1.0, 1.0, 1.0]
-					},
-					"Light": 
-					{
-						"LightColor": [1.0, 1.0, 1.0, 1],
-						"AmbientColor": [0.0, 0.0, 0.0, 1],
-						"LightType": 1,
-						"Distance": 7000.0,
-						"Angle": 30.0,
-						"Intensity": 5.0,
-						"Active": true,
-						"CastShadow": true,
-						"Main": false
-					},
-					"Attach":
-					{
-						"Mesh": "Player_01",
-						"BoneIDX": 48,
-						"Player": "Player1"
-					}
+					"Children":[
+						{
+							"Name": "InventoryHand",
+							"Attach":
+							{
+								"Mesh": "Player_01",
+								"BoneIDX": 48,
+								"Player": "Player1"
+							},
+							"Transform": 
+							{
+								"Position": [0, 0, 0],
+								"Rotate": [0, 0, 0],
+								"Scale": [1.0, 1.0, 1.0]
+							}
+						},
+						{
+							"Name": "FlashLight",
+							"Transform":
+							{
+								"Position": [-46.6, 63.0, 0.0],
+								"Rotate": [90.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Light": 
+							{
+								"LightColor": [1.0, 1.0, 1.0, 1],
+								"AmbientColor": [0.0, 0.0, 0.0, 1],
+								"LightType": 1,
+								"Distance": 7000.0,
+								"Angle": 30.0,
+								"Intensity": 5.0,
+								"Active": true,
+								"CastShadow": true,
+								"Main": false
+							},
+							"Attach":
+							{
+								"Mesh": "Player_01",
+								"BoneIDX": 48,
+								"Player": "Player1"
+							}
+						}
+					]
 				}
 			]
 		},

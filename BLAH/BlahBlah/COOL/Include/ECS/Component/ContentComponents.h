@@ -200,7 +200,9 @@ namespace component {
 	//
 	class Sittable : public ComponentBase<Sittable> {
 		XMFLOAT3 m_AttachPosition = { 0,0,0 };
+		Entity* m_SittableSocket = nullptr;
 
+		std::string m_SittableSocketName;
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);

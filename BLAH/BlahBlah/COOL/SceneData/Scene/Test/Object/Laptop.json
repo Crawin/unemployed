@@ -5,11 +5,6 @@
 			"Children" : 
 			[
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Laptop",
 					"Renderer" : 
 					{
@@ -39,11 +34,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Screen",
 					"Renderer" : 
 					{
@@ -77,25 +67,16 @@
 			"Name" : "Laptop_ScreenDetached",
 			"Transform" : 
 			{
-				"Position" : 
-				[
-					0.0,
-					0.0,
-					0.0
-				],
-				"Rotate" : 
-				[
-					0.0,
-					0.0,
-					0.0
-				],
+				"Position" : [ 24.5, 0.8, 1.6 ],
+				"Rotate" : [-45.732, 86.147, -2.677 ],
 				"Scale" : 
 				[
 					1.0,
 					1.0,
 					1.0
 				]
-			}
+			},
+			"Holdable": {}
 		}
 	],
 	"Name" : "Laptop_Root",

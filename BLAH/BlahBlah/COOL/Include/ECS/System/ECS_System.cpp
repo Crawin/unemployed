@@ -70,12 +70,9 @@ namespace ECSsystem {
 
 				Transform* childTrans = manager->GetComponent<Transform>(bit, innerId);
 				if (childTrans != nullptr) {
-					XMFLOAT4X4 myTransform = childTrans->GetLocalTransform();
-					XMStoreFloat4x4(&temp, XMLoadFloat4x4(&myTransform) * parent);
-
 					// do st trans to child
 					// make world transform from this trans
-					childTrans->SetParentTransform(temp);
+					childTrans->SetParentTransform(tr->GetWorldTransform());
 
 					// execute this func to child
 					manager->ExecuteFromEntity(bit, innerId, func);

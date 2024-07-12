@@ -9,10 +9,7 @@
 				"Mesh" : "crowbar.crowbar"
 			},
 			
-			"Holdable": 
-			{
-				"Action": "Attack"				
-			},
+			"Holdable": {},
 
 			"Attackable":{},
 
@@ -20,14 +17,14 @@
 			{
 				"Position" : 
 				[
+					14.7,
 					0.0,
-					0.0,
-					0.0
+					20.0
 				],
 				"Rotate" : 
 				[
 					0.0,
-					0.0,
+					-92.52,
 					0.0
 				],
 				"Scale" : 

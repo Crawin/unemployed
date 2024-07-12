@@ -141,6 +141,7 @@ public:
 	// find entity by name
 	Entity* GetEntity(const std::string& name);
 	Entity* GetEntityInChildren(const std::string& name, Entity* parent);
+	Entity* GetEntityFromRoute(const std::string& name, Entity* parent);
 
 	// execute normal O(n)
 	template<class ...COMPONENTS>

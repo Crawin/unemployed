@@ -59,9 +59,12 @@ class AnimationTrackBlendingSpace2D : public AnimationTrackBase {
 	int m_ClosePoints[4] = { 0,0,0,0 };			// left right bottom top
 	XMFLOAT4 m_BlendingWeights{ 1,0,0,0 };
 
+	int m_CurrentSuperiorPoint = 0;
+
 	XMMATRIX EvaluateFromAnimation(int boneIdx, int point) const;
 
-	int m_BeforeAnimation = 0;
+
+	int GetMaxIndex(const XMFLOAT4 vec4);
 
 public:
 	AnimationTrackBlendingSpace2D();

@@ -250,8 +250,10 @@ void SetBoneIndexSet(FbxNode* node)
 		FbxMatrix fbxTransform = node->EvaluateGlobalTransform();
 		FbxAMatrix fbxTransformTemp = node->EvaluateGlobalTransform();
 		FbxVector4 t = fbxTransformTemp.GetT();
+		FbxVector4 r = fbxTransformTemp.GetR();
 
 		std::cout << "Translation: (" << t[0] << ", " << t[1] << ", " << t[2] << ")" << std::endl;
+		std::cout << "Rotation: (" << r[0] << ", " << r[1] << ", " << r[2] << ")" << std::endl;
 
 		for (int i = 0; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {

@@ -57,7 +57,7 @@ XMMATRIX& AnimationPlayer::GetAnimatedBone(int boneIdx) const
 	animRes = m_CurrentAnimation->GetAnimatedBoneMat(boneIdx);
 
 	// blending
-	if (m_BeforeAnimWeight > 0) 
+	if (m_BeforeAnimWeight > 0 && m_CurrentAnimation != m_BeforeAnimation)
 		animRes = (1 - m_BeforeAnimWeight) * animRes + m_BeforeAnimWeight * m_BeforeAnimation->GetAnimatedBoneMat(boneIdx);
 
 	return animRes;

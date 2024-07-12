@@ -230,3 +230,27 @@ Entity* ECSManager::GetEntityInChildren(const std::string& name, Entity* parent)
 
 	return nullptr;
 }
+
+Entity* ECSManager::GetEntityFromRoute(const std::string& name, Entity* parent)
+{
+	Entity* entityTarget = parent;
+
+	size_t start = 0;
+	size_t end = name.find('/');
+
+	while (end != std::string::npos) {
+		entityTarget = GetEntityInChildren(name.substr(start, end - start), entityTarget);
+
+		if (entityTarget == nullptr)
+			ERROR_QUIT("ERROR!!! hierachy error");
+
+		start = end + 1;
+		end = name.find('/', start);
+	}
+
+	entityTarget = GetEntityInChildren(name.substr(start), entityTarget);
+	if (entityTarget == nullptr)
+		ERROR_QUIT("ERROR!! no holding hand in current child, inventory component error");
+
+	return entityTarget;
+}
