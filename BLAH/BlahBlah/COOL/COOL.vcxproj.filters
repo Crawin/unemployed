@@ -94,6 +94,9 @@
     <Filter Include="외부\Json">
       <UniqueIdentifier>{0b69166a-b7eb-4e8c-8369-a19446822c44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\ECS\TimeLine">
+      <UniqueIdentifier>{f7f304d0-f132-4f50-b8e4-80d315968221}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -144,17 +147,8 @@
     <ClInclude Include="Include\Scene\ResourceManager.h">
       <Filter>소스 파일\Scene\ResourceManager</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ECS\Entity.h">
-      <Filter>소스 파일\ECS\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\ECS\Component.h">
-      <Filter>소스 파일\ECS\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Include\ECS\ECSManager.h">
       <Filter>소스 파일\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\ECS\ECS_System.h">
-      <Filter>소스 파일\ECS\System</Filter>
     </ClInclude>
     <ClInclude Include="Include\Network\Client.h">
       <Filter>소스 파일\Network</Filter>
@@ -189,17 +183,29 @@
     <ClInclude Include="Include\ECS\ECSMacro.h">
       <Filter>소스 파일\ECS\System</Filter>
     </ClInclude>
-    <ClInclude Include="Include\ECS\EssentialComponents.h">
-      <Filter>소스 파일\ECS\Component\Essential</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\ECS\UIComponents.h">
-      <Filter>소스 파일\ECS\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\ECS\ContentComponents.h">
-      <Filter>소스 파일\ECS\Component\Content</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Animation\AnimationTrack.h">
       <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Entity\Entity.h">
+      <Filter>소스 파일\ECS\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component\Component.h">
+      <Filter>소스 파일\ECS\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component\ContentComponents.h">
+      <Filter>소스 파일\ECS\Component\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component\EssentialComponents.h">
+      <Filter>소스 파일\ECS\Component\Essential</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\Component\UIComponents.h">
+      <Filter>소스 파일\ECS\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\System\ECS_System.h">
+      <Filter>소스 파일\ECS\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\ECS\TimeLine\TimeLine.h">
+      <Filter>소스 파일\ECS\TimeLine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -242,17 +248,8 @@
     <ClCompile Include="Include\Scene\ResourceManager.cpp">
       <Filter>소스 파일\Scene\ResourceManager</Filter>
     </ClCompile>
-    <ClCompile Include="Include\ECS\Entity.cpp">
-      <Filter>소스 파일\ECS\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\ECS\Component.cpp">
-      <Filter>소스 파일\ECS\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Include\ECS\ECSManager.cpp">
       <Filter>소스 파일\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\ECS\ECS_System.cpp">
-      <Filter>소스 파일\ECS\System</Filter>
     </ClCompile>
     <ClCompile Include="Include\Network\Client.cpp">
       <Filter>소스 파일\Network</Filter>
@@ -284,20 +281,35 @@
     <ClCompile Include="Include\Enums.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Include\ECS\EssentialComponents.cpp">
-      <Filter>소스 파일\ECS\Component\Essential</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\ECS\UIComponents.cpp">
-      <Filter>소스 파일\ECS\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Include\ECS\ContentComponents.cpp">
-      <Filter>소스 파일\ECS\Component\Content</Filter>
-    </ClCompile>
     <ClCompile Include="External\Include\jsoncpp.cpp">
       <Filter>외부\Json</Filter>
     </ClCompile>
     <ClCompile Include="Include\Animation\AnimationTrack.cpp">
       <Filter>소스 파일\Scene\SceneData\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Entity\Entity.cpp">
+      <Filter>소스 파일\ECS\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Component\Component.cpp">
+      <Filter>소스 파일\ECS\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Component\ContentComponents.cpp">
+      <Filter>소스 파일\ECS\Component\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Component\EssentialComponents.cpp">
+      <Filter>소스 파일\ECS\Component\Essential</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\Component\UIComponents.cpp">
+      <Filter>소스 파일\ECS\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\System\ECS_System.cpp">
+      <Filter>소스 파일\ECS\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\ECS\TimeLine\TimeLine.cpp">
+      <Filter>소스 파일\ECS\TimeLine</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\mymath.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

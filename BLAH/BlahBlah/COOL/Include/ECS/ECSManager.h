@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "Entity.h"
-#include "Component.h"
-#include "ECS_System.h"
+#include "Entity/Entity.h"
+#include "Component/Component.h"
+#include "System/ECS_System.h"
 
 class ResourceManager;
 
@@ -110,6 +110,8 @@ class ECSManager
 	std::unordered_map<COMP_BITSET, ComponentSet> m_ComponentSets;
 
 	// system
+	ECSsystem::TimeLineManaging* m_TimeLineSystem = nullptr;
+
 	std::vector<ECSsystem::System*> m_Systems;
 	std::vector<ECSsystem::System*> m_PreRenderSystem;
 
@@ -240,6 +242,8 @@ public:
 
 		return nullptr;
 	}
+
+	void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLineSystem->AddTimeLine(entity, timeLine); }
 
 private:
 	template<class ...COMPONENTS>
