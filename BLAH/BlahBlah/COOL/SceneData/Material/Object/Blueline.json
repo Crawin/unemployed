@@ -1,0 +1,9 @@
+{
+	"name": "Doorlock",
+	"BaseColor": "Door/Doorlock/Blueline_Color",
+	"Roughness": "Door/Doorlock/Blueline_Roughness",
+	"Metalic": "Door/Doorlock/Blueline_metallic",
+	"AO": "White",
+	"Normal": "Door/Doorlock/Blueline_Normal",
+	"Shader": "TestMeshDiffered"
+}

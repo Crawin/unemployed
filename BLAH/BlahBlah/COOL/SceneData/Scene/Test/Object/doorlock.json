@@ -2,264 +2,293 @@
 	"Children" : 
 	[
 		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "Doorlock",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.Doorlock"
-			},
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "cover",
+					"Renderer" : 
+					{
+						"Material" : "Object/Cover",
+						"Mesh" : "doorlock.cover"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							3.8146970382513246e-07,
+							9.0162496566772461,
+							0.24053524434566498
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "CutLineBlue",
+					"Renderer" : 
+					{
+						"Material" : "Object/Blueline",
+						"Mesh" : "doorlock.CutLineBlue"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							8.8574361801147461,
+							8.3622989654541016,
+							0.19995056092739105
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "CutLineGreen",
+					"Renderer" : 
+					{
+						"Material" : "Object/Greenline",
+						"Mesh" : "doorlock.CutLineGreen"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							10.878756523132324,
+							8.3622989654541016,
+							0.19995056092739105
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "CutLineRed",
+					"Renderer" : 
+					{
+						"Material" : "Object/Redline",
+						"Mesh" : "doorlock.CutLineRed"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							12.861934661865234,
+							8.3622989654541016,
+							0.19995056092739105
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Doorlock",
+					"Renderer" : 
+					{
+						"Material" : "Object/Doorlock",
+						"Mesh" : "doorlock.Doorlock"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							7.4999995231628418,
+							0.0
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "LineBlue",
+					"Renderer" : 
+					{
+						"Material" : "Object/Blueline",
+						"Mesh" : "doorlock.LineBlue"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2.1065750122070312,
+							8.3622989654541016,
+							0.19995056092739105
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "LineGreen",
+					"Renderer" : 
+					{
+						"Material" : "Object/Greenline",
+						"Mesh" : "doorlock.LineGreen"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-0.085254281759262085,
+							8.3622989654541016,
+							0.19995056092739105
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "LineRed",
+					"Renderer" : 
+					{
+						"Material" : "Object/Redline",
+						"Mesh" : "doorlock.LineRed"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1.897923469543457,
+							8.3622989654541016,
+							0.19995056092739105
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "doorlock",
 			"Transform" : 
 			{
 				"Position" : 
-				[
-					100.0, 150.0, 850.0
-				],
-				"Rotate" : 
 				[
 					0.0,
 					0.0,
 					0.0
 				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "cover",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.cover"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					3.814697265625e-06,
-					90.162506103515625,
-					2.4053528308868408
-				],
 				"Rotate" : 
 				[
 					0.0,
-					0.0,
-					0.0
-				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "LineRed",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.LineRed"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					18.979236602783203,
-					83.623001098632812,
-					1.9995057582855225
-				],
-				"Rotate" : 
-				[
-					90.0,
-					0.0,
-					0.0
-				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "LineGreen",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.LineGreen"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					-0.85254287719726562,
-					83.623001098632812,
-					1.9995057582855225
-				],
-				"Rotate" : 
-				[
-					90.0,
-					0.0,
-					0.0
-				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "LineBlue",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.LineBlue"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					-21.065753936767578,
-					83.623001098632812,
-					1.9995057582855225
-				],
-				"Rotate" : 
-				[
-					90.0,
-					0.0,
-					0.0
-				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "CutLineBlue",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.CutLineBlue"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					88.574378967285156,
-					83.623001098632812,
-					1.9995057582855225
-				],
-				"Rotate" : 
-				[
-					90.0,
-					0.0,
-					0.0
-				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "CutLineRed",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.CutLineRed"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					128.61936950683594,
-					83.623001098632812,
-					1.9995057582855225
-				],
-				"Rotate" : 
-				[
-					90.0,
-					0.0,
-					0.0
-				],
-				"Scale" : 
-				[
-					1.0,
-					1.0,
-					1.0
-				]
-			}
-		},
-		{
-			"Collider" : 
-			{
-				"AutoMesh" : true,
-				"Static" : true
-			},
-			"Name" : "CutLineGreen",
-			"Renderer" : 
-			{
-				"Material" : "NoMaterial",
-				"Mesh" : "doorlock.CutLineGreen"
-			},
-			"Transform" : 
-			{
-				"Position" : 
-				[
-					108.78759002685547,
-					83.623001098632812,
-					1.9995057582855225
-				],
-				"Rotate" : 
-				[
-					90.0,
 					0.0,
 					0.0
 				],
@@ -277,9 +306,7 @@
 	{
 		"Position" : 
 		[
-			0.0,
-			0.0,
-			0.0
+			100.0, 155.0, 1000.0
 		],
 		"Rotate" : 
 		[

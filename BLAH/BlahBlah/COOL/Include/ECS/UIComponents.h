@@ -92,7 +92,7 @@ namespace component {
 
 		const ButtonEventFunction& GetButtonEvent(KEY_STATE keySt) { return m_ButtonActions[keySt]; }
 
-		void SetButtonDownEvent(KEY_STATE keySt, const ButtonEventFunction& e) { m_ButtonActions[keySt] = e; }
+		void SetButtonEvent(KEY_STATE keySt, const ButtonEventFunction& e) { m_ButtonActions[keySt] = e; }
 	};
 
 

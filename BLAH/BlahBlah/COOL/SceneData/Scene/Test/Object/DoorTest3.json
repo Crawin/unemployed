@@ -39,8 +39,8 @@
 			},
 			"Renderer":
 			{
-				"Mesh": "DoorTest.Door",
-				"Material": "NoMaterial"
+				"Mesh": "Door.Door",
+				"Material": "Object/Door"
 			},
 			"Collider": 
 			{

@@ -1,0 +1,9 @@
+{
+	"name": "Cover",
+	"BaseColor": "Door/Doorlock/Cover_Color",
+	"Roughness": "Door/Doorlock/Cover_Roughness",
+	"Metalic": "Door/Doorlock/Cover_metallic",
+	"AO": "White",
+	"Normal": "Door/Doorlock/Cover_Normal",
+	"Shader": "TestMeshDiffered"
+}

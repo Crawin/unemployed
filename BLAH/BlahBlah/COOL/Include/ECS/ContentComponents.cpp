@@ -272,13 +272,12 @@ namespace component {
 						canvas->HideUI();
 
 						};
-					button->SetButtonReleaseEvent(exit);
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
 				}
 				if (name == "Check") {
 					Button* button = manager->GetComponent<Button>(child);
 					ButtonEventFunction check = [canvas, key, manager](Entity* ent) {
 						// hide ui;
-						DebugPrint("check");
 
 						if (key->GetAnswer()) {
 							// open door
@@ -289,7 +288,7 @@ namespace component {
 						}
 
 						};
-					button->SetButtonReleaseEvent(check);
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
 				}
 			}
 		}
@@ -326,7 +325,7 @@ namespace component {
 					ButtonEventFunction exit = [canvas](Entity* ent) {
 						canvas->HideUI();
 						};
-					button->SetButtonReleaseEvent(exit);
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
 				}
 
 				if (name == "Check") {
@@ -345,7 +344,7 @@ namespace component {
 						}
 
 						};
-					button->SetButtonDownEvent(KEY_STATE::END_PRESS, check);
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
 				}
 				else {
 					for (int i = 1; i <= 9; ++i) {
@@ -358,13 +357,12 @@ namespace component {
 								keypad->SetCurrent(current);
 
 								};
-							button->SetButtonDownEvent(KEY_STATE::END_PRESS, password);
+							button->SetButtonEvent(KEY_STATE::END_PRESS, password);
 						}
 					}
 				}
 			}
 		}
-
 	}
 
 	void UIKeypad::ShowYourself() const
