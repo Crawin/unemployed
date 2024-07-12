@@ -213,19 +213,28 @@ namespace ECSsystem {
 				float maxSpeed = sp->GetMaxVelocity();
 				float curSpeed = XMVectorGetX(XMVector3Length(vel));
 				
+				XMVECTOR vec = XMLoadFloat3(&tempMove);
+				XMFLOAT4X4 tpRot = tr->GetLocalTransform();
+				tpRot._41 = 0.0f;
+				tpRot._42 = 0.0f;
+				tpRot._43 = 0.0f;
+
+				vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
+
+				XMStoreFloat3(&tempMove, vec);
+				sp->AddVelocity(tempMove, deltaTime);
+
+				XMFLOAT3 velocity = sp->GetVelocity();
+				vel = XMLoadFloat3(&sp->GetVelocityOnXZ());
+				curSpeed = XMVectorGetX(XMVector3Length(vel));
+
 				// limit max speed
-				if (curSpeed <= maxSpeed)
+				if (curSpeed >= maxSpeed)
 				{
-					XMVECTOR vec = XMLoadFloat3(&tempMove);
-					XMFLOAT4X4 tpRot = tr->GetLocalTransform();
-					tpRot._41 = 0.0f;
-					tpRot._42 = 0.0f;
-					tpRot._43 = 0.0f;
-
-					vec = XMVector3Transform(vec, XMLoadFloat4x4(&tpRot));
-
-					XMStoreFloat3(&tempMove, vec);
-					sp->AddVelocity(tempMove, deltaTime);
+					vel  = vel / curSpeed * maxSpeed;
+					velocity.x = XMVectorGetX(vel);
+					velocity.z = XMVectorGetZ(vel);
+					sp->SetVelocity(velocity);
 				}
 			}
 
