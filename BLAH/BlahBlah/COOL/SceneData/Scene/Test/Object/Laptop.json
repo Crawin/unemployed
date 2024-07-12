@@ -76,7 +76,12 @@
 					1.0
 				]
 			},
-			"Holdable": {}
+			"Holdable": {},
+			"CCTVController": 
+			{
+				"Slot_0": "CCTV_01"
+
+			}
 		}
 	],
 	"Name" : "Laptop_Root",

@@ -52,6 +52,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Throwable, "Throwable");
 	REGISTER_COMPONENT(component::Screen, "Screen");
 	REGISTER_COMPONENT(component::Sittable, "Sittable");
+	REGISTER_COMPONENT(component::CCTVController, "CCTVController");
 
 
 	// ui content

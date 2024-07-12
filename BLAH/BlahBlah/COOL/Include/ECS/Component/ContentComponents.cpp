@@ -691,4 +691,61 @@ namespace component {
 
 	}
 
+	void CCTVController::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value cctvCtrl = v["CCTVController"];
+
+		for (int i = 0; i < MAX_CAMERA; ++i)
+			m_TargetCCTVNames[i] = cctvCtrl[std::format("Slot_{}", i)].asString().c_str();
+	}
+
+	void CCTVController::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// get camera render target indices
+		for (int i = 0; i < MAX_CAMERA; ++i) 
+			m_CCTVEntities[i] = manager->GetEntity(m_TargetCCTVNames[i]);
+
+
+		// set holdable action maps
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		const float rootSpeed = 10.0f;
+
+		// rotate by arrow keys
+		ActionFunction arrowUp = [this, manager, rootSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_CCTVEntities[m_CurrentCCTV]);
+			XMFLOAT3 rot = tr->GetRotation();
+			rot.x -= (deltaTime * rootSpeed);
+			tr->SetRotation(rot);
+			};
+		ActionFunction arrowDown = [this, manager, rootSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_CCTVEntities[m_CurrentCCTV]);
+			XMFLOAT3 rot = tr->GetRotation();
+			rot.x += (deltaTime * rootSpeed);
+			tr->SetRotation(rot);
+			};
+		ActionFunction arrowLeft = [this, manager, rootSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_CCTVEntities[m_CurrentCCTV]);
+			XMFLOAT3 rot = tr->GetRotation();
+			rot.y -= (deltaTime * rootSpeed);
+			tr->SetRotation(rot);
+			};
+		ActionFunction arrowRight = [this, manager, rootSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_CCTVEntities[m_CurrentCCTV]);
+			XMFLOAT3 rot = tr->GetRotation();
+			rot.y += (deltaTime * rootSpeed);
+			tr->SetRotation(rot);
+			};
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_UP, KEY_STATE::PRESSING), arrowUp);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_DOWN, KEY_STATE::PRESSING), arrowDown);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::PRESSING), arrowLeft);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::PRESSING), arrowRight);
+
+		// with [, ], change cctvs
+		ActionFunction prev = [this](float deltaTime) {};
+		ActionFunction next = [this](float deltaTime) {};
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::PREVIOUS, KEY_STATE::END_PRESS), prev);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::NEXT, KEY_STATE::END_PRESS), next);
+	}
+
 }

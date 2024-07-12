@@ -163,6 +163,24 @@ namespace component {
 		virtual void ShowYourself() const {}
 	};
 
+#define MAX_CAMERA 4
+	/////////////////////////////////////////////////////////
+	// Throwable Component
+	// CCTV, drinks
+	//
+	class CCTVController : public ComponentBase<CCTVController> {
+		Entity* m_CCTVEntities[MAX_CAMERA] = {};
+		std::string m_TargetCCTVNames[MAX_CAMERA] = { "", };
+
+		int m_CurrentCCTV = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+	};
+
 #define MAX_INVENTORY 4
 	/////////////////////////////////////////////////////////
 	// Inventory Component
