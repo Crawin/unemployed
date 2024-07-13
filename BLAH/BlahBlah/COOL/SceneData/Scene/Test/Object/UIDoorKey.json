@@ -39,6 +39,49 @@
 				"Material": "UI/UITempMaterial",
 				"IsSprite": false
 			}
+		},
+
+		{	"Name": "Key1",
+
+			"UITransform":
+			{
+				"Center": [440, 260],
+				"Size": [150, 150]
+			},
+			
+			"Button": {},
+
+			"Key":
+			{
+				"Length": 5
+			},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "Key2",
+
+			"UITransform":
+			{
+				"Center": [840, 260],
+				"Size": [150, 150]
+			},
+		
+			"Button": {},
+		
+			"Key":
+			{
+				"Length": 6
+			},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
 		}
 
 	]

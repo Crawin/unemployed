@@ -1,8 +1,8 @@
 {
 	"name": "Redline",
-	"BaseColor": "Door/Doorlock/Redline_Color",
-	"Roughness": "Door/Doorlock/Redline_Roughness",
-	"Metalic": "Door/Doorlock/Redline_metallic",
+	"BaseColor": "Red",
+	"Roughness": "White",
+	"Metalic": "White",
 	"AO": "White",
 	"Normal": "Door/Doorlock/Redline_Normal",
 	"Shader": "TestMeshDiffered"

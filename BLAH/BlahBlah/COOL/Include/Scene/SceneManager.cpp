@@ -52,6 +52,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Attackable, "Attackable");
 	REGISTER_COMPONENT(component::Throwable, "Throwable");
 	REGISTER_COMPONENT(component::Screen, "Screen");
+	REGISTER_COMPONENT(component::Key, "Key");
+
 
 
 	// ui content

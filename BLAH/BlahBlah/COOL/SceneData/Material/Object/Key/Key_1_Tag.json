@@ -1,0 +1,9 @@
+{
+	"name": "Key_1_Tag",
+	"BaseColor": "Door/Key/Simple Key 01_Tag_BaseColor",
+	"Roughness": "Door/Key/Simple Key 01_Tag_Roughness",
+	"Metalic": "Door/Key/Simple Key 01_Tag_Metallic",
+	"AO": "White",
+	"Normal": "Door/Key/Simple Key 01_Tag_Normal",
+	"Shader": "TestMeshDiffered"
+}

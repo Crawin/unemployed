@@ -1,0 +1,9 @@
+{
+	"name": "UIKey1",
+	"BaseColor": "UI/Key01",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

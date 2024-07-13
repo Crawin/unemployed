@@ -1,0 +1,167 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Eyelets",
+							"Renderer" : 
+							{
+								"Material" : "Object/Key/Key_2_Eyelets",
+								"Mesh" : "Simple_03.Eyelets"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									0.0021188508253544569,
+									0.00071841955650597811,
+									-0.0075340862385928631
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Ring",
+							"Renderer" : 
+							{
+								"Material" : "Object/Key/Key_2_Eyelets",
+								"Mesh" : "Simple_03.Ring"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-0.95847296714782715,
+									1.0623750686645508,
+									0.39901846647262573
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Tag8",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/Key_2_Tag",
+						"Mesh" : "Simple_03.Tag8"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							3.8543529510498047,
+							2.9691965579986572,
+							-0.59039050340652466
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Collider" : 
+			{
+				"AutoMesh" : true,
+				"Static" : true
+			},
+			"Name" : "KeyTwo",
+			"Renderer" : 
+			{
+				"Material" : "Object/Key/Key_2",
+				"Mesh" : "Simple_03.Simple_03"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Simple_03_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			150.0, 155.0, 1100.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
