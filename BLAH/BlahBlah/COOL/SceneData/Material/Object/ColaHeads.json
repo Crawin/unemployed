@@ -1,0 +1,9 @@
+{
+	"name": "CanHead",
+	"BaseColor": "Gray",
+	"Roughness": "AllmostBlack",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

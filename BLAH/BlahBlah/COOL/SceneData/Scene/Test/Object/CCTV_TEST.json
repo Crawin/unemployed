@@ -29,6 +29,7 @@
 
 			"DynamicCollider":
 			{
+				"Active": false,
 				"Static": false,
 				"ColideWithDynamic": false,
 				"Center": [0, 0, 0],

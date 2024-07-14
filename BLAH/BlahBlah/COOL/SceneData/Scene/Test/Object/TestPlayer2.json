@@ -31,6 +31,7 @@
 
 	"DynamicCollider": 
 	{
+		"Active": true,
 		"Static": false,
 		"AutoMesh": false,
 		"IsCapsule": true,

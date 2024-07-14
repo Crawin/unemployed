@@ -1,0 +1,191 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Cola",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "COKECAN_01",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {},
+			"Throwable": {
+				"BakeTime": 2.0,
+				"ThrowSpeed": 70.0
+			},
+			"Physics": 
+			{
+				"MaxVelocity": 20000.0,
+				"Acceleration" : [2000.0, 2000.0, 2000.0],
+				"Calculate" : false,
+				"Friction": false
+			}
+			
+		}
+	],
+	"Name" : "COKECAN_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -283,7 +283,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	XMFLOAT3 camDir = camera->GetWorldDirection();
 
 	// make function
-	std::function<void(component::Renderer*)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent) {
+	std::function<void(component::Renderer*, component::Name*)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent, component::Name* name) {
 		int materialIdx = renderComponent->GetMaterial();
 		int meshIdx = renderComponent->GetMesh();
 
@@ -311,7 +311,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 		};
 
 	// execute function
-	m_ECSManager->Execute<component::Renderer>(func);
+	m_ECSManager->Execute(func);
 
 	OnPostRender(commandList, dsv);
 

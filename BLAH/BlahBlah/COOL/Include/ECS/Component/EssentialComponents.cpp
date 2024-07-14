@@ -628,6 +628,7 @@ namespace component {
 	{
 		Json::Value col = v["DynamicCollider"];
 
+		m_Active = col["Active"].asBool();
 		m_StaticObject = col["Static"].asBool();
 		m_Trigger = col["IsTrigger"].asBool();
 

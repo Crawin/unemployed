@@ -1,0 +1,9 @@
+{
+	"name": "Can",
+	"BaseColor": "Object/Can/Cola_Color",
+	"Roughness": "AllmostBlack",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

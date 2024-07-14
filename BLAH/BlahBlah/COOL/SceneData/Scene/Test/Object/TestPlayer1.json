@@ -33,6 +33,7 @@
 
 	"DynamicCollider": 
 	{
+		"Active": true,
 		"Static": false,
 		"AutoMesh": false,
 		"IsCapsule": true,
@@ -47,7 +48,7 @@
 		"Slot_0": "CCTV_TEST",
 		"Slot_1": "crowbar",
 		"Slot_2": "Laptop_ScreenDetached",
-		"Slot_3": ""
+		"Slot_3": "COKECAN_01"
 	},
 
 	"Children": 
