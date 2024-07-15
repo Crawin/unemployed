@@ -8,6 +8,12 @@
 		"Scale": [1.0, 1.0, 1.0]
 	},
 
+	"Renderer":
+	{
+		"Mesh": "Door.Door",
+		"Material": "Object/Door"
+	},
+
 	"Door": 
 	{
 		"MaxAngle": 120.0,
@@ -30,26 +36,21 @@
 
 	"Children":[
 		{
-			"Name": "DoorRender",
+			"Name": "FrameRender",
 			"Transform": 
 			{
 				"Position": 
-				[	
-					50.000011444091797,
-					7.5101852416992188e-06,
-					0.48449993133544922
-				],
-				"Rotate": 
 				[
-					2.5044780613825424e-06, 
-					0.0,
-					0.0
+					-50.0,
+					107.82761383056641,
+					-7.62939453125e-06
 				],
+				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 			"Renderer":
 			{
-				"Mesh": "Door.Door",
+				"Mesh": "Door.Frame",
 				"Material": "Object/Door"
 			},
 			"Collider": 
@@ -57,7 +58,6 @@
 				"Static": true,
 				"AutoMesh": true
 			},
-
 			"Children" : 
 			[
 				{
@@ -71,8 +71,8 @@
 					{
 						"Position" : 
 						[
+							50.0,
 							0.0,
-							100.0,
 							0.0
 						],
 						"Rotate" : 
@@ -274,7 +274,7 @@
 					{
 						"Position" : 
 						[
-							-90.0, 150.0, 5.0
+							-40.0, 20.0, 5.0
 						],
 						"Rotate" : 
 						[
@@ -291,30 +291,6 @@
 					}
 				}
 			]
-		},
-		{
-			"Name": "FrameRender",
-			"Transform": 
-			{
-				"Position": 
-				[
-					0.0,
-					107.82761383056641,
-					-7.62939453125e-06
-				],
-				"Rotate": [0.0, 0.0, 0.0],
-				"Scale": [1.0, 1.0, 1.0]
-			},
-			"Renderer":
-			{
-				"Mesh": "Door.Frame",
-				"Material": "Object/Door"
-			},
-			"Collider": 
-			{
-				"Static": true,
-				"AutoMesh": true
-			}
 		}
 	]
 }

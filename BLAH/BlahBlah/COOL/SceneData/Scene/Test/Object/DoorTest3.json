@@ -7,6 +7,11 @@
 		"Rotate": [0.0, 180.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
+	"Renderer":
+	{
+		"Mesh": "Door.Door",
+		"Material": "Object/Door"
+	},
 
 	"Door": 
 	{
@@ -30,25 +35,62 @@
 
 	"Children":[
 		{
-			"Name": "DoorRender",
+"Name": "FrameRender",
 			"Transform": 
 			{
-				"Position": [0.0, 0.0, 0.0],
+				"Position": [-50.0,
+				107.82761383056641,
+				-7.62939453125e-06],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 			"Renderer":
 			{
-				"Mesh": "Door.Door",
+				"Mesh": "Door.Frame",
 				"Material": "Object/Door"
 			},
 			"Collider": 
 			{
 				"Static": true,
 				"AutoMesh": true
-			}
+			},
+			"Children" : 
+			[
+				{
+					"Name" : "Knob_1",
+					"Renderer" : 
+					{
+						"Material" : "Object/Knob",
+						"Mesh" : "Knob_1.Knob_1"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							50.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"Collider": 
+					{
+						"Static": true,
+						"AutoMesh": true
+					}
+				}
+			]
 		}
 	]
-
-
 }
