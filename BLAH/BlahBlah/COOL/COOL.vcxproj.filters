@@ -201,7 +201,7 @@
     <ClInclude Include="Include\ECS\ContentComponents.h">
       <Filter>소스 파일\ECS\Component\Content</Filter>
     </ClInclude>
-    <ClInclude Include="FmodSound.h">
+    <ClInclude Include="Include\FMODsound\FmodSound.h">
       <Filter>소스 파일\App\FMOD</Filter>
     </ClInclude>
   </ItemGroup>
@@ -299,7 +299,7 @@
     <ClCompile Include="External\Include\jsoncpp.cpp">
       <Filter>외부\Json</Filter>
     </ClCompile>
-    <ClCompile Include="FmodSound.cpp">
+    <ClCompile Include="Include\FMODsound\FmodSound.cpp">
       <Filter>소스 파일\App\FMOD</Filter>
     </ClCompile>
   </ItemGroup>

@@ -159,7 +159,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="External\Include\DDSTextureLoader12.h" />
-    <ClInclude Include="FmodSound.h" />
     <ClInclude Include="Include\Animation\Animation.h" />
     <ClInclude Include="Include\Animation\AnimationPlayer.h" />
     <ClInclude Include="Include\App\Application.h" />
@@ -175,6 +174,7 @@
     <ClInclude Include="Include\ECS\EssentialComponents.h" />
     <ClInclude Include="Include\ECS\UIComponents.h" />
     <ClInclude Include="Include\Enums.h" />
+    <ClInclude Include="Include\FMODsound\FmodSound.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Light.h" />
     <ClInclude Include="Include\Lighting\ShadowMap.h" />
@@ -198,7 +198,6 @@
     <ClCompile Include="External\Include\DDSTextureLoader12.cpp" />
     <ClCompile Include="External\Include\jsoncpp.cpp" />
     <ClCompile Include="External\Include\VIVOX\VIVOX.cpp" />
-    <ClCompile Include="FmodSound.cpp" />
     <ClCompile Include="Include\Animation\Animation.cpp" />
     <ClCompile Include="Include\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="Include\App\Application.cpp" />
@@ -212,6 +211,7 @@
     <ClCompile Include="Include\ECS\EssentialComponents.cpp" />
     <ClCompile Include="Include\ECS\UIComponents.cpp" />
     <ClCompile Include="Include\Enums.cpp" />
+    <ClCompile Include="Include\FMODsound\FmodSound.cpp" />
     <ClCompile Include="Include\framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

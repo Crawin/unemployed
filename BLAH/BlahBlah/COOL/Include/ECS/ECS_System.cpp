@@ -7,6 +7,7 @@
 #include "Network/Client.h"
 #include "ECSMacro.h"
 #include "App/Application.h"
+#include "FMODsound/FmodSound.h"
 
 namespace ECSsystem {
 
@@ -189,7 +190,13 @@ namespace ECSsystem {
 			}
 
 			float maxSpeed = 200.0f;
-			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
+			if (pawn->IsPressing(GAME_INPUT::SHIFT)) {
+				maxSpeed += 400.0f;
+				FMOD_INFO::GetInstance().set_running(true);
+			}
+			else {
+				FMOD_INFO::GetInstance().set_running(false);
+			}
 			sp->SetMaxSpeed(maxSpeed);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
@@ -413,8 +420,14 @@ namespace ECSsystem {
 				client.characters[id].SetUpdate(false);
 
 				if (id != playerSock[0]) {	// 상대방 플레이어면 회전값 적용
-					tr->SetPosition(client.characters[id].getPos());
-					tr->SetRotation(client.characters[id].getRot());
+					DirectX::XMFLOAT3 pos = client.characters[id].getPos();
+					DirectX::XMFLOAT3 rot = client.characters[id].getRot();
+					tr->SetPosition(pos);
+					tr->SetRotation(rot);
+					if (id == 1)	// 가드면 발자국 소리 위치 업데이트를 위해 FMOD_INFO에 위치 업데이트
+					{
+						FMOD_INFO::GetInstance().set_guard_position(pos);
+					}
 				}
 				sp->SetVelocity(client.characters[id].getSpeed());
 				//XMFLOAT3 vel = sp->GetVelocityOnXZ();
