@@ -19,7 +19,8 @@ enum PACKET_TYPE
 	pENTERROOM,
 	pRoomPlayer,
 	pLogout,
-	pAttack
+	pAttack,
+	pAnimation
 };
 
 class packet_base
@@ -173,6 +174,28 @@ public:
 	const unsigned int getRoomNum() { return roomNum; }
 };
 
-//class cs_packet_
+class cs_packet_anim_type : public packet_base
+{
+	char anim_type;
+public:
+	cs_packet_anim_type(ANIMATION_STATE anim_state)
+	{
+		size = sizeof(cs_packet_anim_type);
+		type = pAnimation;
+		anim_type = static_cast<char>(anim_state);
+	}
+};
+
+class cs_packet_unlock_door : public packet_base
+{
+	char success;
+	short doorNum;
+};
+
+class cs_packet_open_door : public packet_base
+{
+	float angle;
+
+};
 
 #pragma pack(pop)

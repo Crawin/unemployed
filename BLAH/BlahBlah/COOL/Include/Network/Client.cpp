@@ -182,6 +182,16 @@ void Client::setSceneManager(SceneManager* scenemanager)
 	this->m_SceneManager = scenemanager;
 }
 
+void Client::send_packet(void* packet)
+{
+	auto base = reinterpret_cast<packet_base*>(packet);
+	EXP_OVER* send_over = new EXP_OVER;
+	send_over->wsabuf->len = base->getSize();
+	memcpy(send_over->buf, packet, base->getSize());
+	ZeroMemory(&wsaover, sizeof(wsaover));
+	WSASend(m_sServer, send_over->wsabuf, 1, nullptr, 0, &send_over->over, send_callback);
+}
+
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
 {
 	if (0 != err)

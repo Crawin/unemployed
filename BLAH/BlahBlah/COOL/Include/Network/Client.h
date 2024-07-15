@@ -116,6 +116,8 @@ public:
 	short get_prev_packet_size() { return prev_packet_size; }
 	void setSceneManager(SceneManager* scenemanager);
 	SceneManager* getSceneManager() { return m_SceneManager; }
+
+	void send_packet(void*);
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);
