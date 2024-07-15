@@ -423,24 +423,52 @@ namespace ECSsystem {
 			const SOCKET* playerSock = client.getPSock();
 			short type = client.getCharType();
 			auto& n = name->getName();
-			if (playerSock[0])
+			if (type)
 			{
-				if (server->getID() == NULL && n.compare("Player1") == 0)
+				if (playerSock[0])			// 자신의 소켓 번호가 들어가있어
 				{
-					server->setID(playerSock[0]);
+					std::string playername;
+					switch (type)
+					{
+					case 1:
+						playername = client.GetHostPlayerName();
+						break;
+					case 2:
+						playername = client.GetGuestPlayerName();
+						break;
+					}
+					if (server->getID() == NULL && n == playername)
+					{
+						server->setID(playerSock[0]);
+					}
 				}
-			}
-			if (playerSock[1])
-			{
-				if (server->getID() == NULL && n.compare("Player2") == 0)
+				if (playerSock[1])
 				{
-					server->setID(playerSock[1]);
+					std::string playername;
+					switch (type)
+					{
+					case 1:
+						playername = client.GetGuestPlayerName();
+						break;
+					case 2:
+						playername = client.GetHostPlayerName();
+						break;
+					}
+					if (server->getID() == NULL && n == playername)
+					{
+						server->setID(playerSock[1]);
+					}
+
+					//if (server->getID() == NULL && n.compare("Player2") == 0)
+					//{
+					//	server->setID(playerSock[1]);
+					//}
 				}
-			}
-			else //상대방 플레이어가 로그아웃 했을때
-			{
-				if (n.compare("Player2") == 0 && server->getID() != NULL)
-					server->setID(NULL);
+				else //상대방 플레이어가 로그아웃 했을때
+				{
+					if (n.compare("Player2") == 0 && server->getID() != NULL)
+						server->setID(NULL);
+				}
 			}
 			if (n.compare("Guard") == 0 && server->getID() == NULL)
 				server->setID(1);

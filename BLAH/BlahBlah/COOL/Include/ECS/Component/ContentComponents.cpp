@@ -5,6 +5,7 @@
 #include "Animation/AnimationTrack.h"
 #include "json/json.h"
 #include "ECS/TimeLine/TimeLine.h"
+#include "Network/Client.h"
 
 
 namespace component {
@@ -731,6 +732,8 @@ namespace component {
 
 				// set animation
 				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_START);
+				cs_packet_anim_type anim(ANIMATION_STATE::SIT_START);
+				Client::GetInstance().send_packet(&anim);
 				float endTime = animCtrl->GetCurrentPlayEndTime();
 
 				// set player position
@@ -772,6 +775,8 @@ namespace component {
 
 				// set animation
 				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_END);
+				cs_packet_anim_type anim(ANIMATION_STATE::SIT_END);
+				Client::GetInstance().send_packet(&anim);
 				float endTime = animCtrl->GetCurrentPlayEndTime();
 
 				// set player camera position

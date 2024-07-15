@@ -247,11 +247,10 @@ void process_packet(packet_base*& base)
 	auto& client = Client::GetInstance();
 	switch (base->getType())		// PACKET_TYPE
 	{
-	case pPOSITION:								// POSITION
-	{
+	case pPOSITION:								// SceneManager가 하기 용이한 것들은 씬매니저에게 전달.
+	case pAnimation:
 		client.getSceneManager()->ProcessPacket(base);
 		break;
-	}
 	case pLOGIN:									// LOGIN
 	{
 		sc_packet_login* buf = reinterpret_cast<sc_packet_login*>(base);
@@ -318,9 +317,6 @@ void process_packet(packet_base*& base)
 	{
 		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(base);
 	}
-		break;
-	case pAnimation:
-		client.getSceneManager()->ProcessPacket(base);
 		break;
 	}
 }
