@@ -624,8 +624,6 @@ namespace component {
 	class Interaction : public ComponentBase<Interaction> {
 		InteractionFuncion m_InteractionFunction = nullptr;
 
-		CollideEvents m_EventFunctions;
-
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);

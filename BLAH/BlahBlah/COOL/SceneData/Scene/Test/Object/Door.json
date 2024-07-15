@@ -1,0 +1,320 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Door",
+					"Renderer" : 
+					{
+						"Material" : "Object/Door",
+						"Mesh" : "Door.Door"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							50.000011444091797,
+							7.5101852416992188e-06,
+							0.48449993133544922
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+
+					"Children" : 
+					[
+						{
+							"Children" : 
+							[
+								{
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
+									},
+									"Name" : "cover",
+									"Renderer" : 
+									{
+										"Material" : "Object/Cover",
+										"Mesh" : "doorlock.cover"
+									},
+									"Transform" : 
+									{
+										"Position" : 
+										[
+											3.8146970382513246e-07,
+											9.0162496566772461,
+											0.24053524434566498
+										],
+										"Rotate" : 
+										[
+											2.5044780613825424e-06,
+											0.0,
+											0.0
+										],
+										"Scale" : 
+										[
+											1.0,
+											1.0,
+											1.0
+										]
+									}
+								},
+
+								{
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
+									},
+									"Name" : "Doorlock",
+									"Renderer" : 
+									{
+										"Material" : "Object/Doorlock",
+										"Mesh" : "doorlock.Doorlock"
+									},
+									"Transform" : 
+									{
+										"Position" : 
+										[
+											0.0,
+											7.4999995231628418,
+											0.0
+										],
+										"Rotate" : 
+										[
+											2.5044780613825424e-06,
+											0.0,
+											0.0
+										],
+										"Scale" : 
+										[
+											1.0,
+											1.0,
+											1.0
+										]
+									}
+								},
+								{
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
+									},
+									"Name" : "LineBlue",
+									"Renderer" : 
+									{
+										"Material" : "Object/Blueline",
+										"Mesh" : "doorlock.LineBlue"
+									},
+									"Transform" : 
+									{
+										"Position" : 
+										[
+											-2.1065750122070312,
+											8.3622989654541016,
+											0.19995056092739105
+										],
+										"Rotate" : 
+										[
+											2.5044780613825424e-06,
+											0.0,
+											0.0
+										],
+										"Scale" : 
+										[
+											1.0,
+											1.0,
+											1.0
+										]
+									}
+								},
+								{
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
+									},
+									"Name" : "LineGreen",
+									"Renderer" : 
+									{
+										"Material" : "Object/Greenline",
+										"Mesh" : "doorlock.LineGreen"
+									},
+									"Transform" : 
+									{
+										"Position" : 
+										[
+											-0.085254281759262085,
+											8.3622989654541016,
+											0.19995056092739105
+										],
+										"Rotate" : 
+										[
+											2.5044780613825424e-06,
+											0.0,
+											0.0
+										],
+										"Scale" : 
+										[
+											1.0,
+											1.0,
+											1.0
+										]
+									}
+								},
+								{
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
+									},
+									"Name" : "LineRed",
+									"Renderer" : 
+									{
+										"Material" : "Object/Redline",
+										"Mesh" : "doorlock.LineRed"
+									},
+									"Transform" : 
+									{
+										"Position" : 
+										[
+											1.897923469543457,
+											8.3622989654541016,
+											0.19995056092739105
+										],
+										"Rotate" : 
+										[
+											2.5044780613825424e-06,
+											0.0,
+											0.0
+										],
+										"Scale" : 
+										[
+											1.0,
+											1.0,
+											1.0
+										]
+									}
+								}
+							],
+							"Name" : "doorlock",
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-20.0, 150.0, -5.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					]
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Frame",
+					"Renderer" : 
+					{
+						"Material" : "Object/Door",
+						"Mesh" : "Door.Frame"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							107.82761383056641,
+							-7.62939453125e-06
+						],
+						"Rotate" : 
+						[
+							2.5044780613825424e-06,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Wood_Door__2_",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Door_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0, 0.0, 0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

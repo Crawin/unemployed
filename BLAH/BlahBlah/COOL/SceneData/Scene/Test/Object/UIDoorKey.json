@@ -1,0 +1,89 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UIDoorKey": {},
+
+	"Children": 
+	[
+		{	"Name": "Exit",
+
+			"UITransform":
+			{
+				"Center": [1200, 650],
+				"Size": [70, 70]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIExit",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "Check",
+
+			"UITransform":
+			{
+				"Center": [640, 100],
+				"Size": [300, 150]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UITempMaterial",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "Key1",
+
+			"UITransform":
+			{
+				"Center": [440, 260],
+				"Size": [150, 150]
+			},
+			
+			"Button": {},
+
+			"Key":
+			{
+				"Length": 5
+			},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "Key2",
+
+			"UITransform":
+			{
+				"Center": [840, 260],
+				"Size": [150, 150]
+			},
+		
+			"Button": {},
+		
+			"Key":
+			{
+				"Length": 6
+			},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
+		}
+
+	]
+
+}

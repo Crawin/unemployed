@@ -1,0 +1,9 @@
+{
+	"name": "Knob",
+	"BaseColor": "Door/Knob/Knob_diffuseOriginal",
+	"Roughness": "Door/Knob/Knob_roughness",
+	"Metalic": "Door/Knob/Knob_metallic",
+	"AO": "White",
+	"Normal": "Door/Knob/Knob_normal",
+	"Shader": "TestMeshDiffered"
+}

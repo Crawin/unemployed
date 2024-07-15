@@ -1,0 +1,9 @@
+{
+	"name": "Key_2_Eyelets",
+	"BaseColor": "Door/Key/Simple Key 02_Eyelets_BaseColor",
+	"Roughness": "Door/Key/Simple Key 02_Eyelets_Roughness",
+	"Metalic": "Door/Key/Simple Key 02_Eyelets_Metallic",
+	"AO": "White",
+	"Normal": "Door/Key/Simple Key 02_Eyelets_Normal",
+	"Shader": "TestMeshDiffered"
+}

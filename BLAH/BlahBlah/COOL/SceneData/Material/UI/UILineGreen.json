@@ -1,0 +1,9 @@
+{
+	"name": "UILineGreen",
+	"BaseColor": "UI/LineGreen",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

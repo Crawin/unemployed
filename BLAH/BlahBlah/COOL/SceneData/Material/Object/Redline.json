@@ -1,0 +1,9 @@
+{
+	"name": "Redline",
+	"BaseColor": "Red",
+	"Roughness": "White",
+	"Metalic": "White",
+	"AO": "White",
+	"Normal": "Door/Doorlock/Redline_Normal",
+	"Shader": "TestMeshDiffered"
+}

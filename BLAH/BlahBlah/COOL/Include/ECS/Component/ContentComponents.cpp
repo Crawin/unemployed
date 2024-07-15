@@ -183,6 +183,8 @@ namespace component {
 		Json::Value door = v["Door"];
 
 		m_Answer = door["Answer"].asInt();
+		m_Gamemode = door["Game"].asInt();
+		m_FailCount = door["FailCount"].asInt();
 	}
 
 	void DoorControl::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -215,20 +217,51 @@ namespace component {
 				// 정답에 대한 정보를 넣어준다. set answer
 				// 정답에 대한 정보는 door가 가지고 있다. set door
 				// KeyPadUI는 확인 버튼이 눌렸을 시 전달받은 정보를 토대로 통과 여부를 판단
+				
+				if (doorCtrl->GetGamemode() == 1) { //1 == keypad
+					std::function<void(component::UICanvas*, component::UIKeypad*)> openUI = [door, doorCtrl](component::UICanvas* can, component::UIKeypad* kpd) {
+						DebugPrint("UI SHOW!!");
 
-				std::function<void(component::UICanvas*, component::UIKeypad*)> openUI = [door, doorCtrl](component::UICanvas* can, component::UIKeypad* kpd) {
-					DebugPrint("UI SHOW!!");
+						// test
+						kpd->SetAnswer(doorCtrl->GetAnswer());
+						kpd->SetDoor(door);
 
-					// test
-					kpd->SetAnswer(doorCtrl->GetAnswer());
-					kpd->SetDoor(door);
+						kpd->SetCurrent(0);
 
-					kpd->SetCurrent(0);
+						can->ShowUI();
 
-					can->ShowUI();
-					};
+						};
 
-				manager->Execute(openUI);
+					manager->Execute(openUI);
+				}
+				else if (doorCtrl->GetGamemode() == 2) { //2 == key
+					std::function<void(component::UICanvas*, component::UIDoorKey*)> openKey = [door, doorCtrl](component::UICanvas* can, component::UIDoorKey* key) {
+						DebugPrint("KEY SHOW");
+
+						key->SetAnswer(doorCtrl->GetAnswer());
+						key->SetFailCount(doorCtrl->GetFailCount());
+						key->SetDoor(door);
+						
+
+						can->ShowUI();
+						};
+
+					manager->Execute(openKey); 
+				}
+				else if (doorCtrl->GetGamemode() == 3) { //3 == doorlock Cutline
+					std::function<void(component::UICanvas*, component::UICutLine*)> openCutline = [door, doorCtrl](component::UICanvas* can, component::UICutLine* line) {
+						DebugPrint("CUTLINE SHOW");
+
+						line->SetAnswer(doorCtrl->GetAnswer());
+						line->SetDoor(door);
+
+						line->SetCurrent(0);
+
+						if (doorCtrl->IsUioff() == false) can->ShowUI();
+						};
+
+					manager->Execute(openCutline);
+				}
 			}
 			};
 
@@ -239,6 +272,81 @@ namespace component {
 	{
 	}
 
+	void UIDoorKey::Create(Json::Value& v, ResourceManager* rm)
+	{
+
+	}
+
+	void UIDoorKey::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		auto& children = selfEntity->GetChildren();
+
+		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
+		UIDoorKey* doorkey = manager->GetComponent<UIDoorKey>(selfEntity);
+
+		for (Entity* child : children) {
+			Name* childName = manager->GetComponent<Name>(child);
+
+			// 확인 버튼
+			if (childName != nullptr) {
+				std::string name = childName->getName();
+
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas](Entity* ent) {
+						// hide ui;
+						canvas->HideUI();
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
+				if (name == "Check") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction check = [canvas, doorkey, manager](Entity* ent) {
+						// hide ui;
+
+						if (doorkey->GetAnswer() == doorkey->GetCurrent()) {
+							// open door
+							Entity* door = doorkey->GetDoor();
+							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+							doorCtrl->SetLock(false);
+							canvas->HideUI();
+						}
+						else {
+							int failcount = doorkey->GetFailCount();
+							failcount--;
+							if (doorkey->GetFailCount() == 0) {
+								canvas->HideUI();
+							}
+							doorkey->SetFailCount(failcount);
+							DebugPrint(std::format("failcount: {}", failcount));
+						}
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
+				}
+				else {
+					for (int i = 1; i <= MAX_KEY; ++i) {
+						std::string buttonName = std::format("Key{}", i);
+						if (name == buttonName) {
+							Button* button = manager->GetComponent<Button>(child);
+							Key* key = manager->GetComponent<Key>(child);
+							ButtonEventFunction password = [key, doorkey, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+								int current = key->GetKeyLength();
+								doorkey->SetCurrent(current);
+								DebugPrint(std::format("length: {}", current));
+								};
+							button->SetButtonEvent(KEY_STATE::END_PRESS, password);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void UIDoorKey::ShowYourself() const
+	{
+	}
 
 	void UIKeypad::Create(Json::Value& v, ResourceManager* rm)
 	{
@@ -255,19 +363,25 @@ namespace component {
 
 		if (canvas == nullptr || keypad == nullptr) 
 			ERROR_QUIT("ERRIR!!!! no canvas or keypad on current entity");
-		
 
-		for (Entity* child : children) {
+		for (Entity* child : children) { 
 			Name* childName = manager->GetComponent<Name>(child);
+
 			// 확인 버튼
 			if (childName != nullptr) {
 				std::string name = childName->getName();
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas](Entity* ent) {
+						canvas->HideUI();
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
 
 				if (name == "Check") {
 					Button* button = manager->GetComponent<Button>(child);
 					ButtonEventFunction check = [canvas, keypad, manager](Entity* ent) {
 						// hide ui;
-						canvas->HideUI();
 						DebugPrint("check");
 
 						DebugPrint(std::format("pw: {}", keypad->GetCurrent()));
@@ -276,28 +390,29 @@ namespace component {
 							Entity* door = keypad->GetDoor();
 							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 							doorCtrl->SetLock(false);
+							canvas->HideUI();
 						}
 
 						};
-					button->SetButtonDownEvent(KEY_STATE::END_PRESS, check);
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
 				}
 				else {
 					for (int i = 1; i <= 9; ++i) {
 						std::string buttonName = std::format("{}Button", i);
 						if (name == buttonName) {
 							Button* button = manager->GetComponent<Button>(child);
-							ButtonEventFunction password = [canvas, keypad, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+							ButtonEventFunction password = [keypad, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
 								int current = keypad->GetCurrent();
 								current = current * 10 + i;
 								keypad->SetCurrent(current);
+
 								};
-							button->SetButtonDownEvent(KEY_STATE::END_PRESS, password);
+							button->SetButtonEvent(KEY_STATE::END_PRESS, password);
 						}
 					}
 				}
 			}
 		}
-
 	}
 
 	void UIKeypad::ShowYourself() const
@@ -802,6 +917,91 @@ namespace component {
 	}
 
 	void CreditCard::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
+	void Key::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value key = v["Key"];
+
+		m_KeyLength = key["Length"].asInt();
+	}
+
+	void Key::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
+	void Key::ShowYourself() const
+	{
+	}
+
+	void UICutLine::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void UICutLine::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		auto& children = selfEntity->GetChildren();
+
+		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
+		UICutLine* cutline = manager->GetComponent<UICutLine>(selfEntity);
+
+		for (Entity* child : children) {
+			Name* childName = manager->GetComponent<Name>(child);
+
+			// 확인 버튼
+			if (childName != nullptr) {
+				std::string name = childName->getName();
+
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas](Entity* ent) {
+						// hide ui;
+						canvas->HideUI();
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
+				if (name == "Check") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction check = [canvas, cutline, manager](Entity* ent) {
+						// hide ui;
+						DebugPrint(std::format("pw: {}", cutline->GetCurrent()));
+						Entity* door = cutline->GetDoor();
+						DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+						if (cutline->GetAnswer() == cutline->GetCurrent()) {
+							// open door
+							doorCtrl->SetLock(false);
+							canvas->HideUI();
+						}
+						else {
+							doorCtrl->SetUioff(true);
+							canvas->HideUI();
+						}
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
+				}
+				else {
+					for (int i = 1; i <= 4; ++i) { //1,2,3,4 == red, blue, green, yellow
+						std::string buttonName = std::format("Line{}", i);
+						if (name == buttonName) {
+							Button* button = manager->GetComponent<Button>(child);
+							ButtonEventFunction password = [canvas, cutline, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+								int current = cutline->GetCurrent();
+								current = current * 10 + i;
+								cutline->SetCurrent(current);
+
+								};
+							button->SetButtonEvent(KEY_STATE::END_PRESS, password);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void UICutLine::ShowYourself() const
 	{
 	}
 

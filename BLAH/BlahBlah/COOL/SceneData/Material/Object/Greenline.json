@@ -1,0 +1,9 @@
+{
+	"name": "Greenline",
+	"BaseColor": "Green",
+	"Roughness": "White",
+	"Metalic": "White",
+	"AO": "White",
+	"Normal": "Door/Doorlock/Greenline_Normal",
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "Redline",
+	"BaseColor": "Door/Door/Door_1_Albedo",
+	"Roughness": "Door/Door/Door_smoothness",
+	"Metalic": "Door/Door/Door_metallic",
+	"AO": "Door/Door/Door_1_AO",
+	"Normal": "Door/Door/Door_1_Normal",
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,109 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UICutLine": {},
+
+	"Children": 
+	[
+		{	"Name": "Exit",
+
+			"UITransform":
+			{
+				"Center": [1200, 650],
+				"Size": [70, 70]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIExit",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "Check",
+
+			"UITransform":
+			{
+				"Center": [640, 100],
+				"Size": [300, 150]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UITempMaterial",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "Line1",
+
+			"UITransform":
+			{
+				"Center": [640, 260],
+				"Size": [500, 30]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UILineRed",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "Line2",
+
+			"UITransform":
+			{
+				"Center": [640, 360],
+				"Size": [500, 30]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UILineBlue",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "Line3",
+
+			"UITransform":
+			{
+				"Center": [640, 460],
+				"Size": [500, 30]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UILineGreen",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "Line4",
+
+			"UITransform":
+			{
+				"Center": [640, 560],
+				"Size": [500, 30]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UILineYellow",
+				"IsSprite": false
+			}
+		}
+	]
+}

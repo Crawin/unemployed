@@ -12,7 +12,9 @@
 	{
 		"MaxAngle": 120.0,
 		"Locked": true,
-		"Answer": 9876
+		"Answer": 9876,
+		"Game": 1,
+		"FailCount":3
 	},
 
 	"Collider": 
@@ -37,8 +39,8 @@
 			},
 			"Renderer":
 			{
-				"Mesh": "DoorTest.Door",
-				"Material": "NoMaterial"
+				"Mesh": "Door.Door",
+				"Material": "Object/Door"
 			},
 			"Collider": 
 			{

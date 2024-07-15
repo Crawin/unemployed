@@ -3,7 +3,7 @@
 
 	"Transform": 
 	{
-		"Position": [-100.0, 0.0, 0.0],
+		"Position": [-650.0, 510.0, 723.0],
 		"Rotate": [0.0, 180.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
@@ -12,7 +12,9 @@
 	{
 		"MaxAngle": 120.0,
 		"Locked": true,
-		"Answer": 1234
+		"Answer": 1234,
+		"Game": 1,
+		"FailCount":3
 	},
 
 	"Collider": 
@@ -31,14 +33,37 @@
 			"Name": "DoorRender",
 			"Transform": 
 			{
-				"Position": [0.0, 0.0, 0.0],
+				"Position": [50.000011444091797,
+				7.5101852416992188e-06,
+				0.48449993133544922],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 			"Renderer":
 			{
-				"Mesh": "DoorTest.Door",
-				"Material": "NoMaterial"
+				"Mesh": "Door.Door",
+				"Material": "Object/Door"
+			},
+			"Collider": 
+			{
+				"Static": true,
+				"AutoMesh": true
+			}
+		},
+		{
+			"Name": "FrameRender",
+			"Transform": 
+			{
+				"Position": [0.0,
+				107.82761383056641,
+				-7.62939453125e-06],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Renderer":
+			{
+				"Mesh": "Door.Frame",
+				"Material": "Object/Door"
 			},
 			"Collider": 
 			{

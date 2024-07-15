@@ -47,6 +47,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::DiaAnimationControl, "DiaAnimationControl");
 	REGISTER_COMPONENT(component::PlayerAnimControll, "PlayerAnimControll");
 	REGISTER_COMPONENT(component::DoorControl, "Door");
+	
 	REGISTER_COMPONENT(component::Inventory, "Inventory");
 	REGISTER_COMPONENT(component::Holdable, "Holdable");
 	REGISTER_COMPONENT(component::Attackable, "Attackable");
@@ -57,10 +58,14 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::VandingMachine, "VandingMachine");
 	REGISTER_COMPONENT(component::Drink, "Drink");
 	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
+	REGISTER_COMPONENT(component::Key, "Key");
+
 
 
 	// ui content
 	REGISTER_COMPONENT(component::UIKeypad, "UIKeypad");
+	REGISTER_COMPONENT(component::UIDoorKey, "UIDoorKey");
+	REGISTER_COMPONENT(component::UICutLine, "UICutLine");
 
 }
 

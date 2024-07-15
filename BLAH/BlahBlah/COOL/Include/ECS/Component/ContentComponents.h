@@ -86,7 +86,10 @@ namespace component {
 		float m_CurrentAngle = 0.0f;
 
 		bool m_Locked = true;
+		bool m_Uioff = false;
 		int m_Answer = 0;
+		int m_Gamemode = -1;
+		int m_FailCount = 0;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -98,12 +101,17 @@ namespace component {
 		float GetMaxAngle() const { return m_MaxAngle; }
 		float GetCurAngle() const { return m_CurrentAngle; }
 		int GetAnswer() const { return m_Answer; }
+		int GetGamemode() const { return m_Gamemode; }
+		int GetFailCount() const { return m_FailCount; }
+		int IsUioff() const { return m_Uioff; }
 
 		void SetLock(bool lock) { m_Locked = lock; }
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
+		void SetUioff(bool uioff) { m_Uioff = uioff; }
 
 	};
+
 
 	/////////////////////////////////////////////////////////
 	// Holdable Component
@@ -288,6 +296,22 @@ namespace component {
 		virtual void ShowYourself() const;
 	};
 
+	/////////////////////////////////////////////////////////
+	// Key Component
+	// 문을 열 수 있는 열쇠의 정보를 가진 키 오브젝트
+	//
+	class Key : public ComponentBase<Key> {
+		int m_KeyLength = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		int GetKeyLength() const { return m_KeyLength; }
+	};
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI 관련 컴포넌트들
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,5 +339,61 @@ namespace component {
 
 		void SetCurrent(int Current) { m_Current = Current; }
 		int GetCurrent() const { return m_Current; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// UIDoorKey component
+	// 열쇠 미니게임의 결과
+	//
+#define MAX_KEY 2
+	class UIDoorKey : public ComponentBase<UIDoorKey> {
+		Entity* m_DoorEntity = nullptr;
+		int m_Answer = 0;
+		int m_Current = 0;
+		int m_FailCount = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		Entity* GetDoor() { return m_DoorEntity; }
+
+		void SetDoor(Entity* door) { m_DoorEntity = door; }
+		void SetAnswer(int ans) { m_Answer = ans; }
+		void SetCurrent(int Current) { m_Current = Current; }
+		void SetFailCount(int failcnt) { m_FailCount = failcnt; }
+
+		int GetAnswer() const { return m_Answer; }
+		int GetCurrent() const { return m_Current; }
+		int GetFailCount() const { return m_FailCount; }
+
+	};
+
+	/////////////////////////////////////////////////////////
+	// UIDoorKey component
+	// 열쇠 미니게임의 결과
+	//
+	class UICutLine : public ComponentBase<UICutLine> {
+		Entity* m_DoorEntity = nullptr;
+		int m_Answer = 0;
+		int m_Current = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const;
+
+		Entity* GetDoor() { return m_DoorEntity; }
+
+		void SetDoor(Entity* door) { m_DoorEntity = door; }
+		void SetAnswer(int ans) { m_Answer = ans; }
+		void SetCurrent(int Current) { m_Current = Current; }
+
+		int GetAnswer() const { return m_Answer; }
+		int GetCurrent() const { return m_Current; }
+
 	};
 }
