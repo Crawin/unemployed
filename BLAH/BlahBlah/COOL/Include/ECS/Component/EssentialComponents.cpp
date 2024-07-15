@@ -776,6 +776,15 @@ namespace component {
 
 	void Pawn::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value pa = v["Pawn"];
+		m_CameraSocketName = pa["CameraName"].asString();
+	}
+
+	void Pawn::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Entity* camEnt = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
+		m_Camera = manager->GetComponent<Camera>(camEnt);
+		m_Physics = manager->GetComponent<Physics>(selfEntity);
 	}
 
 	void Pawn::ShowYourself() const
@@ -835,6 +844,14 @@ namespace component {
 			m_KeyStates[static_cast<long long int>(key)] == KEY_STATE::START_PRESS ||
 			m_KeyStates[static_cast<long long int>(key)] == KEY_STATE::PRESSING;
 	}
+
+	void Pawn::SetActive(bool active)
+	{
+		m_Active = active;
+		m_Camera->SetActive(active);
+		m_Camera->SetMainCamera(active);
+		if (m_Physics) m_Physics->SetCalculateState(active);
+	}
 	
 
 	void PlayerController::Create(Json::Value& v, ResourceManager* rm)
@@ -847,11 +864,6 @@ namespace component {
 
 	void PlayerController::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
-		// find target entity to possess
-		bool res = Possess(manager, m_TargetEntityName);
-
-		if (res == false) 
-			ERROR_QUIT(std::format("ERROR!!, no such target to possess, name : {}", m_TargetEntityName));
 	}
 
 	void PlayerController::ShowYourself() const

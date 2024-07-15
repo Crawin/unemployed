@@ -29,6 +29,24 @@
 		"Name": "Player/Player_Jump_Land"
 	},
 
+	"Sit_Start":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Stand_To_Sit"
+	},
+
+	"Sit_Loop":
+	{
+		"Loop": true,
+		"Name": "Player/Player_Sit_Idle"
+	},
+
+	"Sit_End":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Sit_To_Stand"
+	},
+
 	"Blended_Moving_State":
 	{
 		"Idle":

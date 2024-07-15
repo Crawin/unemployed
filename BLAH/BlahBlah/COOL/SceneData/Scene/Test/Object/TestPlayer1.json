@@ -23,7 +23,10 @@
 		"Friction": true
 	},
 
-	"Pawn": {},
+	"Pawn": 
+	{
+		"CameraName": "PlayerCamera"
+	},
 
 	"Input": {},
 
@@ -45,9 +48,9 @@
 	"Inventory":
 	{
 		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
-		"Slot_0": "CCTV_TEST",
-		"Slot_1": "crowbar",
-		"Slot_2": "Laptop_ScreenDetached",
+		"Slot_0": "crowbar",
+		"Slot_1": "",
+		"Slot_2": "",
 		"Slot_3": ""
 	},
 

@@ -92,6 +92,11 @@ enum class GAME_INPUT {
 	ARROW_RIGHT,
 	NEXT,
 	PREVIOUS,
+	F1,
+	F2,
+	F3,
+	F4,
+	F5,
 	GAME_INPUT_END
 };
 

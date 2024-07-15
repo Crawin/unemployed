@@ -284,6 +284,7 @@ namespace component {
 
 		// on off상태를 이분화
 		bool m_ActiveStateOnRender = false;
+		bool m_IsMainCameraOnRender = false;
 
 		// camera matrix
 		XMFLOAT4X4 m_ViewMatrix = Matrix4x4::Identity();
@@ -334,10 +335,12 @@ namespace component {
 		int GetCameraIndex() const { return m_RenderTargetDataIndex; }
 
 		void SetActive(bool state) { m_Active = state; }
+		void SetMainCamera(bool state) { m_IsMainCamera = state; }
 
-		void SyncActiveState() { m_ActiveStateOnRender = m_Active; }
+		void SyncActiveState() { m_ActiveStateOnRender = m_Active; m_IsMainCameraOnRender = m_IsMainCamera; }
 
 		bool IsMainCamera() const { return m_IsMainCamera; }
+		bool IsMainCameraOnRender() const { return m_IsMainCameraOnRender; }
 		bool IsActive() const { return m_Active; }
 		bool IsActiveOnRender() const { return m_ActiveStateOnRender; }
 
@@ -678,9 +681,15 @@ namespace component {
 		Entity* m_InteractionEntity = nullptr;
 		bool m_Active = false;
 		POINT m_MouseDif = { 0, 0 };
-		
+
+		// todo string을 안써도 되는 방법을 찾아보자
+		std::string m_CameraSocketName;
+		Camera* m_Camera = nullptr;
+		Physics* m_Physics = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 		virtual void ShowYourself() const;
 
 		void ResetInput();
@@ -694,7 +703,7 @@ namespace component {
 		void SetInteractionEntity(Entity* ent) { m_InteractionEntity = ent; }
 		Entity* GetInteractionEntity() { return m_InteractionEntity; }
 
-		void SetActive(bool active) { m_Active = active; }
+		void SetActive(bool active);
 		bool IsActive() const { return m_Active; }
 
 		void SetMouseMove(const POINT& pt) { m_MouseDif = pt; }
@@ -717,6 +726,7 @@ namespace component {
 		bool Possess(ECSManager* manager, const std::string& targetName);
 		bool Possess(Pawn* target);
 
+		const std::string& GetTargetInit() const { return m_TargetEntityName; }
 		Pawn* GetControllingPawn() const { return m_CurrentPossess; }
 	};
 

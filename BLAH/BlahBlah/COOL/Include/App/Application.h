@@ -35,6 +35,7 @@ public:
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
+	SceneManager* GetSceneManager() const { return m_SceneManager; };
 	//FMOD_SYSTEM* getFmodSystem() { return m_pSoundSystem; }
 
 private:

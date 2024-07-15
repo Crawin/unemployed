@@ -154,7 +154,7 @@ namespace ECSsystem {
 		POINT mouseMove = InputManager::GetInstance().GetMouseMove();
 
 		// tick input
-		std::function<void(PlayerController*)> tickAndUpdateInput = [&mouseMove](PlayerController* ctrl) {
+		std::function<void(PlayerController*)> tickAndUpdateInput = [&mouseMove, manager](PlayerController* ctrl) {
 			Pawn* curPawn = ctrl->GetControllingPawn();
 			
 			// tick first
@@ -170,11 +170,25 @@ namespace ECSsystem {
 			// set mouse input
 			curPawn->SetMouseMove(mouseMove);
 			InputManager::GetInstance().ResetMouseMove();
+
+
+
+
+
+			std::function<void(component::PlayerController*)> possessToOne = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player1"); };
+			std::function<void(component::PlayerController*)> possessToTwo = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player2"); };
+
+			if (curPawn->GetInputState(GAME_INPUT::F4) == KEY_STATE::END_PRESS) manager->Execute(possessToOne);
+			if (curPawn->GetInputState(GAME_INPUT::F5) == KEY_STATE::END_PRESS) manager->Execute(possessToTwo);
+
 			};
 
 		// input으로 pysics 업데이트 - player
 		std::function<void(Transform*, Pawn*, Physics*, SelfEntity*, Player*, AnimationController*)> inputFunc = 
 			[deltaTime, &mouseMove, manager](Transform* tr, Pawn* pawn, Physics* sp, SelfEntity* self, Player* pl, AnimationController* ctrl) {
+			
+			if (pawn->IsActive() == false) return;
+
 			Entity* ent = self->GetEntity();
 
 			// keyboard input

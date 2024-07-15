@@ -3,9 +3,36 @@
 
 	"Server": {},
 
-	"Pawn": {},
+	"Pawn": 
+	{
+		"CameraName": "PlayerCamera"
+	},
+
+	"Input": {},
 
 	"Player": {},
+
+	"PlayerAnimControll": {},
+
+	"DynamicCollider": 
+	{
+		"Active": true,
+		"Static": false,
+		"AutoMesh": false,
+		"IsCapsule": true,
+		"ColideWithDynamic": true,
+		"Center": [0.0, 85, 0],
+		"Extent": [25, 85, 25]
+	},
+
+	"Inventory":
+	{
+		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
+		"Slot_0": "CCTV_TEST",
+		"Slot_1": "",
+		"Slot_2": "Laptop_ScreenDetached",
+		"Slot_3": ""
+	},
 
 	"Transform": 
 	{
@@ -27,21 +54,88 @@
 		"Friction": true
 	},
 
-	"PlayerAnimControll": {},
-
-	"DynamicCollider": 
-	{
-		"Active": true,
-		"Static": false,
-		"AutoMesh": false,
-		"IsCapsule": true,
-		"ColideWithDynamic": true,
-		"Center": [0.0, 85, 0],
-		"Extent": [25, 85, 25]
-	},
-
 	"Children": 
 	[
+		{
+			"Name": "PlayerCamera",
+			"Transform": 
+			{
+				"Position": [0.0, 160.0, 17.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Camera":
+			{
+				"Active": false,
+				"IsMainCamera": false,
+				"Right": 	[1.0, 0.0, 0.0],
+				"Up": 		[0.0, 1.0, 0.0],
+				"Look": 	[0.0, 0.0, 1.0],
+				"Position": [0.0, 70.0, 5.5],
+		
+				"Fov": 75.0,
+				"Aspect": 1.777,
+				"Near": 0.1,
+				"Far": 10000.0
+			},
+
+			"Children":
+			[
+				{
+					"Name": "InvenParent",
+					"Transform": 
+					{
+						"Position": [1.6, -160.0, 34.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Children":[
+						{
+							"Name": "InventoryHand",
+							"Attach":
+							{
+								"Mesh": "Player_01",
+								"BoneIDX": 48,
+								"Player": "Player2"
+							},
+							"Transform": 
+							{
+								"Position": [0, 0, 0],
+								"Rotate": [0, 0, 0],
+								"Scale": [1.0, 1.0, 1.0]
+							}
+						},
+						{
+							"Name": "FlashLight",
+							"Transform":
+							{
+								"Position": [-46.6, 63.0, 0.0],
+								"Rotate": [90.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Light": 
+							{
+								"LightColor": [1.0, 1.0, 1.0, 1],
+								"AmbientColor": [0.0, 0.0, 0.0, 1],
+								"LightType": 1,
+								"Distance": 7000.0,
+								"Angle": 30.0,
+								"Intensity": 5.0,
+								"Active": true,
+								"CastShadow": true,
+								"Main": false
+							},
+							"Attach":
+							{
+								"Mesh": "Player_01",
+								"BoneIDX": 48,
+								"Player": "Player2"
+							}
+						}
+					]
+				}
+			]
+		},
 		{
 			"Name": "Player1_hands",
 			"Transform": 

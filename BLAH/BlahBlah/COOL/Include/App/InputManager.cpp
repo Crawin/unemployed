@@ -3,6 +3,9 @@
 #include "Application.h"
 #include "Network/Client.h"
 
+// todo 임시코드이다. 지우자
+#include "Scene/SceneManager.h"
+
 InputManager::InputManager()
 {
 	POINT center;
@@ -79,6 +82,7 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		Client::GetInstance().Connect_Server();
 		break;
 	case 'O':
+		Application::GetInstance().GetSceneManager()->PossessPlayer(true);
 		Client::GetInstance().Send_Room(pMAKEROOM, NULL);
 		break;
 	case 'I':
@@ -87,6 +91,7 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		//std::cin >> s_gameNum;
 		//int i_gameNum = atoi(s_gameNum.c_str());
 		//Client::GetInstance().Send_Room(pENTERROOM, i_gameNum);
+		Application::GetInstance().GetSceneManager()->PossessPlayer(false);
 		Client::GetInstance().Send_Room(pENTERROOM, 10000);
 		break;
 
