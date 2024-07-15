@@ -118,7 +118,8 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 
 int Application::StartProgram()
 {
-	std::thread fmod_thread(start_fmod, std::ref(FMOD_INFO::GetInstance()));
+	//std::thread fmod_thread(start_fmod, std::ref(FMOD_INFO::GetInstance()));
+	FMOD_INFO::GetInstance().begin_fmod();
 	MSG Message;
 	m_Timer->Start();
 	while (m_GameLoop) {
@@ -129,11 +130,12 @@ int Application::StartProgram()
 		else 
 		{
 			Tick();
+			FMOD_INFO::GetInstance().update_fmod();
 		}
 		SleepEx(0, true);
 	}
-	FMOD_INFO::GetInstance().set_client_on(false);
-	fmod_thread.join();
+	//FMOD_INFO::GetInstance().set_client_on(false);
+	//fmod_thread.join();
 	return 0;
 }
 

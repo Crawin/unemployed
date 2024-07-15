@@ -1,5 +1,6 @@
 ﻿#include "framework.h"
 #include <atomic>
+#include <iostream>
 #include "FmodSound.h"
 
 void ERRCHECK(FMOD_RESULT result)
@@ -71,10 +72,11 @@ int start_fmod(FMOD_INFO& info)
     ERRCHECK(result);
 
     // 사운드 재생
-    result = system->playSound(guard_foot.sound, 0, false, &guard_foot.channel);
-    ERRCHECK(result);
+    //result = system->playSound(guard_foot.sound, 0, false, &guard_foot.channel);
+    //ERRCHECK(result);
 
     bool self_running = false;
+    bool guard_running = false;
 
     result = system->createSound("SceneData/Sound/run.wav", FMOD_3D | FMOD_LOOP_NORMAL, 0, &self_foot.sound);
     ERRCHECK(result);
@@ -100,6 +102,25 @@ int start_fmod(FMOD_INFO& info)
         result = guard_foot.channel->set3DAttributes(&soundPos, &soundVel);
         ERRCHECK(result);
 
+        // 가드 발소리
+        if (info.guard_running())  // 클라에서 shift를 눌러 달리는 상태이면
+        {
+            if (guard_running == false)          // 달리지 않다가 달리기가 시작되면
+            {
+                guard_running = true;
+                result = system->playSound(guard_foot.sound, 0, false, &guard_foot.channel);
+                ERRCHECK(result);
+            }
+        }
+        else
+        {                       // 걷고 있는 상태면
+            if (guard_running == true)
+            {
+                guard_running = false;
+                result = guard_foot.channel->stop();
+                ERRCHECK(result);
+            }
+        }
 
         // 나 자신의 발소리
         if (info.is_running())  // 클라에서 shift를 눌러 달리는 상태이면
@@ -117,6 +138,7 @@ int start_fmod(FMOD_INFO& info)
             {
                 self_running = false;
                 result = self_foot.channel->stop();
+                ERRCHECK(result);
             }
         }
 
@@ -141,4 +163,131 @@ int start_fmod(FMOD_INFO& info)
 void FMOD_INFO::set_guard_position(const DirectX::XMFLOAT3& position)
 {
     m_guard_position = position;
+}
+
+void FMOD_INFO::begin_fmod()
+{
+    FMOD_RESULT result;
+
+    // FMOD 시스템 생성
+    result = FMOD::System_Create(&m_system);
+    ERRCHECK(result);
+
+    // 시스템 초기화
+    result = m_system->init(512, FMOD_INIT_NORMAL, 0);
+    ERRCHECK(result);
+
+    result = m_system->set3DSettings(1.0f, 0.01f, 1.0f);
+    ERRCHECK(result);
+
+    // 사운드 로드 (3D 모드)
+    result = m_system->createSound("SceneData/Sound/run.wav", FMOD_3D | FMOD_LOOP_NORMAL, 0, &m_guard_foot.sound);
+    ERRCHECK(result);
+
+    result = m_guard_foot.sound->set3DMinMaxDistance(100.0f, 1000.0f);
+    ERRCHECK(result);
+
+    // 청취자 위치 설정
+    DirectX::XMFLOAT3 player1_pos = m_player1_position;
+    DirectX::XMFLOAT3 player1_rot = m_player1_rotation;
+    FMOD_VECTOR listenerPos = { player1_pos.x,player1_pos.y,player1_pos.z };
+    FMOD_VECTOR listenerVel = { 0.0f, 0.0f, 0.0f };
+    FMOD_VECTOR listenerForward = { 0.0f, 0.0f, -1.0f };
+    FMOD_VECTOR listenerUp = { 0.0f, 1.0f, 0.0f };
+
+    result = m_system->set3DListenerAttributes(0, &listenerPos, &listenerVel, &listenerForward, &listenerUp);
+    ERRCHECK(result);
+
+    // 사운드 위치 설정
+    //DirectX::XMFLOAT3 guard_pos = m_guard_position;
+    //FMOD_VECTOR soundPos = { guard_pos.x,guard_pos.y,guard_pos.z };
+    //FMOD_VECTOR soundVel = { 0.0f, 0.0f, 0.0f };
+
+    //result = m_guard_foot.channel->set3DAttributes(&soundPos, &soundVel);
+    //ERRCHECK(result);
+
+    //// 볼륨 설정
+    //result = m_guard_foot.channel->setVolume(0.1);
+    //ERRCHECK(result);
+
+    // 사운드 재생
+    //result = system->playSound(guard_foot.sound, 0, false, &guard_foot.channel);
+    //ERRCHECK(result);
+
+    bool self_running = false;
+    bool guard_running = false;
+
+    result = m_system->createSound("SceneData/Sound/run.wav", FMOD_3D | FMOD_LOOP_NORMAL, 0, &m_self_foot.sound);
+    ERRCHECK(result);
+
+    //result = m_self_foot.channel->setVolume(0.1);
+    //ERRCHECK(result);
+}
+
+void FMOD_INFO::update_fmod()
+{
+    FMOD_RESULT result;
+// 현재 내 위치 업데이트
+    DirectX::XMFLOAT3 player1_pos = m_player1_position;
+    FMOD_VECTOR listenerPos = { player1_pos.x,player1_pos.y,player1_pos.z };
+    FMOD_VECTOR listenerVel = { 0.0f, 0.0f, 0.0f };
+    FMOD_VECTOR listenerForward = { 0.0f, 0.0f, -1.0f };
+    FMOD_VECTOR listenerUp = { 0.0f, 1.0f, 0.0f };
+    //player1_rot = info.get_player1_rotation();
+    //listenerForward = {};
+
+
+    result = m_system->set3DListenerAttributes(0, &listenerPos, &listenerVel, &listenerForward, &listenerUp);
+    ERRCHECK(result);
+
+    //// 현재 Guard 위치 업데이트
+    //DirectX::XMFLOAT3 guard_pos = m_guard_position;
+    //FMOD_VECTOR soundPos = { guard_pos.x,guard_pos.y,guard_pos.z };
+    //FMOD_VECTOR soundVel = { 0.0f, 0.0f, 0.0f };
+    //result = m_guard_foot.channel->set3DAttributes(&soundPos, &soundVel);
+    //ERRCHECK(result);
+
+
+    // 가드 발소리
+    if (m_guard_running)  // 클라에서 shift를 눌러 달리는 상태이면
+    {
+        if (m_guard_running == false)          // 달리지 않다가 달리기가 시작되면
+        {
+            m_before_guard_running = true;
+            result = m_system->playSound(m_guard_foot.sound, 0, false, &m_guard_foot.channel);
+            ERRCHECK(result);
+        }
+    }
+    else
+    {                       // 걷고 있는 상태면
+        if (m_guard_running == true)
+        {
+            m_before_guard_running = false;
+            result = m_guard_foot.channel->stop();
+            ERRCHECK(result);
+        }
+    }
+
+    // 나 자신의 발소리
+    if (m_self_running)  // 클라에서 shift를 눌러 달리는 상태이면
+    {
+        if (m_before_self_running == false)          // 달리지 않다가 달리기가 시작되면
+        {
+            m_before_self_running = true;
+            result = m_system->playSound(m_self_foot.sound, 0, false, &m_self_foot.channel);
+            ERRCHECK(result);
+        }
+    }
+    else
+    {                       // 걷고 있는 상태면
+        if (m_before_self_running == true)
+        {
+            m_before_self_running = false;
+            result = m_self_foot.channel->stop();
+        }
+    }
+
+    // 시스템 업데이트
+    result = m_system->update();
+    ERRCHECK(result);
 }
