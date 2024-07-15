@@ -802,16 +802,14 @@ namespace component {
 					ButtonEventFunction check = [canvas, cutline, manager](Entity* ent) {
 						// hide ui;
 						DebugPrint(std::format("pw: {}", cutline->GetCurrent()));
+						Entity* door = cutline->GetDoor();
+						DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 						if (cutline->GetAnswer() == cutline->GetCurrent()) {
 							// open door
-							Entity* door = cutline->GetDoor();
-							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 							doorCtrl->SetLock(false);
 							canvas->HideUI();
 						}
 						else {
-							Entity* door = cutline->GetDoor();
-							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 							doorCtrl->SetUioff(true);
 							canvas->HideUI();
 						}
