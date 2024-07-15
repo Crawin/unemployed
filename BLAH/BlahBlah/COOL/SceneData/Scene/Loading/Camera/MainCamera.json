@@ -1,0 +1,10 @@
+{
+	"Name": "Main Camera",
+
+	"Transform": 
+	{
+		"Position": [0.0, 75.0, -100.0],
+		"Rotate": [0.0, 0.0, 0.0, 1.0],
+		"Scale": [1.0, 1.0, 1.0]
+	}
+}

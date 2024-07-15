@@ -1,0 +1,9 @@
+{
+	"name": "UILoading",
+	"BaseColor": "UI/LoadingImage",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

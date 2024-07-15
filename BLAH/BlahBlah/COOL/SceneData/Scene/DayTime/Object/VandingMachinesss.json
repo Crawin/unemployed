@@ -1,0 +1,345 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name": "DrinkParent",
+					"Transform":{
+						"Position" : [ -100,-100,-100 ],
+						"Rotate" : [0,0,0],
+						"Scale" : [1,1,1]
+					},
+					"Children" : [
+
+					]
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Front4",
+							"Renderer" : 
+							{
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "Coke_2F",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2838.5,
+							516.0,
+							-1057.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Front4_1",
+							"Renderer" : 
+							{
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "Coke_3F",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2838.5,
+							873.7,
+							-1057.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Front4_2",
+							"Renderer" : 
+							{
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "Coke_4F",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2838.5,
+							1238.0,
+							-1057.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Front4_3",
+							"Renderer" : 
+							{
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "Coke_5F",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2838.5,
+							1595.4,
+							-1057.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
+					}
+				}
+			],
+			"Name" : "BandingMachines",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "BandingMachinesss_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

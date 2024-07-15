@@ -39,6 +39,7 @@ namespace component {
 class Scene
 {
 	friend class SceneManager;
+	friend class LoadingScene;
 public:
 	Scene();
 	virtual ~Scene();
@@ -59,6 +60,8 @@ private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
 protected:
+	void SetManagers();
+
 	virtual bool AddSystem();
 
 	virtual bool LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList);
@@ -98,15 +101,16 @@ public:
 	// true: 로딩 씬 필요 / 로딩하는 쓰레드를 생성한다. 로딩씬에게 알려줌
 	// false: 로딩 씬 불필요
 	virtual bool Enter(ComPtr<ID3D12GraphicsCommandList> commandList);
+	virtual bool Enter();
 	// 메인루프 중 할 행동 ex) npc의 이동, 로딩씬이면 로딩 프로그레스바 퍼센트 올리기
 	virtual void Update(float deltaTime);
 
-	void RenderSync(float deltaTime);
+	virtual void RenderSync(float deltaTime);
 
 	// 씬 끝나면 할 행동 ex) 객체 해제, 이런거?
-	virtual void Exit() = 0;
+	virtual void Exit() {};
 	// 입력 처리. 해당 씬이 활성화되어 있을 때 할 입력 처리
-	virtual bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam) = 0;
+	virtual bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam) { return false; };
 
 	// 최종 결과를 resultRtv, resultDsv에 넘긴다
 	virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);

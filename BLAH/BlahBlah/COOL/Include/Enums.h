@@ -179,7 +179,8 @@ enum class UI_ROOT_CONST {
 	UI_SIZE = 6,
 
 	SCREEN_SIZE = 8,
-	
+	DEPTH = 10,
+
 	//TEXTURE_IDX = 0,
 	//SPRITE_X_SIZE,
 	//SPRITE_Y_SIZE,

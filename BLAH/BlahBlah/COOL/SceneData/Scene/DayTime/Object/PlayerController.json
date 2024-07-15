@@ -1,0 +1,15 @@
+{
+	"Name": "PlayerControllerEntity",
+	
+	"Transform": 
+	{
+		"Position": [0.0, 100.0, 0.0],
+		"Rotate": [0.0, 180.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"PlayerController": 
+	{
+		"ControllEntity": "Player1"
+	}
+}

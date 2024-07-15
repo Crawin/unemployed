@@ -19,7 +19,8 @@ public:
 
 	enum CMDID {
 		MAIN = 0,
-		MAX = 1
+		LOADING,
+		MAX
 	};
 
 private:

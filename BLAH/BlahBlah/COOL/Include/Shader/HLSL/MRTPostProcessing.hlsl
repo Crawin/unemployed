@@ -245,7 +245,7 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 #define REVERSE_LOOP
 #define MAX_DISTANCE 1000.0f
 #define STEP_PER_LOOP 5.0f
-#define ADD_PER_LOOP float4(0.3f, 0.3f, 0.3f, 0.0f) * STEP_PER_LOOP / MAX_DISTANCE
+#define ADD_PER_LOOP float4(0.5f, 0.5f, 0.5f, 0.0f) * STEP_PER_LOOP / MAX_DISTANCE
 #define MAX_SHAFT_LIGHTS 6
 
 #else

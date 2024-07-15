@@ -4,6 +4,7 @@
 #include "ECS/Component/Component.h"
 #include "Scene/ResourceManager.h"
 #include "TestMainScene.h"
+#include "LoadingScene.h"
 #include "Shader/Shader.h"
 
 void SceneManager::RegisterComponents()
@@ -73,6 +74,8 @@ SceneManager::~SceneManager()
 	if (m_PrevScene) delete m_PrevScene;
 	if (m_CurrentScene) delete m_CurrentScene;
 	if (m_NextScene) delete m_NextScene;
+
+	if (m_LoadingScene) delete m_LoadingScene;
 }
 
 bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const char* firstScene)
@@ -80,25 +83,22 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 	// Register Components
 	RegisterComponents();
 
-
-	// 임시
-	std::string testscene = "Test";
-	if (testscene == firstScene) 
-	{
-		m_CurrentScene = new TestMainScene;
-		m_CurrentScene->m_SceneName = "Test";
-		m_CurrentScene->Enter(commandList);
-	}
-#ifdef _DEBUG
-#endif
+	TestMainScene* mainScene = new TestMainScene;
+	mainScene->m_SceneName = firstScene;
 
 
-	//m_CurrentScene = new Scene();
+	LoadingScene* loadScene = new LoadingScene;
+	loadScene->m_SceneName = "Loading";
+	loadScene->Enter(commandList);
+	loadScene->SetSceneManager(this);
+	loadScene->SetNextScene(mainScene);
+
+	m_CurrentScene = loadScene;
 
 	return true;
 }
 
-void SceneManager::ChangeScene(Scene* newScene)
+void SceneManager::ChangeScene(Scene* newScene, bool isFromLoading)
 {
 	if (newScene == nullptr) {
 		ERROR_QUIT("ERROR!!!! NO SCENE")
@@ -108,11 +108,26 @@ void SceneManager::ChangeScene(Scene* newScene)
 	m_CurrentScene->Exit();
 	//newScene->Enter();
 
-	if (m_PrevScene) delete m_PrevScene;
+	if (isFromLoading == false && m_PrevScene != nullptr) {
+		delete m_PrevScene;
+	}
 	m_PrevScene = m_CurrentScene;
 
-	m_CurrentScene = newScene;
 
+	m_CurrentScene = newScene;
+	m_CurrentScene->Enter();
+}
+
+void SceneManager::ChangeScene(std::string sceneName)
+{
+	// exit cur scene
+	if (m_PrevScene) delete m_PrevScene;
+
+	m_PrevScene = m_CurrentScene;
+	m_CurrentScene->Exit();
+
+	// change cur scene to loading scene
+	m_CurrentScene = m_LoadingScene;
 }
 
 bool SceneManager::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)

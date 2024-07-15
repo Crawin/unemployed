@@ -1,0 +1,27 @@
+{
+	"Name": "LoadingCanvas",
+
+	"UICanvas": {
+		"On" : true,
+		"Layer" : 0
+	},
+
+	"Children": 
+	[
+		{	
+			"Name": "LoadingImg",
+
+			"UITransform":
+			{
+				"Center": [640, 360],
+				"Size": [1280, 720]
+			},
+			
+			"UIRenderer" :
+			{
+				"Material": "UI/LoadingImage",
+				"IsSprite": false
+			}
+		}
+	]
+}

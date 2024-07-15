@@ -1,0 +1,109 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Laptop",
+					"Renderer" : 
+					{
+						"Material" : "Object/Laptop",
+						"Mesh" : "Laptop.Laptop"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							-1.1155900210724212e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "Screen",
+					"Renderer" : 
+					{
+						"Material" : "ScreenMaterial",
+						"Mesh" : "Laptop.Screen"
+					},
+					"Screen": {},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							-1.7986089005717076e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				}
+			],
+			"Name" : "Laptop_ScreenDetached",
+			"Transform" : 
+			{
+				"Position" : [ 24.5, 0.8, 1.6 ],
+				"Rotate" : [-45.732, 86.147, -2.677 ],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Holdable": {},
+			"CCTVController": 
+			{
+				"Slot_0": "CCTV_01"
+
+			}
+		}
+	],
+	"Name" : "Laptop_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			-31.900001525878906,
+			120.0,
+			679.89996337890625
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

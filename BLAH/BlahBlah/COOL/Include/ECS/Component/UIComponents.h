@@ -15,6 +15,7 @@ namespace component {
 	//
 	class UICanvas : public ComponentBase<UICanvas> {
 		int m_CanvasID = -1;
+		int m_Layer = 0;
 		bool m_On = false;
 
 		static int m_NextID;
@@ -26,6 +27,8 @@ namespace component {
 
 		void ShowUI();
 		void HideUI();
+
+		float GetDepth() { return 1.0f - (float)m_Layer / (float)m_NextID; }
 
 		bool IsActive() const { return m_On; }
 	};

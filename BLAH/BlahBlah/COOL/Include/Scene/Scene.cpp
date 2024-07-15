@@ -23,9 +23,7 @@ Scene::~Scene()
 
 bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName)
 {
-	m_ECSManager = std::make_shared<ECSManager>();
-
-	m_ResourceManager->SetECSManager(m_ECSManager);
+	SetManagers();
 
 	CHECK_CREATE_FAILED(AddSystem(), std::format("Error on add system!!, name: {}", sceneName));
 
@@ -36,6 +34,13 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	m_ECSManager->InitSystem();
 
 	return true;
+}
+
+void Scene::SetManagers()
+{
+	m_ECSManager = std::make_shared<ECSManager>();
+
+	m_ResourceManager->SetECSManager(m_ECSManager);
 }
 
 bool Scene::AddSystem()
@@ -491,6 +496,7 @@ void Scene::CombineResultRendertargets(ComPtr<ID3D12GraphicsCommandList> command
 void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 {
 	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
 
 	auto& ecsManager = m_ECSManager;
 	auto& resManager = m_ResourceManager;
@@ -516,7 +522,7 @@ void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESC
 
 	using namespace component;
 
-	std::function<void(UICanvas*, SelfEntity*)> forAllUICanvas = [&ecsManager, &renderUI](UICanvas* canvas, SelfEntity* selfEntity) {
+	std::function<void(UICanvas*, SelfEntity*)> forAllUICanvas = [&ecsManager, &renderUI, &commandList](UICanvas* canvas, SelfEntity* selfEntity) {
 		if (canvas->IsActive()) {
 			Entity* ent = selfEntity->GetEntity();
 			const std::list<Entity*>& children = ent->GetChildren();
@@ -525,6 +531,8 @@ void Scene::DrawUI(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESC
 				auto bit = child->GetBitset();
 				int innerId = child->GetInnerID();
 
+				float depth = std::clamp(canvas->GetDepth(), 0.001f, 0.999f);
+				commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &depth, static_cast<int>(UI_ROOT_CONST::DEPTH));
 				ecsManager->ExecuteFromEntity(bit, innerId, renderUI);
 
 				//// get ui trans and 
@@ -548,6 +556,13 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 	}
 
 	// run Component::OnStart()
+	m_ECSManager->OnStart(m_ResourceManager);
+
+	return true;
+}
+
+bool Scene::Enter()
+{
 	m_ECSManager->OnStart(m_ResourceManager);
 
 	return true;

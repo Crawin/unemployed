@@ -22,6 +22,7 @@ cbuffer MaterialUI : register(b0)
 	int screenWidth;
 	int screenHeight;
 
+	float depth;
 };
 
 
@@ -29,13 +30,13 @@ VS_OUTPUT vs(uint vtxID : SV_VertexID)
 {
 	VS_OUTPUT output;
 
-	if (vtxID == 0)			{ output.position = float4(-1.0f, +1.0f, 0.0f, 1.0f); output.uv = float2(0,0);}
-	else if (vtxID == 1)	{ output.position = float4(+1.0f, +1.0f, 0.0f, 1.0f); output.uv = float2(1,0);}
-	else if (vtxID == 2)	{ output.position = float4(+1.0f, -1.0f, 0.0f, 1.0f); output.uv = float2(1,1);}
+	if (vtxID == 0)			{ output.position = float4(-1.0f, +1.0f, depth, 1.0f); output.uv = float2(0,0);}
+	else if (vtxID == 1)	{ output.position = float4(+1.0f, +1.0f, depth, 1.0f); output.uv = float2(1,0);}
+	else if (vtxID == 2)	{ output.position = float4(+1.0f, -1.0f, depth, 1.0f); output.uv = float2(1,1);}
 
-	else if (vtxID == 3)	{ output.position = float4(-1.0f, +1.0f, 0.0f, 1.0f); output.uv = float2(0,0);}
-	else if (vtxID == 4)	{ output.position = float4(+1.0f, -1.0f, 0.0f, 1.0f); output.uv = float2(1,1);}
-	else if (vtxID == 5)	{ output.position = float4(-1.0f, -1.0f, 0.0f, 1.0f); output.uv = float2(0,1);}
+	else if (vtxID == 3)	{ output.position = float4(-1.0f, +1.0f, depth, 1.0f); output.uv = float2(0,0);}
+	else if (vtxID == 4)	{ output.position = float4(+1.0f, -1.0f, depth, 1.0f); output.uv = float2(1,1);}
+	else if (vtxID == 5)	{ output.position = float4(-1.0f, -1.0f, depth, 1.0f); output.uv = float2(0,1);}
 	
 	output.position.x *= 0.5f * UIwidth;
 	output.position.y *= 0.5f * UIheight;

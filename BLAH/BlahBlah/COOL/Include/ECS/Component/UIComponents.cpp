@@ -14,6 +14,7 @@ namespace component {
 		Json::Value canvas = v["UICanvas"];
 
 		m_On = canvas["On"].asBool();
+		m_Layer = canvas["Layer"].asInt();
 
 		m_CanvasID = m_NextID++;
 	}

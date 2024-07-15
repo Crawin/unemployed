@@ -757,7 +757,7 @@ bool ResourceManager::LoadCameras(const std::string& sceneName, ComPtr<ID3D12Gra
 		CHECK_CREATE_FAILED(LoadObjectFile(fileName, true), std::format("Object Load Failed!! Object Name: {}", fileName));
 	}
 
-	if (m_MainCamera == nullptr) return false;
+	//if (m_MainCamera == nullptr) return false;
 
 	return true;
 }

@@ -1,0 +1,125 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Plane_001",
+					"Renderer" : 
+					{
+						"Material" : "Object/ConvChair",
+						"Mesh" : "conv_Chair.Plane_001"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							6.1414117813110352,
+							0.0
+						],
+						"Rotate" : 
+						[
+							-89.980224609375,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							100.0,
+							100.0,
+							100.0
+						]
+					}
+				},
+				{
+					"Name" : "SitPosition",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2.4000000953674316,
+							-32.700000762939453,
+							2.6000001430511475
+						],
+						"Rotate" : 
+						[
+							0.0,
+							-90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "monoblock_CHAIR",
+			"Collider" :{
+				"Static": true,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [-50.0, 50, 0],
+				"Extent": [150.0, 150, 100]
+			},
+
+			"Interaction": {},
+			"Sittable": {
+				"SocketName": "SitPosition"
+			},
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "conv_Chair_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			447.7,
+			45.5,
+			1036.3
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -1,0 +1,45 @@
+{
+	"Name": "MainLightParent",
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Children": 
+	[
+		{
+			"Name": "DayLight",
+
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [135.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+
+			"Light":
+			{
+				"LightColor": [0.0, 0.0, 0.0, 1.0],
+				"AmbientColor": [0.2, 0.2, 0.2, 1],
+				"Distance": 200.0,
+				"Angle": 60.0,
+				"LightType": 0,
+				"Intensity": 1.0,
+				"Active": true,
+				"CastShadow": true,
+				"Main": true
+			},
+		
+			"DayLight": 
+			{
+				"DayCycle": 10000000000000,
+				"NoonLight": [1.0, 1.0, 1.0, 1.0],
+				"SunSetLight": [0.92, 0.45, 0.04, 1.0],
+				"MoonLight": [0.33, 0.42, 0.56, 1.0]
+			}
+		}
+	]
+}

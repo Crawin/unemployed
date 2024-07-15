@@ -1,0 +1,193 @@
+{
+	"name": "LightMaster",
+
+	"Transform": 
+	{
+		"Position": [0.0, 0.0, 0.0],
+		"Rotate": [0.0, 0.0, 0.0],
+		"Scale": [1.0, 1.0, 1.0]
+	},
+
+	"Children":[
+	{
+		"name": "1st_Light1",
+
+		"Transform": 
+		{
+			"Position": [1886.5, 330, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light2",
+
+		"Transform": 
+		{
+			"Position": [1486.5, 330, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light3",
+
+		"Transform": 
+		{
+			"Position": [1086.5, 330, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light4",
+
+		"Transform": 
+		{
+			"Position": [686.5, 330, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1.0, 1.0, 1.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light5",
+
+		"Transform": 
+		{
+			"Position": [286.5, 330, 1080],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1, 1, 1, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_Light5",
+
+		"Transform": 
+		{
+			"Position": [-460.9, 330, -10.5],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1.0, 1.0, 1.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_StairLight1",
+
+		"Transform": 
+		{
+			"Position": [-420.8, 658, -1261.8],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1.0, 1.0, 1.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	},
+	{
+		"name": "1st_StairLight2",
+
+		"Transform": 
+		{
+			"Position": [-420.8, 330, -747.5],
+			"Rotate": [90.0, 0.0, 0.0],
+			"Scale": [1.0, 1.0, 1.0]
+		},
+		"Light": 
+		{
+			"LightColor": [1.0, 1.0, 1.0, 1],
+			"AmbientColor": [0.1, 0.1, 0.1, 1],
+			"LightType": 1,
+			"Distance": 5000.0,
+			"Angle": 50.0, 
+			"Intensity": 1.0,
+			"Active": true,
+			"CastShadow": true,
+			"Main": false
+		}
+	}
+
+
+	]
+
+
+}

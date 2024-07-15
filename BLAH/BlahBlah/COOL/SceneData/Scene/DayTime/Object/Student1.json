@@ -1,0 +1,40 @@
+﻿{
+	"Name": "Student1",
+
+	"Server": {},
+
+	"Transform": {
+		"Position": [ 500.0, 0.0, 1000.0 ],
+		"Rotate": [ 0.0, 0.0, 0.0 ],
+		"Scale": [ 1.0, 1.0, 1.0 ]
+	},
+
+	"AnimationController": {
+		"Player": "Guard"
+	},
+
+	"Physics": {
+		"MaxVelocity": 200.0,
+		"Acceleration": [ 1500.0, 1500.0, 1500.0 ]
+	},
+
+	"PlayerAnimControll": {},
+
+	"Collider": {
+		"Static": false,
+		"AutoMesh": false,
+		"IsCapsule": true,
+		"Center": [ 0.0, 85, 0 ],
+		"Extent": [ 25, 85, 25 ]
+	},
+
+	"Renderer": {
+		"Mesh": "Guard.Ch18",
+		"Material": "Character/Guard_mat"
+	},
+
+	"AnimationExecutor": {
+		"Player": "Guard"
+	}
+
+}

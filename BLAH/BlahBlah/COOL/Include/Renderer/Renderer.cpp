@@ -485,25 +485,27 @@ bool Renderer::Init(const SIZE& wndSize, HWND hWnd)
 
 bool Renderer::CreateCommandAllocatorAndList(size_t& outIndex)
 {
-	ComPtr<ID3D12CommandAllocator>& allocator = m_CommandAllocators.emplace_back();
-	ComPtr<ID3D12GraphicsCommandList>& commandlist = m_GraphicsCommandLists.emplace_back();
+	outIndex = CMDID::MAIN;
 
-	outIndex = m_CommandAllocators.size() - 1;
+	for (int i = 0; i < CMDID::MAX; ++i) {
+		ComPtr<ID3D12CommandAllocator>& allocator = m_CommandAllocators.emplace_back();
+		ComPtr<ID3D12GraphicsCommandList>& commandlist = m_GraphicsCommandLists.emplace_back();
 
-	m_Device->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(allocator.GetAddressOf()));
-	CHECK_CREATE_FAILED(allocator, "m_CommandAllocator 생성 실패");
+		m_Device->CreateCommandAllocator(
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			IID_PPV_ARGS(allocator.GetAddressOf()));
+		CHECK_CREATE_FAILED(allocator, "m_CommandAllocator 생성 실패");
 
-	m_Device->CreateCommandList(
-		0,
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		allocator.Get(),
-		nullptr,
-		IID_PPV_ARGS(commandlist.GetAddressOf()));
-	CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList 생성 실패");
+		m_Device->CreateCommandList(
+			0,
+			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			allocator.Get(),
+			nullptr,
+			IID_PPV_ARGS(commandlist.GetAddressOf()));
+		CHECK_CREATE_FAILED(commandlist, "m_GraphicsCommandList 생성 실패");
 
-	commandlist->Close();
+		commandlist->Close();
+	}
 
 	return true;
 }
@@ -968,9 +970,10 @@ void Renderer::Render()
 {
 	// pre render
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for (int i = 0; i < m_CommandAllocators.size(); ++i) {
-		m_CommandAllocators[i]->Reset();
-		m_GraphicsCommandLists[i]->Reset(m_CommandAllocators[i].Get(), nullptr);
+	for (int i = 0; i < CMDID::LOADING; ++i) 
+	{
+		m_MainCommandAllocator->Reset();
+		m_MainCommandList->Reset(m_MainCommandAllocator.Get(), nullptr);
 	}
 
 	// root signature set
@@ -1010,8 +1013,10 @@ void Renderer::Render()
 	// 최종 렌더 타겟
 	m_RenderTargetBuffer[m_CurSwapChainIndex]->TransToState(m_MainCommandList, D3D12_RESOURCE_STATE_PRESENT);
 
-	for (auto& command : m_GraphicsCommandLists)
-		command->Close();
+	for (int i = 0; i < CMDID::LOADING; ++i)
+	{
+		m_MainCommandList->Close();
+	}
 
 	// CommandList CommandQueue Execute
 	ID3D12CommandList* p[] = { m_MainCommandList.Get() };
