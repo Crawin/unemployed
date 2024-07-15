@@ -771,7 +771,7 @@ namespace component {
 			// in ui
 			//		select can
 			//		put can into player's inventory
-			
+			DebugPrint("Hit");
 			// 테스트용 임시 코드
 			std::vector<Entity*> cans;
 			std::function<void(Drink*, SelfEntity*)> findDrink = [&cans](Drink* dr, SelfEntity* ent) { if (dr->isOccupied() == false) cans.push_back(ent->GetEntity()); };
@@ -779,6 +779,8 @@ namespace component {
 			
 			// todo 임시
 			Inventory* playerInv = manager->GetComponent<Inventory>(player);
+			Holdable* holdable = manager->GetComponent<Holdable>(cans.front());
+			holdable->SetMaster(player);
 			playerInv->AddItem(cans.front(), 3);
 			};
 
