@@ -464,11 +464,11 @@ namespace ECSsystem {
 					//	server->setID(playerSock[1]);
 					//}
 				}
-				else //상대방 플레이어가 로그아웃 했을때
-				{
-					if (n.compare("Player2") == 0 && server->getID() != NULL)
-						server->setID(NULL);
-				}
+				//else //상대방 플레이어가 로그아웃 했을때
+				//{
+				//	if (n.compare("Player2") == 0 && server->getID() != NULL)
+				//		server->setID(NULL);
+				//}
 			}
 			if (n.compare("Guard") == 0 && server->getID() == NULL)
 				server->setID(1);
@@ -981,8 +981,13 @@ namespace ECSsystem {
 			auto& client = Client::GetInstance();
 			if (client.getRoomNum() && pawn->IsActive() == true)
 			{
-				if (sp->GetCurrentVelocityLen() > 0 || pawn->IsPressing(GAME_INPUT::MOUSE_LEFT))
-					Client::GetInstance().Send_Pos(tr->GetWorldPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
+				if (sp->GetCurrentVelocityLen() > 0 || pawn->IsPressing(GAME_INPUT::MOUSE_LEFT)) {
+					XMFLOAT3 pos = tr->GetWorldPosition();
+					XMFLOAT3 rot = tr->GetRotation();
+					XMFLOAT3 vel = sp->GetVelocity();
+
+					Client::GetInstance().Send_Pos(pos, rot, vel, deltaTime);
+				}
 			}
 			};
 
