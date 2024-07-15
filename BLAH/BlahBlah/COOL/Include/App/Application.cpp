@@ -132,7 +132,7 @@ int Application::StartProgram()
 		}
 		SleepEx(0, true);
 	}
-
+	FMOD_INFO::GetInstance().set_client_on(false);
 	fmod_thread.join();
 	return 0;
 }

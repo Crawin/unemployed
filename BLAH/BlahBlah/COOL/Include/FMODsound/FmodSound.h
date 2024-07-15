@@ -19,18 +19,22 @@ public:
         return inst;
     }
 private:
+    bool client_on = true;
     std::atomic_bool m_self_running;
     DirectX::XMFLOAT3 m_guard_position;
     DirectX::XMFLOAT3 m_player1_position;
     DirectX::XMFLOAT3 m_player1_rotation;
 public:
-    DirectX::XMFLOAT3 get_player1_position() { return m_player1_position; }
-    DirectX::XMFLOAT3 get_player1_rotation() { return m_player1_rotation; }
-    DirectX::XMFLOAT3 get_guard_position() { return m_guard_position; }
+    inline DirectX::XMFLOAT3 get_player1_position() { return m_player1_position; }
+    inline DirectX::XMFLOAT3 get_player1_rotation() { return m_player1_rotation; }
+    inline DirectX::XMFLOAT3 get_guard_position() { return m_guard_position; }
     
     void set_guard_position(const DirectX::XMFLOAT3& position);
     void set_running(const bool& b) { m_self_running = b; }
-    bool is_running() { return m_self_running; }
+    inline bool is_running() { return m_self_running; }
+
+    void set_client_on(const bool& b) { client_on = b; }
+    inline bool is_client_on() { return client_on; }
 };
 
 void ERRCHECK(FMOD_RESULT result);

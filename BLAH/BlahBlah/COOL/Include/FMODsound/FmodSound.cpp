@@ -83,7 +83,7 @@ int start_fmod(FMOD_INFO& info)
     ERRCHECK(result);
 
     // 메인 루프
-    while (true)
+    while (info.is_client_on())
     {
         // 여기서 다른 업데이트 로직 추가 가능
         // 현재 내 위치 업데이트
