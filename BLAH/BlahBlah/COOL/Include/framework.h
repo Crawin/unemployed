@@ -71,7 +71,7 @@ using Microsoft::WRL::ComPtr;
 #include "mymath.h"
 
 // component count
-#define COMPONENT_COUNT 40
+#define COMPONENT_COUNT 41
 using COMP_BITSET = std::bitset<COMPONENT_COUNT>;
 
 std::string ExtractFileName(const std::string& fullPath);
