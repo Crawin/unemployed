@@ -50,5 +50,8 @@ public:
 	void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
 	void ProcessPacket(packet_base* packet);
+	// todo 임시코드
+	void PossessPlayer(bool isHost);
+
 };
 

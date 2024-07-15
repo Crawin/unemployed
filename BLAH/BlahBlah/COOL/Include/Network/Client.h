@@ -86,12 +86,17 @@ private:
 	short characterType = NULL;
 	short prev_packet_size = 0;
 
+
 	float m_SendTimeElapsed = 0.0f;
 	// 1초에 24번 보냄
 	const float m_SendFrame = 1.0f / 60.0f;
 
 	char store_buf[BUFSIZE];
 	SceneManager* m_SceneManager;
+
+private:
+	std::string m_HostPlayerName = "Player1";
+	std::string m_GuestPlayerName = "Player2";
 
 public:
 	std::unordered_map<int, GameCharacters> characters;
@@ -118,6 +123,9 @@ public:
 	SceneManager* getSceneManager() { return m_SceneManager; }
 
 	void send_packet(void*);
+
+	const std::string& GetHostPlayerName() const { return m_HostPlayerName; }
+	const std::string& GetGuestPlayerName() const { return m_GuestPlayerName; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

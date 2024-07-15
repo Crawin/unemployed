@@ -7,6 +7,8 @@
 #include <winsock2.h> // 윈속2 메인 헤더
 #include "Network/Packets.h"
 
+#include "Network/Client.h"
+
 #ifdef _DEBUG
 #include "App/InputManager.h"
 #endif
@@ -119,7 +121,7 @@ void Scene::UpdateLightData()
 	activeLights = 0;
 	component::Camera* mainCamera = nullptr;
 	for (int i = 0; i < camVec.size(); ++i)
-		if (camVec[i]->IsMainCamera())
+		if (camVec[i]->IsMainCameraOnRender())
 			mainCamera = camVec[i];
 
 	XMFLOAT3 camPos = mainCamera->GetWorldPosition();
@@ -619,7 +621,7 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 	component::Camera* mainCam = nullptr;
 	for (component::Camera* cam : camVec)
-		if (cam->IsMainCamera() == true)
+		if (cam->IsMainCameraOnRender() == true)
 			mainCam = cam;
 	// 
 	CombineResultRendertargets(commandLists[0], mainCam, resultRtv, resultDsv);
@@ -662,4 +664,18 @@ void Scene::ProcessPacket(packet_base* packet)
 		break;
 	}
 	}
+}
+
+void Scene::PossessPlayer(bool isHost)
+{
+	ECSManager* manager = m_ECSManager.get();
+
+	std::string targetName(Client::GetInstance().GetHostPlayerName());
+
+	// if not host
+	if (isHost == false)
+		targetName = Client::GetInstance().GetGuestPlayerName();
+
+	std::function<void(component::PlayerController*)> possess = [manager, &targetName](component::PlayerController* ctrl) {	ctrl->Possess(manager, targetName);	};
+	m_ECSManager->Execute(possess);
 }

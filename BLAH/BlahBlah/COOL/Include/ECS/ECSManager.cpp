@@ -1,5 +1,6 @@
 ﻿#include "framework.h"
 #include "ECSManager.h"
+#include "Network/Client.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // Component Container
@@ -204,6 +205,19 @@ void ECSManager::OnStart(ResourceManager* rm)
 
 		m_ComponentSets[entBitset].OnStart(ent, this, rm);
 	}
+
+	// todo
+	// target을 host일 때와 아닐 때로 구분해서 
+	short type = Client::GetInstance().getCharType();
+
+	std::string targetName(Client::GetInstance().GetHostPlayerName());
+
+	// if not host
+	if (type != 1)
+		targetName = Client::GetInstance().GetGuestPlayerName();
+
+	std::function<void(component::PlayerController*)> possess = [this, &targetName](component::PlayerController* ctrl) {	ctrl->Possess(this, targetName);	};
+	Execute(possess);
 }
 
 Entity* ECSManager::GetEntity(const std::string& targetName)

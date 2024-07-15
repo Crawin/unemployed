@@ -30,8 +30,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::AttachInput, "AttachInput");
 	REGISTER_COMPONENT(component::Interaction, "Interaction");
 	REGISTER_COMPONENT(component::Player, "Player");
-	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
 	REGISTER_COMPONENT(component::Pawn, "Pawn");
+	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
@@ -164,4 +164,11 @@ void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& comman
 void SceneManager::ProcessPacket(packet_base* packet)
 {
 	if(m_CurrentScene)	m_CurrentScene->ProcessPacket(packet);
+}
+
+void SceneManager::PossessPlayer(bool isHost)
+{
+
+
+	m_CurrentScene->PossessPlayer(isHost);
 }
