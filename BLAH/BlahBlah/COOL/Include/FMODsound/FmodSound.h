@@ -37,6 +37,7 @@ private:
     SOUND_EFFECT m_guard_foot;
     SOUND_EFFECT m_self_foot;
 public:
+    void set_self_position(const DirectX::XMFLOAT3& position) { m_player1_position = position; }
     void set_guard_position(const DirectX::XMFLOAT3& position) { m_guard_position = position; }
 
     void set_client_on(const bool& b) { client_on = b; }
