@@ -1,9 +1,0 @@
-{
-	"name": "BandingMachile",
-	"BaseColor": "Object/BandingMachile/banding_machile_diffuseOriginal",
-	"Roughness": "Object/BandingMachile/banding_machile_roughness",
-	"Metalic": "Object/BandingMachile/banding_machile_metallic",
-	"AO": "Object/BandingMachile/banding_machile_ao",
-	"Normal": "Object/BandingMachile/banding_machile_normal",
-	"Shader": "TestMeshDiffered"
-}

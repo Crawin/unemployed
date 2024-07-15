@@ -53,6 +53,9 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Screen, "Screen");
 	REGISTER_COMPONENT(component::Sittable, "Sittable");
 	REGISTER_COMPONENT(component::CCTVController, "CCTVController");
+	REGISTER_COMPONENT(component::VandingMachine, "VandingMachine");
+	REGISTER_COMPONENT(component::Drink, "Drink");
+	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
 
 
 	// ui content

@@ -209,7 +209,7 @@ namespace component {
 		const Entity* GetHoldingSocket() const { return m_HoldingSocket; }
 
 		void EraseCurrentHolding() { m_Items[m_CurrentHolding] = nullptr; }
-		
+		void AddItem(Entity* entity, int idx) { m_Items[idx] = entity; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -221,6 +221,51 @@ namespace component {
 		Entity* m_SittableSocket = nullptr;
 
 		std::string m_SittableSocketName;
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+	};
+
+	/////////////////////////////////////////////////////////
+	// VandingMachine Component
+	// 자판기 내용물 보관
+	//
+	class VandingMachine : public ComponentBase<VandingMachine> {
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+	};
+
+	/////////////////////////////////////////////////////////
+	// Drink Component
+	// 음료 속성 보관
+	//
+	class Drink : public ComponentBase<Drink> {
+		bool m_Occupied = false;
+		int m_Type = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		void SetOccupied(bool state) { m_Occupied = state; }
+		bool isOccupied() const { return m_Occupied; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// CreditCard Component
+	// 돈 내용물 보관
+	//
+	class CreditCard : public ComponentBase<CreditCard> {
+		int m_Money = 1000;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);

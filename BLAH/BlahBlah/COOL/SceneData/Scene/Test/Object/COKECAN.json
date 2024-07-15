@@ -162,6 +162,9 @@
 				"Acceleration" : [2000.0, 2000.0, 2000.0],
 				"Calculate" : false,
 				"Friction": false
+			},
+			"Drink": {
+				"Type": 0
 			}
 			
 		}

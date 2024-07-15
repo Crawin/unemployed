@@ -5,6 +5,17 @@
 			"Children" : 
 			[
 				{
+					"Name": "DrinkParent",
+					"Transform":{
+						"Position" : [ -100,-100,-100 ],
+						"Rotate" : [0,0,0],
+						"Scale" : [1,1,1]
+					},
+					"Children" : [
+
+					]
+				},
+				{
 					"Children" : 
 					[
 						{
@@ -16,8 +27,8 @@
 							"Name" : "Front4",
 							"Renderer" : 
 							{
-								"Material" : "Object/BandingMachile",
-								"Mesh" : "BandingMachile.Front4"
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
 							},
 							"Transform" : 
 							{
@@ -63,6 +74,15 @@
 							1.0,
 							1.0
 						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
 					}
 				},
 				{
@@ -77,8 +97,8 @@
 							"Name" : "Front4_1",
 							"Renderer" : 
 							{
-								"Material" : "Object/BandingMachile",
-								"Mesh" : "BandingMachile.Front4"
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
 							},
 							"Transform" : 
 							{
@@ -124,6 +144,15 @@
 							1.0,
 							1.0
 						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
 					}
 				},
 				{
@@ -138,8 +167,8 @@
 							"Name" : "Front4_2",
 							"Renderer" : 
 							{
-								"Material" : "Object/BandingMachile",
-								"Mesh" : "BandingMachile.Front4"
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
 							},
 							"Transform" : 
 							{
@@ -185,6 +214,15 @@
 							1.0,
 							1.0
 						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
 					}
 				},
 				{
@@ -199,8 +237,8 @@
 							"Name" : "Front4_3",
 							"Renderer" : 
 							{
-								"Material" : "Object/BandingMachile",
-								"Mesh" : "BandingMachile.Front4"
+								"Material" : "Object/VandingMachine",
+								"Mesh" : "VandingMachine.Front4"
 							},
 							"Transform" : 
 							{
@@ -246,6 +284,15 @@
 							1.0,
 							1.0
 						]
+					},
+					"Interaction": {},
+					"VandingMachine": {},
+					"Collider": {
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 100, 0],
+						"Extent": [50.0, 100, 100]
 					}
 				}
 			],

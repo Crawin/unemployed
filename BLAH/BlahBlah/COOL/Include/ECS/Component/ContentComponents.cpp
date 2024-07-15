@@ -748,4 +748,59 @@ namespace component {
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::NEXT, KEY_STATE::END_PRESS), next);
 	}
 
+	void VandingMachine::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void VandingMachine::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// set can objects
+		std::vector<Entity*> cans;
+		std::function<void(Drink*, SelfEntity*)> findDrink = [&cans](Drink*, SelfEntity* ent) {cans.push_back(ent->GetEntity()); };
+		manager->Execute(findDrink);
+
+		// set interaction
+		Interaction* interaction = manager->GetComponent<Interaction>(selfEntity);
+
+		if (interaction == nullptr)
+			ERROR_QUIT("ERROR!! no interaction component on current VandingMachine entity");
+
+		InteractionFuncion withVanding = [manager](Entity* player, Entity* vandingMachine) {
+			// todo
+			// ui show here
+			// in ui
+			//		select can
+			//		put can into player's inventory
+			
+			// 테스트용 임시 코드
+			std::vector<Entity*> cans;
+			std::function<void(Drink*, SelfEntity*)> findDrink = [&cans](Drink* dr, SelfEntity* ent) { if (dr->isOccupied() == false) cans.push_back(ent->GetEntity()); };
+			manager->Execute(findDrink);
+			
+			// todo 임시
+			Inventory* playerInv = manager->GetComponent<Inventory>(player);
+			playerInv->AddItem(cans.front(), 3);
+			};
+
+		interaction->SetInteractionFunction(withVanding);
+	}
+
+	void Drink::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value dr = v["Drink"];
+		m_Type = dr["Type"].asInt();
+	}
+
+	void Drink::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
+	void CreditCard::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void CreditCard::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
 }

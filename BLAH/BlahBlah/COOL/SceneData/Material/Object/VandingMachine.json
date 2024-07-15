@@ -1,0 +1,9 @@
+{
+	"name": "VandingMachine",
+	"BaseColor": "Object/VandingMachine/banding_machile_diffuseOriginal",
+	"Roughness": "Object/VandingMachine/banding_machile_roughness",
+	"Metalic": "Object/VandingMachine/banding_machile_metallic",
+	"AO": "Object/VandingMachine/banding_machile_ao",
+	"Normal": "Object/VandingMachine/banding_machile_normal",
+	"Shader": "TestMeshDiffered"
+}
