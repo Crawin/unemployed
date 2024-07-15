@@ -38,108 +38,7 @@
 						]
 					}
 				},
-				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
-					"Name" : "CutLineBlue",
-					"Renderer" : 
-					{
-						"Material" : "Object/Blueline",
-						"Mesh" : "doorlock.CutLineBlue"
-					},
-					"Transform" : 
-					{
-						"Position" : 
-						[
-							8.8574361801147461,
-							8.3622989654541016,
-							0.19995056092739105
-						],
-						"Rotate" : 
-						[
-							2.5044780613825424e-06,
-							0.0,
-							0.0
-						],
-						"Scale" : 
-						[
-							1.0,
-							1.0,
-							1.0
-						]
-					}
-				},
-				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
-					"Name" : "CutLineGreen",
-					"Renderer" : 
-					{
-						"Material" : "Object/Greenline",
-						"Mesh" : "doorlock.CutLineGreen"
-					},
-					"Transform" : 
-					{
-						"Position" : 
-						[
-							10.878756523132324,
-							8.3622989654541016,
-							0.19995056092739105
-						],
-						"Rotate" : 
-						[
-							2.5044780613825424e-06,
-							0.0,
-							0.0
-						],
-						"Scale" : 
-						[
-							1.0,
-							1.0,
-							1.0
-						]
-					}
-				},
-				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
-					"Name" : "CutLineRed",
-					"Renderer" : 
-					{
-						"Material" : "Object/Redline",
-						"Mesh" : "doorlock.CutLineRed"
-					},
-					"Transform" : 
-					{
-						"Position" : 
-						[
-							12.861934661865234,
-							8.3622989654541016,
-							0.19995056092739105
-						],
-						"Rotate" : 
-						[
-							2.5044780613825424e-06,
-							0.0,
-							0.0
-						],
-						"Scale" : 
-						[
-							1.0,
-							1.0,
-							1.0
-						]
-					}
-				},
+
 				{
 					"Collider" : 
 					{
@@ -306,7 +205,7 @@
 	{
 		"Position" : 
 		[
-			100.0, 155.0, 1000.0
+			0.0, 0.0, 0.0
 		],
 		"Rotate" : 
 		[

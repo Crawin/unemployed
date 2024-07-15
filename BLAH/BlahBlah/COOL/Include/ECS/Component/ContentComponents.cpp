@@ -243,7 +243,21 @@ namespace component {
 						can->ShowUI();
 						};
 
-					manager->Execute(openKey);
+					manager->Execute(openKey); 
+				}
+				else if (doorCtrl->GetGamemode() == 3) { //3 == doorlock Cutline
+					std::function<void(component::UICanvas*, component::UICutLine*)> openCutline = [door, doorCtrl](component::UICanvas* can, component::UICutLine* line) {
+						DebugPrint("CUTLINE SHOW");
+
+						line->SetAnswer(doorCtrl->GetAnswer());
+						line->SetDoor(door);
+
+						line->SetCurrent(0);
+
+						if (doorCtrl->IsUioff() == false) can->ShowUI();
+						};
+
+					manager->Execute(openCutline);
 				}
 			}
 			};
@@ -266,8 +280,6 @@ namespace component {
 
 		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
 		UIDoorKey* doorkey = manager->GetComponent<UIDoorKey>(selfEntity);
-
-		int done = doorkey->GetFailCount();
 
 		for (Entity* child : children) {
 			Name* childName = manager->GetComponent<Name>(child);
@@ -316,7 +328,7 @@ namespace component {
 						if (name == buttonName) {
 							Button* button = manager->GetComponent<Button>(child);
 							Key* key = manager->GetComponent<Key>(child);
-							ButtonEventFunction password = [canvas, key, doorkey, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+							ButtonEventFunction password = [key, doorkey, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
 								int current = key->GetKeyLength();
 								doorkey->SetCurrent(current);
 								DebugPrint(std::format("length: {}", current));
@@ -386,7 +398,7 @@ namespace component {
 						std::string buttonName = std::format("{}Button", i);
 						if (name == buttonName) {
 							Button* button = manager->GetComponent<Button>(child);
-							ButtonEventFunction password = [canvas, keypad, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+							ButtonEventFunction password = [keypad, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
 								int current = keypad->GetCurrent();
 								current = current * 10 + i;
 								keypad->SetCurrent(current);
@@ -755,6 +767,78 @@ namespace component {
 	}
 
 	void Key::ShowYourself() const
+	{
+	}
+
+	void UICutLine::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void UICutLine::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		auto& children = selfEntity->GetChildren();
+
+		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
+		UICutLine* cutline = manager->GetComponent<UICutLine>(selfEntity);
+
+		for (Entity* child : children) {
+			Name* childName = manager->GetComponent<Name>(child);
+
+			// 확인 버튼
+			if (childName != nullptr) {
+				std::string name = childName->getName();
+
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas](Entity* ent) {
+						// hide ui;
+						canvas->HideUI();
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
+				if (name == "Check") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction check = [canvas, cutline, manager](Entity* ent) {
+						// hide ui;
+						DebugPrint(std::format("pw: {}", cutline->GetCurrent()));
+						if (cutline->GetAnswer() == cutline->GetCurrent()) {
+							// open door
+							Entity* door = cutline->GetDoor();
+							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+							doorCtrl->SetLock(false);
+							canvas->HideUI();
+						}
+						else {
+							Entity* door = cutline->GetDoor();
+							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+							doorCtrl->SetUioff(true);
+							canvas->HideUI();
+						}
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
+				}
+				else {
+					for (int i = 1; i <= 4; ++i) { //1,2,3,4 == red, blue, green, yellow
+						std::string buttonName = std::format("Line{}", i);
+						if (name == buttonName) {
+							Button* button = manager->GetComponent<Button>(child);
+							ButtonEventFunction password = [canvas, cutline, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
+								int current = cutline->GetCurrent();
+								current = current * 10 + i;
+								cutline->SetCurrent(current);
+
+								};
+							button->SetButtonEvent(KEY_STATE::END_PRESS, password);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void UICutLine::ShowYourself() const
 	{
 	}
 
