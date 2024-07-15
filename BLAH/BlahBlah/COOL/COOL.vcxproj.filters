@@ -100,6 +100,9 @@
     <Filter Include="소스 파일\Scene\LoadScene">
       <UniqueIdentifier>{e0fa7ead-a0b3-4235-afef-b79f92827a12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\App\FMOD">
+      <UniqueIdentifier>{9b66aa58-1826-4997-81a9-4d961bf05232}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\framework.h">
@@ -213,6 +216,9 @@
     <ClInclude Include="Include\Scene\LoadingScene.h">
       <Filter>소스 파일\Scene\LoadScene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\FMODsound\FmodSound.h">
+      <Filter>소스 파일\App\FMOD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Include\main.cpp">
@@ -319,6 +325,9 @@
     </ClCompile>
     <ClCompile Include="Include\Scene\LoadingScene.cpp">
       <Filter>소스 파일\Scene\LoadScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\FMODsound\FmodSound.cpp">
+      <Filter>소스 파일\App\FMOD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

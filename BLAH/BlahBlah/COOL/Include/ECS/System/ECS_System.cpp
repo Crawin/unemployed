@@ -8,6 +8,7 @@
 #include "Network/Client.h"
 #include "App/Application.h"
 #include "ECS/TimeLine/TimeLine.h"
+#include "FMODsound/FmodSound.h"
 
 namespace ECSsystem {
 
@@ -205,6 +206,7 @@ namespace ECSsystem {
 			sp->SetMaxVelocity(maxSpeed);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
+			FMOD_INFO::GetInstance().set_self_speed(speed);
 
 			// update speed if key down
 			if (move) {
@@ -246,6 +248,7 @@ namespace ECSsystem {
 				rot.y += (mouseMove.x / rootSpeed);
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
+				FMOD_INFO::GetInstance().set_player1_rotation_y(rot.y);
 			}
 		};
 
@@ -260,6 +263,7 @@ namespace ECSsystem {
 			//rot.y += (mouseMove.x / rootSpeed);
 			rot.x += (mouseMove.y / rootSpeed);
 			tr->SetRotation(rot);
+			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
 			};
 
 		// mouse - attachInputs
@@ -454,11 +458,20 @@ namespace ECSsystem {
 
 				client.characters[id].SetUpdate(false);
 
-				if (id != playerSock[0]) {	// 상대방 플레이어면 회전값 적용
-					tr->SetPosition(client.characters[id].getPos());
-					tr->SetRotation(client.characters[id].getRot());
-				}
 				sp->SetVelocity(client.characters[id].getSpeed());
+				if (id != playerSock[0]) {	// 상대방 플레이어면 회전값 적용
+					DirectX::XMFLOAT3 pos = client.characters[id].getPos();
+					DirectX::XMFLOAT3 rot = client.characters[id].getRot();
+					tr->SetPosition(pos);
+					tr->SetRotation(rot);
+					if (id == 1)	// 가드면 발자국 소리 위치 업데이트를 위해 FMOD_INFO에 위치 업데이트
+					{
+						auto& fmod = FMOD_INFO::GetInstance();
+						fmod.set_guard_position(pos);
+						fmod.set_guard_speed(sp->GetCurrentVelocityLenOnXZ());
+					}
+				}
+
 				//XMFLOAT3 vel = sp->GetVelocityOnXZ();
 				//if (id != 1) {
 				//}

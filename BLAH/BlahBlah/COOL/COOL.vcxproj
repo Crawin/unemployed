@@ -176,6 +176,7 @@
     <ClInclude Include="Include\ECS\System\ECS_System.h" />
     <ClInclude Include="Include\ECS\TimeLine\TimeLine.h" />
     <ClInclude Include="Include\Enums.h" />
+    <ClInclude Include="Include\FMODsound\FmodSound.h" />
     <ClInclude Include="Include\framework.h" />
     <ClInclude Include="Include\Light.h" />
     <ClInclude Include="Include\Lighting\ShadowMap.h" />
@@ -215,6 +216,7 @@
     <ClCompile Include="Include\ECS\System\ECS_System.cpp" />
     <ClCompile Include="Include\ECS\TimeLine\TimeLine.cpp" />
     <ClCompile Include="Include\Enums.cpp" />
+    <ClCompile Include="Include\FMODsound\FmodSound.cpp" />
     <ClCompile Include="Include\framework.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

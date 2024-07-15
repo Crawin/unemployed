@@ -57,8 +57,6 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lp
 		return 1;
 	}
 
-
-
 	Application::GetInstance().StartProgram();
 
 }

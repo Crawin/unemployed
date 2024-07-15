@@ -4,6 +4,8 @@
 #include "InputManager.h"
 #include "Scene/SceneManager.h"
 #include "Timer.h"
+#include "FMODsound/FmodSound.h"
+#include <thread>
 
 #ifdef _DEBUG
 #pragma warning(disable  : 4996)
@@ -121,6 +123,7 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 
 int Application::StartProgram()
 {
+	FMOD_INFO::GetInstance().begin_fmod();
 	MSG Message;
 	m_Timer->Start();
 	while (m_GameLoop) {
@@ -131,9 +134,11 @@ int Application::StartProgram()
 		else 
 		{
 			Tick();
+			FMOD_INFO::GetInstance().update_fmod();
 		}
 		SleepEx(0, true);
 	}
+	FMOD_INFO::GetInstance().end_fmod();
 	return 0;
 }
 

@@ -1,5 +1,6 @@
 ﻿#include "framework.h"
 #include "VIVOX/vivoxheaders.h"
+#include "../Include/FMODsound/FmodSound.h"
 #include "Client.h"
 #define SERVERPORT 9000
 

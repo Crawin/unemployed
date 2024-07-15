@@ -1046,7 +1046,7 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 {
 	float error_value = 10;
 	if (this->position.x >= pos.x - error_value && this->position.x <= pos.x + error_value)
-		if (this->position.y >= pos.y - error_value && this->position.y <= pos.y + error_value)
+		if (this->position.y >= pos.y - error_value*5 && this->position.y <= pos.y + error_value*5)
 			if (this->position.z >= pos.z - error_value && this->position.z <= pos.z + error_value)
 			{
 				if (state == 1)
