@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "FMODsound/FmodSound.h"
 #include <thread>
+#include "Network/Client.h"
 
 #ifdef _DEBUG
 #pragma warning(disable  : 4996)
@@ -117,6 +118,7 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	CHECK_CREATE_FAILED(m_SceneManager->Init(commandList, "Test"), "씬매니저 생성 실패");
 	Renderer::GetInstance().SetSceneManager(m_SceneManager);
 	Renderer::GetInstance().ExecuteAndEraseUploadHeap(commandList);
+	Client::GetInstance().setSceneManager(m_SceneManager);
 
 	return true;
 }

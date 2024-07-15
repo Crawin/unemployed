@@ -63,6 +63,8 @@ struct EXP_OVER
 	}
 };
 
+class SceneManager;
+
 class Client
 {
 public:
@@ -88,12 +90,16 @@ private:
 	// 1초에 24번 보냄
 	const float m_SendFrame = 1.0f / 60.0f;
 
+	char store_buf[BUFSIZE];
+	SceneManager* m_SceneManager;
+
 public:
 	std::unordered_map<int, GameCharacters> characters;
 	VIVOX_STATE* vivox_state;
 
 	void Recv_Start();
 	char* Get_Buf();
+	char* Get_Store_Buf() { return store_buf + prev_packet_size; }
 	void Send_Pos(const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, const DirectX::XMFLOAT3&, float deltaTime);
 	void Send_Room(const PACKET_TYPE&, const unsigned int&);
 	void Connect_Server();
@@ -108,6 +114,8 @@ public:
 	void pull_packet(const int& current_size);
 	void logout_opponent();
 	short get_prev_packet_size() { return prev_packet_size; }
+	void setSceneManager(SceneManager* scenemanager);
+	SceneManager* getSceneManager() { return m_SceneManager; }
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

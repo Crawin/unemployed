@@ -205,6 +205,8 @@ namespace ECSsystem {
 			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
 			sp->SetMaxVelocity(maxSpeed);
 
+			float speed = sp->GetCurrentVelocityLenOnXZ();
+			FMOD_INFO::GetInstance().set_self_speed(speed);
 
 			// update speed if key down
 			if (move) {
@@ -436,7 +438,52 @@ namespace ECSsystem {
 
 	void SyncPosition::Update(ECSManager* manager, float deltaTime)
 	{
+		/*std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
+		(component::Server* server, component::Name* name, component::Transform* tr, component::Physics* sp) {
+			auto& client = Client::GetInstance();
+			const SOCKET* playerSock = client.getPSock();
+			short type = client.getCharType();
+			auto& n = name->getName();
 
+			auto id = server->getID();
+			if (id && client.characters[id].IsUpdated())
+			{
+				//if (id == 1)
+				//{
+					//auto speed = client.characters[id].getSpeed();
+					//std::cout << speed.x << "," << speed.y << "," << speed.z << std::endl;
+				//}
+				XMFLOAT3 pos = tr->GetPosition();
+				//DebugPrint(std::format("befPos: {}, {}, {}", pos.x, pos.y, pos.z));
+
+				client.characters[id].SetUpdate(false);
+
+				sp->SetVelocity(client.characters[id].getSpeed());
+				if (id != playerSock[0]) {	// 상대방 플레이어면 회전값 적용
+					DirectX::XMFLOAT3 pos = client.characters[id].getPos();
+					DirectX::XMFLOAT3 rot = client.characters[id].getRot();
+					tr->SetPosition(pos);
+					tr->SetRotation(rot);
+					if (id == 1)	// 가드면 발자국 소리 위치 업데이트를 위해 FMOD_INFO에 위치 업데이트
+					{
+						auto& fmod = FMOD_INFO::GetInstance();
+						fmod.set_guard_position(pos);
+						fmod.set_guard_speed(sp->GetCurrentVelocityLenOnXZ());
+					}
+				}
+
+				//XMFLOAT3 vel = sp->GetVelocityOnXZ();
+				//if (id != 1) {
+				//}
+				//DebugPrint(std::format("name: {},\tspeed: {}", n, XMVectorGetX(XMVector3Length(XMLoadFloat3(&vel)))));
+				//XMVECTOR dif = XMLoadFloat3(&pos) - XMLoadFloat3(&tr->GetPosition());
+				//XMStoreFloat3(&pos, dif);
+			}
+
+		};
+
+
+		manager->Execute(func);*/
 	}
 
 	void CollideHandle::Update(ECSManager* manager, float deltaTime)
@@ -786,20 +833,6 @@ namespace ECSsystem {
 
 		manager->Execute(friction);
 		manager->Execute(gravity);
-
-		Pawn* curCtrlPawn = nullptr;
-		std::function<void(PlayerController*)> getPawn = [&curCtrlPawn](PlayerController* ctrl) { curCtrlPawn = ctrl->GetControllingPawn(); };
-		manager->Execute(getPawn);
-
-		std::function<void(Pawn*, Transform*, Physics*)> makeSound = [&curCtrlPawn, manager](Pawn* pawn, Transform* tr, Physics* py) {
-			if (curCtrlPawn == pawn) {
-				float speed = py->GetCurrentVelocityLenOnXZ();
-				FMOD_INFO::GetInstance().set_self_speed(speed);
-				//FMOD_INFO::GetInstance().set_self_position(tr->GetWorldPosition());
-			}
-			};
-
-		manager->Execute(makeSound);
 
 	}
 
