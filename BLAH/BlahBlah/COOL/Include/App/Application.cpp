@@ -118,7 +118,6 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 
 int Application::StartProgram()
 {
-	//std::thread fmod_thread(start_fmod, std::ref(FMOD_INFO::GetInstance()));
 	FMOD_INFO::GetInstance().begin_fmod();
 	MSG Message;
 	m_Timer->Start();
@@ -134,8 +133,7 @@ int Application::StartProgram()
 		}
 		SleepEx(0, true);
 	}
-	//FMOD_INFO::GetInstance().set_client_on(false);
-	//fmod_thread.join();
+	FMOD_INFO::GetInstance().end_fmod();
 	return 0;
 }
 

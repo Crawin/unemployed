@@ -190,16 +190,11 @@ namespace ECSsystem {
 			}
 
 			float maxSpeed = 200.0f;
-			if (pawn->IsPressing(GAME_INPUT::SHIFT)) {
-				maxSpeed += 400.0f;
-				FMOD_INFO::GetInstance().set_running(true);
-			}
-			else {
-				FMOD_INFO::GetInstance().set_running(false);
-			}
+			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
 			sp->SetMaxSpeed(maxSpeed);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
+			FMOD_INFO::GetInstance().set_self_speed(speed);
 
 			// update speed if key down
 			if (move) {
@@ -223,6 +218,7 @@ namespace ECSsystem {
 				rot.y += (mouseMove.x / rootSpeed);
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
+				FMOD_INFO::GetInstance().set_player1_rotation_y(rot.y);
 			}
 		};
 
@@ -237,6 +233,7 @@ namespace ECSsystem {
 			//rot.y += (mouseMove.x / rootSpeed);
 			rot.x += (mouseMove.y / rootSpeed);
 			tr->SetRotation(rot);
+			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
 			};
 
 		// mouse - attachInputs
@@ -419,6 +416,7 @@ namespace ECSsystem {
 
 				client.characters[id].SetUpdate(false);
 
+				sp->SetVelocity(client.characters[id].getSpeed());
 				if (id != playerSock[0]) {	// 상대방 플레이어면 회전값 적용
 					DirectX::XMFLOAT3 pos = client.characters[id].getPos();
 					DirectX::XMFLOAT3 rot = client.characters[id].getRot();
@@ -426,10 +424,12 @@ namespace ECSsystem {
 					tr->SetRotation(rot);
 					if (id == 1)	// 가드면 발자국 소리 위치 업데이트를 위해 FMOD_INFO에 위치 업데이트
 					{
-						FMOD_INFO::GetInstance().set_guard_position(pos);
+						auto& fmod = FMOD_INFO::GetInstance();
+						fmod.set_guard_position(pos);
+						fmod.set_guard_speed(sp->GetCurrentVelocityLenOnXZ());
 					}
 				}
-				sp->SetVelocity(client.characters[id].getSpeed());
+
 				//XMFLOAT3 vel = sp->GetVelocityOnXZ();
 				//if (id != 1) {
 				//}
