@@ -32,6 +32,8 @@ class ResourceManager;
 
 class ECSManager;
 
+class packet_base;
+
 namespace component {
 	class Camera;
 }
@@ -114,5 +116,7 @@ public:
 
 	// 최종 결과를 resultRtv, resultDsv에 넘긴다
 	virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
+
+	virtual void ProcessPacket(packet_base* packet);
 };
 

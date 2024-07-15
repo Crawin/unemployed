@@ -155,3 +155,8 @@ void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& comman
 	m_CurrentScene->Render(commandLists, resultRtv, resultDsv);
 
 }
+
+void SceneManager::ProcessPacket(packet_base* packet)
+{
+	if(m_CurrentScene)	m_CurrentScene->ProcessPacket(packet);
+}

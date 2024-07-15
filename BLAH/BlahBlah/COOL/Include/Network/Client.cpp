@@ -2,6 +2,7 @@
 #include "VIVOX/vivoxheaders.h"
 #include "../Include/FMODsound/FmodSound.h"
 #include "Client.h"
+#include "Scene/SceneManager.h"
 #define SERVERPORT 9000
 
 void print_error(const char* msg, int err_no)
@@ -176,6 +177,11 @@ void Client::logout_opponent()
 	std::cout << "해당 클라이언트에서 상대방이 삭제되었습니다." << std::endl;
 }
 
+void Client::setSceneManager(SceneManager* scenemanager)
+{
+	this->m_SceneManager = scenemanager;
+}
+
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
 {
 	if (0 != err)
@@ -233,8 +239,9 @@ void process_packet(packet_base*& base)
 	{
 	case pPOSITION:								// POSITION
 	{
-		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-		client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
+		client.getSceneManager()->ProcessPacket(base);
+		//sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
+		//client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
 		break;
 	}
 	case pLOGIN:									// LOGIN

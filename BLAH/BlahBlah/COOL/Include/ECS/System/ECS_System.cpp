@@ -438,7 +438,7 @@ namespace ECSsystem {
 
 	void SyncPosition::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
+		/*std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
 		(component::Server* server, component::Name* name, component::Transform* tr, component::Physics* sp) {
 			auto& client = Client::GetInstance();
 			const SOCKET* playerSock = client.getPSock();
@@ -482,7 +482,8 @@ namespace ECSsystem {
 
 		};
 
-		manager->Execute(func);
+
+		manager->Execute(func);*/
 	}
 
 	void CollideHandle::Update(ECSManager* manager, float deltaTime)

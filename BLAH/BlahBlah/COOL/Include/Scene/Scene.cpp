@@ -4,6 +4,8 @@
 #include "ECS/ECSManager.h"
 #include "ResourceManager.h"
 #include "Shader/Shader.h"
+#include <winsock2.h> // 윈속2 메인 헤더
+#include "Network/Packets.h"
 
 #ifdef _DEBUG
 #include "App/InputManager.h"
@@ -626,4 +628,26 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	//PostProcessing(commandLists[0], resultRtv, resultDsv);
 
 	DrawUI(commandLists[0], resultRtv, resultDsv);
+}
+
+void Scene::ProcessPacket(packet_base* packet)
+{
+	switch (packet->getType())		// PACKET_TYPE
+	{
+	case pPOSITION:								// POSITION
+	{
+		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(packet);
+		std::function<void(component::Physics*, component::Transform*, component::Server*)> func = [buf](component::Physics* ph, component::Transform* tr, component::Server* se) {
+			if (se->getID() == buf->getPlayer())
+			{
+				tr->SetPosition(buf->getPos());
+				tr->SetRotation(buf->getRot());
+				ph->SetVelocity(buf->getSpeed());
+			}
+			};
+
+		m_ECSManager->Execute(func);
+		break;
+	}
+	}
 }

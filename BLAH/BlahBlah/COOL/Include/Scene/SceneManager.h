@@ -11,6 +11,8 @@ class Scene;
 //		3. 인게임씬.Update()는 return;
 // 기존 싱글톤에서 Application의 멤버로 바꿈.
 
+class packet_base;
+
 class SceneManager
 {
 	std::string m_BaseScenePath = SCENE_PATH;
@@ -47,5 +49,6 @@ public:
 
 	void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
+	void ProcessPacket(packet_base* packet);
 };
 

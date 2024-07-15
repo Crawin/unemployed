@@ -173,4 +173,6 @@ public:
 	const unsigned int getRoomNum() { return roomNum; }
 };
 
+//class cs_packet_
+
 #pragma pack(pop)
