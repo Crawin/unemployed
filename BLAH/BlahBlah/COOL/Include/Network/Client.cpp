@@ -250,8 +250,6 @@ void process_packet(packet_base*& base)
 	case pPOSITION:								// POSITION
 	{
 		client.getSceneManager()->ProcessPacket(base);
-		//sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(base);
-		//client.characters[buf->getPlayer()].setPosRotSpeed(buf->getPos(), buf->getRot(), buf->getSpeed());
 		break;
 	}
 	case pLOGIN:									// LOGIN
@@ -320,6 +318,9 @@ void process_packet(packet_base*& base)
 	{
 		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(base);
 	}
+		break;
+	case pAnimation:
+		client.getSceneManager()->ProcessPacket(base);
 		break;
 	}
 }

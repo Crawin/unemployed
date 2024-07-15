@@ -306,6 +306,29 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			break;
 		case pAttack:
 			break;
+		case pAnimation:
+		{
+			auto packet = reinterpret_cast<cs_packet_anim_type*>(base);
+			auto sent_player = login_players.find(id);
+			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
+			if (InGamePlayers[0].id == id)
+			{
+				if (InGamePlayers[1].id)
+				{
+					sc_packet_anim_type anim(InGamePlayers[1].sock, packet->getAnimType());
+					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&anim));
+				}
+			}
+			else if (InGamePlayers[1].id == id)
+			{
+
+			}
+			else
+			{
+				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+			}
+		}
+			break;
 		default:
 			std::cout << "정의되지 않은 패킷 타입" << std::endl;
 			break;

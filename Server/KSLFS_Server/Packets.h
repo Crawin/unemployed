@@ -19,8 +19,10 @@ enum PACKET_TYPE
 	pENTERROOM,
 	pRoomPlayer,
 	pLogout,
-	pAttack
+	pAttack,
+	pAnimation
 };
+enum class ANIMATION_STATE;
 
 class packet_base
 {
@@ -126,6 +128,19 @@ public:
 	}
 };
 
+class sc_packet_anim_type : public packet_base
+{
+	SOCKET player = NULL;
+	char anim_type;
+public:
+	sc_packet_anim_type(const SOCKET& playerSocket, const char anim_state) : player(playerSocket), anim_type(anim_state)
+	{
+		type = pAnimation;
+		size = sizeof(sc_packet_anim_type);
+	}
+	const SOCKET getPlayerSock() { return player; }
+};
+
 //--------------------------------------------------------------------------------------------------------------------
 
 class cs_packet_position : public packet_base
@@ -171,6 +186,31 @@ public:
 		roomNum = n;
 	}
 	const unsigned int getRoomNum() { return roomNum; }
+};
+
+class cs_packet_anim_type : public packet_base
+{
+	char anim_type;
+public:
+	cs_packet_anim_type(ANIMATION_STATE anim_state)
+	{
+		size = sizeof(cs_packet_anim_type);
+		type = pAnimation;
+		anim_type = static_cast<char>(anim_state);
+	}
+	const char getAnimType() { return anim_type; }
+};
+
+class cs_packet_unlock_door : public packet_base
+{
+	char success;
+	short doorNum;
+};
+
+class cs_packet_open_door : public packet_base
+{
+	float angle;
+
 };
 
 #pragma pack(pop)

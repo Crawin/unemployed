@@ -649,5 +649,17 @@ void Scene::ProcessPacket(packet_base* packet)
 		m_ECSManager->Execute(func);
 		break;
 	}
+	case pAnimation:
+	{
+		sc_packet_anim_type* buf = reinterpret_cast<sc_packet_anim_type*>(packet);
+		std::function<void(component::AnimationController*, component::Server*)> func = [buf](component::AnimationController* ac, component::Server* se) {
+			if (se->getID() == buf->getPlayer())
+			{
+				ac->ChangeAnimationTo(buf->getAnimState());
+			}
+			};
+		m_ECSManager->Execute(func);
+		break;
+	}
 	}
 }

@@ -22,6 +22,7 @@ enum PACKET_TYPE
 	pAttack,
 	pAnimation
 };
+enum class ANIMATION_STATE;
 
 class packet_base
 {
@@ -127,6 +128,20 @@ public:
 	}
 };
 
+class sc_packet_anim_type : public packet_base
+{
+	SOCKET player = NULL;
+	char anim_type;
+public:
+	sc_packet_anim_type(const SOCKET& playerSocket, const char anim_state) : player(playerSocket), anim_type(anim_state)
+	{
+		type = pAnimation;
+		size = sizeof(sc_packet_anim_type);
+	}
+	const SOCKET getPlayer() { return player; }
+	const ANIMATION_STATE getAnimState() { return static_cast<ANIMATION_STATE>(anim_type); }
+};
+
 //--------------------------------------------------------------------------------------------------------------------
 
 class cs_packet_position : public packet_base
@@ -184,6 +199,7 @@ public:
 		type = pAnimation;
 		anim_type = static_cast<char>(anim_state);
 	}
+	const char getAnimType() { return anim_type; }
 };
 
 class cs_packet_unlock_door : public packet_base

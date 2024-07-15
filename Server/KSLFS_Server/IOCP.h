@@ -187,6 +187,17 @@ public:
 				}
 				break;
 			}
+			case pAnimation:
+			{
+				auto anim = reinterpret_cast<sc_packet_anim_type*>(base);
+				auto sendOver = new EXP_OVER(anim);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+				break;
+			}
 		}
 	}
 
