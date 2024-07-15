@@ -940,7 +940,7 @@ namespace ECSsystem {
 			if (client.getRoomNum() && pawn->IsActive() == true)
 			{
 				if (sp->GetCurrentVelocityLen() > 0 || pawn->IsPressing(GAME_INPUT::MOUSE_LEFT))
-					Client::GetInstance().Send_Pos(tr->GetPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
+					Client::GetInstance().Send_Pos(tr->GetWorldPosition(), tr->GetRotation(), sp->GetVelocity(), deltaTime);
 			}
 			};
 
