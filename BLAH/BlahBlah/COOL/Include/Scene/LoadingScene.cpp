@@ -28,7 +28,11 @@ void LoadingScene::Update(float deltaTime)
 
 			cmdAloc->Reset();
 			cmdlist->Reset(cmdAloc.Get(), nullptr);
-			m_NextScene->m_ResourceManager->Init(cmdlist, m_NextScene->m_SceneName);
+			bool res = m_NextScene->m_ResourceManager->Init(cmdlist, m_NextScene->m_SceneName);
+
+			if (res == false) {
+				ERROR_QUIT("LOADING ERROR!!, resource failed!");
+			}
 
 			Renderer::GetInstance().ExecuteAndEraseUploadHeap(cmdlist);
 			break;
