@@ -17,7 +17,7 @@
 	"PS": "SkyRender.hlsl",
 	"StreamOutput": 0,
 	"BlendState": 0,
-	"RasterizerState": 0,
+	"RasterizerState": 1,
 	"DepthStencilState": 0,
-	"InputLayout": 0
+	"InputLayout": 1
 }

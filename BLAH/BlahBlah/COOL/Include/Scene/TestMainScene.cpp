@@ -10,6 +10,9 @@ bool TestMainScene::LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList
     m_SkyMaterialIdx = m_ResourceManager->GetMaterial("_SkyRender", commandList);
     if (m_SkyMaterialIdx == -1) return false;
 
+	m_SphereSkyMeshIndex = m_ResourceManager->GetMesh("Sphere", commandList);
+	if (m_SphereSkyMeshIndex == -1) return false;
+
     return true;
 }
 
@@ -28,9 +31,10 @@ void TestMainScene::OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D
 
 	int lightResIdx = m_ResourceManager->m_LightIdx;
 	int mainLightIdx = 0;
+	Mesh* sphere = m_ResourceManager->GetMesh(m_SphereSkyMeshIndex);
 
 	std::function<void(component::DayLight*)> func =
-		[commandList, lightResIdx, mainLightIdx](component::DayLight* dayLight) {
+		[commandList, lightResIdx, mainLightIdx, sphere](component::DayLight* dayLight) {
 		XMFLOAT4 noonLight = dayLight->GetNoonLight();
 		XMFLOAT4 moonLight = dayLight->GetMoonLight();
 		XMFLOAT4 sunsetLight = dayLight->GetSunSetLight();
@@ -43,7 +47,9 @@ void TestMainScene::OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &mainLightIdx, static_cast<int>(DAYLIGHT_ROOTCONST::MAIN_LIGHT_INDEX));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &angle, static_cast<int>(DAYLIGHT_ROOTCONST::LIGHT_ANGLE));
 
-		commandList->DrawInstanced(6, 1, 0, 0);
+		int vtxSize = sphere->GetVertexNum();
+		sphere->SetVertexBuffer(commandList);
+		commandList->DrawInstanced(vtxSize, 1, 0, 0);
 		};
 
 	m_ECSManager->Execute(func);

@@ -14,6 +14,7 @@ public:
 
 private:
     int m_SkyMaterialIdx = -1;
+    int m_SphereSkyMeshIndex = -1;
 
 protected:
     virtual bool LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList);

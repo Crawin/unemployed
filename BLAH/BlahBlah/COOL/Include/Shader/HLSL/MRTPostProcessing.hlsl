@@ -241,6 +241,7 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 #define ONLY_MAIN_LIGHT
 
 #ifndef ONLY_MAIN_LIGHT
+// not defined ONLY_MAIN_LIGHT start
 
 #define REVERSE_LOOP
 #define MAX_DISTANCE 1000.0f
@@ -248,11 +249,15 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 #define ADD_PER_LOOP float4(0.5f, 0.5f, 0.5f, 0.0f) * STEP_PER_LOOP / MAX_DISTANCE
 #define MAX_SHAFT_LIGHTS 6
 
+// not defined ONLY_MAIN_LIGHT end
 #else
+// defined ONLY_MAIN_LIGHT start
+
 #define MAX_DISTANCE 2000.0f
 #define STEP_PER_LOOP 5.0f
-#define ADD_PER_LOOP float4(0.3f, 0.3f, 0.3f, 0.0f) * STEP_PER_LOOP / MAX_DISTANCE
+//#define ADD_PER_LOOP STEP_PER_LOOP / MAX_DISTANCE
 
+// defined ONLY_MAIN_LIGHT end
 #endif
 
 
@@ -346,25 +351,28 @@ float4 LightShaft(float3 startPosition, float3 endPosition)
 
 #else
 	LIGHT light;
+	float4 lightColor = float4(0.3f, 0.3f, 0.3f, 0.0f);
+
 	for (int i = 0; i < g_LightSize; ++i) {
 
 		if (lights[i].m_LightType == 0) {
 			light = lights[i];
+			lightColor = light.m_LightColor;
+
+			[loop]
+			for (float step = 0; step < goal; step += STEP_PER_LOOP) {
+				float3 pos = startPosition + (toVector * step);
+
+				float shadowFactor = ShadowCalculate(float4(pos, 1.0f), 
+					1, 
+					light.m_CameraIdx, 
+					light.m_ShadowMapResults.x);
+
+				result += shadowFactor * lightColor * STEP_PER_LOOP / MAX_DISTANCE * 0.1f;
+			}
 			break;
 		}
 	}
-	[loop]
-	for (float step = 0; step < goal; step += STEP_PER_LOOP) {
-		float3 pos = startPosition + (toVector * step);
-
-		float shadowFactor = ShadowCalculate(float4(pos, 1.0f), 
-			1, 
-			light.m_CameraIdx, 
-			light.m_ShadowMapResults.x);
-
-		result += shadowFactor * ADD_PER_LOOP;
-	}
-
 
 #endif
 
@@ -385,8 +393,7 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	float4 positionW = float4(Tex2DList[g_PositionIndex].Sample(samplerWarp, input.uv));
 	
 	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
-
 	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
 
-	return lightShaftResult + lightingResult;
+	return lightingResult + lightShaftResult;
 }

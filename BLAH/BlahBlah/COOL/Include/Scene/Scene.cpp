@@ -282,8 +282,8 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	auto dsv = camDatas.m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
 	commandList->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &dsv);
 
-	OnPreRender(commandList, dsv);
 	camera->SetCameraData(commandList);
+	OnPreRender(commandList, dsv);
 
 	BoundingFrustum& cameraFustum = camera->GetBoundingFrustum();
 	BoundingOrientedBox tempOBB;

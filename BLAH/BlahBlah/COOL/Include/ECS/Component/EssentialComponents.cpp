@@ -425,6 +425,7 @@ namespace component {
 		case LIGHT_TYPES::DIRECTIONAL_LIGHT:
 			if (m_LightData.m_Direction.y > 0) m_Score = -10000.0f;
 			else m_Score = 10000000000;
+			m_Score = 10000000000;
 			break;
 
 		case LIGHT_TYPES::SPOT_LIGHT:
