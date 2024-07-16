@@ -49,6 +49,8 @@ void LoadingScene::Update(float deltaTime)
 			m_NextScene->LoadSceneExtra(cmdlist);
 
 			Renderer::GetInstance().ExecuteAndEraseUploadHeap(cmdlist);
+			cmdAloc->Reset();
+			cmdlist->Reset(cmdAloc.Get(), nullptr);
 			break;
 		}
 		case 3:

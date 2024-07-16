@@ -568,7 +568,7 @@ bool Scene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 bool Scene::Enter()
 {
 	m_ECSManager->OnStart(m_ResourceManager);
-
+	RenderSync(0);
 	return true;
 }
 
@@ -623,6 +623,10 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 	for (component::Camera* cam : camVec)
 		if (cam->IsMainCameraOnRender() == true)
 			mainCam = cam;
+
+	// todo 고쳐야 함
+	if (mainCam == nullptr)
+		mainCam = camVec[0];
 	// 
 	CombineResultRendertargets(commandLists[0], mainCam, resultRtv, resultDsv);
 
