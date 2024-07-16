@@ -315,7 +315,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				if (InGamePlayers[1].id)
 				{
-					sc_packet_anim_type anim(InGamePlayers[1].sock, packet->getAnimType());
+					sc_packet_anim_type anim(InGamePlayers[0].sock, packet->getAnimType());
 					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&anim));
 				}
 			}
@@ -323,7 +323,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				if (InGamePlayers[0].id)
 				{
-					sc_packet_anim_type anim(InGamePlayers[0].sock, packet->getAnimType());
+					sc_packet_anim_type anim(InGamePlayers[1].sock, packet->getAnimType());
 					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&anim));
 				}
 			}
