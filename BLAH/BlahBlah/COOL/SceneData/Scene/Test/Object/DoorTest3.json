@@ -16,6 +16,7 @@
 	"Door": 
 	{
 		"MaxAngle": 120.0,
+		"RotateAxis": 1,
 		"Locked": true,
 		"Answer": 9876,
 		"Game": 1,
@@ -35,7 +36,7 @@
 
 	"Children":[
 		{
-"Name": "FrameRender",
+			"Name": "FrameRender",
 			"Transform": 
 			{
 				"Position": [-50.0,

@@ -92,6 +92,9 @@ namespace component {
 		int m_Gamemode = -1;
 		int m_FailCount = 0;
 
+		// 0, 1, 2 -> x, y, z
+		int m_RotateAxis = 1;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -106,6 +109,7 @@ namespace component {
 		int GetFailCount() const { return m_FailCount; }
 		int IsUioff() const { return m_Uioff; }
 		bool IsOpen() const { return m_Open; }
+		int GetAxis() const { return m_RotateAxis; }
 
 		void SetLock(bool lock) { m_Locked = lock; }
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }

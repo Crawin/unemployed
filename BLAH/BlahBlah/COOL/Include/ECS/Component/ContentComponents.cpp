@@ -184,8 +184,10 @@ namespace component {
 		Json::Value door = v["Door"];
 
 		m_Answer = door["Answer"].asInt();
+		m_Locked = door["Locked"].asInt();
 		m_Gamemode = door["Game"].asInt();
 		m_FailCount = door["FailCount"].asInt();
+		m_RotateAxis = door["RotateAxis"].asInt();
 	}
 
 	void DoorControl::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -208,7 +210,14 @@ namespace component {
 				float angle = doorCtrl->GetMaxAngle();
 
 				if (doorCtrl->IsOpen()) angle *= -1;
-				rotAfter.y -= angle;
+
+				switch (doorCtrl->GetAxis()) {
+				case 0:		rotAfter.x -= angle;	break;
+				case 1:		rotAfter.y -= angle;	break;
+				case 2:		rotAfter.z -= angle;	break;
+					break;
+				}
+				
 
 				TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(trans->GetRotationPtr());
 				openDoor->AddKeyFrame(rot, 0);

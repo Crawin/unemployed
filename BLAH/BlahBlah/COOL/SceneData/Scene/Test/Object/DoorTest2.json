@@ -17,6 +17,7 @@
 	"Door": 
 	{
 		"MaxAngle": 120.0,
+		"RotateAxis": 1,
 		"Locked": true,
 		"Answer": 1234,
 		"Game": 1,
