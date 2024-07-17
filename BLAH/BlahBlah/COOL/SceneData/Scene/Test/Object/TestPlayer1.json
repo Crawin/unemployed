@@ -66,8 +66,8 @@
 			},
 			"Camera":
 			{
-				"Active": true,
-				"IsMainCamera": true,
+				"Active": false,
+				"IsMainCamera": false,
 				"Right": 	[1.0, 0.0, 0.0],
 				"Up": 		[0.0, 1.0, 0.0],
 				"Look": 	[0.0, 0.0, 1.0],

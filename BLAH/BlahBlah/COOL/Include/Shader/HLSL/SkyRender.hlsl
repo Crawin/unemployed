@@ -1,10 +1,18 @@
 
 #include "ShaderBaseParameters.hlsl"
 
+struct VS_INPUT
+{
+	float3 position : POSITION;
+	float3 normal : NORMAL;
+	float3 tangent : TANGENT;
+	float2 uv : TEXCOORD;
+};
+
 struct VS_OUTPUT
 {
 	float4 position : SV_POSITION;
-	float3 normalOnPos : NORMAL;
+	float3 normal : NORMAL;
 };
 
 struct PS_MRT_OUTPUT
@@ -28,19 +36,12 @@ cbuffer MaterialSky : register(b0)
 	float LightAngle;
 };
 
-VS_OUTPUT vs(uint vtxID : SV_VertexID)
+VS_OUTPUT vs(VS_INPUT i)
 {
 	VS_OUTPUT output;
 
-	if (vtxID == 0)			{ output.position = float4(-1.0f, +1.0f, 0.0f, 1.0f); }
-	else if (vtxID == 1)	{ output.position = float4(+1.0f, +1.0f, 0.0f, 1.0f); }
-	else if (vtxID == 2)	{ output.position = float4(+1.0f, -1.0f, 0.0f, 1.0f); }
-	
-	else if (vtxID == 3)	{ output.position = float4(-1.0f, +1.0f, 0.0f, 1.0f); }
-	else if (vtxID == 4)	{ output.position = float4(+1.0f, -1.0f, 0.0f, 1.0f); }
-	else if (vtxID == 5)	{ output.position = float4(-1.0f, -1.0f, 0.0f, 1.0f); }
-
-	output.normalOnPos = mul(mul(normalize(output.position), inverse(projectionMatrix)).xyz, (float3x3)inverse(viewMatrix));
+	output.position = mul(float4(mul(i.normal, (float3x3)viewMatrix), 1.0f), projectionMatrix);
+	output.normal = -i.normal;
 
 	return output; 
 }
@@ -97,27 +98,28 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	float4 currentDayLight = lerp(SunSetLight, mainLight, weight);
 	float4 nextDayLight = lerp(SunSetLight, subLight, weight);
 
-	float4 color = lerp(currentDayLight, nextDayLight, i.normalOnPos.y);
+	float4 color = lerp(currentDayLight, nextDayLight, i.normal.y);
 
-	float density = CalculateLayDensity(i.normalOnPos, lights[MainLightIdx].m_Direction);
+	float density = CalculateLayDensity(i.normal, lights[MainLightIdx].m_Direction);
 
 	currentDayLight = lerp(SunSetLight, mainLight, density / 630);
 
 	currentDayLight = float4(0,0,0,1);
-	currentDayLight += float4(1.0f, 0.0f, 0.0f, 0.0f) * CalculateColorMult(685.0f, density, i.normalOnPos, lights[MainLightIdx].m_Direction);
-	currentDayLight += float4(0.0f, 1.0f, 0.0f, 0.0f) * CalculateColorMult(532.5f, density, i.normalOnPos, lights[MainLightIdx].m_Direction);
-	currentDayLight += float4(0.0f, 0.0f, 1.0f, 0.0f) * CalculateColorMult(460.0f, density, i.normalOnPos, lights[MainLightIdx].m_Direction);
+	currentDayLight += float4(1.0f, 0.0f, 0.0f, 0.0f) * CalculateColorMult(685.0f, density, i.normal, lights[MainLightIdx].m_Direction);
+	currentDayLight += float4(0.0f, 1.0f, 0.0f, 0.0f) * CalculateColorMult(532.5f, density, i.normal, lights[MainLightIdx].m_Direction);
+	currentDayLight += float4(0.0f, 0.0f, 1.0f, 0.0f) * CalculateColorMult(460.0f, density, i.normal, lights[MainLightIdx].m_Direction);
 	//float4 currentDayLight;
 
-	//color.xyz = i.normalOnPos;
+	//color.xyz = i.normal;
 	output.Albedo = currentDayLight;
 	//output.Albedo = float4(density,density,density,1.0f);
 	//output.Albedo = lights[MainLightIdx].m_LightColor * color;
 	output.Roughness = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.Metalic = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.AO = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	output.NormalW = float4(normalize(i.normalOnPos), 0.0f);
-	output.PositionW = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	output.NormalW = float4(normalize(i.normal), 0.0f);
+	float4 pos = float4(cameraPosition, 0.0f) + 5000.0f * -output.NormalW;
+	output.PositionW = pos;
 
 	return output;
 }

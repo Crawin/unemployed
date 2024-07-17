@@ -98,7 +98,7 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 	loadScene->SetSceneManager(this);
 	loadScene->SetNextScene(mainScene);
 
-	m_CurrentScene = loadScene;
+	m_LoadingScene = m_CurrentScene = loadScene;
 
 	return true;
 }
@@ -113,10 +113,13 @@ void SceneManager::ChangeScene(Scene* newScene, bool isFromLoading)
 	m_CurrentScene->Exit();
 	//newScene->Enter();
 
-	if (isFromLoading == false && m_PrevScene != nullptr) {
+	if (m_PrevScene != nullptr) {
 		delete m_PrevScene;
+		m_PrevScene = nullptr;
 	}
-	m_PrevScene = m_CurrentScene;
+
+	if (isFromLoading == false) 
+		m_PrevScene = m_CurrentScene;
 
 
 	m_CurrentScene = newScene;

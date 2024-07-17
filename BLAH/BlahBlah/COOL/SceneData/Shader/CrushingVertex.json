@@ -1,5 +1,5 @@
 {
-	"name": "SkyRender",
+	"name": "TestMeshDiffered",
 	"NumRenderTargets": 6,
 	"RenderTargetFormat_0": 0,
 	"RenderTargetFormat_1": 0,
@@ -10,14 +10,14 @@
 	"DepthStencilViewFormat": 0,
 	"PrimitiveTopologyType": 3,
 	"PrimitiveTopology": 4,
-	"VS": "SkyRender.hlsl",
+	"VS": "CrushingVS.hlsl",
 	"HS": null,
 	"DS": null,
 	"GS": null,
-	"PS": "SkyRender.hlsl",
+	"PS": "TestMeshShaderMRT.hlsl",
 	"StreamOutput": 0,
 	"BlendState": 0,
-	"RasterizerState": 1,
+	"RasterizerState": 0,
 	"DepthStencilState": 0,
 	"InputLayout": 1
 }

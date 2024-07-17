@@ -10,7 +10,7 @@
 
 	"Renderer":
 	{
-		"Mesh": "Door.Door",
+		"Mesh": "Door.Door_1",
 		"Material": "Object/Door"
 	},
 
@@ -51,7 +51,7 @@
 			"Renderer":
 			{
 				"Mesh": "Door.Frame",
-				"Material": "Object/Door"
+				"Material": "Object/DoorFrame"
 			},
 			"Collider": 
 			{
