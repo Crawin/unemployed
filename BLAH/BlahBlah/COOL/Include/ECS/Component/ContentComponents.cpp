@@ -204,12 +204,19 @@ namespace component {
 			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
 				auto rot = trans->GetRotation();
 				XMFLOAT3 rotAfter = rot;
-				rotAfter.y -= 90.0f;
+
+				float angle = doorCtrl->GetMaxAngle();
+
+				if (doorCtrl->IsOpen()) angle *= -1;
+				rotAfter.y -= angle;
+
 				TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(trans->GetRotationPtr());
 				openDoor->AddKeyFrame(rot, 0);
 				openDoor->AddKeyFrame(rotAfter, 1);
 
 				manager->AddTimeLine(door, openDoor);
+
+				doorCtrl->SetOpen(!doorCtrl->IsOpen());
 			}
 			else {
 				// todo

@@ -325,9 +325,6 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 		if (res == -1)
 		{
 			// check first
-			if (meshName == "Extinguisher") {
-				DebugPrint("e");
-			}
 			if (GetMesh(meshFileName) != -1) {
 				DebugPrint(std::format("ERROR!!!!, No Such mesh in file!! mesh: {}\t file: {}", meshName, meshFileName));
 				return false;

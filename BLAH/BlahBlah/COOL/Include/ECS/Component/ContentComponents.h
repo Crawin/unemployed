@@ -87,6 +87,7 @@ namespace component {
 
 		bool m_Locked = true;
 		bool m_Uioff = false;
+		bool m_Open = false;
 		int m_Answer = 0;
 		int m_Gamemode = -1;
 		int m_FailCount = 0;
@@ -104,12 +105,13 @@ namespace component {
 		int GetGamemode() const { return m_Gamemode; }
 		int GetFailCount() const { return m_FailCount; }
 		int IsUioff() const { return m_Uioff; }
+		bool IsOpen() const { return m_Open; }
 
 		void SetLock(bool lock) { m_Locked = lock; }
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
 		void SetUioff(bool uioff) { m_Uioff = uioff; }
-
+		void SetOpen(bool state) { m_Open = state; }
 	};
 
 
