@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "Application.h"
 #include "Network/Client.h"
+#include "FMODsound/FmodSound.h"
 
 // todo 임시코드이다. 지우자
 #include "Scene/SceneManager.h"
@@ -94,7 +95,9 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		Application::GetInstance().GetSceneManager()->PossessPlayer(false);
 		Client::GetInstance().Send_Room(pENTERROOM, 10000);
 		break;
-
+	case 'Q':
+		FMOD_INFO::GetInstance().play_unloop_sound(DirectX::XMFLOAT3{0,0,0}, SOUND_TYPE::DUCK, "ducktest");
+		break;
 	case VK_ESCAPE:
 		// test code
 		SetUIState(m_MouseCapture);
