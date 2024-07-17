@@ -77,14 +77,14 @@ namespace component {
 		XMFLOAT3* GetRotationPtr() { return &m_Rotate; }
 		XMFLOAT3* GetScalePtr() { return &m_Scale; }
 
-		const XMFLOAT3& GetWorldPosition() const;
-		const XMFLOAT3& GetWorldRotation() const;
+		XMFLOAT3 GetWorldPosition() const;
+		XMFLOAT3 GetWorldRotation() const;
 
 		const XMFLOAT4X4& GetParentTransfrom() const { return m_ParentTransform; }
 
 		// 되도록이면 position끼리만을 쓰는것이 아니라 행렬을 원하면 이 함수를 쓰자
-		const XMFLOAT4X4& GetWorldTransform() const;
-		const XMFLOAT4X4& GetLocalTransform() const;
+		XMFLOAT4X4 GetWorldTransform() const;
+		XMFLOAT4X4 GetLocalTransform() const;
 
 		void SetPosition(const XMFLOAT3& pos) { m_Position = pos; }
 		void SetRotation(const XMFLOAT3& rot) { m_Rotate = rot; }
@@ -397,8 +397,8 @@ namespace component {
 		float GetCurrentVelocityLen() const { return Vector3::Length(m_Velocity); }
 		float GetCurrentVelocityLenOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return Vector3::Length(temp); }
 		const XMFLOAT3& GetVelocity() const { return m_Velocity; }
-		const XMFLOAT3& GetVelocityOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return temp; }
-		const XMFLOAT3 GetAcceleration() const { return m_Acceleration; }
+		XMFLOAT3 GetVelocityOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return temp; }
+		const XMFLOAT3& GetAcceleration() const { return m_Acceleration; }
 
 		void SetOriginalMaxVelocity(float maxVel) { m_OriginalMaxVelocity = maxVel; }
 		void SetMaxVelocity(float maxVel) { m_CurrentMaxVelocity = maxVel; }

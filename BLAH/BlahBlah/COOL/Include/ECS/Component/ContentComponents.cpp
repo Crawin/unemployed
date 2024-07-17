@@ -69,7 +69,8 @@ namespace component {
 				Transform* tr = manager->GetComponent<Transform>(selfEntity);
 				XMVECTOR lookDir{ 0, 0, 1, 0 };
 				XMVECTOR up{ 0, 1, 0 };
-				XMMATRIX world = XMLoadFloat4x4(&tr->GetWorldTransform());
+				XMFLOAT4X4 worldtr = tr->GetWorldTransform();
+				XMMATRIX world = XMLoadFloat4x4(&worldtr);
 				lookDir = XMVector3Normalize(XMVector4Transform(lookDir, world));
 
 				XMVECTOR movingDir = XMVector3Normalize(XMLoadFloat3(&py->GetVelocity()));
@@ -613,7 +614,8 @@ namespace component {
 			Transform* masterTr = manager->GetComponent<Transform>(masterInv->GetHoldingSocket()->GetParent());
 
 			XMVECTOR dir{ directionOrigin.x, directionOrigin.y, directionOrigin.z, 0 };
-			XMMATRIX world = XMLoadFloat4x4(&masterTr->GetWorldTransform());
+			XMFLOAT4X4 worldTr = masterTr->GetWorldTransform();
+			XMMATRIX world = XMLoadFloat4x4(&worldTr);
 
 			// vector4 transform으로 방향벡터 transform
 			XMVECTOR resDir = XMVector3Normalize(XMVector4Transform(dir, world));

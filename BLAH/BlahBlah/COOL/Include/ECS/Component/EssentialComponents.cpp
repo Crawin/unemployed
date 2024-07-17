@@ -157,7 +157,7 @@ namespace component {
 
 	}
 
-	const XMFLOAT3& Transform::GetWorldPosition() const
+	XMFLOAT3 Transform::GetWorldPosition() const
 	{
 		XMFLOAT3 temp;
 		XMStoreFloat3(&temp, XMVector3Transform(XMLoadFloat3(&m_Position), XMLoadFloat4x4(&m_ParentTransform)));
@@ -165,9 +165,10 @@ namespace component {
 		return temp;
 	}
 
-	const XMFLOAT3& Transform::GetWorldRotation() const
+	XMFLOAT3 Transform::GetWorldRotation() const
 	{
-		XMMATRIX mat = XMLoadFloat4x4(&GetWorldTransform());
+		XMFLOAT4X4 worldTr = GetWorldTransform();
+		XMMATRIX mat = XMLoadFloat4x4(&worldTr);
 		
 		XMVECTOR s, r, t;
 		XMMatrixDecompose(&s, &r, &t, mat);
@@ -191,7 +192,7 @@ namespace component {
 		return euler;
 	}
 
-	const XMFLOAT4X4& Transform::GetWorldTransform() const
+	XMFLOAT4X4 Transform::GetWorldTransform() const
 	{
 		XMFLOAT3 rotRad;
 		rotRad.x = XMConvertToRadians(m_Rotate.x);
@@ -208,7 +209,7 @@ namespace component {
 		return worldMat;
 	}
 
-	const XMFLOAT4X4& Transform::GetLocalTransform() const
+	XMFLOAT4X4 Transform::GetLocalTransform() const
 	{
 		XMFLOAT3 rotRad;
 		rotRad.x = XMConvertToRadians(m_Rotate.x);

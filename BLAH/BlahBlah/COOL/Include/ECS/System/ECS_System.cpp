@@ -59,7 +59,8 @@ namespace ECSsystem {
 			XMStoreFloat4x4(&temp, parent);
 			tr->SetParentTransform(temp);
 			
-			parent = XMLoadFloat4x4(&tr->GetWorldTransform());
+			XMFLOAT4X4 wordTrans = tr->GetWorldTransform();
+			parent = XMLoadFloat4x4(&wordTrans);
 
 			Entity* ent = self->GetEntity();
 
@@ -109,7 +110,8 @@ namespace ECSsystem {
 			//up = XMVector3Cross(look, right);
 			//
 			//XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixLookToLH(pos, look, up));
-			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&tr->GetWorldTransform())));
+			XMFLOAT4X4 worldTr = tr->GetWorldTransform();
+			XMStoreFloat4x4(&(cam->m_ViewMatrix), XMMatrixInverse(nullptr, XMLoadFloat4x4(&worldTr)));
 
 			// sync states to
 			cam->SyncActiveState();
@@ -224,7 +226,8 @@ namespace ECSsystem {
 
 			// update speed if key down
 			if (move) {
-				XMVECTOR vel = XMLoadFloat3(&sp->GetVelocityOnXZ());
+				XMFLOAT3 velOnXZ = sp->GetVelocityOnXZ();
+				XMVECTOR vel = XMLoadFloat3(&velOnXZ);
 
 				float maxSpeed = sp->GetMaxVelocity();
 				float curSpeed = XMVectorGetX(XMVector3Length(vel));
@@ -241,7 +244,8 @@ namespace ECSsystem {
 				sp->AddVelocity(tempMove, deltaTime);
 
 				XMFLOAT3 velocity = sp->GetVelocity();
-				vel = XMLoadFloat3(&sp->GetVelocityOnXZ());
+				XMFLOAT3 velocityOnXZ = sp->GetVelocityOnXZ();
+				vel = XMLoadFloat3(&velocityOnXZ);
 				curSpeed = XMVectorGetX(XMVector3Length(vel));
 
 				// limit max speed
@@ -385,7 +389,7 @@ namespace ECSsystem {
 			// 0, 90, 180
 			// 0   1   0
 			// day time
-			float weight = pow((sin(XMConvertToRadians(newRot.x))), 2);
+			float weight = powf((sin(XMConvertToRadians(newRot.x))), 2);
 
 			LightData& li = light->GetLightData();
 
@@ -534,7 +538,8 @@ namespace ECSsystem {
 
 		// sync box first
 		std::function<void(Transform*, Collider*)> syncStatic = [](Transform* tr, Collider* col) {
-			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
+			XMFLOAT4X4 transformTr = tr->GetWorldTransform();
+			XMMATRIX trans = XMLoadFloat4x4(&transformTr);
 
 			// reset collider;
 			col->UpdateCollidedList();
@@ -544,7 +549,8 @@ namespace ECSsystem {
 			};
 
 		std::function<void(Transform*, DynamicCollider*)> syncDynamic = [](Transform* tr, DynamicCollider* col) {
-			XMMATRIX trans = XMLoadFloat4x4(&tr->GetWorldTransform());
+			XMFLOAT4X4 transformTr = tr->GetWorldTransform();
+			XMMATRIX trans = XMLoadFloat4x4(&transformTr);
 
 			// reset collider;
 			col->UpdateCollidedList();

@@ -37,10 +37,6 @@ using ActionFunctionMap = std::unordered_map<Input_State_In_LongLong, ActionFunc
 // 컨텐츠 관련 컴포넌트들, 게임 컨텐츠에 필요한 ui도 포함
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct PlayerAnimation {
-	XMFLOAT3 m_Velocity;
-	XMFLOAT3 m_Heading;
-};
 
 namespace component {
 	/////////////////////////////////////////////////////////
@@ -48,7 +44,6 @@ namespace component {
 	// Player를 쓰는 애를 위한 애니메이션 컨트롤 컴포넌트
 	//
 	class PlayerAnimControll : public ComponentBase<PlayerAnimControll> {
-		PlayerAnimation m_AnimData;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -195,7 +190,7 @@ namespace component {
 		virtual void ShowYourself() const {}
 	};
 
-#define MAX_INVENTORY 4
+#define MAX_INVENTORY 6
 	/////////////////////////////////////////////////////////
 	// Inventory Component
 	// Holdable 들을 보관한다
