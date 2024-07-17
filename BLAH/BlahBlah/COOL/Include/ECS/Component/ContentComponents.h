@@ -313,6 +313,24 @@ namespace component {
 		int GetKeyLength() const { return m_KeyLength; }
 	};
 
+
+	/////////////////////////////////////////////////////////
+	// Key Component
+	// 문을 열 수 있는 열쇠의 정보를 가진 키 오브젝트
+	//
+	class FinalCreate : public ComponentBase<FinalCreate> {
+		int m_LockLeft = 5;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		int GetCouneLeft() const { return m_LockLeft; }
+		void SetLeftCount(int count) { m_LockLeft = count; }
+	};
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI 관련 컴포넌트들
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

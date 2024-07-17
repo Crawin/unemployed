@@ -125,6 +125,7 @@ std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat)
 	switch (preLaodMat) {
 	case PRE_LOADED_MATERIALS::LIGHTING:		return std::string("_Lighting");
 	case PRE_LOADED_MATERIALS::SHADOWMAPPING:	return std::string("_ShadowMapping");
+	case PRE_LOADED_MATERIALS::OUTLINE:			return std::string("_OutLine");
 	case PRE_LOADED_MATERIALS::BLIT:			return std::string("_Blit");
 
 #ifdef _DEBUG

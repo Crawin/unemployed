@@ -29,6 +29,7 @@ enum class MATERIAL_TYPES {
 enum class PRE_LOADED_MATERIALS {
 	LIGHTING = 0,
 	SHADOWMAPPING,
+	OUTLINE,
 
 	BLIT,
 #ifdef _DEBUG

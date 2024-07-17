@@ -1028,4 +1028,8 @@ namespace component {
 	{
 	}
 
+	void FinalCreate::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
 }

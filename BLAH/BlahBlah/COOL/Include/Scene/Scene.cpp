@@ -292,7 +292,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	XMFLOAT3 camDir = camera->GetWorldDirection();
 
 	// make function
-	std::function<void(component::Renderer*, component::Name*)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent, component::Name* name) {
+	std::function<void(component::Renderer*/*, component::Name**/)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent/*, component::Name* name*/) {
 		int materialIdx = renderComponent->GetMaterial();
 		int meshIdx = renderComponent->GetMesh();
 
@@ -321,6 +321,31 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 
 	// execute function
 	m_ECSManager->Execute(func);
+
+	// interaction outline
+	component::Pawn* curPawn = nullptr;
+	std::function<void(component::PlayerController*)> getCtrlPawn = [&curPawn](component::PlayerController* ctrl) { curPawn = ctrl->GetControllingPawn(); };
+	m_ECSManager->Execute(getCtrlPawn);
+
+	if (curPawn && curPawn->GetInteractionEntity() != nullptr) {
+		Entity* interactionEntity = curPawn->GetInteractionEntity();
+
+		component::Renderer* renderComponent = m_ECSManager->GetComponent<component::Renderer>(interactionEntity);
+
+		if (renderComponent != nullptr) {
+			int meshIdx = renderComponent->GetMesh();
+			Mesh* mesh = res->GetMesh(meshIdx);
+			Material* outlineMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::OUTLINE);
+
+			outlineMat->GetShader()->SetPipelineState(commandList);
+
+			const auto& view = renderComponent->GetVertexBufferView();
+			D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
+			commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
+
+			mesh->Render(commandList, renderComponent->GetWorldMatrix());
+		}
+	}
 
 	OnPostRender(commandList, dsv);
 
