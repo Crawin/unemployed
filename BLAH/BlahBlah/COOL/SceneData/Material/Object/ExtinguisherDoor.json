@@ -1,0 +1,9 @@
+{
+	"name": "ExtinguisherDoor",
+	"BaseColor": "White",
+	"Roughness": "Gray",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "Extinguisher",
+	"BaseColor": "Object/Extinguisher/Extinguisher_diffuseOriginal",
+	"Roughness": "Object/Extinguisher/Extinguisher_roughness",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": "Object/Extinguisher/Extinguisher_normal",
+	"Shader": "TestMeshDiffered"
+}
