@@ -316,7 +316,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
 
-		mesh->Render(commandList, renderComponent->GetWorldMatrix());
+		mesh->Render(commandList, renderComponent->GetWorldMatrix(), renderComponent->GetExtraShaderData());
 		};
 
 	// execute function
@@ -343,7 +343,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 				Mesh* mesh = res->GetMesh(meshIdx);
 
 				mesh->SetVertexBuffer(commandList);
-				mesh->Render(commandList, renderComp->GetWorldMatrix());
+				mesh->Render(commandList, renderComp->GetWorldMatrix(), renderComp->GetExtraShaderData());
 			}
 
 			for (Entity* child : selfEntity->GetChildren()) {
@@ -428,7 +428,7 @@ void Scene::BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList)
 		D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
 		commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
 
-		mesh->Render(commandList, rend->GetWorldMatrix());
+		mesh->Render(commandList, rend->GetWorldMatrix(), rend->GetExtraShaderData());
 		};
 
 	// 모든 활성화된 셰도우맵에 대해서

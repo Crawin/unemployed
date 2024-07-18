@@ -21,14 +21,17 @@ struct VS_OUTPUT
 	float2 uv : TEXCOORD;
 };
 
-
-cbuffer CrushingMaterials : register(b2)
-{
-	float2 toCrushPos_01;
-	float dist_01;
-	float mult_01;
+struct CrushData{
+	float2 m_CrushPosition;
+	float m_Power;
+	float m_Distance;
 };
 
+cbuffer Material : register(b0)
+{
+	CrushData shaderdatapadding[2];
+	CrushData g_CrushData[2];
+};
 float3 RotateVectorOnZ(float3 v, float theta)
 {
 	float cosTheta = cos(theta);
@@ -55,36 +58,38 @@ float3 RotateVectorOnX(float3 v, float theta)
 	return rotatedVector;
 }
 
-VS_OUTPUT vs(VS_INPUT i)
+VS_OUTPUT vs(VS_INPUT input)
 {
 	VS_OUTPUT o;
 	
-	float3 newPosition = i.position;
+	float3 newPosition = input.position;
 
+	float3 curNormal = input.normal;
 
-	float2 temp = float2(-50.0f, 105.0f);
-	float dist = distance(i.position.xy, temp);
+	[unroll(2)]
+	for(int i = 0; i < 2; ++i) {
+		float2 hitPos = g_CrushData[i].m_CrushPosition;
+		float dist = distance(input.position.xy, hitPos);
 
-	float maxDist = 15.0f;
-	float crushEffect = saturate(1.0f - dist / maxDist);
+		float maxDist = g_CrushData[i].m_Distance;
+		float crushEffect = saturate(1.0f - dist / maxDist);
 
-	float height = 30.0f;
-	float3 addPos = float3(0, 0, -1) * height * crushEffect;
-	newPosition += addPos;
-	
+		float height = g_CrushData[i].m_Power;
+		float3 addPos = float3(0, 0, -1) * height * crushEffect;
+		newPosition += addPos;
 
-	float xFactor =  clamp((temp.x - i.position.x) / maxDist, -1.0f, 1.0f) * 2.0f;
-	float yFactor =  clamp((temp.y - i.position.y) / maxDist, -1.0f, 1.0f) * 2.0f;
-	
-	float3 newNormal = normalize((RotateVectorOnZ(i.normal, xFactor) + RotateVectorOnX(i.normal, -yFactor)));
-	newNormal = lerp(i.normal, newNormal, ceil(crushEffect));
+		float xFactor =  clamp((hitPos.x - input.position.x) / maxDist, -1.0f, 1.0f) * 2.0f;
+		float yFactor =  clamp((hitPos.y - input.position.y) / maxDist, -1.0f, 1.0f) * 2.0f;
 
+		float3 newNormal = normalize((RotateVectorOnZ(input.normal, xFactor) + RotateVectorOnX(input.normal, -yFactor)));
+		curNormal = lerp(curNormal, newNormal, ceil(crushEffect));
+	}
 	o.positionW = (float3) mul(float4(newPosition, 1.0f), localMatrix);
-	o.normalW = normalize(mul(newNormal, (float3x3) localMatrix));
-	o.tangentW = normalize(mul(i.tangent.xyz, (float3x3) localMatrix));
+	o.normalW = normalize(mul(curNormal, (float3x3) localMatrix));
+	o.tangentW = normalize(mul(input.tangent.xyz, (float3x3) localMatrix));
 	o.position = mul(mul(float4(o.positionW, 1.0f), viewMatrix), projectionMatrix);
 	
-	o.uv = i.uv;
+	o.uv = input.uv;
 	
 	return o;
 }

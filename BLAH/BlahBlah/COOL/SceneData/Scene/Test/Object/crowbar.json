@@ -13,6 +13,15 @@
 
 			"Attackable":{},
 
+			"DynamicCollider": 
+			{
+				"Static": false,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [-8.99, 0.0, 31.27],
+				"Extent": [10.0, 10.0, 10.0]
+			},
+
 			"Transform" : 
 			{
 				"Position" : 

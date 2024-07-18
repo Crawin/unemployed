@@ -233,12 +233,13 @@ void Mesh::SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList)
 	commandList->IASetVertexBuffers(0, _countof(vertexBufferViews), vertexBufferViews);
 }
 
-void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& worldMat)
+void Mesh::Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& worldMat, const XMFLOAT4* extraData)
 {
 	if (m_VertexNum > 0) {
 		XMFLOAT4X4 temp;
 		XMStoreFloat4x4(&temp, XMMatrixTranspose(XMLoadFloat4x4(&worldMat)));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 16, &temp, 0);
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::SHADER_EXTRA), 8, extraData, 8);
 
 #ifdef INTERLEAVED_VERTEX
 		commandList->DrawInstanced(m_VertexNum, 1, 0, 0);

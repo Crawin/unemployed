@@ -295,6 +295,17 @@ namespace component {
 	{
 	}
 
+	void DoorControl::SetCrushPosition(XMFLOAT3 pos, float power, float distance)
+	{
+		// crush point는 z는 사용하지 않는다
+		m_CrushPositionAndPower[m_NextCrushIndex].x = pos.x;
+		m_CrushPositionAndPower[m_NextCrushIndex].y = pos.y;
+		m_CrushPositionAndPower[m_NextCrushIndex].z = power;
+		m_CrushPositionAndPower[m_NextCrushIndex].w = distance;
+
+		m_NextCrushIndex = (m_NextCrushIndex + 1) % _countof(m_CrushPositionAndPower);
+	}
+
 	void UIDoorKey::Create(Json::Value& v, ResourceManager* rm)
 	{
 
@@ -549,11 +560,46 @@ namespace component {
 			cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
 			Client::GetInstance().send_packet(&anim);
 
-			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
-			//selfCollider->SetActive(true);
+			// set collider on
+			auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
+			selfCollider->SetActive(true);
 
 			DebugPrint("Todo: PlayAttackAnimation and Weapon Collider On");
 		});
+
+		// set collider event
+		DynamicCollider* collider = manager->GetComponent<DynamicCollider>(selfEntity);
+		EventFunction attackHit = [manager](Entity* self, Entity* other) {
+			Name* name = manager->GetComponent<Name>(other);
+			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+
+			DynamicCollider* collider = manager->GetComponent<DynamicCollider>(self);
+			Transform* doorTrans = manager->GetComponent<Transform>(other);
+
+			// get collider center position on other transform
+			XMFLOAT3 attackCenter = collider->GetBoundingBox().Center;
+
+			XMFLOAT4X4 doorWorld = doorTrans->GetWorldTransform();
+			XMVECTOR pos = XMLoadFloat3(&attackCenter);
+			XMMATRIX doorWorldInv = XMMatrixInverse(nullptr, XMLoadFloat4x4(&doorWorld));
+
+			pos = XMVector3Transform(pos, doorWorldInv);
+
+			XMFLOAT3 attackPosOnDoorLocal;
+			XMStoreFloat3(&attackPosOnDoorLocal, pos);
+
+			// set collided position on renderer
+			DoorControl* doorComp = manager->GetComponent<DoorControl>(other);
+			doorComp->SetCrushPosition(attackPosOnDoorLocal, 50.0f, 15.0f);
+
+			DebugPrintVector(attackPosOnDoorLocal, "pos: ");
+
+			// set collider off
+			collider->SetActive(false);
+			};
+
+		collider->InsertEvent<DoorControl>(attackHit, COLLIDE_EVENT_TYPE::BEGIN);
+		collider->SetActive(false);
 	}
 
 	void Attackable::ShowYourself() const

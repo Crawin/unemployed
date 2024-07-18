@@ -90,6 +90,9 @@ namespace component {
 		// 0, 1, 2 -> x, y, z
 		int m_RotateAxis = 1;
 
+		XMFLOAT4 m_CrushPositionAndPower[2] = { {0,0,0,0}, {0,0,0,0} };
+		int m_NextCrushIndex = 0;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -111,6 +114,9 @@ namespace component {
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
 		void SetUioff(bool uioff) { m_Uioff = uioff; }
 		void SetOpen(bool state) { m_Open = state; }
+
+		void SetCrushPosition(XMFLOAT3 pos, float power, float distance);
+		XMFLOAT4 GetShaderData(int idx) const { return m_CrushPositionAndPower[idx]; }
 	};
 
 

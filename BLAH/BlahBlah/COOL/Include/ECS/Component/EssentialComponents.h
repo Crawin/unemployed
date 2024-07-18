@@ -100,6 +100,8 @@ namespace component {
 	{
 		XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();
 
+		XMFLOAT4 m_ExtraShaderData[2] = { {0,0,0,0}, {0,0,0,0} };
+
 		D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView = {};
 
 		int m_MeshID;
@@ -113,11 +115,13 @@ namespace component {
 		int GetMesh() const { return m_MeshID; }
 		int GetMaterial() const { return m_MaterialID; }
 		XMFLOAT4X4& GetWorldMatrix() { return m_WorldMatrix; }
+		XMFLOAT4* GetExtraShaderData() { return m_ExtraShaderData; }
 		const D3D12_VERTEX_BUFFER_VIEW& GetVertexBufferView() const { return m_VertexBufferView; }
 
 		void SetMesh(int idx) { m_MeshID = idx; }
 		void SetMaterial(int idx) { m_MaterialID = idx; }
 		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
+		void SetExtraShaderData(const XMFLOAT4& data, int idx) { m_ExtraShaderData[idx] = data; }
 		void SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view) { m_VertexBufferView = view; }
 	};
 

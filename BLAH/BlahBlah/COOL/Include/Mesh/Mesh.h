@@ -101,7 +101,7 @@ public:
 	int GetBoneIdx() const { return m_BoneIdx; }
 	void SetVertexBuffer(ComPtr<ID3D12GraphicsCommandList> commandList);
 
-	void Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& worldMat);
+	void Render(ComPtr<ID3D12GraphicsCommandList> commandList, const XMFLOAT4X4& worldMat, const XMFLOAT4* extraData);
 
 	// make animation data
 	void Animate(ComPtr<ID3D12GraphicsCommandList> commandList);

@@ -142,11 +142,16 @@ namespace ECSsystem {
 			};
 		
 
+		// sync with extra shader data
+		std::function<void(component::DoorControl*, component::Renderer*)> func4 = [](component::DoorControl* door, component::Renderer* ren) {
+			for (int i = 0; i < 2; ++i)
+				ren->SetExtraShaderData(door->GetShaderData(i), i);
+			};
 
-		
 		manager->Execute(func1);
 		manager->Execute(func2);
 		manager->Execute(func3);
+		manager->Execute(func4);
 
 	}
 
