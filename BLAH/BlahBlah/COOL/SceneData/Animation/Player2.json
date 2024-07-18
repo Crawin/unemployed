@@ -47,6 +47,12 @@
 		"Name": "Player/Player_Sit_To_Stand"
 	},
 
+	"Attack":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Attack"
+	},
+
 	"Blended_Moving_State":
 	{
 		"Idle":

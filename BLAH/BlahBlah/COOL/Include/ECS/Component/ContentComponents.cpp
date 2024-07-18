@@ -92,11 +92,16 @@ namespace component {
 
 				});
 
+			// jump
 			ctrl->InsertCondition(ANIMATION_STATE::JUMP_START, ANIMATION_STATE::JUMP_ING, endPlaying);
 			ctrl->InsertCondition(ANIMATION_STATE::JUMP_LAND, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
 
+			// sit
 			ctrl->InsertCondition(ANIMATION_STATE::SIT_START, ANIMATION_STATE::SIT_LOOP, endPlaying);
 			ctrl->InsertCondition(ANIMATION_STATE::SIT_END, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
+
+			// attack
+			ctrl->InsertCondition(ANIMATION_STATE::ATTACK, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
 
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
@@ -540,7 +545,9 @@ namespace component {
 			// todo
 			// change player chara animation to attack
 			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
-			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+			cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
+			Client::GetInstance().send_packet(&anim);
 
 			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			//selfCollider->SetActive(true);
