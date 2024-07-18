@@ -282,6 +282,28 @@ namespace component {
 		virtual void ShowYourself() const {}
 	};
 
+#define MAX_KEYTOOL_HOLDING 10
+	/////////////////////////////////////////////////////////
+	// KeyTool Component
+	// 열쇠뭉치 컴포넌트
+	//
+	class KeyTool : public ComponentBase<KeyTool> {
+		int m_Keys[MAX_KEYTOOL_HOLDING] = { -1 };
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+		
+		// if key max; return false;
+		bool InsertKey(int keyAnswer);
+		
+		bool DeleteKey(int keyAnswer);
+
+		bool IsKeyInKeyTool(int keyAnswer) const;
+	};
+
 #define MAX_CCTV 4
 	/////////////////////////////////////////////////////////
 	// Screen Component
@@ -313,23 +335,6 @@ namespace component {
 		int GetKeyLength() const { return m_KeyLength; }
 	};
 
-
-	/////////////////////////////////////////////////////////
-	// Key Component
-	// 문을 열 수 있는 열쇠의 정보를 가진 키 오브젝트
-	//
-	class FinalCreate : public ComponentBase<FinalCreate> {
-		int m_LockLeft = 5;
-
-	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
-		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
-
-		virtual void ShowYourself() const {}
-
-		int GetCouneLeft() const { return m_LockLeft; }
-		void SetLeftCount(int count) { m_LockLeft = count; }
-	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI 관련 컴포넌트들
@@ -415,4 +420,24 @@ namespace component {
 		int GetCurrent() const { return m_Current; }
 
 	};
+
+
+	/////////////////////////////////////////////////////////
+	// UITreasureChest Component
+	// 최종 금고를 열기 위한 그거
+	//
+	class UITreasureChest : public ComponentBase<UITreasureChest> {
+		int m_LockLeft = 5;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		int GetCouneLeft() const { return m_LockLeft; }
+		void SetLeftCount(int count) { m_LockLeft = count; }
+	};
+
+
 }

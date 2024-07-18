@@ -1028,8 +1028,80 @@ namespace component {
 	{
 	}
 
-	void FinalCreate::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	void UITreasureChest::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
+		// todo
+		// 남은 열쇠 갯수 1
+	}
+
+	void KeyTool::Create(Json::Value& v, ResourceManager* rm)
+	{
+		memset(m_Keys, -1, sizeof(m_Keys));
+
+
+	}
+
+	void KeyTool::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		if (holdable == nullptr) {
+			Name* name = manager->GetComponent<Name>(selfEntity);
+			ERROR_QUIT(std::format("ERROR!!! no Holdable component in this entity, entity name: {}\n태양이 두개면 시원한 이유는?\nsun sun 해지니까", name->getName()));
+		}
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::START_PRESS), [manager, holdable, selfEntity, this](float deltaTime) {
+			Entity* master = holdable->GetMaster();
+			Pawn* masterPawn = manager->GetComponent<Pawn>(master);
+			Entity* interactionEntity = masterPawn->GetInteractionEntity();
+
+			if (interactionEntity != nullptr) {
+				DoorControl* door = manager->GetComponent<DoorControl>(interactionEntity);
+				if (door != nullptr) {
+					// check answer here
+					int doorAnswer = door->GetAnswer();
+					if (IsKeyInKeyTool(doorAnswer)) {
+						// 잠금 해제
+						door->SetLock(false);
+						DeleteKey(doorAnswer);
+					}
+				}
+			}
+
+		});
+	}
+
+	bool KeyTool::InsertKey(int keyAnswer)
+	{
+		for (int i = 0; i < _countof(m_Keys); ++i) {
+			if (m_Keys[i] != -1) {
+				m_Keys[i] = keyAnswer;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool KeyTool::DeleteKey(int keyAnswer)
+	{
+		for (int i = 0; i < _countof(m_Keys); ++i) {
+			if (m_Keys[i] == keyAnswer) {
+				m_Keys[i] = -1;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool KeyTool::IsKeyInKeyTool(int keyAnswer) const
+	{
+		for (int i = 0; i < _countof(m_Keys); ++i)
+			if (m_Keys[i] == keyAnswer)
+				return true;
+
+		return false;
 	}
 
 }

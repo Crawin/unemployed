@@ -49,7 +49,7 @@
 	{
 		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
 		"Slot_0": "crowbar",
-		"Slot_1": "",
+		"Slot_1": "KeyTool",
 		"Slot_2": "",
 		"Slot_3": ""
 	},

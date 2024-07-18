@@ -58,7 +58,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::VandingMachine, "VandingMachine");
 	REGISTER_COMPONENT(component::Drink, "Drink");
 	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
-	REGISTER_COMPONENT(component::Key, "Key");
+	REGISTER_COMPONENT(component::KeyTool, "KeyTool");
+	REGISTER_COMPONENT(component::Key, "Key");			// 굳이 필요 한것인가?
 
 
 
