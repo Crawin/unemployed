@@ -1036,8 +1036,10 @@ namespace component {
 
 	void KeyTool::Create(Json::Value& v, ResourceManager* rm)
 	{
-		memset(m_Keys, -1, sizeof(m_Keys));
+		Json::Value kt = v["KeyTool"];
 
+		memset(m_Keys, -1, sizeof(m_Keys));
+		m_SoundMakingMinimum = kt["SoundMakingMinimum"].asInt();
 
 	}
 
@@ -1076,6 +1078,7 @@ namespace component {
 		for (int i = 0; i < _countof(m_Keys); ++i) {
 			if (m_Keys[i] != -1) {
 				m_Keys[i] = keyAnswer;
+				++m_CurrentHolding;
 				return true;
 			}
 		}
@@ -1088,6 +1091,7 @@ namespace component {
 		for (int i = 0; i < _countof(m_Keys); ++i) {
 			if (m_Keys[i] == keyAnswer) {
 				m_Keys[i] = -1;
+				--m_CurrentHolding;
 				return true;
 			}
 		}

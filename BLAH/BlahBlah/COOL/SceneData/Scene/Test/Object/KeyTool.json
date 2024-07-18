@@ -11,7 +11,9 @@
 			
 			"Holdable": {},
 
-			"KeyTool": {},
+			"KeyTool": {
+				"SoundMakingMinimum": 3
+			},
 
 			"Transform" : 
 			{

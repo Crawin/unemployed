@@ -289,6 +289,8 @@ namespace component {
 	//
 	class KeyTool : public ComponentBase<KeyTool> {
 		int m_Keys[MAX_KEYTOOL_HOLDING] = { -1 };
+		int m_SoundMakingMinimum = 3;
+		int m_CurrentHolding = 0;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
