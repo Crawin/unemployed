@@ -218,6 +218,8 @@ namespace ECSsystem {
 
 						pl->SetJumping(true);
 						ctrl->ChangeAnimationTo(ANIMATION_STATE::JUMP_START);
+						cs_packet_anim_type anim(ANIMATION_STATE::JUMP_START);
+						Client::GetInstance().send_packet(&anim);
 					}
 				}
 			}
