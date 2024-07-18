@@ -22,16 +22,26 @@ struct VS_OUTPUT
 };
 
 #define VERTEX_OFFSET 5.0f
+#define MULT_MOUNT 1.1f
 
 VS_OUTPUT vs(VS_INPUT i)
 {
 	VS_OUTPUT o;
+
+	float3x3 mulOnePOne = float3x3(
+		MULT_MOUNT, 0.0, 0.0,
+		0.0, MULT_MOUNT, 0.0,
+		0.0, 0.0, MULT_MOUNT
+		);
+
 	
-	o.positionW = (float3) mul(float4(i.position, 1.0f), localMatrix);
+	float3 pos = mul(i.position, mulOnePOne);
+
+	o.positionW = (float3) mul(float4(pos, 1.0f), localMatrix);
 	o.normalW = normalize(mul(i.normal, (float3x3) localMatrix));
 	o.tangentW = normalize(mul(i.tangent, (float3x3) localMatrix));
 
-	o.positionW += o.normalW * VERTEX_OFFSET;
+	//o.positionW += o.normalW * VERTEX_OFFSET;
 
 	o.position = mul(mul(float4(o.positionW, 1.0f), viewMatrix), projectionMatrix);
 	
