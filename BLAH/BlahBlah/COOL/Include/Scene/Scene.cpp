@@ -330,21 +330,30 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	if (curPawn && curPawn->GetInteractionEntity() != nullptr) {
 		Entity* interactionEntity = curPawn->GetInteractionEntity();
 
-		component::Renderer* renderComponent = m_ECSManager->GetComponent<component::Renderer>(interactionEntity);
+		Material* outlineMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::OUTLINE);
+		outlineMat->GetShader()->SetPipelineState(commandList);
 
-		if (renderComponent != nullptr) {
-			int meshIdx = renderComponent->GetMesh();
-			Mesh* mesh = res->GetMesh(meshIdx);
-			Material* outlineMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::OUTLINE);
 
-			outlineMat->GetShader()->SetPipelineState(commandList);
+		ECSManager* manager = m_ECSManager.get();
+		std::function<void(component::SelfEntity*)> traverse = [manager, commandList, res, &traverse](component::SelfEntity* self) {
+			Entity* selfEntity = self->GetEntity();
+			component::Renderer* renderComp = manager->GetComponent<component::Renderer>(selfEntity);
+			if (renderComp != nullptr) {
+				int meshIdx = renderComp->GetMesh();
+				Mesh* mesh = res->GetMesh(meshIdx);
 
-			const auto& view = renderComponent->GetVertexBufferView();
-			D3D12_VERTEX_BUFFER_VIEW bufView[] = { view };
-			commandList->IASetVertexBuffers(0, _countof(bufView), bufView);
+				mesh->SetVertexBuffer(commandList);
+				mesh->Render(commandList, renderComp->GetWorldMatrix());
+			}
 
-			mesh->Render(commandList, renderComponent->GetWorldMatrix());
-		}
+			for (Entity* child : selfEntity->GetChildren()) {
+				
+				manager->ExecuteFromEntity(child->GetBitset(), child->GetInnerID(), traverse);
+			}
+
+		};
+		
+		m_ECSManager->ExecuteFromEntity(interactionEntity->GetBitset(), interactionEntity->GetInnerID(), traverse);
 	}
 
 	OnPostRender(commandList, dsv);

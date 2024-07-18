@@ -789,7 +789,7 @@ namespace component {
 			}
 			else {
 				// detach
-				manager->DetachChild(sittableEntity, player);
+				manager->DetachChild(sittableSocket, player);
 
 				// set animation
 				animCtrl->ChangeAnimationTo(ANIMATION_STATE::SIT_END);
