@@ -523,7 +523,7 @@ namespace component {
 	void Holdable::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value hold = v["Holdable"];
-
+		m_HoldableItemID = hold["HoldableID"].asInt();
 	}
 
 	void Holdable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)

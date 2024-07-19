@@ -9,7 +9,9 @@
 				"Mesh" : "crowbar.crowbar"
 			},
 			
-			"Holdable": {},
+			"Holdable": {
+				"HoldableID" : 3
+			},
 
 			"Attackable":{},
 

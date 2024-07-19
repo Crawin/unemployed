@@ -133,6 +133,8 @@ namespace component {
 		// 원래 있던 곳, (사용하지 않는 Holdable들은 안보이는곳에 보관
 		Entity* m_OriginalParent = nullptr;
 
+		int m_HoldableItemID = -1;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);

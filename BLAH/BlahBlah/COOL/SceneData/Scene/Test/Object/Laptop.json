@@ -76,7 +76,9 @@
 					1.0
 				]
 			},
-			"Holdable": {},
+			"Holdable": {
+				"HoldableID" : 4
+			},
 			"CCTVController": 
 			{
 				"Slot_0": "CCTV_01"

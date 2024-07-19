@@ -151,7 +151,9 @@
 				"Center": [0, 0, 0],
 				"Extent": [10.0, 10, 10]
 			},
-			"Holdable": {},
+			"Holdable": {
+				"HoldableID" : 2
+			},
 			"Throwable": {
 				"BakeTime": 2.0,
 				"ThrowSpeed": 70.0
