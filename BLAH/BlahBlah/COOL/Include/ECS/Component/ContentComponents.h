@@ -296,7 +296,7 @@ namespace component {
 	// 열쇠뭉치 컴포넌트
 	//
 	class KeyTool : public ComponentBase<KeyTool> {
-		int m_Keys[MAX_KEYTOOL_HOLDING] = { -1 };
+		int m_Keys[MAX_KEYTOOL_HOLDING] = { 2, 3, -1, 5 };
 		int m_SoundMakingMinimum = 3;
 		int m_CurrentHolding = 0;
 
@@ -312,6 +312,8 @@ namespace component {
 		bool DeleteKey(int keyAnswer);
 
 		bool IsKeyInKeyTool(int keyAnswer) const;
+
+		int GetKeyHold(int i) const { return m_Keys[i]; }
 	};
 
 #define MAX_CCTV 4
@@ -341,6 +343,8 @@ namespace component {
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
+
+		void SetKeyAnswer(int ans) { m_KeyLength = ans; }
 
 		int GetKeyLength() const { return m_KeyLength; }
 	};
@@ -380,11 +384,19 @@ namespace component {
 	// 열쇠 미니게임의 결과
 	//
 #define MAX_KEY 2
+#define MAX_BUTTON 8
+	class UIRenderer;
 	class UIDoorKey : public ComponentBase<UIDoorKey> {
 		Entity* m_DoorEntity = nullptr;
 		int m_Answer = 0;
 		int m_Current = 0;
 		int m_FailCount = 0;
+
+		std::map<int, int> m_KeyMaterialMap;
+		UIRenderer* m_AnswerUIrender = nullptr;
+		UIRenderer* m_AnswerbuttonUIrender[MAX_BUTTON] = {};	
+		Key* m_keyAnswer[MAX_BUTTON] = {};	// 키 이미지 정답
+
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -402,7 +414,11 @@ namespace component {
 		int GetAnswer() const { return m_Answer; }
 		int GetCurrent() const { return m_Current; }
 		int GetFailCount() const { return m_FailCount; }
+		int GetMaterial(int ans) { return m_KeyMaterialMap[ans]; }
 
+		void SetAnswerMaterial(int idx); 	// 정답지 이미지
+		void SetAnswerButtonMaterial(int target, int answer); 	//들고 있는 열쇠들 이미지
+		void SetAnswerButton(int target, int answer); 
 	};
 
 	/////////////////////////////////////////////////////////

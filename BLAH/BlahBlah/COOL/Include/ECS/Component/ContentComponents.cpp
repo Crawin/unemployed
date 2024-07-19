@@ -208,6 +208,7 @@ namespace component {
 
 			// if opened
 			component::DoorControl* doorCtrl = manager->GetComponent<component::DoorControl>(door);
+			component::Inventory* inven = manager->GetComponent<component::Inventory>(player);
 			auto trans = manager->GetComponent<component::Transform>(door);
 			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
 				auto rot = trans->GetRotation();
@@ -258,18 +259,28 @@ namespace component {
 					manager->Execute(openUI);
 				}
 				else if (doorCtrl->GetGamemode() == 2) { //2 == key
-					std::function<void(component::UICanvas*, component::UIDoorKey*)> openKey = [door, doorCtrl](component::UICanvas* can, component::UIDoorKey* key) {
-						DebugPrint("KEY SHOW");
+					Entity* curhold = inven->GetCurrentHoldingItem();
+					if (curhold != nullptr) {
+						KeyTool* keytool = manager->GetComponent<KeyTool>(curhold);
+						if (keytool != nullptr) {
+							std::function<void(component::UICanvas*, component::UIDoorKey*)> openKey = [door, doorCtrl, keytool](component::UICanvas* can, component::UIDoorKey* key) {
+								DebugPrint("KEY SHOW");
 
-						key->SetAnswer(doorCtrl->GetAnswer());
-						key->SetFailCount(doorCtrl->GetFailCount());
-						key->SetDoor(door);
-						
+								key->SetAnswer(doorCtrl->GetAnswer());
+								for (int i = 0; i < MAX_BUTTON; i++) {
+									key->SetAnswerButton(i, keytool->GetKeyHold(i));
+									key->SetAnswerButtonMaterial(i, keytool->GetKeyHold(i));
+								}
+								key->SetAnswerMaterial(doorCtrl->GetAnswer());
+								key->SetFailCount(doorCtrl->GetFailCount());
+								key->SetDoor(door);
 
-						can->ShowUI();
-						};
+								can->ShowUI();
+								};
 
-					manager->Execute(openKey); 
+							manager->Execute(openKey);
+						}
+					}
 				}
 				else if (doorCtrl->GetGamemode() == 3) { //3 == doorlock Cutline
 					std::function<void(component::UICanvas*, component::UICutLine*)> openCutline = [door, doorCtrl](component::UICanvas* can, component::UICutLine* line) {
@@ -308,6 +319,17 @@ namespace component {
 
 	void UIDoorKey::Create(Json::Value& v, ResourceManager* rm)
 	{
+		//rm->AddLateLoadUI("key_0", nullptr);
+		//rm->AddLateLoadUI("key_1", nullptr);
+		//rm->AddLateLoadUI("key_2", nullptr);
+		//rm->AddLateLoadUI("key_3", nullptr);
+		//rm->AddLateLoadUI("key_4", nullptr);
+		//rm->AddLateLoadUI("key_5", nullptr);
+		//rm->AddLateLoadUI("key_6", nullptr);
+		//rm->AddLateLoadUI("key_7", nullptr);
+		//rm->AddLateLoadUI("key_8", nullptr);
+		//rm->AddLateLoadUI("key_9", nullptr);
+		//rm->AddLateLoadUI("xxx", nullptr);
 
 	}
 
@@ -317,6 +339,21 @@ namespace component {
 
 		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
 		UIDoorKey* doorkey = manager->GetComponent<UIDoorKey>(selfEntity);
+
+		m_KeyMaterialMap = std::map<int, int>();
+		m_KeyMaterialMap[0] = rm->GetMaterial("UIPassword1");
+		m_KeyMaterialMap[1] = rm->GetMaterial("UIPassword2");
+		m_KeyMaterialMap[2] = rm->GetMaterial("UIPassword3");
+		m_KeyMaterialMap[3] = rm->GetMaterial("UIPassword4");
+		m_KeyMaterialMap[4] = rm->GetMaterial("UIPassword5");
+		m_KeyMaterialMap[5] = rm->GetMaterial("UIPassword6");
+		m_KeyMaterialMap[6] = rm->GetMaterial("UIPassword7");
+		m_KeyMaterialMap[7] = rm->GetMaterial("UIPassword8");
+		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword9");
+		m_KeyMaterialMap[9] = rm->GetMaterial("UITempMaterial");
+
+		m_KeyMaterialMap[-1] = rm->GetMaterial("UIExit");
+
 
 		for (Entity* child : children) {
 			Name* childName = manager->GetComponent<Name>(child);
@@ -333,6 +370,9 @@ namespace component {
 
 						};
 					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
+				if (name == "AnswerKey") {
+					m_AnswerUIrender = manager->GetComponent<UIRenderer>(child);
 				}
 				if (name == "Check") {
 					Button* button = manager->GetComponent<Button>(child);
@@ -360,11 +400,14 @@ namespace component {
 					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
 				}
 				else {
-					for (int i = 1; i <= MAX_KEY; ++i) {
-						std::string buttonName = std::format("Key{}", i);
+					for (int i = 0; i <= MAX_BUTTON; ++i) {
+						std::string buttonName = std::format("KeyButton{}", i);
 						if (name == buttonName) {
 							Button* button = manager->GetComponent<Button>(child);
+							UIRenderer* render = manager->GetComponent<UIRenderer>(child);
+							m_AnswerbuttonUIrender[i] = render;
 							Key* key = manager->GetComponent<Key>(child);
+							m_keyAnswer[i] = key;
 							ButtonEventFunction password = [key, doorkey, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
 								int current = key->GetKeyLength();
 								doorkey->SetCurrent(current);
@@ -380,6 +423,21 @@ namespace component {
 
 	void UIDoorKey::ShowYourself() const
 	{
+	}
+
+	void UIDoorKey::SetAnswerMaterial(int idx)
+	{
+		m_AnswerUIrender->SetMaterial(m_KeyMaterialMap[idx]);
+	}
+
+	void UIDoorKey::SetAnswerButtonMaterial(int target, int answer)
+	{
+		m_AnswerbuttonUIrender[target]->SetMaterial(m_KeyMaterialMap[answer]);
+	}
+
+	void UIDoorKey::SetAnswerButton(int target, int answer)
+	{
+		m_keyAnswer[target]->SetKeyAnswer(answer);
 	}
 
 	void UIKeypad::Create(Json::Value& v, ResourceManager* rm)
@@ -1091,7 +1149,7 @@ namespace component {
 	{
 		Json::Value kt = v["KeyTool"];
 
-		memset(m_Keys, -1, sizeof(m_Keys));
+		//memset(m_Keys, -1, sizeof(m_Keys));
 		m_SoundMakingMinimum = kt["SoundMakingMinimum"].asInt();
 
 	}
