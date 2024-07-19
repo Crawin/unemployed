@@ -1,8 +1,8 @@
 {
-	"name": "Redline",
+	"name": "Door",
 	"BaseColor": "Door/Door/Door_1_Albedo",
-	"Roughness": "Door/Door/Door_smoothness",
-	"Metalic": "Door/Door/Door_metallic",
+	"Roughness": "Door/Door/Door_1_smoothness",
+	"Metalic": null,
 	"AO": "Door/Door/Door_1_AO",
 	"Normal": "Door/Door/Door_1_Normal",
 	"Shader": "CrushingVertex"
