@@ -329,7 +329,7 @@ namespace component {
 		// send door open packet
 		if (sendServer) {
 			DebugPrint("SEND DOOR OPEN");
-			cs_packet_open_door packet(m_DoorId, m_Open ? 1 : 0);
+			cs_packet_open_door packet(m_DoorId, state ? 1 : 0);
 			Client::GetInstance().send_packet(&packet);
 		}
 
