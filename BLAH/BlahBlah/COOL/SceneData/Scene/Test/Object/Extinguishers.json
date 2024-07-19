@@ -23,7 +23,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10000
 									},
 									"Interaction": {},
 									"Name" : "Door",
@@ -104,7 +105,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10001
 									},
 									"Interaction": {},
 									"Name" : "Door_1",
@@ -185,7 +187,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10000
 									},
 									"Interaction": {},
 									"Name" : "Door_2",
@@ -266,7 +269,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10003
 									},
 									"Interaction": {},
 									"Name" : "Door_3",
@@ -374,7 +378,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10004
 									},
 									"Interaction": {},
 									"Name" : "Door_4",
@@ -455,7 +460,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10005
 									},
 									"Interaction": {},
 									"Name" : "Door_5",
@@ -536,7 +542,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10006
 									},
 									"Interaction": {},
 									"Name" : "Door_6",
@@ -617,7 +624,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10007
 									},
 									"Interaction": {},
 									"Name" : "Door_7",
@@ -725,7 +733,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10008
 									},
 									"Interaction": {},
 									"Name" : "Door_8",
@@ -806,7 +815,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10009
 									},
 									"Interaction": {},
 									"Name" : "Door_9",
@@ -887,7 +897,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10010
 									},
 									"Interaction": {},
 									"Name" : "Door_10",
@@ -968,7 +979,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10011
 									},
 									"Interaction": {},
 									"Name" : "Door_11",
@@ -1076,7 +1088,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10012
 									},
 									"Interaction": {},
 									"Name" : "Door_12",
@@ -1157,7 +1170,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10013
 									},
 									"Interaction": {},
 									"Name" : "Door_13",
@@ -1238,7 +1252,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10014
 									},
 									"Interaction": {},
 									"Name" : "Door_14",
@@ -1319,7 +1334,8 @@
 									{
 										"MaxAngle": 120.0,
 										"Locked": false,
-										"RotateAxis": 2
+										"RotateAxis": 2,
+										"ID": 10015
 									},
 									"Interaction": {},
 									"Name" : "Door_15",

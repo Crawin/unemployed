@@ -704,14 +704,12 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pOpenDoor:
 	{
-		DebugPrint("OPEN");
 		cs_packet_open_door* buf = reinterpret_cast<cs_packet_open_door*>(packet);
 		std::function<void(component::Transform*, component::DoorControl*, component::SelfEntity*)> func = [buf, manager]
 		(component::Transform* trans, component::DoorControl* doorCtrl, component::SelfEntity* self) {
-			if (buf->getDoorNum()) {
+			if (buf->getDoorNum() == doorCtrl->GetDoorID()) {
 				doorCtrl->SetOpen(manager, trans, self->GetEntity(), buf->getOpen(), false);
 				DebugPrint("OPEN");
-
 			}
 			};
 
@@ -720,11 +718,10 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pUnlockDoor:
 	{
-		DebugPrint("UNLOCK");
 		cs_packet_unlock_door* buf = reinterpret_cast<cs_packet_unlock_door*>(packet);
 		std::function<void(component::Transform*, component::DoorControl*, component::SelfEntity*)> func = [buf, manager]
 		(component::Transform* trans, component::DoorControl* doorCtrl, component::SelfEntity* self) {
-			if (buf->getDoorNum()) {
+			if (buf->getDoorNum() == doorCtrl->GetDoorID()) {
 				DebugPrint("UNLOCK");
 				if (buf->getSuccess())
 					doorCtrl->SetLock(buf->getSuccess(), false);
