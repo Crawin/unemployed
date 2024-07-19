@@ -1,0 +1,17 @@
+{
+	"Idle": {
+		"Loop": true,
+		"Name": "Student/Student_Breathing_Idle"
+	},
+
+	"Surprise": {
+		"Loop": false,
+		"Name": "Student/Student_Surprised"
+	},
+
+	"Walk": {
+		"Loop": true,
+		"Name": "Student/Student_Walking"
+	}
+
+}
