@@ -40,9 +40,6 @@ private:
 
 private:
     FMOD::System* m_system;
-    
-    SOUND_EFFECT m_guard_foot;
-    SOUND_EFFECT m_self_foot;
 
     std::unordered_map<SOUND_TYPE, FMOD::Sound*> SOUNDS;
     std::unordered_map<std::string, FMOD::Channel*> CHANNELS;
@@ -66,7 +63,7 @@ public:
     void end_fmod();
     bool play_loop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel);
     bool play_unloop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel);
-    bool stop_sound(std::string& channel);
+    bool stop_sound(const std::string& channel);
 };
 
 void ERRCHECK(FMOD_RESULT result);
