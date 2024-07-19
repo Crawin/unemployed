@@ -28,8 +28,8 @@
 	"Inventory":
 	{
 		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
-		"Slot_0": "CCTV_TEST",
-		"Slot_1": "",
+		"Slot_0": "",
+		"Slot_1": "CCTV_TEST",
 		"Slot_2": "Laptop_ScreenDetached",
 		"Slot_3": ""
 	},
