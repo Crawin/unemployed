@@ -162,38 +162,6 @@ public:
 	const char getTime() { return time; }
 };
 
-class sc_packet_open_door : public packet_base
-{
-	short doorNum;
-	char open;
-public:
-	sc_packet_open_door(const short& doorNum, const char& open)
-	{
-		size = sizeof(sc_packet_open_door);
-		type = pOpenDoor;
-		this->doorNum = doorNum;
-		this->open = open;
-	}
-	const short getDoorNum() { return doorNum; }
-	const char getOpen() { return open; }
-};
-
-class sc_packet_unlock_door : public packet_base
-{
-	short doorNum;
-	char success;
-public:
-	sc_packet_unlock_door(const short& doorNum, const char& success)
-	{
-		size = sizeof(sc_packet_unlock_door);
-		type = pUnlockDoor;
-		this->doorNum = doorNum;
-		this->success = success;
-	}
-	const short getDoorNum() { return doorNum; }
-	const char getSuccess() { return success; }
-};
-
 class sc_packet_get_item : public packet_base
 {
 	SOCKET player;

@@ -335,13 +335,104 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			break;
 		case pOpenDoor:
 		{
-			auto packet = reinterpret_cast<cs_packet_open_door*>(base);
+			auto sent_player = login_players.find(id);
+			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
+			if (InGamePlayers[0].id == id)
+			{
+				if (InGamePlayers[1].id)
+				{
+					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&base));
+				}
+			}
+			else if (InGamePlayers[1].id == id)
+			{
+				if (InGamePlayers[0].id)
+				{
+					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&base));
+				}
+			}
+			else
+			{
+				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+			}
 		}
 			break;
 		case pUnlockDoor:
 		{
-			auto packet = reinterpret_cast<cs_packet_unlock_door*>(base);
-
+			auto sent_player = login_players.find(id);
+			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
+			if (InGamePlayers[0].id == id)
+			{
+				if (InGamePlayers[1].id)
+				{
+					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&base));
+				}
+			}
+			else if (InGamePlayers[1].id == id)
+			{
+				if (InGamePlayers[0].id)
+				{
+					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&base));
+				}
+			}
+			else
+			{
+				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+			}
+		}
+		break;
+		case pGetItem:
+		{
+			auto packet = reinterpret_cast<cs_packet_get_item*>(base);
+			auto sent_player = login_players.find(id);
+			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
+			if (InGamePlayers[0].id == id)
+			{
+				if (InGamePlayers[1].id)
+				{
+					sc_packet_get_item item(InGamePlayers[0].sock, packet->getItemID(), packet->getSlotID());
+					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&item));
+				}
+			}
+			else if (InGamePlayers[1].id == id)
+			{
+				if (InGamePlayers[0].id)
+				{
+					sc_packet_get_item item(InGamePlayers[1].sock, packet->getItemID(), packet->getSlotID());
+					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&item));
+				}
+			}
+			else
+			{
+				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+			}
+		}
+			break;
+		case pKeyInput:
+		{
+			auto packet = reinterpret_cast<cs_packet_key_input*>(base);
+			auto sent_player = login_players.find(id);
+			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
+			if (InGamePlayers[0].id == id)
+			{
+				if (InGamePlayers[1].id)
+				{
+					sc_packet_key_input input(InGamePlayers[0].sock, packet->getKeyState(), packet->getGameInput());
+					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&input));
+				}
+			}
+			else if (InGamePlayers[1].id == id)
+			{
+				if (InGamePlayers[0].id)
+				{
+					sc_packet_key_input input(InGamePlayers[1].sock, packet->getKeyState(), packet->getGameInput());
+					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&input));
+				}
+			}
+			else
+			{
+				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+			}
 		}
 			break;
 		default:

@@ -198,6 +198,61 @@ public:
 				}
 				break;
 			}
+			case pOpenDoor:
+			{
+				auto open = reinterpret_cast<sc_packet_open_door*>(base);
+				auto sendOver = new EXP_OVER(open);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case pUnlockDoor:
+			{
+				auto unlock = reinterpret_cast<sc_packet_unlock_door*>(base);
+				auto sendOver = new EXP_OVER(unlock);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case pChangeDayOrNight:
+			{
+				auto changeDayOrNight = reinterpret_cast<sc_packet_change_day_or_night*>(base);
+				auto sendOver = new EXP_OVER(changeDayOrNight);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case pGetItem:
+			{
+				auto getItem = reinterpret_cast<sc_packet_get_item*>(base);
+				auto sendOver = new EXP_OVER(getItem);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case pKeyInput:
+			{
+				auto keyInput = reinterpret_cast<sc_packet_key_input*>(base);
+				auto sendOver = new EXP_OVER(keyInput);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
 		}
 	}
 
