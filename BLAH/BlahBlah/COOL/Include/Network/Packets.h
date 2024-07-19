@@ -20,9 +20,16 @@ enum PACKET_TYPE
 	pRoomPlayer,
 	pLogout,
 	pAttack,
-	pAnimation
+	pAnimation,
+	pOpenDoor,
+	pUnlockDoor,
+	pChangeDayOrNight,
+	pGetItem,
+	pKeyInput
 };
 enum class ANIMATION_STATE;
+enum class GAME_INPUT;
+enum class KEY_STATE;
 
 class packet_base
 {
@@ -142,6 +149,89 @@ public:
 	const ANIMATION_STATE getAnimState() { return static_cast<ANIMATION_STATE>(anim_type); }
 };
 
+class sc_packet_change_day_or_night : public packet_base
+{
+	char time;
+public:
+	sc_packet_change_day_or_night(const char& time)
+	{
+		size = sizeof(sc_packet_change_day_or_night);
+		type = pChangeDayOrNight;
+		this->time = time;
+	}
+	const char getTime() { return time; }
+};
+
+class sc_packet_open_door : public packet_base
+{
+	short doorNum;
+	char open;
+public:
+	sc_packet_open_door(const short& doorNum, const char& open)
+	{
+		size = sizeof(sc_packet_open_door);
+		type = pOpenDoor;
+		this->doorNum = doorNum;
+		this->open = open;
+	}
+	const short getDoorNum() { return doorNum; }
+	const char getOpen() { return open; }
+};
+
+class sc_packet_unlock_door : public packet_base
+{
+	short doorNum;
+	char success;
+public:
+	sc_packet_unlock_door(const short& doorNum, const char& success)
+	{
+		size = sizeof(sc_packet_unlock_door);
+		type = pUnlockDoor;
+		this->doorNum = doorNum;
+		this->success = success;
+	}
+	const short getDoorNum() { return doorNum; }
+	const char getSuccess() { return success; }
+};
+
+class sc_packet_get_item : public packet_base
+{
+	SOCKET player;
+	short item_id;
+	char slot_id;
+public:
+	sc_packet_get_item(const SOCKET& player, const short& item_id, const char& slot_id)
+	{
+		size = sizeof(sc_packet_get_item);
+		type = pGetItem;
+		this->player = player;
+		this->item_id = item_id;
+		this->slot_id = slot_id;
+	}
+	const SOCKET getPlayer() { return player; }
+	const int getItemID() { return static_cast<int>(item_id); }
+	const char getSlotID() { return slot_id; }
+};
+
+class sc_packet_key_input : public packet_base
+{
+	SOCKET player;
+	char key_state;
+	char game_input;
+public:
+	sc_packet_key_input(const SOCKET& player, const KEY_STATE& key_state, const GAME_INPUT& game_input)
+	{
+		size = sizeof(sc_packet_key_input);
+		type = pKeyInput;
+		this->player = player;
+		this->key_state = static_cast<char>(key_state);
+		this->game_input = static_cast<char>(game_input);
+	}
+	const SOCKET getPlayer() { return player; }
+	const KEY_STATE getKeyState() { return static_cast<KEY_STATE>(key_state); }
+	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
+};
+
 //--------------------------------------------------------------------------------------------------------------------
 
 class cs_packet_position : public packet_base
@@ -202,16 +292,68 @@ public:
 	const char getAnimType() { return anim_type; }
 };
 
-class cs_packet_unlock_door : public packet_base
-{
-	char success;
-	short doorNum;
-};
-
 class cs_packet_open_door : public packet_base
 {
-	float angle;
+	short doorNum;
+	char open;
+public:
+	cs_packet_open_door(const short& doorNum, const char& open)
+	{
+		size = sizeof(cs_packet_open_door);
+		type = pOpenDoor;
+		this->doorNum = doorNum;
+		this->open = open;
+	}
+	const short getDoorNum() { return doorNum; }
+	const char getOpen() { return open; }
+};
 
+class cs_packet_unlock_door : public packet_base
+{
+	short doorNum;
+	char success;
+public:
+	cs_packet_unlock_door(const short& doorNum, const char& success)
+	{
+		size = sizeof(cs_packet_unlock_door);
+		type = pUnlockDoor;
+		this->doorNum = doorNum;
+		this->success = success;
+	}
+	const short getDoorNum() { return doorNum; }
+	const char getSuccess() { return success; }
+};
+
+class cs_packet_get_item : public packet_base
+{
+	short item_id;
+	char slot_id;
+public:
+	cs_packet_get_item(const int& item_id, const char& slot_id)
+	{
+		size = sizeof(cs_packet_get_item);
+		type = pGetItem;
+		this->item_id = static_cast<short>(item_id);
+		this->slot_id = slot_id;
+	}
+	const short getItemID() { return item_id; }
+	const char getSlotID() { return slot_id; }
+};
+
+class cs_packet_key_input : public packet_base
+{
+	char key_state;
+	char game_input;
+public:
+	cs_packet_key_input(const KEY_STATE& key_state, const GAME_INPUT& game_input)
+	{
+		size = sizeof(cs_packet_key_input);
+		type = pKeyInput;
+		this->key_state = static_cast<char>(key_state);
+		this->game_input = static_cast<char>(game_input);
+	}
+	const KEY_STATE getKeyState() { return static_cast<KEY_STATE>(key_state); }
+	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
 };
 
 #pragma pack(pop)

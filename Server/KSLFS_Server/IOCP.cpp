@@ -333,6 +333,17 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			}
 		}
 			break;
+		case pOpenDoor:
+		{
+			auto packet = reinterpret_cast<cs_packet_open_door*>(base);
+		}
+			break;
+		case pUnlockDoor:
+		{
+			auto packet = reinterpret_cast<cs_packet_unlock_door*>(base);
+
+		}
+			break;
 		default:
 			std::cout << "정의되지 않은 패킷 타입" << std::endl;
 			break;

@@ -701,6 +701,26 @@ void Scene::ProcessPacket(packet_base* packet)
 		m_ECSManager->Execute(func);
 		break;
 	}
+	case pOpenDoor:
+	{
+		break;
+	}
+	case pUnlockDoor:
+	{
+		break;
+	}
+	case pChangeDayOrNight:
+	{
+		break;
+	}
+	case pGetItem:
+	{
+		break;
+	}
+	case pKeyInput:
+	{
+		break;
+	}
 	}
 }
 

@@ -379,7 +379,7 @@ bool FMOD_INFO::play_unloop_sound(const DirectX::XMFLOAT3& WorldPos,const SOUND_
     }
 }
 
-bool FMOD_INFO::stop_sound(std::string& channel)
+bool FMOD_INFO::stop_sound(const std::string& channel)
 {
     FMOD_RESULT result;
     auto f = CHANNELS.find(channel);
