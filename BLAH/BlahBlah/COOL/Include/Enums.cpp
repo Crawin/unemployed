@@ -89,6 +89,7 @@ int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput)
 	case GAME_INPUT::NUM_3:					return '3';
 	case GAME_INPUT::NUM_4:					return '4';
 	case GAME_INPUT::NUM_5:					return '5';
+	case GAME_INPUT::NUM_6:					return '6';
 	case GAME_INPUT::ARROW_UP:				return VK_UP;
 	case GAME_INPUT::ARROW_DOWN:			return VK_DOWN;
 	case GAME_INPUT::ARROW_LEFT:			return VK_LEFT;

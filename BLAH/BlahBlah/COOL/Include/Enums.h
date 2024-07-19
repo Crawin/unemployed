@@ -91,6 +91,7 @@ enum class GAME_INPUT {
 	NUM_3,
 	NUM_4,
 	NUM_5,
+	NUM_6,
 	ARROW_UP,
 	ARROW_DOWN,
 	ARROW_LEFT,
