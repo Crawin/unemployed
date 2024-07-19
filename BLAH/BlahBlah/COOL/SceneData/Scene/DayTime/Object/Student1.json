@@ -3,38 +3,198 @@
 
 	"Server": {},
 
-	"Transform": {
+	"Transform": 
+	{
 		"Position": [ 500.0, 0.0, 1000.0 ],
 		"Rotate": [ 0.0, 0.0, 0.0 ],
 		"Scale": [ 1.0, 1.0, 1.0 ]
 	},
 
-	"AnimationController": {
-		"Player": "Guard"
+	"AnimationController":
+	{
+		"Player": "Student"
 	},
 
-	"Physics": {
+	"Physics":
+	{
 		"MaxVelocity": 200.0,
-		"Acceleration": [ 1500.0, 1500.0, 1500.0 ]
+		"Acceleration": [ 2000.0, 2000.0, 2000.0 ],
+		"Calculate": true,
+		"Friction": true
 	},
+
+	"Pawn": {},
 
 	"PlayerAnimControll": {},
 
-	"Collider": {
+	"DynamicCollider": {
+		"Active": true,
 		"Static": false,
 		"AutoMesh": false,
 		"IsCapsule": true,
+		"ColideWithDynamic": true,
 		"Center": [ 0.0, 85, 0 ],
 		"Extent": [ 25, 85, 25 ]
 	},
 
-	"Renderer": {
-		"Mesh": "Guard.Ch18",
-		"Material": "Character/Guard_mat"
-	},
-
-	"AnimationExecutor": {
-		"Player": "Guard"
-	}
-
+	"Children": 
+	[
+		{
+			"Children": [
+				{
+					"Name": "Ch01_Body",
+					"Renderer": {
+						"Material": "Character/Student1_mat",
+						"Mesh": "Student1.Ch01_Body"
+					},
+					"AnimationExecutor": {
+						"Player": "Student"
+					},
+					"Transform": {
+						"Position": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale": [
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name": "Ch01_Eyelashes",
+					"Renderer": {
+						"Material": "Character/Student1_mat",
+						"Mesh": "Student1.Ch01_Eyelashes"
+					},
+					"AnimationExecutor": {
+						"Player": "Student"
+					},
+					"Transform": {
+						"Position": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale": [
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name": "Ch01_Pants",
+					"Renderer": {
+						"Material": "Character/Student1_mat",
+						"Mesh": "Student1.Ch01_Pants"
+					},
+					"AnimationExecutor": {
+						"Player": "Student"
+					},
+					"Transform": {
+						"Position": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale": [
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name": "Ch01_Shirt",
+					"Renderer": {
+						"Material": "Character/Student1_mat",
+						"Mesh": "Student1.Ch01_Shirt"
+					},
+					"AnimationExecutor": {
+						"Player": "Student"
+					},
+					"Transform": {
+						"Position": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale": [
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name": "Ch01_Sneakers",
+					"Renderer": {
+						"Material": "Character/Student1_mat",
+						"Mesh": "Student1.Ch01_Sneakers"
+					},
+					"AnimationExecutor": {
+						"Player": "Student"
+					},
+					"Transform": {
+						"Position": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate": [
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale": [
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name": "Ch01_nonPBR",
+			"Transform": {
+				"Position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale": [
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	]
 }

@@ -1,0 +1,9 @@
+{
+	"name": "Student1",
+	"BaseColor": "Character/Student/Student1_Diffuse",
+	"Roughness": "Character/Student/Student1_Glossiness",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": "Character/Student/Student1_Normal",
+	"Shader": "TestMeshDiffered"
+}
