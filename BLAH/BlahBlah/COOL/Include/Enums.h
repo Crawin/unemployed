@@ -106,7 +106,7 @@ enum class GAME_INPUT {
 	GAME_INPUT_END
 };
 
-
+#define SEND_SERVER_START static_cast<int>(GAME_INPUT::CTRL)
 
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim);

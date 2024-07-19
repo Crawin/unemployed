@@ -801,19 +801,34 @@ namespace component {
 	void Pawn::TickInput()
 	{
 		// if pressing
-		for (KEY_STATE& state : m_KeyStates) {
-			switch (state) {
-			case KEY_STATE::START_PRESS:
-			case KEY_STATE::PRESSING:
-				state = KEY_STATE::END_PRESS;
-				break;
+		if (m_ControledByServer == false) {
+			for (KEY_STATE& state : m_KeyStates) {
+				switch (state) {
+				case KEY_STATE::START_PRESS:
+				case KEY_STATE::PRESSING:
+					state = KEY_STATE::END_PRESS;
+					break;
 
-			case KEY_STATE::END_PRESS:
-				state = KEY_STATE::NONE;
-				break;
+				case KEY_STATE::END_PRESS:
+					state = KEY_STATE::NONE;
+					break;
+				}
 			}
 		}
+		else {
+			for (KEY_STATE& state : m_KeyStates) {
+				switch (state) {
+				case KEY_STATE::START_PRESS:
+				case KEY_STATE::PRESSING:
+					state = KEY_STATE::PRESSING;
+					break;
 
+				case KEY_STATE::END_PRESS:
+					state = KEY_STATE::NONE;
+					break;
+				}
+			}
+		}
 		m_MouseDif = { 0, 0 };
 
 	}

@@ -179,7 +179,17 @@ namespace ECSsystem {
 			curPawn->SetMouseMove(mouseMove);
 			InputManager::GetInstance().ResetMouseMove();
 
+			// update inputs
+			for (int i = SEND_SERVER_START; i < static_cast<int>(GAME_INPUT::GAME_INPUT_END); ++i) {
+				GAME_INPUT input = static_cast<GAME_INPUT>(i);
+				KEY_STATE state = curPawn->GetInputState(input);
 
+				// if start or end press, go press
+				if (state == KEY_STATE::START_PRESS || state == KEY_STATE::END_PRESS) {
+					cs_packet_key_input packet(state, input);
+					Client::GetInstance().send_packet(&packet);
+				}
+			}
 
 
 
@@ -279,8 +289,6 @@ namespace ECSsystem {
 
 		// mouse - cameras
 		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime, &mouseMove](Transform* tr, Camera* cam) {
-			if (cam->m_IsMainCamera == false) return;
-
 			// todo rotate must not be orbit
 
 			XMFLOAT3 rot = tr->GetRotation();
@@ -307,6 +315,9 @@ namespace ECSsystem {
 		//////////////////////////////////////////
 		// Pawn Inventory Action
 		std::function<void(Pawn*, Inventory*)> pawnInvenAction = [deltaTime, manager](Pawn* pawn, Inventory* inven) {
+			// if self && ui state
+			if (InputManager::GetInstance().IsUIState() == true && pawn->GetControlServer() == false) return;
+
 			// holding change
 			for (int i = 0; i < MAX_INVENTORY; ++i) {
 				int start = static_cast<int>(GAME_INPUT::NUM_1);
@@ -342,14 +353,15 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(tickAndUpdateInput);
-	
+		
 		// if ui state, no more update
-		if (InputManager::GetInstance().IsUIState() == false) {
+		if (InputManager::GetInstance().IsUIState() == false) 
+		{
 			manager->Execute(inputFunc);
 			manager->Execute(mouseInput);
 			manager->Execute(attachinput);
-			manager->Execute(pawnInvenAction);
 		}
+		manager->Execute(pawnInvenAction);
 	}
 
 	void ChangeAnimationTest::Update(ECSManager* manager, float deltaTime)
@@ -428,8 +440,8 @@ namespace ECSsystem {
 
 	void AllocateServer::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Server*, component::Name*)> allocate = []
-		(component::Server* server, component::Name* name) {
+		std::function<void(component::Server*, component::Name*, component::SelfEntity*)> allocate = [manager]
+		(component::Server* server, component::Name* name, component::SelfEntity* self) {
 			auto& client = Client::GetInstance();
 			const SOCKET* playerSock = client.getPSock();
 			short type = client.getCharType();
@@ -468,6 +480,10 @@ namespace ECSsystem {
 					if (server->getID() == NULL && n == playername)
 					{
 						server->setID(playerSock[1]);
+						component::Pawn* pawn = manager->GetComponent<component::Pawn>(self->GetEntity());
+						if (pawn != nullptr) {
+							pawn->SetControlServer(true);
+						}
 					}
 
 					//if (server->getID() == NULL && n.compare("Player2") == 0)
