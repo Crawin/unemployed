@@ -372,7 +372,7 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 			res = GetMaterial(materialFileName, commandList);
 		}
 
-		uiRendererInfo.m_Renderer->SetMaterial(res);
+		if (uiRendererInfo.m_Renderer != nullptr) uiRendererInfo.m_Renderer->SetMaterial(res);
 	}
 
 	return true;
