@@ -207,6 +207,7 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
+				std::cout << "오픈 패킷 전송 완료" << std::endl;
 			}
 				break;
 			case pUnlockDoor:
@@ -218,6 +219,7 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
+				std::cout << "언락 전송 완료" << std::endl;
 			}
 				break;
 			case pChangeDayOrNight:

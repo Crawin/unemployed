@@ -717,7 +717,6 @@ void Scene::ProcessPacket(packet_base* packet)
 
 		m_ECSManager->Execute(func);
 		break;
-		break;
 	}
 	case pUnlockDoor:
 	{

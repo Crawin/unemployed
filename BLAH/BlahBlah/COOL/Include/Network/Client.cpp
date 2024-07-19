@@ -249,6 +249,11 @@ void process_packet(packet_base*& base)
 	{
 	case pPOSITION:								// SceneManager가 하기 용이한 것들은 씬매니저에게 전달.
 	case pAnimation:
+	case pOpenDoor:
+	case pUnlockDoor:
+	case pChangeDayOrNight:
+	case pGetItem:
+	case pKeyInput:
 		client.getSceneManager()->ProcessPacket(base);
 		break;
 	case pLOGIN:									// LOGIN

@@ -341,14 +341,14 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				if (InGamePlayers[1].id)
 				{
-					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&base));
+					login_players[InGamePlayers[1].id].send_packet(base);
 				}
 			}
 			else if (InGamePlayers[1].id == id)
 			{
 				if (InGamePlayers[0].id)
 				{
-					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&base));
+					login_players[InGamePlayers[0].id].send_packet(base);
 				}
 			}
 			else
@@ -365,14 +365,14 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				if (InGamePlayers[1].id)
 				{
-					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&base));
+					login_players[InGamePlayers[1].id].send_packet(base);
 				}
 			}
 			else if (InGamePlayers[1].id == id)
 			{
 				if (InGamePlayers[0].id)
 				{
-					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&base));
+					login_players[InGamePlayers[0].id].send_packet(base);
 				}
 			}
 			else
@@ -924,8 +924,8 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 		//std::cout << "npc: " << now_floor << std::endl;
 		if (now_floor <= 5.5)
 		{
-			if (m_floor != now_floor)
-				std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
+			//if (m_floor != now_floor)
+			//	std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
 			m_floor = now_floor;
 		}
 	}
@@ -950,7 +950,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 				{
 					reset_graph();
 					int des = rand() % astar_graph.size();
-					std::cout << des << "로 목적지 설정" << std::endl;
+					//std::cout << des << "로 목적지 설정" << std::endl;
 					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
 					this->path = aStarSearch(position, destination, astar_graph);
 					if (this->path != nullptr)
@@ -1180,7 +1180,7 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 			{
 				if (state == 1)
 				{
-					std::cout <<"NPC["<<this->id<<"] 목적지 도착" << std::endl;
+					//std::cout <<"NPC["<<this->id<<"] 목적지 도착" << std::endl;
 					return true;
 				}
 			}
