@@ -194,6 +194,7 @@ namespace component {
 		m_Gamemode = door["Game"].asInt();
 		m_FailCount = door["FailCount"].asInt();
 		m_RotateAxis = door["RotateAxis"].asInt();
+		m_DoorId = door["ID"].asInt();
 	}
 
 	void DoorControl::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -210,28 +211,26 @@ namespace component {
 			component::DoorControl* doorCtrl = manager->GetComponent<component::DoorControl>(door);
 			auto trans = manager->GetComponent<component::Transform>(door);
 			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
-				auto rot = trans->GetRotation();
-				XMFLOAT3 rotAfter = rot;
+				//auto rot = trans->GetRotation();
+				//XMFLOAT3 rotAfter = rot;
 
-				float angle = doorCtrl->GetMaxAngle();
+				//float angle = doorCtrl->GetMaxAngle();
+				//if (doorCtrl->IsOpen()) angle *= -1;
 
-				if (doorCtrl->IsOpen()) angle *= -1;
+				//switch (doorCtrl->GetAxis()) {
+				//case 0:		rotAfter.x -= angle;	break;
+				//case 1:		rotAfter.y -= angle;	break;
+				//case 2:		rotAfter.z -= angle;	break;
+				//	break;
+				//}
 
-				switch (doorCtrl->GetAxis()) {
-				case 0:		rotAfter.x -= angle;	break;
-				case 1:		rotAfter.y -= angle;	break;
-				case 2:		rotAfter.z -= angle;	break;
-					break;
-				}
-				
+				//TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(trans->GetRotationPtr());
+				//openDoor->AddKeyFrame(rot, 0);
+				//openDoor->AddKeyFrame(rotAfter, 1);
 
-				TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(trans->GetRotationPtr());
-				openDoor->AddKeyFrame(rot, 0);
-				openDoor->AddKeyFrame(rotAfter, 1);
+				//manager->AddTimeLine(door, openDoor);
 
-				manager->AddTimeLine(door, openDoor);
-
-				doorCtrl->SetOpen(!doorCtrl->IsOpen());
+				doorCtrl->SetOpen(manager, trans, door, !doorCtrl->IsOpen(), true);
 			}
 			else {
 				// todo
@@ -295,6 +294,48 @@ namespace component {
 	{
 	}
 
+	void DoorControl::SetLock(bool lock, bool sendServer)
+	{
+		m_Locked = lock;
+
+		// send door open packet
+		if (sendServer) {
+			cs_packet_unlock_door packet(m_DoorId, m_Open ? 1 : 0);
+			Client::GetInstance().send_packet(&packet);
+		}
+	}
+
+	void DoorControl::SetOpen(ECSManager* manager, Transform* tr, Entity* self, bool state, bool sendServer)
+	{
+		auto rot = tr->GetRotation();
+		XMFLOAT3 rotAfter = rot;
+
+		float angle = m_MaxAngle;
+		if (m_Open) angle *= -1;
+
+		switch (m_RotateAxis) {
+		case 0:		rotAfter.x -= angle;	break;
+		case 1:		rotAfter.y -= angle;	break;
+		case 2:		rotAfter.z -= angle;	break;
+			break;
+		}
+
+		TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(tr->GetRotationPtr());
+		openDoor->AddKeyFrame(rot, 0);
+		openDoor->AddKeyFrame(rotAfter, 1);
+
+		manager->AddTimeLine(self, openDoor);
+
+		// send door open packet
+		if (sendServer) {
+			DebugPrint("SEND DOOR OPEN");
+			cs_packet_open_door packet(m_DoorId, m_Open ? 1 : 0);
+			Client::GetInstance().send_packet(&packet);
+		}
+
+		m_Open = state;
+	}
+
 	void DoorControl::SetCrushPosition(XMFLOAT3 pos, float power, float distance)
 	{
 		// crush point는 z는 사용하지 않는다
@@ -308,11 +349,13 @@ namespace component {
 
 	void UIDoorKey::Create(Json::Value& v, ResourceManager* rm)
 	{
-
+		rm->AddLateLoadUI("Key_No1", nullptr);
 	}
 
 	void UIDoorKey::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
+		rm->GetMaterial("Key_No1");
+
 		auto& children = selfEntity->GetChildren();
 
 		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);

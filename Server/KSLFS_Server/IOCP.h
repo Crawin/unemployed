@@ -200,7 +200,7 @@ public:
 			}
 			case pOpenDoor:
 			{
-				auto open = reinterpret_cast<sc_packet_open_door*>(base);
+				auto open = reinterpret_cast<cs_packet_open_door*>(base);
 				auto sendOver = new EXP_OVER(open);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
@@ -211,7 +211,7 @@ public:
 				break;
 			case pUnlockDoor:
 			{
-				auto unlock = reinterpret_cast<sc_packet_unlock_door*>(base);
+				auto unlock = reinterpret_cast<cs_packet_unlock_door*>(base);
 				auto sendOver = new EXP_OVER(unlock);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);

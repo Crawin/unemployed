@@ -921,7 +921,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 			if (floor.floor_collision(now_obb, now_floor, this->position.y))
 				break;
 		}
-		std::cout << "npc: " << now_floor << std::endl;
+		//std::cout << "npc: " << now_floor << std::endl;
 		if (now_floor <= 5.5)
 		{
 			if (m_floor != now_floor)

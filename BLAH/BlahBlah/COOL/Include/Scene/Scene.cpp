@@ -672,6 +672,7 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 void Scene::ProcessPacket(packet_base* packet)
 {
+	ECSManager* manager = m_ECSManager.get();
 	switch (packet->getType())		// PACKET_TYPE
 	{
 	case pPOSITION:								// POSITION
@@ -703,10 +704,38 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pOpenDoor:
 	{
+		DebugPrint("OPEN");
+		cs_packet_open_door* buf = reinterpret_cast<cs_packet_open_door*>(packet);
+		std::function<void(component::Transform*, component::DoorControl*, component::SelfEntity*)> func = [buf, manager]
+		(component::Transform* trans, component::DoorControl* doorCtrl, component::SelfEntity* self) {
+			if (buf->getDoorNum()) {
+				doorCtrl->SetOpen(manager, trans, self->GetEntity(), buf->getOpen(), false);
+				DebugPrint("OPEN");
+
+			}
+			};
+
+		m_ECSManager->Execute(func);
+		break;
 		break;
 	}
 	case pUnlockDoor:
 	{
+		DebugPrint("UNLOCK");
+		cs_packet_unlock_door* buf = reinterpret_cast<cs_packet_unlock_door*>(packet);
+		std::function<void(component::Transform*, component::DoorControl*, component::SelfEntity*)> func = [buf, manager]
+		(component::Transform* trans, component::DoorControl* doorCtrl, component::SelfEntity* self) {
+			if (buf->getDoorNum()) {
+				DebugPrint("UNLOCK");
+				if (buf->getSuccess())
+					doorCtrl->SetLock(buf->getSuccess(), false);
+				else {
+					// play sound here?
+				}
+			}
+			};
+
+		m_ECSManager->Execute(func);
 		break;
 	}
 	case pChangeDayOrNight:
