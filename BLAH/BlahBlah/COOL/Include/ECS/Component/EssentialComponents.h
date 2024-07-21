@@ -495,6 +495,7 @@ namespace component {
 	//
 	class Server : public ComponentBase<Server> {
 		unsigned int m_id;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -689,6 +690,8 @@ namespace component {
 		Camera* m_Camera = nullptr;
 		Physics* m_Physics = nullptr;
 
+		bool m_ControledByServer = false;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -696,8 +699,10 @@ namespace component {
 
 		void ResetInput();
 		void TickInput();
-		
+
 		void PressInput(GAME_INPUT key);
+
+		void SetInput(GAME_INPUT key, KEY_STATE state) { m_KeyStates[static_cast<int>(key)] = state; }
 
 		KEY_STATE GetInputState(GAME_INPUT key) const { return m_KeyStates[static_cast<long long int>(key)]; }
 		bool IsPressing(GAME_INPUT key) const;
@@ -710,6 +715,9 @@ namespace component {
 
 		void SetMouseMove(const POINT& pt) { m_MouseDif = pt; }
 		const POINT& GetMouseMove() const { return m_MouseDif; }
+
+		bool GetControlServer() const { return m_ControledByServer; }
+		void SetControlServer(bool state) { m_ControledByServer = state; }
 	};
 
 	/////////////////////////////////////////////////////////

@@ -72,6 +72,7 @@ namespace component {
 		bool m_BefKeyDown = false;
 	};
 
+	class Transform;
 	/////////////////////////////////////////////////////////
 	// Door Component
 	// 문짝 컴포넌트, 잠금해제상태라면 플레이어가 직접 열 수 있다.
@@ -95,6 +96,8 @@ namespace component {
 		XMFLOAT4 m_CrushPositionAndPower[2] = { {0,0,0,0}, {0,0,0,0} };
 		int m_NextCrushIndex = 0;
 
+		int m_DoorId = -1;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -111,12 +114,14 @@ namespace component {
 		int IsUioff() const { return m_Uioff; }
 		bool IsOpen() const { return m_Open; }
 		int GetAxis() const { return m_RotateAxis; }
+		int GetDoorID() const { return m_DoorId; }
 		bool GetKeyDoorOpen() const { return m_KeyDoorOpen; }
 
-		void SetLock(bool lock) { m_Locked = lock; }
+		void SetLock(bool lock, bool sendServer = true);
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
 		void SetUioff(bool uioff) { m_Uioff = uioff; }
+		void SetOpen(ECSManager* manager, Transform* tr, Entity* self, bool state, bool sendServer = true);
 		void SetOpen(bool state) { m_Open = state; }
 		void SetKeyDoorOpen(bool keyopen) { m_KeyDoorOpen = keyopen; }
 

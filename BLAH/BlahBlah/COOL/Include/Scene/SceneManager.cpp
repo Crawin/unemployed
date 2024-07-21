@@ -167,7 +167,7 @@ void SceneManager::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& comman
 
 void SceneManager::ProcessPacket(packet_base* packet)
 {
-	if(m_CurrentScene)	m_CurrentScene->ProcessPacket(packet);
+	if (m_CurrentScene) m_CurrentScene->ProcessPacket(packet);
 }
 
 void SceneManager::PossessPlayer(bool isHost)

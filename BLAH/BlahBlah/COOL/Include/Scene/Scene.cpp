@@ -672,6 +672,7 @@ void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists,
 
 void Scene::ProcessPacket(packet_base* packet)
 {
+	ECSManager* manager = m_ECSManager.get();
 	switch (packet->getType())		// PACKET_TYPE
 	{
 	case pPOSITION:								// POSITION
@@ -703,10 +704,34 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pOpenDoor:
 	{
+		cs_packet_open_door* buf = reinterpret_cast<cs_packet_open_door*>(packet);
+		std::function<void(component::Transform*, component::DoorControl*, component::SelfEntity*)> func = [buf, manager]
+		(component::Transform* trans, component::DoorControl* doorCtrl, component::SelfEntity* self) {
+			if (buf->getDoorNum() == doorCtrl->GetDoorID()) {
+				doorCtrl->SetOpen(manager, trans, self->GetEntity(), buf->getOpen(), false);
+				DebugPrint("OPEN");
+			}
+			};
+
+		m_ECSManager->Execute(func);
 		break;
 	}
 	case pUnlockDoor:
 	{
+		cs_packet_unlock_door* buf = reinterpret_cast<cs_packet_unlock_door*>(packet);
+		std::function<void(component::Transform*, component::DoorControl*, component::SelfEntity*)> func = [buf, manager]
+		(component::Transform* trans, component::DoorControl* doorCtrl, component::SelfEntity* self) {
+			if (buf->getDoorNum() == doorCtrl->GetDoorID()) {
+				DebugPrint("UNLOCK");
+				if (buf->getSuccess())
+					doorCtrl->SetLock(buf->getSuccess(), false);
+				else {
+					// play sound here?
+				}
+			}
+			};
+
+		m_ECSManager->Execute(func);
 		break;
 	}
 	case pChangeDayOrNight:
@@ -719,6 +744,16 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pKeyInput:
 	{
+		sc_packet_key_input* buf = reinterpret_cast<sc_packet_key_input*>(packet);
+		std::function<void(component::Server*, component::Pawn*)> func = [manager, buf](component::Server* server, component::Pawn* pawn) {
+			if (pawn->GetControlServer() == false) return;
+
+			char c = ConvertGameInputEnumToKeyIntValue(buf->getGameInput());
+			DebugPrint(std::format("state: {}, key: {}", (int)buf->getKeyState(), c));
+			pawn->SetInput(buf->getGameInput(), buf->getKeyState());
+
+			};
+		m_ECSManager->Execute(func);
 		break;
 	}
 	}

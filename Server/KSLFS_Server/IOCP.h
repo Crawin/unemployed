@@ -200,24 +200,26 @@ public:
 			}
 			case pOpenDoor:
 			{
-				auto open = reinterpret_cast<sc_packet_open_door*>(base);
+				auto open = reinterpret_cast<cs_packet_open_door*>(base);
 				auto sendOver = new EXP_OVER(open);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
+				std::cout << "오픈 패킷 전송 완료" << std::endl;
 			}
 				break;
 			case pUnlockDoor:
 			{
-				auto unlock = reinterpret_cast<sc_packet_unlock_door*>(base);
+				auto unlock = reinterpret_cast<cs_packet_unlock_door*>(base);
 				auto sendOver = new EXP_OVER(unlock);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
+				std::cout << "언락 전송 완료" << std::endl;
 			}
 				break;
 			case pChangeDayOrNight:
