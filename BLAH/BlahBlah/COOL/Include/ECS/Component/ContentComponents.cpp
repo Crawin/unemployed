@@ -346,14 +346,14 @@ namespace component {
 		rm->AddLateLoadUI("UITempMaterial", nullptr);
 		rm->AddLateLoadUI("UIPassword1", nullptr);
 		rm->AddLateLoadUI("UIPassword2", nullptr);
-		rm->AddLateLoadUI("UIPassword3", nullptr);
+		rm->AddLateLoadUI("UIKey1", nullptr);
 		rm->AddLateLoadUI("UIPassword4", nullptr);
-		rm->AddLateLoadUI("UIPassword5", nullptr);
+		rm->AddLateLoadUI("UIKey2", nullptr);
 		rm->AddLateLoadUI("UIPassword6", nullptr);
 		rm->AddLateLoadUI("UIPassword7", nullptr);
 		rm->AddLateLoadUI("UIPassword8", nullptr);
 		rm->AddLateLoadUI("UIPassword9", nullptr);
-		rm->AddLateLoadUI("UIExit", nullptr);
+		rm->AddLateLoadUI("UILineRed", nullptr);
 
 	}
 
@@ -368,15 +368,15 @@ namespace component {
 		m_KeyMaterialMap[0] = rm->GetMaterial("UITempMaterial");
 		m_KeyMaterialMap[1] = rm->GetMaterial("UIPassword1");
 		m_KeyMaterialMap[2] = rm->GetMaterial("UIPassword2");
-		m_KeyMaterialMap[3] = rm->GetMaterial("UIPassword3");
+		m_KeyMaterialMap[3] = rm->GetMaterial("UIKey1");
 		m_KeyMaterialMap[4] = rm->GetMaterial("UIPassword4");
-		m_KeyMaterialMap[5] = rm->GetMaterial("UIPassword5");
+		m_KeyMaterialMap[5] = rm->GetMaterial("UIKey2");
 		m_KeyMaterialMap[6] = rm->GetMaterial("UIPassword6");
 		m_KeyMaterialMap[7] = rm->GetMaterial("UIPassword7");
 		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword8");
 		m_KeyMaterialMap[9] = rm->GetMaterial("UIPassword9");
 
-		m_KeyMaterialMap[-1] = rm->GetMaterial("UIExit");
+		m_KeyMaterialMap[-1] = rm->GetMaterial("UILineRed");
 
 
 		for (Entity* child : children) {

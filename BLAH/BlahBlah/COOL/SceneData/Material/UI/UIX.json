@@ -1,0 +1,9 @@
+{
+	"name": "UIX",
+	"BaseColor": "UI/XButton",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}
