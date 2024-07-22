@@ -370,7 +370,7 @@ namespace component {
 		Entity* m_RCEntity = nullptr;
 		std::string m_TargetRC = "";
 
-		XMFLOAT3 m_Direction{ 0,0,1 };
+		float m_GoRotateAngle = 0.0f;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);

@@ -1311,15 +1311,17 @@ namespace component {
 		// set holdable action maps
 		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
 
-		XMFLOAT3& dir = m_Direction;
+		float& angle = m_GoRotateAngle;
 		const float c_RcMoveSpeed = 1.0f;
+		const float c_RotateSpeed = 30.0f;
 
 		// rotate by arrow keys
 		ActionFunction arrowUp = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			DebugPrint(std::format("angle: {}", m_GoRotateAngle));
 			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
 			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
 
-			XMVECTOR d = { m_Direction.x, m_Direction.y, m_Direction.z, 0.0f };
+			XMVECTOR d = { 0.0f, 0.0f, 1.0f, 0.0f };
 			XMFLOAT4X4 temp = tr->GetWorldTransform();
 			XMMATRIX mat = XMLoadFloat4x4(&temp);
 
@@ -1330,14 +1332,14 @@ namespace component {
 			move.y = 0.0f;
 
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
-
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
 			};
 		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			DebugPrint(std::format("angle: {}", m_GoRotateAngle));
 			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
 			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
 
-			XMVECTOR d = { m_Direction.x, m_Direction.y, m_Direction.z, 0.0f };
+			XMVECTOR d = { 0.0f, 0.0f, 1.0f, 0.0f };
 			XMFLOAT4X4 temp = tr->GetWorldTransform();
 			XMMATRIX mat = XMLoadFloat4x4(&temp);
 
@@ -1346,13 +1348,20 @@ namespace component {
 			XMFLOAT3 move;
 			XMStoreFloat3(&move, d);
 			move.y = 0.0f;
-
+			
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
-
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
 			};
-		ActionFunction dirLeft = [&dir](float deltaTime) { dir.x -= 1.0f; };
-		ActionFunction dirRight = [&dir](float deltaTime) { dir.x += 1.0f; };
+		ActionFunction dirDrift = [this, manager, c_RotateSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+			
+			tr->GetRotationPtr()->y += py->GetCurrentVelocityLenOnXZ() * m_GoRotateAngle / c_RotateSpeed * deltaTime;
+			};
+
+
+		ActionFunction dirLeft = [&angle](float deltaTime) { angle -= 45.0f; };
+		ActionFunction dirRight = [&angle](float deltaTime) { angle += 45.0f; };
 
 
 
@@ -1360,8 +1369,10 @@ namespace component {
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_DOWN, KEY_STATE::PRESSING), arrowDown);
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::START_PRESS), dirLeft);
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::END_PRESS), dirRight);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::PRESSING), dirDrift);
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::START_PRESS), dirRight);
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::END_PRESS), dirLeft);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::PRESSING), dirDrift);
 	}
 
 }
