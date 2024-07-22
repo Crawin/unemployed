@@ -6,7 +6,7 @@
 #include "Shader/Shader.h"
 #include <winsock2.h> // 윈속2 메인 헤더
 #include "Network/Packets.h"
-
+#include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
 
 #ifdef _DEBUG
@@ -38,6 +38,46 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	m_ECSManager->InitSystem();
 
 	return true;
+}
+
+void Scene::ChangeDayToNight()
+{
+	ECSManager* manager = m_ECSManager.get();
+
+	// change day to light on light
+	// change pawn and recover pawn
+	std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager](component::DayLightManager* dayManager, component::SelfEntity* ent) {
+		using namespace component;
+
+		PlayerController* ctrler = nullptr;
+		std::function<void(PlayerController*)> getCtrler = [&ctrler](PlayerController* control) { ctrler = control; };
+		manager->Execute(getCtrler);
+
+		Pawn* controlledPawn = ctrler->GetControllingPawn();
+
+		Pawn* changeingPawn = nullptr;
+		std::function<void(Pawn*, Name*)> getChangePawn = [&changeingPawn](Pawn* pawn, Name* name) { if (name->getName() == "ChangeTimePawn") changeingPawn = pawn; };
+		manager->Execute(getChangePawn);
+
+		// possess to camera
+		ctrler->Possess(changeingPawn);
+
+		// end event
+		std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+
+		TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
+		changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
+		changeTime->AddKeyFrame(22.0f, 1);
+		changeTime->AddKeyFrame(22.0f, 2);
+		changeTime->SetEndEvent(returnToPawn);
+
+		manager->AddTimeLine(ent->GetEntity(), changeTime);
+		};
+	m_ECSManager->Execute(changeTime);
+
+	// todo hide students
+	// reset player positions
+
 }
 
 void Scene::SetManagers()
@@ -734,6 +774,11 @@ void Scene::ProcessPacket(packet_base* packet)
 			};
 
 		m_ECSManager->Execute(func);
+		break;
+	}
+	case pChangeDayOrNight:
+	{
+		ChangeDayToNight();
 		break;
 	}
 	case pGetItem:

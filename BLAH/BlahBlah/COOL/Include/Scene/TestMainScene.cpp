@@ -4,47 +4,6 @@
 #include "ECS/ECSManager.h"
 #include "Shader/Shader.h"
 #include "ECS/TimeLine/TimeLine.h"
-#include "Network/Packets.h"
-
-void TestMainScene::ChangeDayToNight()
-{
-	ECSManager* manager = m_ECSManager.get();
-
-	// change day to light on light
-	// change pawn and recover pawn
-	std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager](component::DayLightManager* dayManager, component::SelfEntity* ent) {
-		using namespace component;
-
-		PlayerController* ctrler = nullptr;
-		std::function<void(PlayerController*)> getCtrler = [&ctrler](PlayerController* control) { ctrler = control; };
-		manager->Execute(getCtrler);
-
-		Pawn* controlledPawn = ctrler->GetControllingPawn();
-
-		Pawn* changeingPawn = nullptr;
-		std::function<void(Pawn*, Name*)> getChangePawn = [&changeingPawn](Pawn* pawn, Name* name) { if (name->getName() == "ChangeTimePawn") changeingPawn = pawn; };
-		manager->Execute(getChangePawn);
-
-		// possess to camera
-		ctrler->Possess(changeingPawn);
-
-		// end event
-		std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
-
-		TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
-		changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
-		changeTime->AddKeyFrame(22.0f, 1);
-		changeTime->AddKeyFrame(22.0f, 2);
-		changeTime->SetEndEvent(returnToPawn);
-
-		manager->AddTimeLine(ent->GetEntity(), changeTime);
-		};
-	m_ECSManager->Execute(changeTime);
-
-	// todo hide students
-	// reset player positions
-
-}
 
 bool TestMainScene::LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
@@ -125,21 +84,6 @@ void TestMainScene::Exit()
 bool TestMainScene::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
 {
     return false;
-}
-
-void TestMainScene::ProcessPacket(packet_base* packet)
-{
-	ECSManager* manager = m_ECSManager.get();
-
-	switch (packet->getType()) {
-	case pChangeDayOrNight:
-	{
-		ChangeDayToNight();
-		break;
-	}
-	default:
-		Scene::ProcessPacket(packet);
-	}
 }
 
 //void TestMainScene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
