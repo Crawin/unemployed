@@ -865,20 +865,31 @@ namespace component {
 
 	void Screen::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value sc = v["Screen"];
+
+		for (int i = 0; i < MAX_CCTV; ++i)
+			m_TargetNames[i] = sc[std::format("Slot_{}", i)].asString().c_str();
 	}
 
 	void Screen::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		// todo 임시이다
-		int cameraIndex = -1;
-		std::function<void(Name*, Camera*)> findCam = [&cameraIndex, manager](Name* name, Camera* cam) {
-			if (name->getName() == "CCTV_01")
-				cameraIndex = cam->GetCameraIndex();
-			};
-		manager->Execute(findCam);
+		int cameraIndex[MAX_CCTV] = { -1 };
+		memset(cameraIndex, -1, sizeof(cameraIndex));
 
-		if (cameraIndex != -1) {
-			const auto& data = rm->GetCameraRenderTargetData(cameraIndex);
+		for (int i = 0; i < MAX_CCTV; ++i) {
+			Entity* camEnt = manager->GetEntity(m_TargetNames[i]);
+			if (camEnt == nullptr) continue;
+
+			Camera* cam = manager->GetComponent<Camera>(camEnt);
+			if (cam == nullptr) continue;
+
+			cameraIndex[i] = cam->GetCameraIndex();
+		}
+
+		for (int i = 0; i < MAX_CCTV; ++i) {
+			if (cameraIndex[i] == -1) continue;
+			const auto& data = rm->GetCameraRenderTargetData(cameraIndex[i]);
 
 			component::Renderer* ren = manager->GetComponent<component::Renderer>(selfEntity);
 			Material* mat = rm->GetMaterial(ren->GetMaterial());
@@ -1283,6 +1294,74 @@ namespace component {
 				return true;
 
 		return false;
+	}
+
+	void RCController::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value rc = v["RCController"];
+
+		m_TargetRC = rc["Target"].asString().c_str();
+	}
+
+	void RCController::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// get camera render target indices
+		m_RCEntity = manager->GetEntity(m_TargetRC);
+
+		// set holdable action maps
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		XMFLOAT3& dir = m_Direction;
+		const float c_RcMoveSpeed = 1.0f;
+
+		// rotate by arrow keys
+		ActionFunction arrowUp = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+
+			XMVECTOR d = { m_Direction.x, m_Direction.y, m_Direction.z, 0.0f };
+			XMFLOAT4X4 temp = tr->GetWorldTransform();
+			XMMATRIX mat = XMLoadFloat4x4(&temp);
+
+			d = XMVector4Transform(d, mat);
+
+			XMFLOAT3 move;
+			XMStoreFloat3(&move, d);
+			move.y = 0.0f;
+
+			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
+
+			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+			};
+		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+
+			XMVECTOR d = { m_Direction.x, m_Direction.y, m_Direction.z, 0.0f };
+			XMFLOAT4X4 temp = tr->GetWorldTransform();
+			XMMATRIX mat = XMLoadFloat4x4(&temp);
+
+			d = XMVector4Transform(-d, mat);
+
+			XMFLOAT3 move;
+			XMStoreFloat3(&move, d);
+			move.y = 0.0f;
+
+			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
+
+			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+			};
+		ActionFunction dirLeft = [&dir](float deltaTime) { dir.x -= 1.0f; };
+		ActionFunction dirRight = [&dir](float deltaTime) { dir.x += 1.0f; };
+
+
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_UP, KEY_STATE::PRESSING), arrowUp);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_DOWN, KEY_STATE::PRESSING), arrowDown);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::START_PRESS), dirLeft);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::END_PRESS), dirRight);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::START_PRESS), dirRight);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::END_PRESS), dirLeft);
 	}
 
 }

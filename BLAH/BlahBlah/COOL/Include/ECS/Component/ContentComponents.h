@@ -335,6 +335,8 @@ namespace component {
 	class Screen : public ComponentBase<Screen> {
 		int m_CameraRenderTargets[MAX_CCTV] = { 0, };
 
+		std::string m_TargetNames[MAX_CCTV] = { "" };
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -358,6 +360,23 @@ namespace component {
 		void SetKeyID(int id) { m_KeyID = id; }
 
 		int GetKeyID() const { return m_KeyID; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// Throwable Component
+	// CCTV, drinks
+	//
+	class RCController : public ComponentBase<RCController> {
+		Entity* m_RCEntity = nullptr;
+		std::string m_TargetRC = "";
+
+		XMFLOAT3 m_Direction{ 0,0,1 };
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
 	};
 
 

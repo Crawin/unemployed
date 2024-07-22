@@ -18,7 +18,6 @@ class Bone
 	void LoadBone(ComPtr<ID3D12GraphicsCommandList> commandList, std::ifstream& file, ResourceManager* manager);
 
 public:
-	
 	const std::string& GetName() const { return m_Name; }
 
 	int GetLength() const { return m_Lenght; }

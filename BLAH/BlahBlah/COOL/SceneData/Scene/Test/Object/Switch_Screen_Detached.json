@@ -5,31 +5,31 @@
 			"Children" : 
 			[
 				{
-					"Name" : "Laptop",
+					"Name" : "Nintendo_Switch_Body",
 					"Renderer" : 
 					{
-						"Material" : "Object/Laptop",
-						"Mesh" : "Laptop.Laptop"
+						"Material" : "NoMaterial",
+						"Mesh" : "Switch_Screen_Detached.Nintendo_Switch_Body"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
 							0.0,
-							0.0,
+							-0.45498135685920715,
 							0.0
 						],
 						"Rotate" : 
 						[
-							-1.1155900210724212e-05,
+							0.0,
 							0.0,
 							0.0
 						],
 						"Scale" : 
 						[
-							0.0099999997764825821,
-							0.0099999997764825821,
-							0.0099999997764825821
+							1.0,
+							1.0,
+							1.0
 						]
 					}
 				},
@@ -38,7 +38,7 @@
 					"Renderer" : 
 					{
 						"Material" : "ScreenMaterial",
-						"Mesh" : "Laptop.Screen"
+						"Mesh" : "Switch_Screen_Detached.Switch_Screen"
 					},
 					"Screen": {
 						"Slot_0": "CCTV_01"
@@ -48,53 +48,51 @@
 						"Position" : 
 						[
 							0.0,
-							0.0,
+							-0.45498135685920715,
 							0.0
 						],
 						"Rotate" : 
 						[
-							-1.7986089005717076e-05,
+							0.0,
 							0.0,
 							0.0
 						],
 						"Scale" : 
 						[
-							0.0099999997764825821,
-							0.0099999997764825821,
-							0.0099999997764825821
+							1.0,
+							1.0,
+							1.0
 						]
 					}
 				}
 			],
-			"Name" : "Laptop_ScreenDetached",
+			"Name" : "Switch_Screen_Detached",
+			"Holdable" : {},
+			"RCController": 
+			{
+				"Target": "CCTV_TEST"
+			},
 			"Transform" : 
 			{
-				"Position" : [ 24.5, 0.8, 1.6 ],
-				"Rotate" : [-45.732, 86.147, -2.677 ],
+				"Position" : [ 8.41, 25.0, -2.96 ],
+				"Rotate" : [-79.808, 99.273, -15.481 ],
 				"Scale" : 
 				[
 					1.0,
 					1.0,
 					1.0
 				]
-			},
-			"Holdable": {
-				"HoldableID" : 4
-			},
-			"CCTVController": 
-			{
-				"Slot_0": "CCTV_01"
 			}
 		}
 	],
-	"Name" : "Laptop_Root",
+	"Name" : "Switch_Screen_Detached_Root",
 	"Transform" : 
 	{
 		"Position" : 
 		[
-			-31.900001525878906,
-			120.0,
-			679.89996337890625
+			0.0,
+			0.0,
+			0.0
 		],
 		"Rotate" : 
 		[
