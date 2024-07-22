@@ -235,7 +235,7 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 
 	}
 
-	return result;
+	return lerp(albedo, result, albedo.a);
 }
 
 #define ONLY_MAIN_LIGHT
@@ -395,5 +395,5 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
 	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
 
-	return lightingResult + lightShaftResult;
+	return lightingResult;// + lightShaftResult;
 }

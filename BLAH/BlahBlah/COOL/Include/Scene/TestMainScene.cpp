@@ -30,21 +30,26 @@ void TestMainScene::OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D
 	//skyMaterial->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 	int lightResIdx = m_ResourceManager->m_LightIdx;
-	int mainLightIdx = 0;
 	Mesh* sphere = m_ResourceManager->GetMesh(m_SphereSkyMeshIndex);
+	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 
-	std::function<void(component::DayLight*)> func =
-		[commandList, lightResIdx, mainLightIdx, sphere](component::DayLight* dayLight) {
+	std::function<void(component::DayLight*, component::Light*)> func =
+		[commandList, lightResIdx, sphere](component::DayLight* dayLight, component::Light* li) {
 		XMFLOAT4 noonLight = dayLight->GetNoonLight();
 		XMFLOAT4 moonLight = dayLight->GetMoonLight();
 		XMFLOAT4 sunsetLight = dayLight->GetSunSetLight();
 		float angle = dayLight->GetLightAngle();
 
+		LightData& light = li->GetLightData();
+		DebugPrintVector(light.m_Direction, "Dir: ");
+
+		int lightIdx = li->GetIndex();
+
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 4, &noonLight, static_cast<int>(DAYLIGHT_ROOTCONST::DAY_LIGHT));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 4, &moonLight, static_cast<int>(DAYLIGHT_ROOTCONST::MOON_LIGHT));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 4, &sunsetLight, static_cast<int>(DAYLIGHT_ROOTCONST::SUNSET_LIGHT));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &lightResIdx, static_cast<int>(DAYLIGHT_ROOTCONST::LIGHT_RESOURCE_INDEX));
-		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &mainLightIdx, static_cast<int>(DAYLIGHT_ROOTCONST::MAIN_LIGHT_INDEX));
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &lightIdx, static_cast<int>(DAYLIGHT_ROOTCONST::MAIN_LIGHT_INDEX));
 		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT), 1, &angle, static_cast<int>(DAYLIGHT_ROOTCONST::LIGHT_ANGLE));
 
 		int vtxSize = sphere->GetVertexNum();
