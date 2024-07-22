@@ -384,17 +384,17 @@ namespace component {
 
 	void UIDoorKey::Create(Json::Value& v, ResourceManager* rm)
 	{
-		rm->AddLateLoadUI("UITempMaterial", nullptr);
-		rm->AddLateLoadUI("UIPassword1", nullptr);
-		rm->AddLateLoadUI("UIPassword2", nullptr);
-		rm->AddLateLoadUI("UIKey1", nullptr);
-		rm->AddLateLoadUI("UIPassword4", nullptr);
-		rm->AddLateLoadUI("UIKey2", nullptr);
-		rm->AddLateLoadUI("UIPassword6", nullptr);
-		rm->AddLateLoadUI("UIPassword7", nullptr);
-		rm->AddLateLoadUI("UIPassword8", nullptr);
-		rm->AddLateLoadUI("UIPassword9", nullptr);
-		rm->AddLateLoadUI("UILineRed", nullptr);
+		rm->AddLateLoadUI("UI/UITempMaterial", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword1", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword2", nullptr);
+		rm->AddLateLoadUI("UI/UIKey1", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword4", nullptr);
+		rm->AddLateLoadUI("UI/UIKey2", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword6", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword7", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword8", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword9", nullptr);
+		rm->AddLateLoadUI("UI/UIX", nullptr);
 
 	}
 
@@ -419,7 +419,7 @@ namespace component {
 		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword8");
 		m_KeyMaterialMap[9] = rm->GetMaterial("UIPassword9");
 
-		m_KeyMaterialMap[-1] = rm->GetMaterial("UILineRed");
+		m_KeyMaterialMap[-1] = rm->GetMaterial("UIX");
 
 
 		for (Entity* child : children) {
