@@ -41,7 +41,7 @@ void TestMainScene::OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D
 		float angle = dayLight->GetLightAngle();
 
 		LightData& light = li->GetLightData();
-		DebugPrintVector(light.m_Direction, "Dir: ");
+		//DebugPrintVector(light.m_Direction, "Dir: ");
 
 		int lightIdx = li->GetIndex();
 

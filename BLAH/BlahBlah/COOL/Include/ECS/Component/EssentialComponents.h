@@ -430,6 +430,8 @@ namespace component {
 		// 카메라와 달리 얘는 배열로 관리 해야함
 		LightData m_LightData;
 
+		int m_LightIdx = -1;
+
 		bool m_IsMainLight = false;
 		bool m_CastShadow = false;
 
@@ -448,6 +450,9 @@ namespace component {
 
 		void RefreshScore() { m_Score = -100; }
 		float GetScore() const { return m_Score; }
+
+		void SetIndex(int idx) { m_LightIdx = idx; }
+		int GetIndex() const { return m_LightIdx; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -473,10 +478,13 @@ namespace component {
 		XMFLOAT4 m_SunSetLight = {};
 		XMFLOAT4 m_MoonLight = {};
 
+		Light* m_LightComponent = nullptr;
+
 		float m_LightAngle = 0.0f;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
@@ -487,6 +495,8 @@ namespace component {
 		const XMFLOAT4& GetSunSetLight() const { return m_SunSetLight; }
 		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
 		float GetLightAngle() const { return m_LightAngle; }
+
+		const Light* GetLightComp() const { return m_LightComponent; }
 	};
 
 	/////////////////////////////////////////////////////////

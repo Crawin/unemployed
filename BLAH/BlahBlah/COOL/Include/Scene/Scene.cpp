@@ -202,8 +202,10 @@ void Scene::UpdateLightData()
 	}
 
 	// memcpy to gpu
+
 	std::function<void(component::Light*)> updateLight = [&count, data](component::Light* lightComp) {
 		LightData& light = lightComp->GetLightData();
+		lightComp->SetIndex(count);
 		memcpy(data + count++, &light, sizeof(LightData));
 		};
 	m_ECSManager->Execute(updateLight);

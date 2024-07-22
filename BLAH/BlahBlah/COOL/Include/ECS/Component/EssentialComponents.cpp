@@ -483,6 +483,11 @@ namespace component {
 
 	}
 
+	void DayLight::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		m_LightComponent = manager->GetComponent<Light>(selfEntity);
+	}
+
 	void DayLight::ShowYourself() const
 	{
 		DebugPrint("DayLight Comp");
