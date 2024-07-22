@@ -1,0 +1,2084 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "city_part_demo_main1",
+					"Renderer" : 
+					{
+						"Material" : "Map/BG_Sideway_tile",
+						"Mesh" : "Background.city_part_demo_main1"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							13621.03125,
+							483.67648315429688,
+							-10456.4736328125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "city_part_demo_main2",
+					"Renderer" : 
+					{
+						"Material" : "Map/BG_Sideway_tile",
+						"Mesh" : "Background.city_part_demo_main2"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-20000.240234375,
+							558.9254150390625,
+							-10118.365234375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part1",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part1"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-26899.423828125,
+							627.94287109375,
+							-1674.16455078125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part2",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part2"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-5269.259765625,
+							129.0194091796875,
+							921.60870361328125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part3",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part3"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-5539.27783203125,
+							625.12530517578125,
+							-16628.40234375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part4",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part4"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2050.2822265625,
+							128.31230163574219,
+							915.2763671875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part5",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part5"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							22438.2734375,
+							627.322998046875,
+							92.93975830078125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part6",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part6"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2419.085693359375,
+							326.6156005859375,
+							-6945.81298828125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part7",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part7"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2496.675048828125,
+							626.13543701171875,
+							-16626.87109375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part8",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part8"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							7887.556640625,
+							527.137939453125,
+							-9526.5009765625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part9",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part9"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							10532.126953125,
+							527.42767333984375,
+							-9557.1650390625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part10",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part10"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							22946.8359375,
+							527.28216552734375,
+							-9906.0078125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part11",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part11"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							23113.447265625,
+							726.25830078125,
+							-17137.43359375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part12",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part12"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							10176.158203125,
+							626.7215576171875,
+							-16764.533203125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part13",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part13"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-21787.46484375,
+							592.08819580078125,
+							-2343.762939453125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part14",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part14"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-14815.0126953125,
+							434.74179077148438,
+							-82.955169677734375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part15",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part15"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-10146.86328125,
+							282.98330688476562,
+							987.5885009765625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part16",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part16"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-4928.55078125,
+							216.63356018066406,
+							-2976.111572265625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part17",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part17"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-5119.4931640625,
+							325.4210205078125,
+							-8327.4736328125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part18",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part18"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-5177.41259765625,
+							477.42578125,
+							-13258.0546875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part19",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part19"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-10629.8056640625,
+							675.8035888671875,
+							-16000.1865234375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part20",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part20"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-17826.01953125,
+							782.63311767578125,
+							-16354.015625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part21",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part21"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-22638.513671875,
+							819.78485107421875,
+							-16036.87109375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part22",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part22"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-26359.841796875,
+							822.876953125,
+							-15026.4951171875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part23",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part23"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-26976.63671875,
+							771.713134765625,
+							-11112.3759765625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part24",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part24"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-27194.390625,
+							683.6788330078125,
+							-5710.40673828125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part25",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part25"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2648.553466796875,
+							216.63356018066406,
+							-3019.681640625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part26",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part26"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							3409.3125,
+							175.51240539550781,
+							1220.037109375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part27",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part27"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							9349.3056640625,
+							306.00213623046875,
+							902.55279541015625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part28",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part28"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							17354.95703125,
+							488.67291259765625,
+							-683.8782958984375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part29",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part29"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							22965.85546875,
+							561.55535888671875,
+							-3751.270263671875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part30",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part30"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							20420.09765625,
+							514.0540771484375,
+							-6328.57080078125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part31",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part31"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							15105.0830078125,
+							518.52130126953125,
+							-7256.6865234375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part32",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part32"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							9243.748046875,
+							524.4615478515625,
+							-7294.087890625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part33",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part33"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2769.46728515625,
+							432.91598510742188,
+							-7324.24609375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part34",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part34"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							23414.970703125,
+							632.73858642578125,
+							-13580.984375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part35",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part35"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							19026.30859375,
+							690.609619140625,
+							-16611.611328125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part36",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part36"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							13894.3828125,
+							664.02606201171875,
+							-17210.68359375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part37",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part37"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							9901.7685546875,
+							570.67181396484375,
+							-13188.37109375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part38",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part38"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							19587.021484375,
+							519.539306640625,
+							-9299.0947265625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part39",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part39"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							15385.353515625,
+							524.00286865234375,
+							-9217.4609375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part40",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part40"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							7353.654296875,
+							614.53521728515625,
+							-15772.564453125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part41",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part41"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2344.6806640625,
+							619.20440673828125,
+							-17093.373046875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part42",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part42"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2447.66552734375,
+							363.66937255859375,
+							-10744.0732421875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part43",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part43"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2795.268310546875,
+							432.93862915039062,
+							-9203.70703125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part45",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part45"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-31117.30859375,
+							675.137939453125,
+							-5798.23779296875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part46",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part46"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-29960.3203125,
+							771.2254638671875,
+							-11219.076171875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part47",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part47"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-30895.8828125,
+							823.44415283203125,
+							-17041.55859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part50",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part50"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-24257.443359375,
+							825.55181884765625,
+							-18234.009765625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part51",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part51"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-19270.099609375,
+							794.93511962890625,
+							-18483.74609375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part52",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part52"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-14513.5966796875,
+							751.41961669921875,
+							-18891.654296875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part53",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part53"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-8340.9189453125,
+							661.367919921875,
+							-19415.244140625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part54",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part54"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-5384.54443359375,
+							534.7379150390625,
+							-26736.150390625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part55",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part55"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2688.580322265625,
+							534.98675537109375,
+							-26893.5703125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part56",
+					"Renderer" : 
+					{
+						"Material" : "Map/highway_wall",
+						"Mesh" : "Background.fence_part56"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							861.96746826171875,
+							626.51422119140625,
+							-19528.453125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part57",
+					"Renderer" : 
+					{
+						"Material" : "Map/highway_wall",
+						"Mesh" : "Background.fence_part57"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							8748.7080078125,
+							627.17950439453125,
+							-19424.794921875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part58",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part58"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							17280.970703125,
+							701.81854248046875,
+							-19684.734375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part61",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part61"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							26126.87890625,
+							706.71099853515625,
+							-15446.6123046875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part62",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part62"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							25987.884765625,
+							525.556396484375,
+							-8401.4130859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part63",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part63"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							25746.783203125,
+							565.93402099609375,
+							-3278.7421875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part66",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part66"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							20804.978515625,
+							608.5001220703125,
+							3129.638671875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part67",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part67"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							15331.5205078125,
+							432.46475219726562,
+							3245.73681640625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part68",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part68"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							9216.7041015625,
+							300.677978515625,
+							3588.911376953125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part69",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part69"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1970.20263671875,
+							151.81050109863281,
+							5210.25390625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part70",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part70"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-3660.76953125,
+							124.60260772705078,
+							3955.180419921875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part71",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part71"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-10663.3291015625,
+							289.79779052734375,
+							3577.58935546875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part72",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part72"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-15296.58984375,
+							438.0068359375,
+							2513.158447265625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part73",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part73"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-19885.126953125,
+							565.5047607421875,
+							1652.9891357421875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "fence_part74",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Background.fence_part74"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-25239.4140625,
+							622.21875,
+							1384.770263671875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.0099999997764825821,
+							0.0099999997764825821,
+							0.0099999997764825821
+						]
+					}
+				},
+				{
+					"Name" : "office_building_1_bgr",
+					"Renderer" : 
+					{
+						"Material" : "Map/BG_highrise_facades",
+						"Mesh" : "office_building_1_bgr.office_building_1_bgr"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							4744.0,
+							534.0,
+							-11864.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Background",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-2924.0,
+					-638.0,
+					22841.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Background_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

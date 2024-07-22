@@ -110,10 +110,13 @@
 					}
 				}
 			],
-			"Collider" : 
+			"Collider": 
 			{
-				"AutoMesh" : true,
-				"Static" : true
+				"Static": true,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [0.0, 0, 0],
+				"Extent": [10.0, 10, 10]
 			},
 			"Name" : "KeyTwo",
 			"Renderer" : 
@@ -121,13 +124,17 @@
 				"Material" : "Object/Key/Key_2",
 				"Mesh" : "Simple_03.Simple_03"
 			},
+			"Interaction":{},
+			"Holdable": {},
+			"Door": 
+			{
+				"KeyID": 3
+			},
 			"Transform" : 
 			{
 				"Position" : 
 				[
-					0.0,
-					0.0,
-					0.0
+					100.0, 20.0, 1100.0
 				],
 				"Rotate" : 
 				[
@@ -149,7 +156,7 @@
 	{
 		"Position" : 
 		[
-			0.0, 5.0, 0.0
+			0.0, 0.0, 0.0
 		],
 		"Rotate" : 
 		[
