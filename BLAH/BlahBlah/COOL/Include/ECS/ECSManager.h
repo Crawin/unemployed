@@ -143,6 +143,8 @@ public:
 	Entity* GetEntityInChildren(const std::string& name, Entity* parent);
 	Entity* GetEntityFromRoute(const std::string& name, Entity* parent);
 
+	void SetEntityState(Entity* entity, bool active);
+
 	// execute normal O(n)
 	template<class ...COMPONENTS>
 	void Execute(std::function<void(COMPONENTS*...)>& func)

@@ -2,6 +2,11 @@
 	"Name": "Guard",
 
 	"Server": {},
+	
+	"AI": 
+	{
+		"Type": 1
+	},
 
 	"Transform": {
 		"Position": [ 3160.0, 0.0, -400.0 ],

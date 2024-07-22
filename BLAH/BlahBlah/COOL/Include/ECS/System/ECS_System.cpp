@@ -226,8 +226,21 @@ namespace ECSsystem {
 
 					manager->AddTimeLine(ent->GetEntity(), changeTime);
 					};
-
 				manager->Execute(changeTime);
+
+				// hide students
+				std::function<void(component::AI*, component::SelfEntity*)> disable = [manager](component::AI* ai, component::SelfEntity* self) {
+					if (ai->GetType() == 0) manager->SetEntityState(self->GetEntity(), false);
+					};
+				manager->Execute(disable);
+
+				// set player position to original
+				std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+					tr->SetPosition(pl->GetOriginalPosition());
+					tr->SetRotation(pl->GetOriginalRotate());
+					};
+				manager->Execute(movePlayers);
+
 			}
 
 			};
@@ -430,17 +443,11 @@ namespace ECSsystem {
 		manager->Execute(updateAndGetTime);
 
 
-		DebugPrint(std::format("time: {}", time));
-
 		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
 			[time](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
 			
 			XMFLOAT3 newRot = dayLight->GetOriginRotate();
 			newRot.x += time * (360.0f / 24.0f);
-
-			if (dayLight->IsRender())
-				DebugPrint(std::format("angle: {}", newRot.x));
-
 
 			if (newRot.x > 360.0f) newRot.x -= 360.0f;
 

@@ -764,7 +764,6 @@ namespace component {
 	void Player::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		// make interaction enable
-		
 		EventFunction begin = [manager](Entity* playerEnt, Entity* interaction) {
 			auto pawn = manager->GetComponent<component::Pawn>(playerEnt);
 			pawn->SetInteractionEntity(interaction);
@@ -788,6 +787,10 @@ namespace component {
 		else {
 			ERROR_QUIT("ERROR!!! no dynamic collider on Player Entity!!");
 		}
+
+		Transform* tr = manager->GetComponent<Transform>(selfEntity);
+		m_OriginalPosition = tr->GetPosition();
+		m_OriginalRotate = tr->GetRotation();
 	}
 
 	void Player::ShowYourself() const
@@ -964,5 +967,13 @@ namespace component {
 
 		if (m_CurTime >= 24.0f) m_CurTime -= 24.0f;
 	}
+
+	void AI::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value ai = v["AI"];
+
+		m_Type = ai["Type"].asInt();
+	}
+
 
 }

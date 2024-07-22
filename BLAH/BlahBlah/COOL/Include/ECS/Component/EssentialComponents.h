@@ -98,6 +98,8 @@ namespace component {
 	//
 	class Renderer : public ComponentBase<Renderer>
 	{
+		bool m_Active = true;
+
 		XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();
 
 		XMFLOAT4 m_ExtraShaderData[2] = { {0,0,0,0}, {0,0,0,0} };
@@ -123,6 +125,9 @@ namespace component {
 		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
 		void SetExtraShaderData(const XMFLOAT4& data, int idx) { m_ExtraShaderData[idx] = data; }
 		void SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view) { m_VertexBufferView = view; }
+
+		void SetActive(bool state) { m_Active = state; }
+		bool IsActive() const { return m_Active; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -705,6 +710,9 @@ namespace component {
 		bool m_OnGround = false;
 		bool m_Sitting = false;
 
+		XMFLOAT3 m_OriginalPosition{};
+		XMFLOAT3 m_OriginalRotate{};
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -716,6 +724,9 @@ namespace component {
 
 		bool IsAir() const { return m_Jumping && !m_OnGround; }
 		bool IsSitting() const { return m_Sitting; }
+
+		const XMFLOAT3& GetOriginalPosition() const { return m_OriginalPosition; }
+		const XMFLOAT3& GetOriginalRotate() const { return m_OriginalRotate; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -781,6 +792,21 @@ namespace component {
 
 		const std::string& GetTargetInit() const { return m_TargetEntityName; }
 		Pawn* GetControllingPawn() const { return m_CurrentPossess; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// AI Component
+	// AI들이 가지는 컴포넌트
+	//
+	class AI : public ComponentBase<AI> {
+		int m_Type = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		//virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const {}
+
+		int GetType() const { return m_Type; }
 	};
 
 }

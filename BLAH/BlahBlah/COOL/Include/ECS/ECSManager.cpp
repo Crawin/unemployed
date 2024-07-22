@@ -268,3 +268,21 @@ Entity* ECSManager::GetEntityFromRoute(const std::string& name, Entity* parent)
 
 	return entityTarget;
 }
+
+void ECSManager::SetEntityState(Entity* entity, bool active)
+{
+	// renderer
+	component::Renderer* rend = GetComponent<component::Renderer>(entity);
+	if (rend) rend->SetActive(active);
+	
+	// dynamic collider
+	component::DynamicCollider* dCol = GetComponent<component::DynamicCollider>(entity);
+	if (dCol) dCol->SetActive(active);
+
+	// Physics
+	component::Physics* phys = GetComponent<component::Physics>(entity);
+	if (phys) phys->SetCalculateState(active);
+
+	for (Entity* child : entity->GetChildren())
+		SetEntityState(child, active);
+}

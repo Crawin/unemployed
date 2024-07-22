@@ -15,6 +15,11 @@
 		"Player": "Student"
 	},
 
+	"AI": 
+	{
+		"Type": 0
+	},
+
 	"Physics":
 	{
 		"MaxVelocity": 200.0,

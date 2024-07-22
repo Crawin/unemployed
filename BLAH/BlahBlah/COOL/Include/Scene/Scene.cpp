@@ -75,9 +75,20 @@ void Scene::ChangeDayToNight()
 		};
 	m_ECSManager->Execute(changeTime);
 
-	// todo hide students
-	// reset player positions
+	// hide students
+	std::function<void(component::AI*, component::SelfEntity*)> disable = [manager](component::AI* ai, component::SelfEntity* self) {
+		if (ai->GetType() == 0)
+			manager->SetEntityState(self->GetEntity(), false);
 
+		};
+	m_ECSManager->Execute(disable);
+
+	// reset player positions
+	std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+		tr->SetPosition(pl->GetOriginalPosition());
+		tr->SetRotation(pl->GetOriginalRotate());
+		};
+	m_ECSManager->Execute(movePlayers);
 }
 
 void Scene::SetManagers()
@@ -260,6 +271,9 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// animate and set animed data
 	std::function<void(component::Renderer*, component::AnimationExecutor*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
+
+		if (renderComponent->IsActive() == false) return;
+
 		int meshIdx = renderComponent->GetMesh();
 		Mesh* mesh = manager->GetMesh(meshIdx);
 		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
@@ -335,6 +349,8 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 
 	// make function
 	std::function<void(component::Renderer*/*, component::Name**/)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent/*, component::Name* name*/) {
+		if (renderComponent->IsActive() == false) return;
+
 		int materialIdx = renderComponent->GetMaterial();
 		int meshIdx = renderComponent->GetMesh();
 
@@ -458,6 +474,9 @@ void Scene::BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList)
 	BoundingOrientedBox tempOBB;
 
 	std::function<void(component::Renderer*)> render = [commandList, res, &cameraFustum, &tempOBB](component::Renderer* rend) {
+
+		if (rend->IsActive() == false) return;
+
 		Mesh* mesh = res->GetMesh(rend->GetMesh());
 
 		const BoundingOrientedBox& meshOBB = mesh->GetBoundingBox();
