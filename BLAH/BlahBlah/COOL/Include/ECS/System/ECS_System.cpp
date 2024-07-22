@@ -192,7 +192,7 @@ namespace ECSsystem {
 			}
 
 
-
+#ifdef _DEBUG
 			std::function<void(component::PlayerController*)> possessToOne = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player1"); };
 			std::function<void(component::PlayerController*)> possessToTwo = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player2"); };
 
@@ -242,6 +242,7 @@ namespace ECSsystem {
 				manager->Execute(movePlayers);
 
 			}
+#endif
 
 			};
 
