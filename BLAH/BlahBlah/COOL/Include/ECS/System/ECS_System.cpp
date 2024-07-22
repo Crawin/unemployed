@@ -389,12 +389,23 @@ namespace ECSsystem {
 
 	void DayLight::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
-			[deltaTime](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
-			float rotSpeed = 360.0f / dayLight->GetDayCycle();
+		float time = 12.0f;
 
-			XMFLOAT3 newRot = transform->GetRotation();
-			newRot.x += rotSpeed * deltaTime;
+		std::function<void(component::DayLightManager*)> updateAndGetTime = [deltaTime, &time](component::DayLightManager* dayManager) {
+			dayManager->TimeAdd(deltaTime);
+			time = dayManager->GetCurTime();
+			};
+
+		manager->Execute(updateAndGetTime);
+
+
+
+		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
+			[time](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
+			
+			XMFLOAT3 newRot = dayLight->GetOriginRotate();
+			newRot.x += time * (360.0f / 24.0f);
+
 			if (newRot.x > 360.0f) newRot.x = 0.0f;
 
 			transform->SetRotation(newRot);

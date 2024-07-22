@@ -464,7 +464,6 @@ namespace component {
 	void DayLight::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value d = v["DayLight"];
-		m_DayCycle = d["DayCycle"].asFloat();
 
 		m_NoonLight.x = d["NoonLight"][0].asFloat();
 		m_NoonLight.y = d["NoonLight"][1].asFloat();
@@ -493,17 +492,19 @@ namespace component {
 
 		m_RenderShader = d["RenderShader"].asBool();
 
+		m_Day = d["Day"].asBool();
+
 	}
 
 	void DayLight::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		m_LightComponent = manager->GetComponent<Light>(selfEntity);
+		m_OriginRotate = manager->GetComponent<Transform>(selfEntity)->GetRotation();
 	}
 
 	void DayLight::ShowYourself() const
 	{
 		DebugPrint("DayLight Comp");
-		DebugPrint(std::format("\tDay Cycle: {}", m_DayCycle));
 	}
 
 
@@ -941,6 +942,27 @@ namespace component {
 		m_CurrentPossess->SetActive(true);
 
 		return true;
+	}
+
+	int DayLightManager::m_ManagerCount = 0;
+	void DayLightManager::Create(Json::Value& v, ResourceManager* rm)
+	{
+		m_ManagerCount++;
+		if (m_ManagerCount > 1) 
+			ERROR_QUIT("ERROR!!, DayLightManager is two");
+
+		Json::Value d = v["DayLightManager"];
+		m_CurTime = d["Time"].asFloat();
+		m_DayCycle = d["DayCycle"].asFloat();
+	}
+
+	void DayLightManager::TimeAdd(float deltaTime)
+	{
+		// 360.0f / 24.0f
+		float timeAdd = 24.0f / m_DayCycle;
+		m_CurTime += deltaTime * timeAdd;
+
+		if (m_CurTime >= 24.0f) m_CurTime -= 24.0f;
 	}
 
 }

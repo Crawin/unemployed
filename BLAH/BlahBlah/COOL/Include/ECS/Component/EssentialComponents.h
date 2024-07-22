@@ -471,19 +471,21 @@ namespace component {
 	// 시간에 따라 Directional Light가 회전되기 위한 컴포넌트
 	//
 	class DayLight : public ComponentBase<DayLight> {
-		// 초단위
-		float m_DayCycle = 30.0f;
-
+		// 초단위, m_DayCycle초 만큼 한바퀴를 돈다
+		//
 		XMFLOAT4 m_NoonLight = {};
 		XMFLOAT4 m_SunSetLight = {};
 		XMFLOAT4 m_MoonLight = {};
 		XMFLOAT4 m_MinAmbient = {};
 		XMFLOAT4 m_MaxAmbient = {};
 
+		XMFLOAT3 m_OriginRotate{ 0,0,0 };
+
 		Light* m_LightComponent = nullptr;
 
 		float m_LightAngle = 0.0f;
 		bool m_RenderShader = false;
+		bool m_Day = true;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -493,7 +495,6 @@ namespace component {
 
 		void SetLightAngle(float angle) { m_LightAngle = angle; }
 
-		float GetDayCycle() const { return m_DayCycle; }
 		const XMFLOAT4& GetNoonLight() const { return m_NoonLight; }
 		const XMFLOAT4& GetSunSetLight() const { return m_SunSetLight; }
 		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
@@ -501,10 +502,32 @@ namespace component {
 
 		const XMFLOAT4& GetMinAmbient() const { return m_MinAmbient; }
 		const XMFLOAT4& GetMaxAmbient() const { return m_MaxAmbient; }
+		
+		const XMFLOAT3& GetOriginRotate() const { return m_OriginRotate; }
 
 		const Light* GetLightComp() const { return m_LightComponent; }
 
 		bool IsRender() const { return m_RenderShader; }
+	};
+
+	class DayLightManager : public ComponentBase<DayLightManager> {
+		// 초단위, m_DayCycle초 만큼 한바퀴를 돈다
+		float m_DayCycle = 30.0f;
+		float m_CurTime = 0.0f;
+
+		static int m_ManagerCount;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const {}
+
+		void SetDayCycle(float cycle) { m_DayCycle = cycle; }
+		float GetDayCycle() const { return m_DayCycle; }
+
+		void SetCurTime(float time) { m_CurTime = time; }
+		float GetCurTime() const { return m_CurTime; }
+
+		void TimeAdd(float deltaTime);
 	};
 
 	/////////////////////////////////////////////////////////

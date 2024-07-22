@@ -24,6 +24,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Light, "Light");
 	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
+	REGISTER_COMPONENT(component::DayLightManager, "DayLightManager");
 	REGISTER_COMPONENT(component::Server, "Server");
 	REGISTER_COMPONENT(component::Collider, "Collider");
 	REGISTER_COMPONENT(component::DynamicCollider, "DynamicCollider");
