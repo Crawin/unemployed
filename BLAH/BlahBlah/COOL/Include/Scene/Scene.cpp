@@ -736,10 +736,6 @@ void Scene::ProcessPacket(packet_base* packet)
 		m_ECSManager->Execute(func);
 		break;
 	}
-	case pChangeDayOrNight:
-	{
-		break;
-	}
 	case pGetItem:
 	{
 		break;

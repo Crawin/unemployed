@@ -9,7 +9,7 @@
 	},
 	"DayLightManager": {
 		"Time": 0.0,
-		"DayCycle": 24
+		"DayCycle": 240
 	},
 
 	"Children": 
@@ -20,7 +20,7 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [0.0, 0.0, 0.0],
+				"Rotate": [270.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 
@@ -54,7 +54,7 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [180.0, 0.0, 0.0],
+				"Rotate": [90.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 

@@ -16,6 +16,8 @@ private:
     int m_SkyMaterialIdx = -1;
     int m_SphereSkyMeshIndex = -1;
 
+    void ChangeDayToNight();
+
 protected:
     virtual bool LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList);
 

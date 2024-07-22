@@ -527,6 +527,8 @@ namespace component {
 		void SetCurTime(float time) { m_CurTime = time; }
 		float GetCurTime() const { return m_CurTime; }
 
+		float* GetCurTimePtr() { return &m_CurTime; }
+
 		void TimeAdd(float deltaTime);
 	};
 

@@ -199,6 +199,37 @@ namespace ECSsystem {
 			if (curPawn->GetInputState(GAME_INPUT::F4) == KEY_STATE::END_PRESS) manager->Execute(possessToOne);
 			if (curPawn->GetInputState(GAME_INPUT::F5) == KEY_STATE::END_PRESS) manager->Execute(possessToTwo);
 
+			if (curPawn->GetInputState(GAME_INPUT::F1) == KEY_STATE::END_PRESS) {
+				std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager](component::DayLightManager* dayManager, component::SelfEntity* ent) {
+
+					PlayerController* ctrler = nullptr;
+					std::function<void(PlayerController*)> getCtrler = [&ctrler](PlayerController* control) { ctrler = control; };
+					manager->Execute(getCtrler);
+
+					Pawn* controlledPawn = ctrler->GetControllingPawn();
+
+					Pawn* changeingPawn = nullptr;
+					std::function<void(Pawn*, Name*)> getChangePawn = [&changeingPawn](Pawn* pawn, Name* name) { if(name->getName() == "ChangeTimePawn") changeingPawn = pawn; };
+					manager->Execute(getChangePawn);
+					
+					// possess to camera
+					ctrler->Possess(changeingPawn);
+
+					// end event
+					std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+
+					TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
+					changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
+					changeTime->AddKeyFrame(22.0f, 1);
+					changeTime->AddKeyFrame(22.0f, 2);
+					changeTime->SetEndEvent(returnToPawn);
+
+					manager->AddTimeLine(ent->GetEntity(), changeTime);
+					};
+
+				manager->Execute(changeTime);
+			}
+
 			};
 
 		// input으로 pysics 업데이트 - player
@@ -399,6 +430,7 @@ namespace ECSsystem {
 		manager->Execute(updateAndGetTime);
 
 
+		DebugPrint(std::format("time: {}", time));
 
 		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
 			[time](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
@@ -406,7 +438,11 @@ namespace ECSsystem {
 			XMFLOAT3 newRot = dayLight->GetOriginRotate();
 			newRot.x += time * (360.0f / 24.0f);
 
-			if (newRot.x > 360.0f) newRot.x = 0.0f;
+			if (dayLight->IsRender())
+				DebugPrint(std::format("angle: {}", newRot.x));
+
+
+			if (newRot.x > 360.0f) newRot.x -= 360.0f;
 
 			transform->SetRotation(newRot);
 
@@ -1048,8 +1084,10 @@ namespace ECSsystem {
 		}
 
 		for (auto iter = m_TimeLines.begin(); iter != m_TimeLines.end();) {
-			if (iter->second->IsPlaying() == false)
+			if (iter->second->IsPlaying() == false) {
+				iter->second->RunEndEvent();
 				iter = m_TimeLines.erase(iter);
+			}
 			else
 				++iter;
 		}
