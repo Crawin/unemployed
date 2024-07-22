@@ -1,6 +1,6 @@
 #pragma once
 constexpr short PORT = 9000;
-constexpr int BUFSIZE = 512;
+constexpr int BUFSIZE = 1024;
 constexpr int STUDENT_SIZE = 1;
 
 class packet_base;

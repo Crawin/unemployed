@@ -747,7 +747,7 @@ void Scene::ProcessPacket(packet_base* packet)
 		sc_packet_key_input* buf = reinterpret_cast<sc_packet_key_input*>(packet);
 		std::function<void(component::Server*, component::Pawn*)> func = [manager, buf](component::Server* server, component::Pawn* pawn) {
 			if (pawn->GetControlServer() == false) return;
-
+			if (server->getID() != buf->getPlayer()) return;
 			char c = ConvertGameInputEnumToKeyIntValue(buf->getGameInput());
 			DebugPrint(std::format("state: {}, key: {}", (int)buf->getKeyState(), c));
 			pawn->SetInput(buf->getGameInput(), buf->getKeyState());

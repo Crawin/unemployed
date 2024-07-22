@@ -4,7 +4,6 @@
 #include "IOCP.h"
 std::vector<Mesh*> m_vMeshes;
 std::unordered_map<int, NODE*> g_um_graph;
-//concurrency::concurrent_unordered_map<int, std::atomic<std::shared_ptr>
 std::unordered_map<unsigned int, SESSION> login_players;
 std::priority_queue<npc_info> g_npc_timer;
 std::mutex g_mutex_npc_timer;
@@ -84,7 +83,6 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		unsigned int my_id = static_cast<unsigned int>(key);
 
 		if (FALSE == ret) {
-			print_error("GQCS", WSAGetLastError());
 			if (0 == rw_byte) {
 				unsigned int gameNum = login_players[my_id].getGameNum();
 				if (Games.find(gameNum) == Games.end())
@@ -120,6 +118,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				std::cout << "login_players에서 " << my_id << "를 삭제하였습니다." << std::endl;
 				continue;
 			}
+			print_error("GQCS", WSAGetLastError());
 		}
 
 		EXP_OVER* e_over = reinterpret_cast<EXP_OVER*>(over);
