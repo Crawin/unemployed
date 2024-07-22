@@ -8,48 +8,15 @@
 					"Children" : 
 					[
 						{
-							"Children" : 
-							[
-								{
-									"Name" : "Knob_1",
-									"Renderer" : 
-									{
-										"Material" : "Object/Knob",
-										"Mesh" : "Knob_1.Knob_1"
-									},
-									"Transform" : 
-									{
-										"Position" : [ 50.0, 0.0, 0.0],
-										"Rotate" : [ 0.0, 0.0, 0.0 ],
-										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
-									}
-								}
-							],
-							"Collider" : 
-							{
-								"AutoMesh" : true,
-								"Static" : true
-							},
-							"Name" : "FrameRender",
+							"Name" : "Knob_1",
 							"Renderer" : 
 							{
-								"Material" : "Object/Door",
-								"Mesh" : "Door.Frame"
+								"Material" : "Object/Knob",
+								"Mesh" : "Knob_1.Knob_1"
 							},
-
 							"Transform" : 
 							{
-								"Position" : 
-								[
-									-50.0,
-									107.82761383056641,
-									-7.62939453125e-06
-								],
+								"Position" : [ 0.0, 100.0, 0.0],
 								"Rotate" : [ 0.0, 0.0, 0.0 ],
 								"Scale" : [ 1.0, 1.0, 1.0 ]
 							}
@@ -110,11 +77,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -198,11 +160,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -286,11 +243,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -374,11 +326,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -462,11 +409,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -550,11 +492,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -638,11 +575,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -726,11 +658,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -814,11 +741,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -902,11 +824,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -990,11 +907,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1078,11 +990,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1166,11 +1073,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1254,11 +1156,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1342,11 +1239,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1430,11 +1322,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1518,11 +1405,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1606,11 +1488,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1694,11 +1571,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1782,11 +1654,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1870,11 +1737,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1958,11 +1820,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2046,11 +1903,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2134,11 +1986,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2222,11 +2069,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2310,11 +2152,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2398,11 +2235,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2486,11 +2318,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2574,11 +2401,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2662,11 +2484,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2750,11 +2567,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2838,11 +2650,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2926,11 +2733,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3014,11 +2816,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3102,11 +2899,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3190,11 +2982,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3278,11 +3065,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3366,11 +3148,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3454,11 +3231,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3542,11 +3314,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3630,11 +3397,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3718,11 +3480,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3806,11 +3563,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3894,11 +3646,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3982,11 +3729,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4070,11 +3812,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4158,11 +3895,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4246,11 +3978,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4334,11 +4061,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4422,11 +4144,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4510,11 +4227,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4598,11 +4310,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4686,11 +4393,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4774,11 +4476,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4862,11 +4559,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4950,11 +4642,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5038,11 +4725,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5126,11 +4808,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5214,11 +4891,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5302,11 +4974,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5390,11 +5057,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5478,11 +5140,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5566,11 +5223,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5654,11 +5306,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5742,11 +5389,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5830,11 +5472,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5918,11 +5555,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6006,11 +5638,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6094,11 +5721,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6182,11 +5804,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6270,11 +5887,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6358,11 +5970,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6446,11 +6053,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6534,11 +6136,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6622,11 +6219,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6710,11 +6302,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6798,11 +6385,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6886,11 +6468,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6974,11 +6551,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7062,11 +6634,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7150,11 +6717,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7238,11 +6800,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7326,11 +6883,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7414,11 +6966,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7502,11 +7049,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7590,11 +7132,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7678,11 +7215,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7766,11 +7298,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7854,11 +7381,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7942,11 +7464,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8030,11 +7547,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8118,11 +7630,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8206,11 +7713,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8294,11 +7796,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8382,11 +7879,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8470,11 +7962,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8558,11 +8045,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8646,11 +8128,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8734,11 +8211,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8822,11 +8294,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8910,11 +8377,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8998,11 +8460,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9086,11 +8543,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9174,11 +8626,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9262,11 +8709,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9350,11 +8792,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9438,11 +8875,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9526,11 +8958,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9614,11 +9041,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9702,11 +9124,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9790,11 +9207,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9878,11 +9290,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9966,11 +9373,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10054,11 +9456,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10142,11 +9539,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10230,11 +9622,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10318,11 +9705,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10406,11 +9788,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10494,11 +9871,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
