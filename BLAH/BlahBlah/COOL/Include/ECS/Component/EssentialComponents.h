@@ -477,10 +477,13 @@ namespace component {
 		XMFLOAT4 m_NoonLight = {};
 		XMFLOAT4 m_SunSetLight = {};
 		XMFLOAT4 m_MoonLight = {};
+		XMFLOAT4 m_MinAmbient = {};
+		XMFLOAT4 m_MaxAmbient = {};
 
 		Light* m_LightComponent = nullptr;
 
 		float m_LightAngle = 0.0f;
+		bool m_RenderShader = false;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -496,7 +499,12 @@ namespace component {
 		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
 		float GetLightAngle() const { return m_LightAngle; }
 
+		const XMFLOAT4& GetMinAmbient() const { return m_MinAmbient; }
+		const XMFLOAT4& GetMaxAmbient() const { return m_MaxAmbient; }
+
 		const Light* GetLightComp() const { return m_LightComponent; }
+
+		bool IsRender() const { return m_RenderShader; }
 	};
 
 	/////////////////////////////////////////////////////////

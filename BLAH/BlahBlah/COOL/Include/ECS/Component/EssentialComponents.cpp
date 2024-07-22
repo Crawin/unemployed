@@ -481,6 +481,18 @@ namespace component {
 		m_MoonLight.z = d["MoonLight"][2].asFloat();
 		m_MoonLight.w = d["MoonLight"][3].asFloat();
 
+		m_MinAmbient.x = d["MinAmbient"][0].asFloat();
+		m_MinAmbient.y = d["MinAmbient"][1].asFloat();
+		m_MinAmbient.z = d["MinAmbient"][2].asFloat();
+		m_MinAmbient.w = d["MinAmbient"][3].asFloat();
+
+		m_MaxAmbient.x = d["MaxAmbient"][0].asFloat();
+		m_MaxAmbient.y = d["MaxAmbient"][1].asFloat();
+		m_MaxAmbient.z = d["MaxAmbient"][2].asFloat();
+		m_MaxAmbient.w = d["MaxAmbient"][3].asFloat();
+
+		m_RenderShader = d["RenderShader"].asBool();
+
 	}
 
 	void DayLight::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)

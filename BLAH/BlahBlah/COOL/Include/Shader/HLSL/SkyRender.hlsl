@@ -55,10 +55,10 @@ float3 CalculateRayleighScattering(float3 lightDirection, float3 viewDirection, 
 	const float3 waveLengths  = float3(0.650f, 0.570f, 0.475f);
 	const float3 k =  0.0025 / (waveLengths * waveLengths * waveLengths * waveLengths);
 
-	float cosTheta = dot(normalize(viewDirection), normalize(normal));
+	float cosTheta = (dot(normalize(viewDirection), normalize(normal)) + 1) / 2.0f;
 	float3 rayleigh = k * (1.0 + cosTheta * cosTheta);
 
-	float cosPhi = dot(normalize(lightDirection), normalize(normal));
+	float cosPhi = (dot(normalize(lightDirection), normalize(normal)) + 1) / 2.0f;
 	float sunlightIntensity = max(0.0, cosPhi) * 20.0;
 
 	float3 skyColor = rayleigh * sunlightIntensity;
@@ -70,7 +70,7 @@ float3 CalculateRayleighScattering(float3 lightDirection, float3 viewDirection, 
 float3 CalculateLightSource(float3 normal, float3 lightDirection)
 {
 	float dotRes = dot(normal, lightDirection);
-	float mult = pow(dotRes, 128.0f);
+	float mult = pow(abs(dotRes), 128.0f);
 
 	return float3(1, 1, 1) * mult;
 }
@@ -94,7 +94,7 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	float3 viewVector = normalize(pos.xyz - cameraPosition);
 
 	float angle = dot(mainLight.m_Direction, i.normal);
-	clip(angle);
+	//clip(angle);
 
 	float3 albedo = CalculateRayleighScattering(-normalize(mainLight.m_Direction), viewVector, -i.normal) + CalculateLightSource(i.normal, mainLight.m_Direction);
 	albedo *= mainLight.m_LightColor;

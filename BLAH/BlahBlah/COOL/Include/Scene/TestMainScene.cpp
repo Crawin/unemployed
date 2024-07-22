@@ -35,6 +35,9 @@ void TestMainScene::OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D
 
 	std::function<void(component::DayLight*, component::Light*)> func =
 		[commandList, lightResIdx, sphere](component::DayLight* dayLight, component::Light* li) {
+
+		if (dayLight->IsRender() == false) return;
+
 		XMFLOAT4 noonLight = dayLight->GetNoonLight();
 		XMFLOAT4 moonLight = dayLight->GetMoonLight();
 		XMFLOAT4 sunsetLight = dayLight->GetSunSetLight();

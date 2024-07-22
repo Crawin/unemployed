@@ -408,7 +408,10 @@ namespace ECSsystem {
 			// 0, 90, 180
 			// 0   1   0
 			// day time
-			float weight = powf((sin(XMConvertToRadians(newRot.x))), 2);
+			float ambientWeight = sin(XMConvertToRadians(newRot.x));
+			float weight = powf(ambientWeight, 2);
+
+			ambientWeight = (ambientWeight + 1.0f) / 2.0f;
 
 			LightData& li = light->GetLightData();
 
@@ -428,7 +431,11 @@ namespace ECSsystem {
 						XMLoadFloat4(&dayLight->GetMoonLight()),
 						weight));
 			}
-
+			XMStoreFloat4(&li.m_LightAmbient,
+					XMVectorLerp(
+						XMLoadFloat4(&dayLight->GetMinAmbient()),
+						XMLoadFloat4(&dayLight->GetMaxAmbient()),
+						ambientWeight));
 
 
 			//DebugPrint(std::format("angle : {}\tweight : {}", newRot.x, weight));
