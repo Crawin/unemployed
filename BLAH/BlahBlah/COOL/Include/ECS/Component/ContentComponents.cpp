@@ -196,6 +196,8 @@ namespace component {
 		m_FailCount = door["FailCount"].asInt();
 		m_RotateAxis = door["RotateAxis"].asInt();
 		m_DoorId = door["ID"].asInt();
+		m_Hp = door["HP"].asInt();
+
 	}
 
 	void DoorControl::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -717,6 +719,14 @@ namespace component {
 			// set collided position on renderer
 			DoorControl* doorComp = manager->GetComponent<DoorControl>(other);
 			doorComp->SetCrushPosition(attackPosOnDoorLocal, 50.0f, 15.0f);
+			
+			// todo 문 체력 줄여서 0되면 열리게 
+			int doorhp = doorComp->GetDoorHp();
+			doorComp->SetDoorHp(--doorhp);
+			if (doorhp == 0) doorComp->SetLock(false);
+			// todo 소리 재생
+
+
 
 			DebugPrintVector(attackPosOnDoorLocal, "pos: ");
 

@@ -89,6 +89,7 @@ namespace component {
 		int m_Gamemode = -1;
 		int m_FailCount = 0;
 		int m_KeyID = -1;
+		int m_Hp = 2;
 
 		// 0, 1, 2 -> x, y, z
 		int m_RotateAxis = 1;
@@ -116,6 +117,7 @@ namespace component {
 		int GetAxis() const { return m_RotateAxis; }
 		int GetDoorID() const { return m_DoorId; }
 		bool GetKeyDoorOpen() const { return m_KeyDoorOpen; }
+		int GetDoorHp() const { return m_Hp; }
 
 		void SetLock(bool lock, bool sendServer = true);
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
@@ -124,6 +126,7 @@ namespace component {
 		void SetOpen(ECSManager* manager, Transform* tr, Entity* self, bool state, bool sendServer = true);
 		void SetOpen(bool state) { m_Open = state; }
 		void SetKeyDoorOpen(bool keyopen) { m_KeyDoorOpen = keyopen; }
+		void SetDoorHp(int hp) { m_Hp = hp; }
 
 
 		void SetCrushPosition(XMFLOAT3 pos, float power, float distance);
