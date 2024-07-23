@@ -626,6 +626,8 @@ namespace component {
 		bool m_Active = true;
 		bool m_ColideWithDynamic = true;
 
+		float m_PossibleClimbHeight = 30.0f;
+
 		CollideEvents m_EventFunctions;
 
 		std::list<CollidedEntity> m_CollidedEntities;

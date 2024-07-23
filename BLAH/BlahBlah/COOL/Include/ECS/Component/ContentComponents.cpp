@@ -764,6 +764,10 @@ namespace component {
 			Name* name = manager->GetComponent<Name>(other);
 
 			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+			
+			Physics* py = manager->GetComponent<Physics>(self);
+			DebugPrintVector(py->GetVelocity(), "velocity: ");
+
 			};
 
 		DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
@@ -1325,7 +1329,7 @@ namespace component {
 			XMFLOAT4X4 temp = tr->GetWorldTransform();
 			XMMATRIX mat = XMLoadFloat4x4(&temp);
 
-			d = XMVector4Transform(-d, mat);
+			d = XMVector4Transform(d, mat);
 
 			XMFLOAT3 move;
 			XMStoreFloat3(&move, d);
@@ -1344,7 +1348,7 @@ namespace component {
 			XMFLOAT4X4 temp = tr->GetWorldTransform();
 			XMMATRIX mat = XMLoadFloat4x4(&temp);
 
-			d = XMVector4Transform(d, mat);
+			d = XMVector4Transform(-d, mat);
 
 			XMFLOAT3 move;
 			XMStoreFloat3(&move, d);
