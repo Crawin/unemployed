@@ -464,7 +464,6 @@ namespace component {
 	void DayLight::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value d = v["DayLight"];
-		m_DayCycle = d["DayCycle"].asFloat();
 
 		m_NoonLight.x = d["NoonLight"][0].asFloat();
 		m_NoonLight.y = d["NoonLight"][1].asFloat();
@@ -481,18 +480,39 @@ namespace component {
 		m_MoonLight.z = d["MoonLight"][2].asFloat();
 		m_MoonLight.w = d["MoonLight"][3].asFloat();
 
+		m_MinAmbient.x = d["MinAmbient"][0].asFloat();
+		m_MinAmbient.y = d["MinAmbient"][1].asFloat();
+		m_MinAmbient.z = d["MinAmbient"][2].asFloat();
+		m_MinAmbient.w = d["MinAmbient"][3].asFloat();
+
+		m_MaxAmbient.x = d["MaxAmbient"][0].asFloat();
+		m_MaxAmbient.y = d["MaxAmbient"][1].asFloat();
+		m_MaxAmbient.z = d["MaxAmbient"][2].asFloat();
+		m_MaxAmbient.w = d["MaxAmbient"][3].asFloat();
+
+		m_RenderShader = d["RenderShader"].asBool();
+
+		m_Day = d["Day"].asBool();
+
+	}
+
+	void DayLight::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		m_LightComponent = manager->GetComponent<Light>(selfEntity);
+		m_OriginRotate = manager->GetComponent<Transform>(selfEntity)->GetRotation();
 	}
 
 	void DayLight::ShowYourself() const
 	{
 		DebugPrint("DayLight Comp");
-		DebugPrint(std::format("\tDay Cycle: {}", m_DayCycle));
 	}
 
 
 	void Server::Create(Json::Value& v, ResourceManager* rm)
 	{
-		m_id = NULL;
+		Json::Value ser = v["Server"];
+
+		m_id = ser["ID"].asInt();
 	}
 
 	void Server::ShowYourself() const
@@ -640,6 +660,8 @@ namespace component {
 
 		m_ColideWithDynamic = col["ColideWithDynamic"].asBool();
 
+		m_PossibleClimbHeight = col["ClimbHeight"].asInt();
+
 		if (m_Collided == false) {
 			XMFLOAT3 center;
 			center.x = col["Center"][0].asFloat();
@@ -746,7 +768,6 @@ namespace component {
 	void Player::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		// make interaction enable
-		
 		EventFunction begin = [manager](Entity* playerEnt, Entity* interaction) {
 			auto pawn = manager->GetComponent<component::Pawn>(playerEnt);
 			pawn->SetInteractionEntity(interaction);
@@ -770,6 +791,10 @@ namespace component {
 		else {
 			ERROR_QUIT("ERROR!!! no dynamic collider on Player Entity!!");
 		}
+
+		Transform* tr = manager->GetComponent<Transform>(selfEntity);
+		m_OriginalPosition = tr->GetPosition();
+		m_OriginalRotate = tr->GetRotation();
 	}
 
 	void Player::ShowYourself() const
@@ -784,8 +809,8 @@ namespace component {
 
 	void Pawn::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
-		Entity* camEnt = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
-		m_Camera = manager->GetComponent<Camera>(camEnt);
+		m_CameraEntity = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
+		m_Camera = manager->GetComponent<Camera>(m_CameraEntity);
 		m_Physics = manager->GetComponent<Physics>(selfEntity);
 	}
 
@@ -925,5 +950,34 @@ namespace component {
 
 		return true;
 	}
+
+	int DayLightManager::m_ManagerCount = 0;
+	void DayLightManager::Create(Json::Value& v, ResourceManager* rm)
+	{
+		m_ManagerCount++;
+		if (m_ManagerCount > 1) 
+			ERROR_QUIT("ERROR!!, DayLightManager is two");
+
+		Json::Value d = v["DayLightManager"];
+		m_CurTime = d["Time"].asFloat();
+		m_DayCycle = d["DayCycle"].asFloat();
+	}
+
+	void DayLightManager::TimeAdd(float deltaTime)
+	{
+		// 360.0f / 24.0f
+		float timeAdd = 24.0f / m_DayCycle;
+		m_CurTime += deltaTime * timeAdd;
+
+		if (m_CurTime >= 24.0f) m_CurTime -= 24.0f;
+	}
+
+	void AI::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value ai = v["AI"];
+
+		m_Type = ai["Type"].asInt();
+	}
+
 
 }

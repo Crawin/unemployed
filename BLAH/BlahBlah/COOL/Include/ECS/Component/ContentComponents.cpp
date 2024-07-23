@@ -190,6 +190,7 @@ namespace component {
 		Json::Value door = v["Door"];
 
 		m_Answer = door["Answer"].asInt();
+		m_KeyID = door["KeyID"].asInt();
 		m_Locked = door["Locked"].asInt();
 		m_Gamemode = door["Game"].asInt();
 		m_FailCount = door["FailCount"].asInt();
@@ -207,10 +208,33 @@ namespace component {
 		InteractionFuncion withDoor = [manager](Entity* player, Entity* door) {
 			DebugPrint("Interaction, DOOR!!");
 
-			// if opened
 			component::DoorControl* doorCtrl = manager->GetComponent<component::DoorControl>(door);
 			component::Inventory* inven = manager->GetComponent<component::Inventory>(player);
 			auto trans = manager->GetComponent<component::Transform>(door);
+
+			// put key into player's keytool
+			if (doorCtrl != nullptr && (1 <= doorCtrl->GetKeyID() && 9 >= doorCtrl->GetKeyID())) {
+				Entity* curhold = inven->GetCurrentHoldingItem();
+				if (curhold != nullptr) {
+					KeyTool* keytool = manager->GetComponent<KeyTool>(curhold);
+					if (keytool != nullptr) {
+						keytool->InsertKey(doorCtrl->GetKeyID());
+						trans->SetPosition({ 0,0,0 });
+					}
+				}
+			}
+			else if (doorCtrl->GetKeyDoorOpen() == true) {
+				Entity* curhold = inven->GetCurrentHoldingItem();
+				if (curhold != nullptr) {
+					KeyTool* keytool = manager->GetComponent<KeyTool>(curhold);
+					if (keytool != nullptr) {
+						keytool->DeleteKey(doorCtrl->GetAnswer());
+						doorCtrl->SetKeyDoorOpen(false);
+					}
+				}
+			}
+			
+			// if opened
 			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
 				//auto rot = trans->GetRotation();
 				//XMFLOAT3 rotAfter = rot;
@@ -266,9 +290,9 @@ namespace component {
 								DebugPrint("KEY SHOW");
 
 								key->SetAnswer(doorCtrl->GetAnswer());
-								for (int i = 0; i < MAX_BUTTON; i++) {
-									key->SetAnswerButton(i, keytool->GetKeyHold(i));
-									key->SetAnswerButtonMaterial(i, keytool->GetKeyHold(i));
+								for (int i = 0; i < MAX_BUTTON; ++i) {
+									key->SetAnswerButton(i, keytool->GetKeyHold(i+1));
+									key->SetAnswerButtonMaterial(i, keytool->GetKeyHold(i+1));
 								}
 								key->SetAnswerMaterial(doorCtrl->GetAnswer());
 								key->SetFailCount(doorCtrl->GetFailCount());
@@ -360,17 +384,17 @@ namespace component {
 
 	void UIDoorKey::Create(Json::Value& v, ResourceManager* rm)
 	{
-		//rm->AddLateLoadUI("key_0", nullptr);
-		//rm->AddLateLoadUI("key_1", nullptr);
-		//rm->AddLateLoadUI("key_2", nullptr);
-		//rm->AddLateLoadUI("key_3", nullptr);
-		//rm->AddLateLoadUI("key_4", nullptr);
-		//rm->AddLateLoadUI("key_5", nullptr);
-		//rm->AddLateLoadUI("key_6", nullptr);
-		//rm->AddLateLoadUI("key_7", nullptr);
-		//rm->AddLateLoadUI("key_8", nullptr);
-		//rm->AddLateLoadUI("key_9", nullptr);
-		//rm->AddLateLoadUI("xxx", nullptr);
+		rm->AddLateLoadUI("UI/UITempMaterial", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword1", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword2", nullptr);
+		rm->AddLateLoadUI("UI/UIKey1", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword4", nullptr);
+		rm->AddLateLoadUI("UI/UIKey2", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword6", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword7", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword8", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword9", nullptr);
+		rm->AddLateLoadUI("UI/UIX", nullptr);
 
 	}
 
@@ -384,18 +408,18 @@ namespace component {
 		UIDoorKey* doorkey = manager->GetComponent<UIDoorKey>(selfEntity);
 
 		m_KeyMaterialMap = std::map<int, int>();
-		m_KeyMaterialMap[0] = rm->GetMaterial("UIPassword1");
-		m_KeyMaterialMap[1] = rm->GetMaterial("UIPassword2");
-		m_KeyMaterialMap[2] = rm->GetMaterial("UIPassword3");
-		m_KeyMaterialMap[3] = rm->GetMaterial("UIPassword4");
-		m_KeyMaterialMap[4] = rm->GetMaterial("UIPassword5");
-		m_KeyMaterialMap[5] = rm->GetMaterial("UIPassword6");
-		m_KeyMaterialMap[6] = rm->GetMaterial("UIPassword7");
-		m_KeyMaterialMap[7] = rm->GetMaterial("UIPassword8");
-		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword9");
-		m_KeyMaterialMap[9] = rm->GetMaterial("UITempMaterial");
+		m_KeyMaterialMap[0] = rm->GetMaterial("UITempMaterial");
+		m_KeyMaterialMap[1] = rm->GetMaterial("UIPassword1");
+		m_KeyMaterialMap[2] = rm->GetMaterial("UIPassword2");
+		m_KeyMaterialMap[3] = rm->GetMaterial("UIKey1");
+		m_KeyMaterialMap[4] = rm->GetMaterial("UIPassword4");
+		m_KeyMaterialMap[5] = rm->GetMaterial("UIKey2");
+		m_KeyMaterialMap[6] = rm->GetMaterial("UIPassword6");
+		m_KeyMaterialMap[7] = rm->GetMaterial("UIPassword7");
+		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword8");
+		m_KeyMaterialMap[9] = rm->GetMaterial("UIPassword9");
 
-		m_KeyMaterialMap[-1] = rm->GetMaterial("UIExit");
+		m_KeyMaterialMap[-1] = rm->GetMaterial("UIX");
 
 
 		for (Entity* child : children) {
@@ -427,6 +451,7 @@ namespace component {
 							Entity* door = doorkey->GetDoor();
 							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 							doorCtrl->SetLock(false);
+							doorCtrl->SetKeyDoorOpen(true);
 							canvas->HideUI();
 						}
 						else {
@@ -452,7 +477,7 @@ namespace component {
 							Key* key = manager->GetComponent<Key>(child);
 							m_keyAnswer[i] = key;
 							ButtonEventFunction password = [key, doorkey, manager, i](Entity* ent) { // 버튼에 대한 콜백함수 등록
-								int current = key->GetKeyLength();
+								int current = key->GetKeyID();
 								doorkey->SetCurrent(current);
 								DebugPrint(std::format("length: {}", current));
 								};
@@ -480,7 +505,7 @@ namespace component {
 
 	void UIDoorKey::SetAnswerButton(int target, int answer)
 	{
-		m_keyAnswer[target]->SetKeyAnswer(answer);
+		m_keyAnswer[target]->SetKeyID(answer);
 	}
 
 	void UIKeypad::Create(Json::Value& v, ResourceManager* rm)
@@ -753,6 +778,10 @@ namespace component {
 			Name* name = manager->GetComponent<Name>(other);
 
 			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+			
+			Physics* py = manager->GetComponent<Physics>(self);
+			DebugPrintVector(py->GetVelocity(), "velocity: ");
+
 			};
 
 		DynamicCollider* dc = manager->GetComponent<DynamicCollider>(selfEntity);
@@ -854,20 +883,31 @@ namespace component {
 
 	void Screen::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value sc = v["Screen"];
+
+		for (int i = 0; i < MAX_CCTV; ++i)
+			m_TargetNames[i] = sc[std::format("Slot_{}", i)].asString().c_str();
 	}
 
 	void Screen::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		// todo 임시이다
-		int cameraIndex = -1;
-		std::function<void(Name*, Camera*)> findCam = [&cameraIndex, manager](Name* name, Camera* cam) {
-			if (name->getName() == "CCTV_01")
-				cameraIndex = cam->GetCameraIndex();
-			};
-		manager->Execute(findCam);
+		int cameraIndex[MAX_CCTV] = { -1 };
+		memset(cameraIndex, -1, sizeof(cameraIndex));
 
-		if (cameraIndex != -1) {
-			const auto& data = rm->GetCameraRenderTargetData(cameraIndex);
+		for (int i = 0; i < MAX_CCTV; ++i) {
+			Entity* camEnt = manager->GetEntity(m_TargetNames[i]);
+			if (camEnt == nullptr) continue;
+
+			Camera* cam = manager->GetComponent<Camera>(camEnt);
+			if (cam == nullptr) continue;
+
+			cameraIndex[i] = cam->GetCameraIndex();
+		}
+
+		for (int i = 0; i < MAX_CCTV; ++i) {
+			if (cameraIndex[i] == -1) continue;
+			const auto& data = rm->GetCameraRenderTargetData(cameraIndex[i]);
 
 			component::Renderer* ren = manager->GetComponent<component::Renderer>(selfEntity);
 			Material* mat = rm->GetMaterial(ren->GetMaterial());
@@ -1114,8 +1154,6 @@ namespace component {
 	void Key::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value key = v["Key"];
-
-		m_KeyLength = key["Length"].asInt();
 	}
 
 	void Key::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -1206,7 +1244,7 @@ namespace component {
 	{
 		Json::Value kt = v["KeyTool"];
 
-		//memset(m_Keys, -1, sizeof(m_Keys));
+		memset(m_Keys, -1, sizeof(m_Keys));
 		m_SoundMakingMinimum = kt["SoundMakingMinimum"].asInt();
 
 	}
@@ -1244,7 +1282,7 @@ namespace component {
 	bool KeyTool::InsertKey(int keyAnswer)
 	{
 		for (int i = 0; i < _countof(m_Keys); ++i) {
-			if (m_Keys[i] != -1) {
+			if (i == keyAnswer) {
 				m_Keys[i] = keyAnswer;
 				++m_CurrentHolding;
 				return true;
@@ -1274,6 +1312,116 @@ namespace component {
 				return true;
 
 		return false;
+	}
+
+	void RCController::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value rc = v["RCController"];
+
+		m_TargetRC = rc["Target"].asString().c_str();
+	}
+
+	void RCController::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// get camera render target indices
+		m_RCEntity = manager->GetEntity(m_TargetRC);
+
+		// set holdable action maps
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+
+		float& angle = m_GoRotateAngle;
+		const float c_RcMoveSpeed = 1.0f;
+		const float c_RotateSpeed = 30.0f;
+
+		// rotate by arrow keys
+		ActionFunction arrowUp = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			//DebugPrint(std::format("angle: {}", m_GoRotateAngle));
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+
+			XMVECTOR d = { 0.0f, 0.0f, 1.0f, 0.0f };
+			XMFLOAT4X4 temp = tr->GetWorldTransform();
+			XMMATRIX mat = XMLoadFloat4x4(&temp);
+
+			d = XMVector4Transform(d, mat);
+
+			XMFLOAT3 move;
+			XMStoreFloat3(&move, d);
+			move.y = 0.0f;
+
+			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
+			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+
+			XMFLOAT3 velocity = py->GetVelocity();
+			XMFLOAT3 velocityOnXZ = py->GetVelocityOnXZ();
+			XMVECTOR vel = XMLoadFloat3(&velocityOnXZ);
+			float curSpeed = XMVectorGetX(XMVector3Length(vel));
+			float maxSpeed = py->GetMaxVelocity();
+
+			// limit max speed
+			if (curSpeed >= maxSpeed)
+			{
+				vel = vel / curSpeed * maxSpeed;
+				velocity.x = XMVectorGetX(vel);
+				velocity.z = XMVectorGetZ(vel);
+				py->SetVelocity(velocity);
+			}
+
+			};
+		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			//DebugPrint(std::format("angle: {}", m_GoRotateAngle));
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+
+			XMVECTOR d = { 0.0f, 0.0f, 1.0f, 0.0f };
+			XMFLOAT4X4 temp = tr->GetWorldTransform();
+			XMMATRIX mat = XMLoadFloat4x4(&temp);
+
+			d = XMVector4Transform(-d, mat);
+
+			XMFLOAT3 move;
+			XMStoreFloat3(&move, d);
+			move.y = 0.0f;
+			
+			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
+			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+
+			XMFLOAT3 velocity = py->GetVelocity();
+			XMFLOAT3 velocityOnXZ = py->GetVelocityOnXZ();
+			XMVECTOR vel = XMLoadFloat3(&velocityOnXZ);
+			float curSpeed = XMVectorGetX(XMVector3Length(vel));
+			float maxSpeed = py->GetMaxVelocity();
+
+			// limit max speed
+			if (curSpeed >= maxSpeed)
+			{
+				vel = vel / curSpeed * maxSpeed;
+				velocity.x = XMVectorGetX(vel);
+				velocity.z = XMVectorGetZ(vel);
+				py->SetVelocity(velocity);
+			}
+			};
+		ActionFunction dirDrift = [this, manager, c_RotateSpeed](float deltaTime) {
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+			
+			tr->GetRotationPtr()->y += py->GetCurrentVelocityLenOnXZ() * m_GoRotateAngle / c_RotateSpeed * deltaTime;
+			};
+
+
+		ActionFunction dirLeft = [&angle](float deltaTime) { angle -= 45.0f; };
+		ActionFunction dirRight = [&angle](float deltaTime) { angle += 45.0f; };
+
+
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_UP, KEY_STATE::PRESSING), arrowUp);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_DOWN, KEY_STATE::PRESSING), arrowDown);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::START_PRESS), dirLeft);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::END_PRESS), dirRight);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_LEFT, KEY_STATE::PRESSING), dirDrift);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::START_PRESS), dirRight);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::END_PRESS), dirLeft);
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::PRESSING), dirDrift);
 	}
 
 }

@@ -1,0 +1,9 @@
+{
+	"name": "highrise_facades",
+	"BaseColor": "Map/BackGround/highrise_facades",
+	"Roughness": "Black",
+	"Metalic": "Black",
+	"AO": "Map/BackGround/highrise_facades_em",
+	"Normal": "Map/BackGround/highrise_facades_nm",
+	"Shader": "TestMeshDiffered"
+}

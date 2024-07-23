@@ -40,7 +40,9 @@
 						"Material" : "ScreenMaterial",
 						"Mesh" : "Laptop.Screen"
 					},
-					"Screen": {},
+					"Screen": {
+						"Slot_0": "CCTV_01"
+					},
 					"Transform" : 
 					{
 						"Position" : 
@@ -82,7 +84,6 @@
 			"CCTVController": 
 			{
 				"Slot_0": "CCTV_01"
-
 			}
 		}
 	],

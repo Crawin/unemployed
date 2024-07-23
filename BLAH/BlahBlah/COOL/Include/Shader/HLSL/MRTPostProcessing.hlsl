@@ -235,7 +235,7 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 
 	}
 
-	return result;
+	return lerp(albedo, result, albedo.a);
 }
 
 #define ONLY_MAIN_LIGHT
@@ -358,6 +358,7 @@ float4 LightShaft(float3 startPosition, float3 endPosition)
 		if (lights[i].m_LightType == 0) {
 			light = lights[i];
 			lightColor = light.m_LightColor;
+			if (light.m_ShadowMapResults.x == -1) continue;
 
 			[loop]
 			for (float step = 0; step < goal; step += STEP_PER_LOOP) {
@@ -368,7 +369,7 @@ float4 LightShaft(float3 startPosition, float3 endPosition)
 					light.m_CameraIdx, 
 					light.m_ShadowMapResults.x);
 
-				result += shadowFactor * lightColor * STEP_PER_LOOP / MAX_DISTANCE * 0.1f;
+				result += shadowFactor * lightColor * STEP_PER_LOOP / MAX_DISTANCE * 0.3f;
 			}
 			break;
 		}
@@ -395,5 +396,5 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
 	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
 
-	return lightingResult + lightShaftResult;
+	return lightingResult;// + lightShaftResult;
 }

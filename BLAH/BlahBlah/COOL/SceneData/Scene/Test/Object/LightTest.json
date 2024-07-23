@@ -7,6 +7,10 @@
 		"Rotate": [0.0, 0.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
+	"DayLightManager": {
+		"Time": 0.0,
+		"DayCycle": 240
+	},
 
 	"Children": 
 	[
@@ -16,7 +20,7 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [135.0, 0.0, 0.0],
+				"Rotate": [270.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 
@@ -35,10 +39,13 @@
 		
 			"DayLight": 
 			{
-				"DayCycle": 20,
 				"NoonLight": [1.0, 1.0, 1.0, 1.0],
 				"SunSetLight": [0.92, 0.45, 0.04, 1.0],
-				"MoonLight": [0, 0, 0, 1.0]
+				"MoonLight": [0.1, 0.1, 0.2, 1.0],
+				"MinAmbient": [0.1, 0.1, 0.1, 1.0],
+				"MaxAmbient": [0.5, 0.5, 0.5, 1.0],
+				"RenderShader": true,
+				"Day": true
 			}
 		},
 		{
@@ -47,7 +54,7 @@
 			"Transform": 
 			{
 				"Position": [0.0, 0.0, 0.0],
-				"Rotate": [315.0, 0.0, 0.0],
+				"Rotate": [90.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 
@@ -66,10 +73,13 @@
 		
 			"DayLight": 
 			{
-				"DayCycle": 20,
 				"NoonLight": [0.2, 0.2, 0.2, 1.0],
 				"SunSetLight": [0.1, 0.1, 0.2, 1.0],
-				"MoonLight": [0, 0, 0, 1.0]
+				"MoonLight": [0, 0, 0, 1.0],
+				"MinAmbient": [0.0, 0.0, 0.0, 1.0],
+				"MaxAmbient": [0.0, 0.0, 0.0, 1.0],
+				"RenderShader": false,
+				"Day": false
 			}
 		}
 	]

@@ -114,6 +114,7 @@ private:
 	// for mesh
 	void AddMesh(Mesh* mesh) { m_Meshes.push_back(mesh); }
 
+	/*
 	template <class T>
 	int CreateBufferFromVector(ComPtr<ID3D12GraphicsCommandList> commandList, const std::vector<T>& data, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::VERTEX)
 	{
@@ -138,6 +139,7 @@ private:
 
 		return -1;
 	}
+	*/
 
 	int CreateBufferFromData(ComPtr<ID3D12GraphicsCommandList> commandList, char* data, int stride, int numOfData, D3D12_RESOURCE_STATES resourceState, std::string_view name = "buffer", RESOURCE_TYPES toInsert = RESOURCE_TYPES::VERTEX);
 

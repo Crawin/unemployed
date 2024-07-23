@@ -21,6 +21,12 @@ protected:
 
     virtual void OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
+    virtual void OnSelfHost();
+
+    virtual void OnSelfGuest();
+
+    virtual void OnGuestEnter();
+
 public:
     virtual bool Enter(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -29,6 +35,8 @@ public:
     virtual void Exit();
 
     virtual bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);
+
+    virtual void OnServerConnected();
 
     // 최종 결과를 resultRtv, resultDsv에 넘긴다
     //virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);

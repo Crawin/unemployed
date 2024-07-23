@@ -1,0 +1,9 @@
+{
+	"name": "SwitchScreenMaterial",
+	"BaseColor": "Black",
+	"Roughness": "White",
+	"Metalic": "White",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

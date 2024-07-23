@@ -1,0 +1,9 @@
+{
+	"name": "NintendoSwitch",
+	"BaseColor": "Object/NintendoSwitch/Nintendo_Switch_Material_albedo",
+	"Roughness": "Object/NintendoSwitch/Nintendo_Switch_Material_roughness",
+	"Metalic": "Object/NintendoSwitch/Nintendo_Switch_Material_metallic",
+	"AO": "Object/NintendoSwitch/Nintendo_Switch_Material_AO",
+	"Normal": "Object/NintendoSwitch/Nintendo_Switch_Material_normal",
+	"Shader": "TestMeshDiffered"
+}

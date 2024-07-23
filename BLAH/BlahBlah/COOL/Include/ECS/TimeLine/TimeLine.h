@@ -14,6 +14,9 @@ protected:
 	bool m_Playing = true;
 	bool m_PlayBack = false;
 
+	bool m_HaveEndEvent = false;
+	std::function<void()> m_OnEnd;
+
 public:
 	virtual void Update(float deltaTime) = 0;
 	virtual void SyncData() = 0;
@@ -25,6 +28,9 @@ public:
 	bool IsBack() { return m_PlayBack; }
 	void SetMoveFront() { m_PlayBack = false; }
 	void SetMoveBack() { m_PlayBack = true; }
+
+	void SetEndEvent(std::function<void()>& event) { m_HaveEndEvent = true; m_OnEnd = event; }
+	void RunEndEvent() { if (m_HaveEndEvent) m_OnEnd(); }
 };
 
 template <typename T>

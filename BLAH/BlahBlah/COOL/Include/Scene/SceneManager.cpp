@@ -24,6 +24,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Light, "Light");
 	REGISTER_COMPONENT(component::Physics, "Physics");
 	REGISTER_COMPONENT(component::DayLight, "DayLight");
+	REGISTER_COMPONENT(component::DayLightManager, "DayLightManager");
 	REGISTER_COMPONENT(component::Server, "Server");
 	REGISTER_COMPONENT(component::Collider, "Collider");
 	REGISTER_COMPONENT(component::DynamicCollider, "DynamicCollider");
@@ -32,6 +33,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Player, "Player");
 	REGISTER_COMPONENT(component::Pawn, "Pawn");
 	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
+	REGISTER_COMPONENT(component::AI, "AI");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");
@@ -55,6 +57,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Screen, "Screen");
 	REGISTER_COMPONENT(component::Sittable, "Sittable");
 	REGISTER_COMPONENT(component::CCTVController, "CCTVController");
+	REGISTER_COMPONENT(component::RCController, "RCController");
 	REGISTER_COMPONENT(component::VandingMachine, "VandingMachine");
 	REGISTER_COMPONENT(component::Drink, "Drink");
 	REGISTER_COMPONENT(component::CreditCard, "CreditCard");

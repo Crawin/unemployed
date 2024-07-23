@@ -98,6 +98,8 @@ namespace component {
 	//
 	class Renderer : public ComponentBase<Renderer>
 	{
+		bool m_Active = true;
+
 		XMFLOAT4X4 m_WorldMatrix = Matrix4x4::Identity();
 
 		XMFLOAT4 m_ExtraShaderData[2] = { {0,0,0,0}, {0,0,0,0} };
@@ -123,6 +125,9 @@ namespace component {
 		void SetWorldMatrix(const XMFLOAT4X4& mat) { m_WorldMatrix = mat; }
 		void SetExtraShaderData(const XMFLOAT4& data, int idx) { m_ExtraShaderData[idx] = data; }
 		void SetVertexBufferView(const D3D12_VERTEX_BUFFER_VIEW& view) { m_VertexBufferView = view; }
+
+		void SetActive(bool state) { m_Active = state; }
+		bool IsActive() const { return m_Active; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -430,6 +435,8 @@ namespace component {
 		// 카메라와 달리 얘는 배열로 관리 해야함
 		LightData m_LightData;
 
+		int m_LightIdx = -1;
+
 		bool m_IsMainLight = false;
 		bool m_CastShadow = false;
 
@@ -448,6 +455,9 @@ namespace component {
 
 		void RefreshScore() { m_Score = -100; }
 		float GetScore() const { return m_Score; }
+
+		void SetIndex(int idx) { m_LightIdx = idx; }
+		int GetIndex() const { return m_LightIdx; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -466,27 +476,65 @@ namespace component {
 	// 시간에 따라 Directional Light가 회전되기 위한 컴포넌트
 	//
 	class DayLight : public ComponentBase<DayLight> {
-		// 초단위
-		float m_DayCycle = 30.0f;
-
+		// 초단위, m_DayCycle초 만큼 한바퀴를 돈다
+		//
 		XMFLOAT4 m_NoonLight = {};
 		XMFLOAT4 m_SunSetLight = {};
 		XMFLOAT4 m_MoonLight = {};
+		XMFLOAT4 m_MinAmbient = {};
+		XMFLOAT4 m_MaxAmbient = {};
+
+		XMFLOAT3 m_OriginRotate{ 0,0,0 };
+
+		Light* m_LightComponent = nullptr;
 
 		float m_LightAngle = 0.0f;
+		bool m_RenderShader = false;
+		bool m_Day = true;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const;
 
 		void SetLightAngle(float angle) { m_LightAngle = angle; }
 
-		float GetDayCycle() const { return m_DayCycle; }
 		const XMFLOAT4& GetNoonLight() const { return m_NoonLight; }
 		const XMFLOAT4& GetSunSetLight() const { return m_SunSetLight; }
 		const XMFLOAT4& GetMoonLight() const { return m_MoonLight; }
 		float GetLightAngle() const { return m_LightAngle; }
+
+		const XMFLOAT4& GetMinAmbient() const { return m_MinAmbient; }
+		const XMFLOAT4& GetMaxAmbient() const { return m_MaxAmbient; }
+		
+		const XMFLOAT3& GetOriginRotate() const { return m_OriginRotate; }
+
+		const Light* GetLightComp() const { return m_LightComponent; }
+
+		bool IsRender() const { return m_RenderShader; }
+	};
+
+	class DayLightManager : public ComponentBase<DayLightManager> {
+		// 초단위, m_DayCycle초 만큼 한바퀴를 돈다
+		float m_DayCycle = 30.0f;
+		float m_CurTime = 0.0f;
+
+		static int m_ManagerCount;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const {}
+
+		void SetDayCycle(float cycle) { m_DayCycle = cycle; }
+		float GetDayCycle() const { return m_DayCycle; }
+
+		void SetCurTime(float time) { m_CurTime = time; }
+		float GetCurTime() const { return m_CurTime; }
+
+		float* GetCurTimePtr() { return &m_CurTime; }
+
+		void TimeAdd(float deltaTime);
 	};
 
 	/////////////////////////////////////////////////////////
@@ -495,6 +543,7 @@ namespace component {
 	//
 	class Server : public ComponentBase<Server> {
 		unsigned int m_id;
+		bool m_SendMode = false;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -503,6 +552,9 @@ namespace component {
 
 		const unsigned int getID() { return m_id; }
 		void setID(const unsigned int&);
+
+		void SetSendMode(bool state) { m_SendMode = state; }
+		bool IsSendMode() const { return m_SendMode; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -578,6 +630,8 @@ namespace component {
 		bool m_Active = true;
 		bool m_ColideWithDynamic = true;
 
+		float m_PossibleClimbHeight = 100.0f;
+
 		CollideEvents m_EventFunctions;
 
 		std::list<CollidedEntity> m_CollidedEntities;
@@ -609,6 +663,8 @@ namespace component {
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
 
 		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
+
+		float GetPossibleClimb() const { return m_PossibleClimbHeight; }
 
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
@@ -662,6 +718,9 @@ namespace component {
 		bool m_OnGround = false;
 		bool m_Sitting = false;
 
+		XMFLOAT3 m_OriginalPosition{};
+		XMFLOAT3 m_OriginalRotate{};
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -673,6 +732,9 @@ namespace component {
 
 		bool IsAir() const { return m_Jumping && !m_OnGround; }
 		bool IsSitting() const { return m_Sitting; }
+
+		const XMFLOAT3& GetOriginalPosition() const { return m_OriginalPosition; }
+		const XMFLOAT3& GetOriginalRotate() const { return m_OriginalRotate; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -689,6 +751,7 @@ namespace component {
 		std::string m_CameraSocketName;
 		Camera* m_Camera = nullptr;
 		Physics* m_Physics = nullptr;
+		Entity* m_CameraEntity = nullptr;
 
 		bool m_ControledByServer = false;
 
@@ -718,6 +781,8 @@ namespace component {
 
 		bool GetControlServer() const { return m_ControledByServer; }
 		void SetControlServer(bool state) { m_ControledByServer = state; }
+
+		Entity* GetCameraEntity() const { return m_CameraEntity; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -738,6 +803,21 @@ namespace component {
 
 		const std::string& GetTargetInit() const { return m_TargetEntityName; }
 		Pawn* GetControllingPawn() const { return m_CurrentPossess; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// AI Component
+	// AI들이 가지는 컴포넌트
+	//
+	class AI : public ComponentBase<AI> {
+		int m_Type = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		//virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const {}
+
+		int GetType() const { return m_Type; }
 	};
 
 }

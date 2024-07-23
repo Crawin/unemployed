@@ -6,7 +6,7 @@
 #include "Shader/Shader.h"
 #include <winsock2.h> // 윈속2 메인 헤더
 #include "Network/Packets.h"
-
+#include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
 
 #ifdef _DEBUG
@@ -40,6 +40,57 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	return true;
 }
 
+void Scene::ChangeDayToNight()
+{
+	ECSManager* manager = m_ECSManager.get();
+
+	// change day to light on light
+	// change pawn and recover pawn
+	std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager](component::DayLightManager* dayManager, component::SelfEntity* ent) {
+		using namespace component;
+
+		PlayerController* ctrler = nullptr;
+		std::function<void(PlayerController*)> getCtrler = [&ctrler](PlayerController* control) { ctrler = control; };
+		manager->Execute(getCtrler);
+
+		Pawn* controlledPawn = ctrler->GetControllingPawn();
+
+		Pawn* changeingPawn = nullptr;
+		std::function<void(Pawn*, Name*)> getChangePawn = [&changeingPawn](Pawn* pawn, Name* name) { if (name->getName() == "ChangeTimePawn") changeingPawn = pawn; };
+		manager->Execute(getChangePawn);
+
+		// possess to camera
+		ctrler->Possess(changeingPawn);
+
+		// end event
+		std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+
+		TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
+		changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
+		changeTime->AddKeyFrame(22.0f, 1);
+		changeTime->AddKeyFrame(22.0f, 2);
+		changeTime->SetEndEvent(returnToPawn);
+
+		manager->AddTimeLine(ent->GetEntity(), changeTime);
+		};
+	m_ECSManager->Execute(changeTime);
+
+	// hide students
+	std::function<void(component::AI*, component::SelfEntity*)> disable = [manager](component::AI* ai, component::SelfEntity* self) {
+		if (ai->GetType() == 0)
+			manager->SetEntityState(self->GetEntity(), false);
+
+		};
+	m_ECSManager->Execute(disable);
+
+	// reset player positions
+	std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+		tr->SetPosition(pl->GetOriginalPosition());
+		tr->SetRotation(pl->GetOriginalRotate());
+		};
+	m_ECSManager->Execute(movePlayers);
+}
+
 void Scene::SetManagers()
 {
 	m_ECSManager = std::make_shared<ECSManager>();
@@ -57,7 +108,6 @@ bool Scene::AddSystem()
 	// 999. 부모에 따라 transform을 바꾸는 system(LocalToWorldTransform)
 	
 	// sync position by server
-	m_ECSManager->InsertSystem(new ECSsystem::AllocateServer);
 	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
 	
 	// move collide check, handle simulate, move and send
@@ -202,8 +252,10 @@ void Scene::UpdateLightData()
 	}
 
 	// memcpy to gpu
+
 	std::function<void(component::Light*)> updateLight = [&count, data](component::Light* lightComp) {
 		LightData& light = lightComp->GetLightData();
+		lightComp->SetIndex(count);
 		memcpy(data + count++, &light, sizeof(LightData));
 		};
 	m_ECSManager->Execute(updateLight);
@@ -218,6 +270,9 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	// animate and set animed data
 	std::function<void(component::Renderer*, component::AnimationExecutor*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
+
+		if (renderComponent->IsActive() == false) return;
+
 		int meshIdx = renderComponent->GetMesh();
 		Mesh* mesh = manager->GetMesh(meshIdx);
 		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
@@ -293,6 +348,8 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 
 	// make function
 	std::function<void(component::Renderer*/*, component::Name**/)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent/*, component::Name* name*/) {
+		if (renderComponent->IsActive() == false) return;
+
 		int materialIdx = renderComponent->GetMaterial();
 		int meshIdx = renderComponent->GetMesh();
 
@@ -416,6 +473,9 @@ void Scene::BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList)
 	BoundingOrientedBox tempOBB;
 
 	std::function<void(component::Renderer*)> render = [commandList, res, &cameraFustum, &tempOBB](component::Renderer* rend) {
+
+		if (rend->IsActive() == false) return;
+
 		Mesh* mesh = res->GetMesh(rend->GetMesh());
 
 		const BoundingOrientedBox& meshOBB = mesh->GetBoundingBox();
@@ -675,6 +735,25 @@ void Scene::ProcessPacket(packet_base* packet)
 	ECSManager* manager = m_ECSManager.get();
 	switch (packet->getType())		// PACKET_TYPE
 	{
+		// todo
+		// scene 변경이 되어야 하는 부분이다.
+	case pMAKEROOM:
+	{
+		OnSelfHost();
+		break;
+	}
+		// todo
+		// scene 변경이 되어야 하는 부분이다.
+	case pENTERROOM:
+	{
+		OnSelfGuest();
+		break;
+	}
+	case pRoomPlayer:
+	{
+		OnGuestEnter();
+		break;
+	}
 	case pPOSITION:								// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(packet);
@@ -736,6 +815,7 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pChangeDayOrNight:
 	{
+		ChangeDayToNight();
 		break;
 	}
 	case pGetItem:
@@ -757,6 +837,10 @@ void Scene::ProcessPacket(packet_base* packet)
 		break;
 	}
 	}
+}
+
+void Scene::OnServerConnected()
+{
 }
 
 void Scene::PossessPlayer(bool isHost)

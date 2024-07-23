@@ -167,8 +167,11 @@
 			},
 			"Drink": {
 				"Type": 0
+			},
+			"Server":
+			{
+				"ID": 60
 			}
-			
 		}
 	],
 	"Name" : "COKECAN_Root",

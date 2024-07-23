@@ -1,0 +1,9 @@
+{
+	"name": "CyberTruck",
+	"BaseColor": "Object/CyberTruck/Cybertruck_BaseColor",
+	"Roughness": "Gray",
+	"Metalic": "ZeroOneBlack",
+	"AO": "Object/CyberTruck/Cybertruck_AO",
+	"Normal": "Object/CyberTruck/Cybertruck_Normal",
+	"Shader": "TestMeshDiffered"
+}

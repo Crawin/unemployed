@@ -22,6 +22,14 @@ void Animation::LoadAnimation(ComPtr<ID3D12GraphicsCommandList> commandList, std
 
 	file.read((char*)(&m_AnimData[0]), sizeof(XMFLOAT4X4) * m_AnimData.size());
 
-	m_AnimationDataIdx = manager->CreateBufferFromVector(commandList, m_AnimData, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, std::format("anim_{}", m_Name), RESOURCE_TYPES::SHADER);
+	UINT bytes = static_cast<UINT>(m_AnimData.size()) * static_cast<UINT>(sizeof(XMFLOAT4X4));
+	bytes = ((bytes + 255) & ~255);
 
+	char* data = new char[bytes];
+	memcpy(data, (char*)(&m_AnimData[0]), sizeof(XMFLOAT4X4) * m_AnimData.size());
+
+	m_AnimationDataIdx = manager->CreateBufferFromData(commandList, data, sizeof(XMFLOAT4X4), m_AnimData.size(),
+		D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, std::format("anim_{}", m_Name), RESOURCE_TYPES::SHADER);
+
+	delete[] data;
 }

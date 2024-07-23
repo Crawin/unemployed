@@ -84,9 +84,11 @@ namespace component {
 		bool m_Locked = true;
 		bool m_Uioff = false;
 		bool m_Open = false;
+		bool m_KeyDoorOpen = false;
 		int m_Answer = 0;
 		int m_Gamemode = -1;
 		int m_FailCount = 0;
+		int m_KeyID = -1;
 
 		// 0, 1, 2 -> x, y, z
 		int m_RotateAxis = 1;
@@ -106,18 +108,23 @@ namespace component {
 		float GetMaxAngle() const { return m_MaxAngle; }
 		float GetCurAngle() const { return m_CurrentAngle; }
 		int GetAnswer() const { return m_Answer; }
+		int GetKeyID() const { return m_KeyID; }
 		int GetGamemode() const { return m_Gamemode; }
 		int GetFailCount() const { return m_FailCount; }
 		int IsUioff() const { return m_Uioff; }
 		bool IsOpen() const { return m_Open; }
 		int GetAxis() const { return m_RotateAxis; }
 		int GetDoorID() const { return m_DoorId; }
+		bool GetKeyDoorOpen() const { return m_KeyDoorOpen; }
 
 		void SetLock(bool lock, bool sendServer = true);
 		void SetMaxAngle(float angle) { m_MaxAngle = angle; }
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
 		void SetUioff(bool uioff) { m_Uioff = uioff; }
 		void SetOpen(ECSManager* manager, Transform* tr, Entity* self, bool state, bool sendServer = true);
+		void SetOpen(bool state) { m_Open = state; }
+		void SetKeyDoorOpen(bool keyopen) { m_KeyDoorOpen = keyopen; }
+
 
 		void SetCrushPosition(XMFLOAT3 pos, float power, float distance);
 		XMFLOAT4 GetShaderData(int idx) const { return m_CrushPositionAndPower[idx]; }
@@ -300,7 +307,7 @@ namespace component {
 	// 열쇠뭉치 컴포넌트
 	//
 	class KeyTool : public ComponentBase<KeyTool> {
-		int m_Keys[MAX_KEYTOOL_HOLDING] = { 2, 3, -1, 5 };
+		int m_Keys[MAX_KEYTOOL_HOLDING] = {  };
 		int m_SoundMakingMinimum = 3;
 		int m_CurrentHolding = 0;
 
@@ -317,7 +324,7 @@ namespace component {
 
 		bool IsKeyInKeyTool(int keyAnswer) const;
 
-		int GetKeyHold(int i) const { return m_Keys[i]; }
+		int GetKeyHold(int slot) const { return m_Keys[slot]; }
 	};
 
 #define MAX_CCTV 4
@@ -327,6 +334,8 @@ namespace component {
 	//
 	class Screen : public ComponentBase<Screen> {
 		int m_CameraRenderTargets[MAX_CCTV] = { 0, };
+
+		std::string m_TargetNames[MAX_CCTV] = { "" };
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -340,7 +349,7 @@ namespace component {
 	// 문을 열 수 있는 열쇠의 정보를 가진 키 오브젝트
 	//
 	class Key : public ComponentBase<Key> {
-		int m_KeyLength = 0;
+		int m_KeyID = 0;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -348,9 +357,26 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		void SetKeyAnswer(int ans) { m_KeyLength = ans; }
+		void SetKeyID(int id) { m_KeyID = id; }
 
-		int GetKeyLength() const { return m_KeyLength; }
+		int GetKeyID() const { return m_KeyID; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// Throwable Component
+	// CCTV, drinks
+	//
+	class RCController : public ComponentBase<RCController> {
+		Entity* m_RCEntity = nullptr;
+		std::string m_TargetRC = "";
+
+		float m_GoRotateAngle = 0.0f;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
 	};
 
 

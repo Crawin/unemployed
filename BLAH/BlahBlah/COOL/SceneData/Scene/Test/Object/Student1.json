@@ -1,7 +1,10 @@
 {
 	"Name": "Student1",
 
-	"Server": {},
+	"Server": 
+	{
+		"ID": 2
+	},
 
 	"Transform": 
 	{
@@ -13,6 +16,11 @@
 	"AnimationController":
 	{
 		"Player": "Student"
+	},
+
+	"AI": 
+	{
+		"Type": 0
 	},
 
 	"Physics":

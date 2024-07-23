@@ -61,12 +61,20 @@ protected:
 private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
+	void ChangeDayToNight();
+
 protected:
 	void SetManagers();
 
 	virtual bool AddSystem();
 
 	virtual bool LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+	virtual void OnSelfHost() {}
+
+	virtual void OnSelfGuest() {}
+
+	virtual void OnGuestEnter() {}
 
 	void SetResourceHeap(ComPtr<ID3D12GraphicsCommandList> commandList);
 
@@ -118,6 +126,8 @@ public:
 	virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);
 
 	virtual void ProcessPacket(packet_base* packet);
+
+	virtual void OnServerConnected();
 
 	void PossessPlayer(bool isHost);
 };

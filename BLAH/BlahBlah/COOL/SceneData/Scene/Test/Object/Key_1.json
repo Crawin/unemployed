@@ -110,10 +110,13 @@
 					}
 				}
 			],
-			"Collider" : 
+			"Collider": 
 			{
-				"AutoMesh" : true,
-				"Static" : true
+				"Static": true,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [0.0, 0, 0],
+				"Extent": [10.0, 10, 10]
 			},
 			"Name" : "KeyOne",
 			"Renderer" : 
@@ -121,13 +124,17 @@
 				"Material" : "Object/Key/Key_1",
 				"Mesh" : "Simple_02.Simple_02"
 			},
+			"Interaction":{},
+			"Holdable": {},
+			"Door": 
+			{
+				"KeyID": 5
+			},
 			"Transform" : 
 			{
 				"Position" : 
 				[
-					0.0,
-					0.0,
-					0.0
+					100.0, 20.0, 1000.0
 				],
 				"Rotate" : 
 				[

@@ -194,13 +194,57 @@ namespace ECSsystem {
 				}
 			}
 
-
-
+#ifdef _DEBUG
 			std::function<void(component::PlayerController*)> possessToOne = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player1"); };
 			std::function<void(component::PlayerController*)> possessToTwo = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player2"); };
 
 			if (curPawn->GetInputState(GAME_INPUT::F4) == KEY_STATE::END_PRESS) manager->Execute(possessToOne);
 			if (curPawn->GetInputState(GAME_INPUT::F5) == KEY_STATE::END_PRESS) manager->Execute(possessToTwo);
+
+			if (curPawn->GetInputState(GAME_INPUT::F1) == KEY_STATE::END_PRESS) {
+				std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager](component::DayLightManager* dayManager, component::SelfEntity* ent) {
+
+					PlayerController* ctrler = nullptr;
+					std::function<void(PlayerController*)> getCtrler = [&ctrler](PlayerController* control) { ctrler = control; };
+					manager->Execute(getCtrler);
+
+					Pawn* controlledPawn = ctrler->GetControllingPawn();
+
+					Pawn* changeingPawn = nullptr;
+					std::function<void(Pawn*, Name*)> getChangePawn = [&changeingPawn](Pawn* pawn, Name* name) { if(name->getName() == "ChangeTimePawn") changeingPawn = pawn; };
+					manager->Execute(getChangePawn);
+					
+					// possess to camera
+					ctrler->Possess(changeingPawn);
+
+					// end event
+					std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+
+					TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
+					changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
+					changeTime->AddKeyFrame(22.0f, 1);
+					changeTime->AddKeyFrame(22.0f, 2);
+					changeTime->SetEndEvent(returnToPawn);
+
+					manager->AddTimeLine(ent->GetEntity(), changeTime);
+					};
+				manager->Execute(changeTime);
+
+				// hide students
+				std::function<void(component::AI*, component::SelfEntity*)> disable = [manager](component::AI* ai, component::SelfEntity* self) {
+					if (ai->GetType() == 0) manager->SetEntityState(self->GetEntity(), false);
+					};
+				manager->Execute(disable);
+
+				// set player position to original
+				std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+					tr->SetPosition(pl->GetOriginalPosition());
+					tr->SetRotation(pl->GetOriginalRotate());
+					};
+				manager->Execute(movePlayers);
+
+			}
+#endif
 
 			};
 
@@ -291,15 +335,25 @@ namespace ECSsystem {
 		};
 
 		// mouse - cameras
-		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime, &mouseMove](Transform* tr, Camera* cam) {
+		std::function<void(PlayerController*)> mouseInput = [deltaTime, manager](PlayerController* ctrl) {
 			// todo rotate must not be orbit
+			Pawn* curPawn = ctrl->GetControllingPawn();
 
-			XMFLOAT3 rot = tr->GetRotation();
+			Entity* curCam = curPawn->GetCameraEntity();
+
+			Transform* camTr = manager->GetComponent<Transform>(curCam);
+			Camera* cam = manager->GetComponent<Camera>(curCam);
+
+			auto& mouseMove = curPawn->GetMouseMove();
+
+			// rotate on x
+			XMFLOAT3 rot = camTr->GetRotation();
 			const float rootSpeed = 10.0f;
 			//rot.y += (mouseMove.x / rootSpeed);
 			rot.x += (mouseMove.y / rootSpeed);
-			tr->SetRotation(rot);
+			camTr->SetRotation(rot);
 			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
+
 			};
 
 		// mouse - attachInputs
@@ -392,13 +446,23 @@ namespace ECSsystem {
 
 	void DayLight::Update(ECSManager* manager, float deltaTime)
 	{
-		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
-			[deltaTime](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
-			float rotSpeed = 360.0f / dayLight->GetDayCycle();
+		float time = 12.0f;
 
-			XMFLOAT3 newRot = transform->GetRotation();
-			newRot.x += rotSpeed * deltaTime;
-			if (newRot.x > 360.0f) newRot.x = 0.0f;
+		std::function<void(component::DayLightManager*)> updateAndGetTime = [deltaTime, &time](component::DayLightManager* dayManager) {
+			dayManager->TimeAdd(deltaTime);
+			time = dayManager->GetCurTime();
+			};
+
+		manager->Execute(updateAndGetTime);
+
+
+		std::function<void(component::Transform*, component::DayLight*, component::Light*)> func = 
+			[time](component::Transform* transform, component::DayLight* dayLight, component::Light* light) {
+			
+			XMFLOAT3 newRot = dayLight->GetOriginRotate();
+			newRot.x += time * (360.0f / 24.0f);
+
+			if (newRot.x > 360.0f) newRot.x -= 360.0f;
 
 			transform->SetRotation(newRot);
 
@@ -411,7 +475,10 @@ namespace ECSsystem {
 			// 0, 90, 180
 			// 0   1   0
 			// day time
-			float weight = powf((sin(XMConvertToRadians(newRot.x))), 2);
+			float ambientWeight = sin(XMConvertToRadians(newRot.x));
+			float weight = powf(ambientWeight, 2);
+
+			ambientWeight = (ambientWeight + 1.0f) / 2.0f;
 
 			LightData& li = light->GetLightData();
 
@@ -431,7 +498,11 @@ namespace ECSsystem {
 						XMLoadFloat4(&dayLight->GetMoonLight()),
 						weight));
 			}
-
+			XMStoreFloat4(&li.m_LightAmbient,
+					XMVectorLerp(
+						XMLoadFloat4(&dayLight->GetMinAmbient()),
+						XMLoadFloat4(&dayLight->GetMaxAmbient()),
+						ambientWeight));
 
 
 			//DebugPrint(std::format("angle : {}\tweight : {}", newRot.x, weight));
@@ -441,6 +512,7 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
+<<<<<<< HEAD
 	void AllocateServer::Update(ECSManager* manager, float deltaTime)
 	{
 		std::function<void(component::Server*, component::Name*, component::SelfEntity*)> allocate = [manager]
@@ -508,6 +580,8 @@ namespace ECSsystem {
 		manager->Execute(allocate);
 	}
 
+=======
+>>>>>>> main
 	void SyncPosition::Update(ECSManager* manager, float deltaTime)
 	{
 		/*std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []
@@ -732,7 +806,9 @@ namespace ECSsystem {
 			auto& colVec = col->GetCollidedEntitiesList();
 			auto& myBox = col->GetBoundingBox();
 			// 
-			XMVECTOR boxCenter = XMLoadFloat3(&myBox.Center);
+			XMFLOAT3 movedCenter = myBox.Center;
+			movedCenter.y += col->GetPossibleClimb();
+			XMVECTOR boxCenter = XMLoadFloat3(&movedCenter);
 			for (auto& otherEntity : colVec) {
 				Collider* other = manager->GetComponent<Collider>(otherEntity.m_Entity);
 				if (other == nullptr) {
@@ -1024,7 +1100,26 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(send);
+
+
+		std::function<void(Server*, Transform*, Physics*)> sendNotPawn = [deltaTime](Server* serv, Transform* tr, Physics* py) {
+			if (serv->IsSendMode() == false) return;
+
+			if (py->GetCurrentVelocityLen() > 0) {
+				XMFLOAT3 pos = tr->GetPosition();
+				XMFLOAT3 rot = tr->GetRotation();
+				XMFLOAT3 vel = py->GetVelocity();
+
+				auto id = serv->getID();
+				cs_packet_position packet(id, pos, rot, vel);
+				Client::GetInstance().send_packet(&packet);
+			}
+			};
+
+		manager->Execute(sendNotPawn);
+
 	}
+
 	void TimeLineManaging::Update(ECSManager* manager, float deltaTime)
 	{
 		for (auto& [entity, timeline] : m_TimeLines) {
@@ -1033,8 +1128,10 @@ namespace ECSsystem {
 		}
 
 		for (auto iter = m_TimeLines.begin(); iter != m_TimeLines.end();) {
-			if (iter->second->IsPlaying() == false)
+			if (iter->second->IsPlaying() == false) {
+				iter->second->RunEndEvent();
 				iter = m_TimeLines.erase(iter);
+			}
 			else
 				++iter;
 		}

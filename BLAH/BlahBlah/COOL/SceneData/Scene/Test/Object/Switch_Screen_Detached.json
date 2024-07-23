@@ -1,0 +1,110 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Nintendo_Switch_Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/NintendoSwitch",
+						"Mesh" : "Switch_Screen_Detached.Nintendo_Switch_Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							-0.45498135685920715,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Screen",
+					"Renderer" : 
+					{
+						"Material" : "ScreenMaterial",
+						"Mesh" : "Switch_Screen_Detached.Switch_Screen"
+					},
+					"Screen": {
+						"Slot_0": "TruckCCTV"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							-0.45498135685920715,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Switch_Screen_Detached",
+			"Holdable" : {},
+			"RCController": 
+			{
+				"Target": "Cybertruck_RC"
+			},
+			"Transform" : 
+			{
+				"Position" : [ 8.41, 25.0, -2.96 ],
+				"Rotate" : [-79.808, 99.273, -15.481 ],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Switch_Screen_Detached_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
