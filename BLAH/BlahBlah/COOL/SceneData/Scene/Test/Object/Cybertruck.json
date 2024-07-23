@@ -411,22 +411,17 @@
 				"AutoMesh": false,
 				"ColideWithDynamic": true,
 				"Center": [0.0, 10.0, 0.0],
-				"Extent": [30.0, 20.0, 55.0]
+				"Extent": [30.0, 20.0, 55.0],
+				"ClimbHeight": 150.0
 			},
 			"Holdable": 
 			{
 				"HoldableID" : 1
 			},
 
-			"Throwable": 
-			{
-				"BakeTime": 2.0,
-				"ThrowSpeed": 20.0
-			},
-
 			"Physics": 
 			{
-				"MaxVelocity": 100.0,
+				"MaxVelocity": 400.0,
 				"Acceleration" : [2000.0, 2000.0, 2000.0],
 				"Calculate" : true,
 				"Friction": true

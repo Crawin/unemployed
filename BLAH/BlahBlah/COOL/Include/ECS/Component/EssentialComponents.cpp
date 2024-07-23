@@ -658,6 +658,8 @@ namespace component {
 
 		m_ColideWithDynamic = col["ColideWithDynamic"].asBool();
 
+		m_PossibleClimbHeight = col["ClimbHeight"].asInt();
+
 		if (m_Collided == false) {
 			XMFLOAT3 center;
 			center.x = col["Center"][0].asFloat();

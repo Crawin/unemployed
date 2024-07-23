@@ -1337,6 +1337,22 @@ namespace component {
 
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+
+			XMFLOAT3 velocity = py->GetVelocity();
+			XMFLOAT3 velocityOnXZ = py->GetVelocityOnXZ();
+			XMVECTOR vel = XMLoadFloat3(&velocityOnXZ);
+			float curSpeed = XMVectorGetX(XMVector3Length(vel));
+			float maxSpeed = py->GetMaxVelocity();
+
+			// limit max speed
+			if (curSpeed >= maxSpeed)
+			{
+				vel = vel / curSpeed * maxSpeed;
+				velocity.x = XMVectorGetX(vel);
+				velocity.z = XMVectorGetZ(vel);
+				py->SetVelocity(velocity);
+			}
+
 			};
 		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
 			//DebugPrint(std::format("angle: {}", m_GoRotateAngle));
@@ -1355,6 +1371,21 @@ namespace component {
 			
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+
+			XMFLOAT3 velocity = py->GetVelocity();
+			XMFLOAT3 velocityOnXZ = py->GetVelocityOnXZ();
+			XMVECTOR vel = XMLoadFloat3(&velocityOnXZ);
+			float curSpeed = XMVectorGetX(XMVector3Length(vel));
+			float maxSpeed = py->GetMaxVelocity();
+
+			// limit max speed
+			if (curSpeed >= maxSpeed)
+			{
+				vel = vel / curSpeed * maxSpeed;
+				velocity.x = XMVectorGetX(vel);
+				velocity.z = XMVectorGetZ(vel);
+				py->SetVelocity(velocity);
+			}
 			};
 		ActionFunction dirDrift = [this, manager, c_RotateSpeed](float deltaTime) {
 			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
