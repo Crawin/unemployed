@@ -46,7 +46,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lp
 #ifdef _DEBUG
     if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0)
     {
-        //LoadLibrary(GetLatestWinPixGpuCapturerPath().c_str());
+        LoadLibrary(GetLatestWinPixGpuCapturerPath().c_str());
     }
 #endif
 

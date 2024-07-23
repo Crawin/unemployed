@@ -202,7 +202,7 @@ float CalculatePointLightFactor(int idx, float3 worldPosition)
 	return CalculateDistanceFactor(lights[idx].m_Position, worldPosition, lights[idx].m_Distance);
 }
 
-float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 worldNormal, float3 worldPosition)
+float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float4 worldNormal, float3 worldPosition)
 {
 	StructuredBuffer<LIGHT> lights = LightDataList[g_LightDataIndex];
 
@@ -218,24 +218,25 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float3 
 
 		if (lights[i].m_LightType == 0) {
 			result.rgb += 
-				PBRLighting(i, worldNormal, viewDir, -light.m_Direction, albedo, roughness, metalic, ao, worldPosition);
+				PBRLighting(i, worldNormal.xyz, viewDir, -light.m_Direction, albedo, roughness, metalic, ao, worldPosition);
 		}		
 		else if (lights[i].m_LightType == 1) {
 			float3 pointToLight = normalize(light.m_Position - worldPosition);
 			result.rgb += 
 				//light.m_LightColor.rgb * light.m_Intensity *
-				PBRLighting(i, worldNormal, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculateSpotLightFactor(i, worldPosition);
+				PBRLighting(i, worldNormal.xyz, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculateSpotLightFactor(i, worldPosition);
 		}	
 		else if (lights[i].m_LightType == 2) {
 			float3 pointToLight = normalize(light.m_Position - worldPosition);
 			result.rgb += 
 				//light.m_LightColor.rgb * light.m_Intensity *
-				PBRLighting(i, worldNormal, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculatePointLightFactor(i, worldPosition);
+				PBRLighting(i, worldNormal.xyz, viewDir, pointToLight, albedo, roughness, metalic, ao, worldPosition) * CalculatePointLightFactor(i, worldPosition);
 		}
 
 	}
 
-	return lerp(albedo, result, albedo.a);
+	float4 res = lerp(albedo, result, albedo.a);
+	return lerp(res, albedo, worldNormal.w);
 }
 
 #define ONLY_MAIN_LIGHT
@@ -393,7 +394,7 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	//normalW -= 1;
 	float4 positionW = float4(Tex2DList[g_PositionIndex].Sample(samplerWarp, input.uv));
 	
-	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
+	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, float4(normalize(normalW.rgb), normalW.a), positionW.xyz);
 	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
 
 	return lightingResult;// + lightShaftResult;
