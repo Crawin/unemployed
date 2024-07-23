@@ -396,5 +396,5 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, normalize(normalW.rgb), positionW.xyz);
 	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
 
-	return lightingResult + lightShaftResult;
+	return lightingResult;// + lightShaftResult;
 }
