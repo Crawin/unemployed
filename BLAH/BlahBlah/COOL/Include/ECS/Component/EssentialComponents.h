@@ -743,6 +743,7 @@ namespace component {
 		std::string m_CameraSocketName;
 		Camera* m_Camera = nullptr;
 		Physics* m_Physics = nullptr;
+		Entity* m_CameraEntity = nullptr;
 
 		bool m_ControledByServer = false;
 
@@ -772,6 +773,8 @@ namespace component {
 
 		bool GetControlServer() const { return m_ControledByServer; }
 		void SetControlServer(bool state) { m_ControledByServer = state; }
+
+		Entity* GetCameraEntity() const { return m_CameraEntity; }
 	};
 
 	/////////////////////////////////////////////////////////

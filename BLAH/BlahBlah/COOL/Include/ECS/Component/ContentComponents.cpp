@@ -1317,25 +1317,7 @@ namespace component {
 
 		// rotate by arrow keys
 		ActionFunction arrowUp = [this, manager, c_RcMoveSpeed](float deltaTime) {
-			DebugPrint(std::format("angle: {}", m_GoRotateAngle));
-			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
-			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
-
-			XMVECTOR d = { 0.0f, 0.0f, 1.0f, 0.0f };
-			XMFLOAT4X4 temp = tr->GetWorldTransform();
-			XMMATRIX mat = XMLoadFloat4x4(&temp);
-
-			d = XMVector4Transform(d, mat);
-
-			XMFLOAT3 move;
-			XMStoreFloat3(&move, d);
-			move.y = 0.0f;
-
-			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
-			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
-			};
-		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
-			DebugPrint(std::format("angle: {}", m_GoRotateAngle));
+			//DebugPrint(std::format("angle: {}", m_GoRotateAngle));
 			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
 			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
 
@@ -1348,8 +1330,28 @@ namespace component {
 			XMFLOAT3 move;
 			XMStoreFloat3(&move, d);
 			move.y = 0.0f;
+
+			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
+			DebugPrintVector(move, "move: ");
+			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
+			};
+		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
+			//DebugPrint(std::format("angle: {}", m_GoRotateAngle));
+			Transform* tr = manager->GetComponent<Transform>(m_RCEntity);
+			Physics* py = manager->GetComponent<Physics>(m_RCEntity);
+
+			XMVECTOR d = { 0.0f, 0.0f, 1.0f, 0.0f };
+			XMFLOAT4X4 temp = tr->GetWorldTransform();
+			XMMATRIX mat = XMLoadFloat4x4(&temp);
+
+			d = XMVector4Transform(d, mat);
+
+			XMFLOAT3 move;
+			XMStoreFloat3(&move, d);
+			move.y = 0.0f;
 			
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
+			DebugPrintVector(move, "move: ");
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
 			};
 		ActionFunction dirDrift = [this, manager, c_RotateSpeed](float deltaTime) {

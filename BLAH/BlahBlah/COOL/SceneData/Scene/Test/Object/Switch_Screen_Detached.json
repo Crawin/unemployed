@@ -8,7 +8,7 @@
 					"Name" : "Nintendo_Switch_Body",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Object/NintendoSwitch",
 						"Mesh" : "Switch_Screen_Detached.Nintendo_Switch_Body"
 					},
 					"Transform" : 
@@ -41,7 +41,7 @@
 						"Mesh" : "Switch_Screen_Detached.Switch_Screen"
 					},
 					"Screen": {
-						"Slot_0": "CCTV_01"
+						"Slot_0": "TruckCCTV"
 					},
 					"Transform" : 
 					{
@@ -70,7 +70,7 @@
 			"Holdable" : {},
 			"RCController": 
 			{
-				"Target": "CCTV_TEST"
+				"Target": "Cybertruck_RC"
 			},
 			"Transform" : 
 			{

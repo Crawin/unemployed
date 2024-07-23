@@ -805,8 +805,8 @@ namespace component {
 
 	void Pawn::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
-		Entity* camEnt = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
-		m_Camera = manager->GetComponent<Camera>(camEnt);
+		m_CameraEntity = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
+		m_Camera = manager->GetComponent<Camera>(m_CameraEntity);
 		m_Physics = manager->GetComponent<Physics>(selfEntity);
 	}
 

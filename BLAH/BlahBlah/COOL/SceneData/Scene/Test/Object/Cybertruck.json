@@ -1,0 +1,447 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "BackArch",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.BackArch"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BackBumper",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.BackBumper"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BackSmallLights",
+					"Renderer" : 
+					{
+						"Material" : "Object/CyberTruck_Lights",
+						"Mesh" : "Cybertruck_Mesh.BackSmallLights"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "BorderSkirt",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.BorderSkirt"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "FrontArch",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.FrontArch"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "FrontGrid",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.FrontGrid"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "TruckFrontTire",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.TruckFrontTire"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "TruckFrontWheel",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.TruckFrontWheel"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "TruckRearTire",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.TruckRearTire"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "TruckRearWheel",
+					"Renderer" : 
+					{
+						"Material" : "BlackPlastic",
+						"Mesh" : "Cybertruck_Mesh.TruckRearWheel"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name": "TruckCCTV",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 3.01],
+						"Rotate": [90.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Camera":
+					{
+						"Active": true,
+						"IsMainCamera": false,
+						"Right": 	[1.0, 0.0, 0.0],
+						"Up": 		[0.0, 1.0, 0.0],
+						"Look": 	[0.0, 0.0, 1.0],
+						"Position": [0.0, 0.0, 0.0],
+				
+						"Fov": 75.0,
+						"Aspect": 1.777,
+						"Near": 0.1,
+						"Far": 10000.0
+					}
+				},
+				{
+					"Name": "Lights",
+					"Transform": 
+					{
+						"Position": [0.0, -3.196, 1.1],
+						"Rotate": [90.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Children":[
+						{
+							"Name": "LightLeft",
+							"Transform": 
+							{
+								"Position": [-0.945, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Light":
+							{
+								"LightColor": [1.0, 1.0, 1.0, 1],
+								"AmbientColor": [0.1, 0.1, 0.1, 1],
+								"LightType": 1,
+								"Distance": 500.0,
+								"Angle": 50.0, 
+								"Intensity": 1.0,
+								"Active": true,
+								"CastShadow": true,
+								"Main": false
+							}
+						},
+						{
+							"Name": "LightRight",
+							"Transform": 
+							{
+								"Position": [0.945, 0.0, 0.0],
+								"Rotate": [0.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Light":
+							{
+								"LightColor": [1.0, 1.0, 1.0, 1],
+								"AmbientColor": [0.1, 0.1, 0.1, 1],
+								"LightType": 1,
+								"Distance": 500.0,
+								"Angle": 50.0, 
+								"Intensity": 1.0,
+								"Active": true,
+								"CastShadow": true,
+								"Main": false
+							}
+						}
+					]
+
+				}
+			],
+			"DynamicCollider" : 
+			{
+				"Active": true,
+				"Static": false,
+				"AutoMesh": false,
+				"ColideWithDynamic": true,
+				"Center": [0.0, 0.01364183, 1.291959],
+				"Extent": [2.224641, 6.52978, 1.618162]
+			},
+			"Holdable": 
+			{
+				"HoldableID" : 1
+			},
+
+			"Physics": 
+			{
+				"MaxVelocity": 100.0,
+				"Acceleration" : [2000.0, 2000.0, 2000.0],
+				"Calculate" : true,
+				"Friction": true
+			},
+			"Name" : "Cybertruck_RC",
+			"Renderer" : 
+			{
+				"Material" : "Object/CyberTruck",
+				"Mesh" : "Cybertruck_Mesh.Cybertruck"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					-90.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					9.9999990463256836,
+					10.0,
+					10.0
+				]
+			}
+		}
+	],
+	"Name" : "Cybertruck_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			100.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -191,7 +191,6 @@ namespace ECSsystem {
 				}
 			}
 
-
 #ifdef _DEBUG
 			std::function<void(component::PlayerController*)> possessToOne = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player1"); };
 			std::function<void(component::PlayerController*)> possessToTwo = [manager](component::PlayerController* ctrl) { ctrl->Possess(manager, "Player2"); };
@@ -333,15 +332,25 @@ namespace ECSsystem {
 		};
 
 		// mouse - cameras
-		std::function<void(Transform*, Camera*)> mouseInput = [deltaTime, &mouseMove](Transform* tr, Camera* cam) {
+		std::function<void(PlayerController*)> mouseInput = [deltaTime, manager](PlayerController* ctrl) {
 			// todo rotate must not be orbit
+			Pawn* curPawn = ctrl->GetControllingPawn();
 
-			XMFLOAT3 rot = tr->GetRotation();
+			Entity* curCam = curPawn->GetCameraEntity();
+
+			Transform* camTr = manager->GetComponent<Transform>(curCam);
+			Camera* cam = manager->GetComponent<Camera>(curCam);
+
+			auto& mouseMove = curPawn->GetMouseMove();
+
+			// rotate on x
+			XMFLOAT3 rot = camTr->GetRotation();
 			const float rootSpeed = 10.0f;
 			//rot.y += (mouseMove.x / rootSpeed);
 			rot.x += (mouseMove.y / rootSpeed);
-			tr->SetRotation(rot);
+			camTr->SetRotation(rot);
 			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
+
 			};
 
 		// mouse - attachInputs

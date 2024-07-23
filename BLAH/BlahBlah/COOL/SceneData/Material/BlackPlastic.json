@@ -1,0 +1,9 @@
+{
+	"name": "BlackPlastic",
+	"BaseColor": "White",
+	"Roughness": "Gray",
+	"Metalic": "ZeroOneBlack",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

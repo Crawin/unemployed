@@ -1,0 +1,9 @@
+{
+	"name": "CyberTruck",
+	"BaseColor": "Object/CyberTruck/BackSmallLights_Color",
+	"Roughness": "ZeroOneBlack",
+	"Metalic": "ZeroOneBlack",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
