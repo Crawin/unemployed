@@ -77,7 +77,7 @@ void TestMainScene::OnSelfHost()
 		std::string othername = client.GetGuestPlayerName();
 
 		std::function<void(component::Server*, component::Name*, component::Pawn*)>
-			findAndSetID = [&playername, &othername, &playerSock](component::Server* ser, component::Name* na, , component::Pawn* pawnComp) {
+			findAndSetID = [&playername, &othername, &playerSock](component::Server* ser, component::Name* na, component::Pawn* pawnComp) {
 			if (na->getName() == playername) ser->setID(playerSock[0]);
 			if (na->getName() == othername) pawnComp->SetControlServer(true);
 			};
