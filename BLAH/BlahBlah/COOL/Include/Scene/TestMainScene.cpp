@@ -74,10 +74,12 @@ void TestMainScene::OnSelfHost()
 
 	if (playerSock[0]) {
 		std::string playername = client.GetHostPlayerName();
+		std::string othername = client.GetGuestPlayerName();
 
-		std::function<void(component::Server*, component::Name*)>
-			findAndSetID = [&playername, &playerSock](component::Server* ser, component::Name* na) {
+		std::function<void(component::Server*, component::Name*, component::Pawn*)>
+			findAndSetID = [&playername, &othername, &playerSock](component::Server* ser, component::Name* na, , component::Pawn* pawnComp) {
 			if (na->getName() == playername) ser->setID(playerSock[0]);
+			if (na->getName() == othername) pawnComp->SetControlServer(true);
 			};
 		m_ECSManager->Execute(findAndSetID);
 	}
@@ -107,9 +109,12 @@ void TestMainScene::OnSelfGuest()
 
 		std::string otherPlayer = client.GetHostPlayerName();
 		// set other
-		std::function<void(component::Server*, component::Name*)>
-			findAndSetIDOnOther = [&otherPlayer, &playerSock](component::Server* ser, component::Name* na) {
-			if (na->getName() == otherPlayer) ser->setID(playerSock[1]);
+		std::function<void(component::Server*, component::Name*, component::Pawn*)>
+			findAndSetIDOnOther = [&otherPlayer, &playerSock](component::Server* ser, component::Name* na, component::Pawn* pawnComp) {
+			if (na->getName() == otherPlayer) {
+				ser->setID(playerSock[1]);
+				pawnComp->SetControlServer(true);
+			}
 			};
 		m_ECSManager->Execute(findAndSetIDOnOther);
 
