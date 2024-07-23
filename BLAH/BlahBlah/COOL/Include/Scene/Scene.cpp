@@ -746,8 +746,8 @@ void Scene::ProcessPacket(packet_base* packet)
 	{
 		sc_packet_key_input* buf = reinterpret_cast<sc_packet_key_input*>(packet);
 		std::function<void(component::Server*, component::Pawn*)> func = [manager, buf](component::Server* server, component::Pawn* pawn) {
-			if (pawn->GetControlServer() == false) return;
-			if (server->getID() != buf->getPlayer()) return;
+			if (pawn->GetControlServer() == false) return;		// 클라 본인이면 리턴
+			//if (server->getID() != buf->getPlayer()) return; //윗줄의 코드와 똑같은 효과 인듯 하다.
 			char c = ConvertGameInputEnumToKeyIntValue(buf->getGameInput());
 			DebugPrint(std::format("state: {}, key: {}", (int)buf->getKeyState(), c));
 			pawn->SetInput(buf->getGameInput(), buf->getKeyState());

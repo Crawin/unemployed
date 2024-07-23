@@ -658,8 +658,22 @@ namespace component {
 			// change player chara animation to attack
 			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
 			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
-			cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
-			Client::GetInstance().send_packet(&anim);
+			auto& client = Client::GetInstance();
+			std::string playername;
+			switch (client.getCharType())
+			{
+			case 1:
+				playername = client.GetHostPlayerName();
+				break;
+			case 2:
+				playername = client.GetGuestPlayerName();
+				break;
+			}
+			if (masterAnimCtrl->GetPlayer()->GetName() == playername)			// 자신의 캐릭터라면 animation 변경 패킷 전송
+			{
+				cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
+				Client::GetInstance().send_packet(&anim);
+			}
 
 			// set collider on
 			auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);

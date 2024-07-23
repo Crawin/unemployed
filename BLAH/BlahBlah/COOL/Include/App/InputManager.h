@@ -36,6 +36,7 @@ public:
 
 	//bool OnMouseLeftPressStart();
 	//bool IsMouseLeftDownStart() const { return false; }
+	bool GetMouseCapture()const { return m_MouseCapture; }
 
 private:
 	// mosue input

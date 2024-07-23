@@ -801,7 +801,7 @@ namespace component {
 	void Pawn::TickInput()
 	{
 		// if pressing
-		if (m_ControledByServer == false) {
+		if (m_ControledByServer == false) {				// 클라 본인
 			for (KEY_STATE& state : m_KeyStates) {
 				switch (state) {
 				case KEY_STATE::START_PRESS:
@@ -815,7 +815,7 @@ namespace component {
 				}
 			}
 		}
-		else {
+		else {											// 상대방
 			for (KEY_STATE& state : m_KeyStates) {
 				switch (state) {
 				case KEY_STATE::START_PRESS:

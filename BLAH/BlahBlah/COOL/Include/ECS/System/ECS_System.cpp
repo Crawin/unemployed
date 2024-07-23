@@ -186,8 +186,11 @@ namespace ECSsystem {
 
 				// if start or end press, go press
 				if (state == KEY_STATE::START_PRESS || state == KEY_STATE::END_PRESS) {
-					cs_packet_key_input packet(state, input);
-					Client::GetInstance().send_packet(&packet);
+					if (InputManager::GetInstance().GetMouseCapture())
+					{
+						cs_packet_key_input packet(state, input);
+						Client::GetInstance().send_packet(&packet);
+					}
 				}
 			}
 
@@ -482,7 +485,7 @@ namespace ECSsystem {
 						server->setID(playerSock[1]);
 						component::Pawn* pawn = manager->GetComponent<component::Pawn>(self->GetEntity());
 						if (pawn != nullptr) {
-							pawn->SetControlServer(true);
+							pawn->SetControlServer(true);	// 본인은 ControlServer 가 아니고, 상대방만 ControlServer이다
 						}
 					}
 

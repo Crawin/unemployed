@@ -309,6 +309,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto packet = reinterpret_cast<cs_packet_anim_type*>(base);
 			auto sent_player = login_players.find(id);
+			printf("[%d] Sent Animation Change\n", id);
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
@@ -411,6 +412,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto packet = reinterpret_cast<cs_packet_key_input*>(base);
 			auto sent_player = login_players.find(id);
+			printf("[%d] Sent KeyInput\n", id);
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
