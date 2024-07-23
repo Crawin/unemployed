@@ -213,7 +213,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			cs_packet_position* position = reinterpret_cast<cs_packet_position*>(base);
 			auto ping = std::chrono::high_resolution_clock::now() - position->sendTime;
-			auto& gameRoom = Games[position->getNum()];
+			auto& gameRoom = Games[login_players[id].getGameNum()];
 			
 			// 충돌체크 하지 않고 위치 전달
 			gameRoom.setPlayerPR(id, position);
@@ -227,10 +227,10 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				gameRoom.setFloor(id, floor);
 			}
 
-			sc_packet_position after_pos(login_players[id].getSock(), position->getPosition(), position->getRotation(), position->getSpeed());
+			sc_packet_position after_pos(position->getID(), position->getPosition(), position->getRotation(), position->getSpeed());
 
 			// 게임 방 내의 플레이어들 모두에게 패킷 전송
-			Player* players = Games[position->getNum()].getPlayers();
+			Player* players = gameRoom.getPlayers();
 			for (int i = 0; i < 2; ++i)
 			{
 				if (players[i].id && players[i].id != id)

@@ -205,19 +205,19 @@ public:
 class cs_packet_position : public packet_base
 {
 private:
-	unsigned int roomNum;
+	unsigned int id;
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 speed;
 
 public:
 	cs_packet_position(const unsigned int& n, const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot, const DirectX::XMFLOAT3& sp)
-		:roomNum(n), position(pos), rotation(rot), speed(sp)
+		:id(n), position(pos), rotation(rot), speed(sp)
 	{
 		size = sizeof(cs_packet_position);
 		type = pPOSITION;
 	};
-	const unsigned int getNum() { return roomNum; }
+	const unsigned int getID() { return id; }
 	const DirectX::XMFLOAT3 getPosition() { return position; }
 	const DirectX::XMFLOAT3 getRotation() { return rotation; }
 	const DirectX::XMFLOAT3 getSpeed() { return speed; }
