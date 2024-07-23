@@ -1,7 +1,10 @@
 {
 	"Name": "Student1",
 
-	"Server": {},
+	"Server": 
+	{
+		"ID": 2
+	},
 
 	"Transform": 
 	{

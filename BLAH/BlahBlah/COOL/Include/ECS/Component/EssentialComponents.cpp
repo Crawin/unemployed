@@ -510,7 +510,9 @@ namespace component {
 
 	void Server::Create(Json::Value& v, ResourceManager* rm)
 	{
-		m_id = NULL;
+		Json::Value ser = v["Server"];
+
+		m_id = ser["ID"].asInt();
 	}
 
 	void Server::ShowYourself() const

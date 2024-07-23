@@ -517,6 +517,8 @@ namespace ECSsystem {
 			const SOCKET* playerSock = client.getPSock();
 			short type = client.getCharType();
 			auto& n = name->getName();
+
+			// if logged in
 			if (type)
 			{
 				if (playerSock[0])			// 자신의 소켓 번호가 들어가있어
@@ -568,10 +570,6 @@ namespace ECSsystem {
 				//		server->setID(NULL);
 				//}
 			}
-			if (n.compare("Guard") == 0 && server->getID() == NULL)
-				server->setID(1);
-			if (n.compare("Student1") == 0 && server->getID() == NULL)
-				server->setID(2);
 			};
 		manager->Execute(allocate);
 	}

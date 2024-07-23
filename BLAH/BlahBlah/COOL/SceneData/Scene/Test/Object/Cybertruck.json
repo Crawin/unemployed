@@ -426,6 +426,12 @@
 				"Calculate" : true,
 				"Friction": true
 			},
+
+			"Server":
+			{
+				"ID": 10
+			},
+
 			"Transform" : 
 			{
 				"Position" : 
