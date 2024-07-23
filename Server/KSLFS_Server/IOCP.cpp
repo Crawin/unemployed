@@ -412,7 +412,6 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto packet = reinterpret_cast<cs_packet_key_input*>(base);
 			auto sent_player = login_players.find(id);
-			printf("[%d] Sent KeyInput\n", id);
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
@@ -420,6 +419,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				{
 					sc_packet_key_input input(InGamePlayers[0].sock, packet->getKeyState(), packet->getGameInput());
 					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&input));
+					printf("[%d] -> [%d] Sent KeyInput\n", id, InGamePlayers[1].id);
 				}
 			}
 			else if (InGamePlayers[1].id == id)
@@ -428,6 +428,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				{
 					sc_packet_key_input input(InGamePlayers[1].sock, packet->getKeyState(), packet->getGameInput());
 					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&input));
+					printf("[%d] -> [%d] Sent KeyInput\n", id, InGamePlayers[0].id);
 				}
 			}
 			else
