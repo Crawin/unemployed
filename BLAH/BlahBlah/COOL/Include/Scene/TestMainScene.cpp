@@ -122,7 +122,7 @@ void TestMainScene::OnSelfGuest()
 		// set cctv, rc to send mode
 		std::function<void(component::Server*, component::Name*)>
 			toSendMode = [&otherPlayer, &playerSock](component::Server* ser, component::Name* na) {
-			if (ser->getID() >= 70) ser->SetSendMode(true);
+			if (70 <= ser->getID() && ser->getID() <= 80) ser->SetSendMode(true);
 			};
 		m_ECSManager->Execute(toSendMode);
 
