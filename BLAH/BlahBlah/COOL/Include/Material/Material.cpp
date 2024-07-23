@@ -81,7 +81,8 @@ bool Material::LoadFile(ComPtr<ID3D12GraphicsCommandList> cmdList, const std::st
 
 void Material::SetDatas(ComPtr<ID3D12GraphicsCommandList> cmdList, UINT paramIdx)
 {
-	cmdList->SetGraphicsRoot32BitConstants(paramIdx, 16, m_TextureIndex, 0);
+	cmdList->SetGraphicsRoot32BitConstants(paramIdx, _countof(m_TextureIndex), m_TextureIndex, 0);
+	cmdList->SetGraphicsRoot32BitConstants(paramIdx, _countof(m_ExtraData), m_ExtraData, _countof(m_TextureIndex));
 }
 
 

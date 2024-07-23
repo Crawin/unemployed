@@ -710,8 +710,7 @@ namespace component {
 		// set collider event
 		DynamicCollider* collider = manager->GetComponent<DynamicCollider>(selfEntity);
 		EventFunction attackHit = [manager](Entity* self, Entity* other) {
-			Name* name = manager->GetComponent<Name>(other);
-			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+			DebugPrint("doorCrush");
 
 			DynamicCollider* collider = manager->GetComponent<DynamicCollider>(self);
 			Transform* doorTrans = manager->GetComponent<Transform>(other);
@@ -731,14 +730,16 @@ namespace component {
 			// set collided position on renderer
 			DoorControl* doorComp = manager->GetComponent<DoorControl>(other);
 			doorComp->SetCrushPosition(attackPosOnDoorLocal, 50.0f, 15.0f);
-
-			DebugPrintVector(attackPosOnDoorLocal, "pos: ");
-
-			// set collider off
-			collider->SetActive(false);
 			};
 
 		collider->InsertEvent<DoorControl>(attackHit, COLLIDE_EVENT_TYPE::BEGIN);
+
+		EventFunction setFirePoo = [manager](Entity* self, Entity* other) {
+			DynamicCollider* collider = manager->GetComponent<DynamicCollider>(self);
+			DebugPrint("POO");
+			collider->SetActive(false);
+			};
+		collider->InsertEvent<Collider>(setFirePoo, COLLIDE_EVENT_TYPE::BEGIN);
 		collider->SetActive(false);
 	}
 
@@ -928,7 +929,8 @@ namespace component {
 
 		component::Renderer* rend = manager->GetComponent<component::Renderer>(selfEntity);
 		XMFLOAT4 extra = { 1.0f, 0.0f, 0.0f, 0.0f };
-		rend->SetExtraShaderData(extra, 0);
+		Material* mat = rm->GetMaterial(rend->GetMaterial());
+		mat->SetExtraDataIndex(0, 1.0f);
 	}
 
 	void Screen::ShowYourself() const
