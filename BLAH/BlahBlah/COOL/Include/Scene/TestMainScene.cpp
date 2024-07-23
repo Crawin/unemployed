@@ -4,6 +4,7 @@
 #include "ECS/ECSManager.h"
 #include "Shader/Shader.h"
 #include "ECS/TimeLine/TimeLine.h"
+#include "Network/Client.h"
 
 bool TestMainScene::LoadSceneExtra(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
@@ -66,10 +67,83 @@ void TestMainScene::OnPreRender(ComPtr<ID3D12GraphicsCommandList> commandList, D
 	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
 
+void TestMainScene::OnSelfHost()
+{
+	auto& client = Client::GetInstance();
+	const SOCKET* playerSock = client.getPSock();
+
+	if (playerSock[0]) {
+		std::string playername = client.GetHostPlayerName();
+
+		std::function<void(component::Server*, component::Name*)>
+			findAndSetID = [&playername, &playerSock](component::Server* ser, component::Name* na) {
+			if (na->getName() == playername) ser->setID(playerSock[0]);
+			};
+		m_ECSManager->Execute(findAndSetID);
+	}
+	else 
+		ERROR_QUIT("ERROR_NO SOCKET");
+	
+}
+
+void TestMainScene::OnSelfGuest()
+{
+	auto& client = Client::GetInstance();
+	const SOCKET* playerSock = client.getPSock();
+
+	if (playerSock[0]) {
+		std::string playername = client.GetGuestPlayerName();
+
+		// set self
+		std::function<void(component::Server*, component::Name*)>
+			findAndSetID = [&playername, &playerSock](component::Server* ser, component::Name* na) {
+			if (na->getName() == playername) ser->setID(playerSock[0]);
+			};
+		m_ECSManager->Execute(findAndSetID);
+
+		std::string otherPlayer = client.GetHostPlayerName();
+		// set other
+		std::function<void(component::Server*, component::Name*)>
+			findAndSetIDOnOther = [&otherPlayer, &playerSock](component::Server* ser, component::Name* na) {
+			if (na->getName() == otherPlayer) ser->setID(playerSock[1]);
+			};
+		m_ECSManager->Execute(findAndSetIDOnOther);
+
+		// todo
+		// set cctv, rc to send mode
+
+
+	}
+	else
+		ERROR_QUIT("ERROR_NO SOCKET");
+}
+
+void TestMainScene::OnGuestEnter()
+{
+	auto& client = Client::GetInstance();
+	const SOCKET* playerSock = client.getPSock();
+
+	if (playerSock[1]) {
+		std::string playername = client.GetGuestPlayerName();
+
+		std::function<void(component::Server*, component::Name*)>
+			findAndSetID = [&playername, &playerSock](component::Server* ser, component::Name* na) {
+			if (na->getName() == playername) ser->setID(playerSock[1]);
+			};
+		m_ECSManager->Execute(findAndSetID);
+	}
+	else
+		ERROR_QUIT("ERROR_NO SOCKET");
+}
+
 bool TestMainScene::Enter(ComPtr<ID3D12GraphicsCommandList> commandList)
 {
     Scene::Enter(commandList);
-    return true;
+ 
+	// on main scene enter
+	// check is host
+	
+	return true;
 }
 
 void TestMainScene::Update(float deltaTime)
@@ -84,6 +158,25 @@ void TestMainScene::Exit()
 bool TestMainScene::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
 {
     return false;
+}
+
+void TestMainScene::OnServerConnected()
+{
+	short type = Client::GetInstance().getCharType();
+	
+	// if logged in
+
+	// if host
+	std::string playername;
+	if (type == 1)
+	{
+		// start host
+		OnSelfHost();
+	}
+	else {
+		// start guest
+		OnSelfGuest();
+	}
 }
 
 //void TestMainScene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)

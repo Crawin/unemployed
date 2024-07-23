@@ -276,6 +276,12 @@ void process_packet(packet_base*& base)
 		client.vivox_state->game_state = true;
 		std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
 		vivox.detach();
+
+		// todo 
+		// to scene manager-> change scene
+		// lobby -> (loading) -> main scene
+		client.getSceneManager()->ProcessPacket(base);
+
 		break;
 	}
 	case pENTERROOM:							// enter_room
@@ -296,6 +302,12 @@ void process_packet(packet_base*& base)
 			client.vivox_state->game_state = true;
 			std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
 			vivox.detach();
+
+			// todo 
+			// to scene manager-> change scene
+			// lobby -> (loading) -> main scene
+			client.getSceneManager()->ProcessPacket(base);
+
 		}
 		else
 		{
@@ -309,6 +321,10 @@ void process_packet(packet_base*& base)
 		SOCKET playerSock = buf->getPlayerSock();
 		client.characters.try_emplace(playerSock);
 		client.setPSock(playerSock);
+
+		// todo
+		// to scene manager-> process packet
+		client.getSceneManager()->ProcessPacket(base);
 	}
 		break;
 	case pLogout:									// pLogout

@@ -108,7 +108,6 @@ bool Scene::AddSystem()
 	// 999. 부모에 따라 transform을 바꾸는 system(LocalToWorldTransform)
 	
 	// sync position by server
-	m_ECSManager->InsertSystem(new ECSsystem::AllocateServer);
 	m_ECSManager->InsertSystem(new ECSsystem::SyncPosition);
 	
 	// move collide check, handle simulate, move and send
@@ -736,6 +735,25 @@ void Scene::ProcessPacket(packet_base* packet)
 	ECSManager* manager = m_ECSManager.get();
 	switch (packet->getType())		// PACKET_TYPE
 	{
+		// todo
+		// scene 변경이 되어야 하는 부분이다.
+	case pMAKEROOM:
+	{
+		OnSelfHost();
+		break;
+	}
+		// todo
+		// scene 변경이 되어야 하는 부분이다.
+	case pENTERROOM:
+	{
+		OnSelfGuest();
+		break;
+	}
+	case pRoomPlayer:
+	{
+		OnGuestEnter();
+		break;
+	}
 	case pPOSITION:								// POSITION
 	{
 		sc_packet_position* buf = reinterpret_cast<sc_packet_position*>(packet);
@@ -819,6 +837,10 @@ void Scene::ProcessPacket(packet_base* packet)
 		break;
 	}
 	}
+}
+
+void Scene::OnServerConnected()
+{
 }
 
 void Scene::PossessPlayer(bool isHost)
