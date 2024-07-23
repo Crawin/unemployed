@@ -31,6 +31,11 @@
 							0.0099999997764825821,
 							0.0099999997764825821
 						]
+					},
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
 					}
 				},
 				{
@@ -1574,7 +1579,7 @@
 					"Name" : "fence_part56",
 					"Renderer" : 
 					{
-						"Material" : "Map/highway_wall",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Background.fence_part56"
 					},
 					"Transform" : 
@@ -1603,7 +1608,7 @@
 					"Name" : "fence_part57",
 					"Renderer" : 
 					{
-						"Material" : "Map/highway_wall",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Background.fence_part57"
 					},
 					"Transform" : 

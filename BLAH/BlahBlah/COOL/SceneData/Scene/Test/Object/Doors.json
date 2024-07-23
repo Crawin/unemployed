@@ -19,6 +19,24 @@
 								"Position" : [ 0.0, 100.0, 0.0],
 								"Rotate" : [ 0.0, 0.0, 0.0 ],
 								"Scale" : [ 1.0, 1.0, 1.0 ]
+							},
+							"Collider" : 
+							{
+								"AutoMesh" : false,
+								"Center" : 
+								[
+									-40.0,
+									100.0,
+									0.0
+								],
+								"Extent" : 
+								[
+									50.0,
+									100.0,
+									10.0
+								],
+								"Rotate" : [ 0.0, 0.0, 0.0],
+								"Static" : true
 							}
 						}
 					],
@@ -36,7 +54,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -119,7 +137,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -202,7 +220,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -285,7 +303,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -368,7 +386,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -451,7 +469,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -534,7 +552,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -617,7 +635,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -700,7 +718,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -783,7 +801,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -866,7 +884,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 9876,
@@ -949,7 +967,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1032,7 +1050,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1115,7 +1133,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1198,7 +1216,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1281,7 +1299,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1364,7 +1382,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1447,7 +1465,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1530,7 +1548,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1613,7 +1631,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -1696,7 +1714,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -1779,7 +1797,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -1862,7 +1880,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -1945,7 +1963,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2028,7 +2046,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2111,7 +2129,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2194,7 +2212,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2277,7 +2295,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2360,7 +2378,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2443,7 +2461,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2526,7 +2544,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2609,7 +2627,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2692,7 +2710,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -2775,7 +2793,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -2858,7 +2876,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -2941,7 +2959,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -3024,7 +3042,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3107,7 +3125,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3190,7 +3208,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -3273,7 +3291,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3356,7 +3374,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -3439,7 +3457,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3522,7 +3540,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3605,7 +3623,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3688,7 +3706,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -3771,7 +3789,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -3854,7 +3872,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -3937,7 +3955,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -4020,7 +4038,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -4103,7 +4121,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -4186,7 +4204,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -4269,7 +4287,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -4352,7 +4370,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -4435,7 +4453,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -4518,7 +4536,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -4601,7 +4619,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -4684,7 +4702,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -4767,7 +4785,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -4850,7 +4868,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -4933,7 +4951,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5016,7 +5034,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5099,7 +5117,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5182,7 +5200,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5265,7 +5283,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5348,7 +5366,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5431,7 +5449,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5514,7 +5532,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5597,7 +5615,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5680,7 +5698,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5763,7 +5781,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5846,7 +5864,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -5929,7 +5947,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6012,7 +6030,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6095,7 +6113,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6178,7 +6196,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6261,7 +6279,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6344,7 +6362,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6427,7 +6445,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6510,7 +6528,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6593,7 +6611,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6676,7 +6694,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6759,7 +6777,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6842,7 +6860,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -6925,7 +6943,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7008,7 +7026,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7091,7 +7109,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7174,7 +7192,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7257,7 +7275,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7340,7 +7358,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7423,7 +7441,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7506,7 +7524,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7589,7 +7607,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7672,7 +7690,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7755,7 +7773,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7838,7 +7856,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -7921,7 +7939,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8004,7 +8022,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8087,7 +8105,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8170,7 +8188,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8253,7 +8271,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8336,7 +8354,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8419,7 +8437,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8502,7 +8520,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8585,7 +8603,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8668,7 +8686,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8751,7 +8769,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8834,7 +8852,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -8917,7 +8935,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9000,7 +9018,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -9083,7 +9101,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -9166,7 +9184,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9249,7 +9267,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
@@ -9332,7 +9350,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9415,7 +9433,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9498,7 +9516,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9581,7 +9599,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9664,7 +9682,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9747,7 +9765,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9830,7 +9848,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
@@ -9913,7 +9931,7 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
