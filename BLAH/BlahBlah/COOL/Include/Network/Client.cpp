@@ -65,7 +65,7 @@ void Client::Send_Pos(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& rot
 	if (m_SendTimeElapsed >= m_SendFrame) {
 		m_SendTimeElapsed = 0.0f;
 
-		cs_packet_position temp(roomNum, pos, rot, sp);
+		cs_packet_position temp(playerSock[0], pos, rot, sp);
 		temp.sendTime = std::chrono::high_resolution_clock::now();
 		EXP_OVER* send_over = new EXP_OVER;
 		send_over->wsabuf->len = sizeof(cs_packet_position);
