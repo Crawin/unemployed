@@ -121,7 +121,7 @@
 								"LightType": 1,
 								"Distance": 7000.0,
 								"Angle": 30.0,
-								"Intensity": 5.0,
+								"Intensity": 2.0,
 								"Active": true,
 								"CastShadow": true,
 								"Main": false
