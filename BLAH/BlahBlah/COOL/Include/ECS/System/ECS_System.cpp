@@ -800,7 +800,9 @@ namespace ECSsystem {
 			auto& colVec = col->GetCollidedEntitiesList();
 			auto& myBox = col->GetBoundingBox();
 			// 
-			XMVECTOR boxCenter = XMLoadFloat3(&myBox.Center);
+			XMFLOAT3 movedCenter = myBox.Center;
+			movedCenter.y += col->GetPossibleClimb();
+			XMVECTOR boxCenter = XMLoadFloat3(&movedCenter);
 			for (auto& otherEntity : colVec) {
 				Collider* other = manager->GetComponent<Collider>(otherEntity.m_Entity);
 				if (other == nullptr) {

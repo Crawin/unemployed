@@ -410,8 +410,8 @@
 				"Static": false,
 				"AutoMesh": false,
 				"ColideWithDynamic": true,
-				"Center": [0.0, 0.01364183, 1.937938],
-				"Extent": [4.449282, 6.52978, 3.236324]
+				"Center": [0.0, 10.0, 0.0],
+				"Extent": [30.0, 20.0, 55.0]
 			},
 			"Holdable": 
 			{

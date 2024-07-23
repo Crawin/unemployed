@@ -626,7 +626,7 @@ namespace component {
 		bool m_Active = true;
 		bool m_ColideWithDynamic = true;
 
-		float m_PossibleClimbHeight = 30.0f;
+		float m_PossibleClimbHeight = 100.0f;
 
 		CollideEvents m_EventFunctions;
 
@@ -659,6 +659,8 @@ namespace component {
 		void ResetList() { m_CollidedEntities = std::list<CollidedEntity>(); }
 
 		const EventFunctionMap* GetEventMap(COLLIDE_EVENT_TYPE type) const;
+
+		float GetPossibleClimb() const { return m_PossibleClimbHeight; }
 
 		template<class COMP>
 		void InsertEvent(EventFunction& eventFunc, COLLIDE_EVENT_TYPE type)
