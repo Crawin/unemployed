@@ -797,11 +797,6 @@ namespace ECSsystem {
 			[&faces, deltaTime, manager](DynamicCollider* col, Physics* sp, Transform* tr, SelfEntity* self) {
 			if (col->GetCollided() == false || col->IsTrigger()) return;
 
-			Name* nameComp = manager->GetComponent<Name>(self->GetEntity());
-			std::string name = nameComp->getName();
-
-			if (name == "Cybertruck_RC") DebugPrint("RC Get Hit");
-
 			auto& colVec = col->GetCollidedEntitiesList();
 			auto& myBox = col->GetBoundingBox();
 			// 
@@ -844,8 +839,6 @@ namespace ECSsystem {
 				// reduce velocity here
 				XMVECTOR velocityBack = dot * hitFace;// *sp->GetElasticity();
 				XMVECTOR result = velocity - velocityBack;
-
-				if (name == "Cybertruck_RC") DebugPrint(std::format("Hit Face: {}", idx));
 
 				XMFLOAT3 res;
 				XMStoreFloat3(&res, result);

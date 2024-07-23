@@ -1336,7 +1336,6 @@ namespace component {
 			move.y = 0.0f;
 
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
-			DebugPrintVector(move, "move: ");
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
 			};
 		ActionFunction arrowDown = [this, manager, c_RcMoveSpeed](float deltaTime) {
@@ -1355,7 +1354,6 @@ namespace component {
 			move.y = 0.0f;
 			
 			XMStoreFloat3(&move, XMVector3Normalize(XMLoadFloat3(&move)));
-			DebugPrintVector(move, "move: ");
 			py->AddVelocity(move, deltaTime * c_RcMoveSpeed);
 			};
 		ActionFunction dirDrift = [this, manager, c_RotateSpeed](float deltaTime) {
