@@ -83,7 +83,11 @@ void TestMainScene::OnSelfHost()
 	}
 	else 
 		ERROR_QUIT("ERROR_NO SOCKET");
-	
+
+	// todo
+	// set can to send mode
+	std::function<void(component::Server*, component::Drink*)> sendMode = [](component::Server* ser, component::Drink* dr) { ser->SetSendMode(true); };
+	m_ECSManager->Execute(sendMode);
 }
 
 void TestMainScene::OnSelfGuest()
@@ -109,9 +113,18 @@ void TestMainScene::OnSelfGuest()
 			};
 		m_ECSManager->Execute(findAndSetIDOnOther);
 
+		//	ID
+		//	60~65 음료수
+		//	70~72 CCTV
+		//	80 RC
+
 		// todo
 		// set cctv, rc to send mode
-
+		std::function<void(component::Server*, component::Name*)>
+			toSendMode = [&otherPlayer, &playerSock](component::Server* ser, component::Name* na) {
+			if (ser->getID() >= 70) ser->SetSendMode(true);
+			};
+		m_ECSManager->Execute(toSendMode);
 
 	}
 	else

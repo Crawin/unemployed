@@ -1027,7 +1027,26 @@ namespace ECSsystem {
 			};
 
 		manager->Execute(send);
+
+
+		std::function<void(Server*, Transform*, Physics*)> sendNotPawn = [deltaTime](Server* serv, Transform* tr, Physics* py) {
+			if (serv->IsSendMode() == false) return;
+
+			if (py->GetCurrentVelocityLen() > 0) {
+				XMFLOAT3 pos = tr->GetPosition();
+				XMFLOAT3 rot = tr->GetRotation();
+				XMFLOAT3 vel = py->GetVelocity();
+
+				auto id = serv->getID();
+				cs_packet_position packet(id, pos, rot, vel);
+				Client::GetInstance().send_packet(&packet);
+			}
+			};
+
+		manager->Execute(sendNotPawn);
+
 	}
+
 	void TimeLineManaging::Update(ECSManager* manager, float deltaTime)
 	{
 		for (auto& [entity, timeline] : m_TimeLines) {

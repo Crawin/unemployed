@@ -543,6 +543,7 @@ namespace component {
 	//
 	class Server : public ComponentBase<Server> {
 		unsigned int m_id;
+		bool m_SendMode = false;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -551,6 +552,9 @@ namespace component {
 
 		const unsigned int getID() { return m_id; }
 		void setID(const unsigned int&);
+
+		void SetSendMode(bool state) { m_SendMode = state; }
+		bool IsSendMode() const { return m_SendMode; }
 	};
 
 	/////////////////////////////////////////////////////////
