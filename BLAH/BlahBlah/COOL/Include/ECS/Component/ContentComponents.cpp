@@ -866,6 +866,18 @@ namespace component {
 				// collider off
 				dc->SetActive(false);
 
+				Server* serv = manager->GetComponent<Server>(self);
+				if (serv != nullptr) {
+					Transform* tr = manager->GetComponent<Transform>(self);
+					XMFLOAT3 pos = tr->GetPosition();
+					XMFLOAT3 rot = tr->GetRotation();
+					XMFLOAT3 vel = py->GetVelocity();
+
+					auto id = serv->getID();
+					cs_packet_position packet(id, pos, rot, vel);
+					Client::GetInstance().send_packet(&packet);
+
+				}
 				Name* name = manager->GetComponent<Name>(other);
 				Transform* otherTrans = manager->GetComponent<Transform>(other);
 				Collider* otherCol = manager->GetComponent<Collider>(other);
@@ -913,6 +925,10 @@ namespace component {
 			Material* mat = rm->GetMaterial(ren->GetMaterial());
 			mat->SetDataIndex(0, data.m_ResultRenderTargetIndex);
 		}
+
+		component::Renderer* rend = manager->GetComponent<component::Renderer>(selfEntity);
+		XMFLOAT4 extra = { 1.0f, 0.0f, 0.0f, 0.0f };
+		rend->SetExtraShaderData(extra, 0);
 	}
 
 	void Screen::ShowYourself() const
