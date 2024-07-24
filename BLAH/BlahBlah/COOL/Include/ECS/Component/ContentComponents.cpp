@@ -189,6 +189,7 @@ namespace component {
 	{
 		Json::Value door = v["Door"];
 
+		m_MaxAngle = door["MaxAngle"].asFloat();
 		m_Answer = door["Answer"].asInt();
 		m_KeyID = door["KeyID"].asInt();
 		m_Locked = door["Locked"].asInt();
@@ -347,7 +348,7 @@ namespace component {
 		auto rot = tr->GetRotation();
 		XMFLOAT3 rotAfter = rot;
 
-		float angle = m_MaxAngle;
+		float angle = GetMaxAngle();
 		if (m_Open) angle *= -1;
 
 		switch (m_RotateAxis) {
