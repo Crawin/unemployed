@@ -4,6 +4,10 @@ class ECSManager;
 class ITimeLine;
 class Entity;
 
+namespace component {
+	class Particle;
+}
+
 namespace ECSsystem {
 
 	// system class's member variable == global setting
@@ -229,6 +233,23 @@ namespace ECSsystem {
 
 		void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLines.emplace(entity, timeLine); }
 	};
+
+	/////////////////////////////////////////////////////////
+	// Particle Managing
+	// 
+	class ParticleManaging : public System {
+		std::map<PARTICLE_TYPES, component::Particle*> m_Particles;
+
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+
+		void InitComponent(PARTICLE_TYPES type, component::Particle* particle) { m_Particles[type] = particle; }
+
+		void InsertParticle(PARTICLE_TYPES type, XMFLOAT3 pos, XMFLOAT3 vel, int toInsert, float randRange);
+
+		void SyncParticle();
+	};
+	
 }
 
 

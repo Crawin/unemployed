@@ -341,9 +341,10 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 			return false;
 		}
 
-		rendererLoadInfo.m_Renderer->SetMesh(res);
-		rendererLoadInfo.m_Renderer->SetVertexBufferView(m_Meshes[res]->m_VertexBufferView);
-
+		if (rendererLoadInfo.m_Renderer != nullptr) {
+			rendererLoadInfo.m_Renderer->SetMesh(res);
+			rendererLoadInfo.m_Renderer->SetVertexBufferView(m_Meshes[res]->m_VertexBufferView);
+		}
 		// load material
 		std::string materialFileName = rendererLoadInfo.m_MaterialName;
 		res = GetMaterial(materialFileName, commandList);
@@ -355,9 +356,9 @@ bool ResourceManager::LoadLateInitMesh(ComPtr<ID3D12GraphicsCommandList> command
 			res = GetMaterial("NoMaterial", commandList);
 		}
 
-
-		rendererLoadInfo.m_Renderer->SetMaterial(res);
-
+		if (rendererLoadInfo.m_Renderer != nullptr) {
+			rendererLoadInfo.m_Renderer->SetMaterial(res);
+		}
 	}
 
 	for (const auto& uiRendererInfo : m_ToLoadUIDatas) {
@@ -614,6 +615,7 @@ bool ResourceManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const 
 		Renderer::GetInstance().CreateResourceDescriptorHeap(m_ShaderResourceHeap, m_Resources), 
 		"CreateResourceDescriptorHeap Fail!!");
 
+	m_ECSManager->InitPartlcie();
 
 	return true;
 }
@@ -708,22 +710,14 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 
 	m_ECSManager->Execute(setBox);
 
-	// todo
-	// todo
-	// todo
-	// todo
-	// todo
-	// todo
-	// 
-	// set default animation to anim executor;
-	//for (auto& player : m_AnimationPlayer) {
-	//	player->ChangeToAnimation(ANIMATION_STATE::IDLE);
-	//	player->ChangeToAnimation(ANIMATION_STATE::IDLE);
-	//};
-
 	// Make shader for animation stream out
 	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
 	CHECK_CREATE_FAILED(m_AnimationShader, "Shader Making Failed!!");
+
+	for (auto& res : m_VertexIndexDatas) {
+		res->TransToState(commandList, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	}
+	
 
 	// clear all LateLoad
 	m_ToLoadRenderDatas.clear();

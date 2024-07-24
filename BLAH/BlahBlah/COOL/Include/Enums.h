@@ -31,6 +31,7 @@ enum class PRE_LOADED_MATERIALS {
 	LIGHTING = 0,
 	SHADOWMAPPING,
 	OUTLINE,
+	PARTICLE,
 
 	BLIT,
 #ifdef _DEBUG
@@ -108,11 +109,19 @@ enum class GAME_INPUT {
 
 #define SEND_SERVER_START static_cast<int>(GAME_INPUT::CTRL)
 
+enum class PARTICLE_TYPES {
+	SPARK = 0,
+	WATER,
+	PARTICLE_TYPE_END
+};
+
 ANIMATION_STATE ConvertStringToAnimationState(const std::string& str);
 std::string ConvertAnimationStateToString(ANIMATION_STATE anim);
 int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput);
 PRE_LOADED_MATERIALS ConvertStringToMaterial(const std::string& str);
 std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat);
+PARTICLE_TYPES ConvertStringToParticleType(const std::string& str);
+std::string ConvertParticleTypeToString(PARTICLE_TYPES type);
 
 // struct
 //struct PS_MRT_OUTPUT
@@ -153,7 +162,8 @@ enum class MRT_POST_ROOTCONST
 enum class VERTEX_TYPES {
 	NO_VERTEX = 0,
 	NORMAL,
-	SKINNED
+	SKINNED,
+	BILLBOARD_POSITION_ONLY
 };
 
 enum class RESOURCE_TYPES {

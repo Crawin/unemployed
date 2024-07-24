@@ -713,8 +713,7 @@ namespace component {
 		// set collider event
 		DynamicCollider* collider = manager->GetComponent<DynamicCollider>(selfEntity);
 		EventFunction attackHit = [manager](Entity* self, Entity* other) {
-			Name* name = manager->GetComponent<Name>(other);
-			DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+			DebugPrint("doorCrush");
 
 			DynamicCollider* collider = manager->GetComponent<DynamicCollider>(self);
 			Transform* doorTrans = manager->GetComponent<Transform>(other);
@@ -746,10 +745,34 @@ namespace component {
 			DebugPrintVector(attackPosOnDoorLocal, "pos: ");
 
 			// set collider off
-			collider->SetActive(false);
 			};
 
 		collider->InsertEvent<DoorControl>(attackHit, COLLIDE_EVENT_TYPE::BEGIN);
+
+		EventFunction setFirePoo = [manager](Entity* self, Entity* other) {
+			DynamicCollider* collider = manager->GetComponent<DynamicCollider>(self);
+			Collider* otherColl = manager->GetComponent<Collider>(other);
+
+			// if trigger, no fire
+			if (otherColl->IsTrigger()) return;
+
+			Transform* tr = manager->GetComponent<Transform>(self);
+			XMFLOAT3 pos =  tr->GetWorldPosition();
+			XMFLOAT3 otherPos = otherColl->GetBoundingBox().Center;
+
+			XMFLOAT3 vel = {
+				pos.x - otherPos.x,
+				pos.y - otherPos.y,
+				pos.z - otherPos.z,
+			};
+			XMVECTOR velT = XMVector3Normalize(XMLoadFloat3(&vel)) * 200.0f;
+			XMStoreFloat3(&vel, velT);
+
+			DebugPrint("POO");
+			manager->AddParticle(PARTICLE_TYPES::SPARK, pos, vel, 100, 10.0f);
+			collider->SetActive(false);
+			};
+		collider->InsertEvent<Collider>(setFirePoo, COLLIDE_EVENT_TYPE::BEGIN);
 		collider->SetActive(false);
 	}
 
@@ -877,6 +900,18 @@ namespace component {
 				// collider off
 				dc->SetActive(false);
 
+				Server* serv = manager->GetComponent<Server>(self);
+				if (serv != nullptr) {
+					Transform* tr = manager->GetComponent<Transform>(self);
+					XMFLOAT3 pos = tr->GetPosition();
+					XMFLOAT3 rot = tr->GetRotation();
+					XMFLOAT3 vel = py->GetVelocity();
+
+					auto id = serv->getID();
+					cs_packet_position packet(id, pos, rot, vel);
+					Client::GetInstance().send_packet(&packet);
+
+				}
 				Name* name = manager->GetComponent<Name>(other);
 				Transform* otherTrans = manager->GetComponent<Transform>(other);
 				Collider* otherCol = manager->GetComponent<Collider>(other);
@@ -924,6 +959,11 @@ namespace component {
 			Material* mat = rm->GetMaterial(ren->GetMaterial());
 			mat->SetDataIndex(0, data.m_ResultRenderTargetIndex);
 		}
+
+		component::Renderer* rend = manager->GetComponent<component::Renderer>(selfEntity);
+		XMFLOAT4 extra = { 1.0f, 0.0f, 0.0f, 0.0f };
+		Material* mat = rm->GetMaterial(rend->GetMaterial());
+		mat->SetExtraDataIndex(0, 1.0f);
 	}
 
 	void Screen::ShowYourself() const

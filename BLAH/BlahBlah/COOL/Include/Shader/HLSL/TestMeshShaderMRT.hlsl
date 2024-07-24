@@ -11,6 +11,27 @@ struct VS_INPUT
 };
 
 
+struct ExtraData
+{
+	float data0;
+	float data1;
+	float data2;
+	float data3;
+};
+
+cbuffer Material : register(b0)
+{
+	uint g_MatIdx0;
+	uint g_MatIdx1;
+	uint g_MatIdx2;
+	uint g_MatIdx3;
+	uint g_MatIdx4;
+	float g_Extra0;
+	float g_Extra1;
+	float g_Extra2;
+	ExtraData g_ExtraData[2];
+};
+
 
 struct VS_OUTPUT
 {
@@ -52,21 +73,21 @@ PS_MRT_OUTPUT ps(VS_OUTPUT i)
 	
 	PS_MRT_OUTPUT output;
 	
-	output.Albedo = float4(Tex2DList[matIdx0.x].Sample(samplerWarp, i.uv));
-	output.Roughness = float4(Tex2DList[matIdx0.y].Sample(samplerWarp, i.uv).rrr, 1.0f);
-	output.Metalic = float4(Tex2DList[matIdx0.z].Sample(samplerWarp, i.uv).rrr, 1.0f);
-	output.Ao =float4(Tex2DList[matIdx0.w].Sample(samplerWarp, i.uv).rrr, 1.0f);
+	output.Albedo = float4(Tex2DList[g_MatIdx0].Sample(samplerWarp, i.uv));
+	output.Roughness = float4(Tex2DList[g_MatIdx1].Sample(samplerWarp, i.uv).rrr, 1.0f);
+	output.Metalic = float4(Tex2DList[g_MatIdx2].Sample(samplerWarp, i.uv).rrr, 1.0f);
+	output.Ao =float4(Tex2DList[g_MatIdx3].Sample(samplerWarp, i.uv).rrr, 1.0f);
 
 	float3 biTangent = cross(i.normalW, i.tangentW);
 	float3x3 TBN = float3x3(i.tangentW, biTangent, i.normalW);
-	float3 sampledNormal = normalize(Tex2DList[matIdx1.x].Sample(samplerWarp, i.uv).rgb * 2.0f - 1.0f);
+	float3 sampledNormal = normalize(Tex2DList[g_MatIdx4].Sample(samplerWarp, i.uv).rgb * 2.0f - 1.0f);
 
 	float3 res = mul(sampledNormal, TBN);
-	if (matIdx1.x <= 0) res = i.normalW;
-	//output.Albedo =  float4(Tex2DList[matIdx1.x].Sample(samplerWarp, i.uv));
-	output.NormalW = float4(normalize(mul(Tex2DList[matIdx1.x].Sample(samplerWarp, i.uv).rgb, TBN)), 0.0f);
+	if (g_MatIdx4 <= 0) res = i.normalW;
+	//output.Albedo =  float4(Tex2DList[g_MatIdx4].Sample(samplerWarp, i.uv));
+	//output.NormalW = float4(normalize(mul(Tex2DList[g_MatIdx4].Sample(samplerWarp, i.uv).rgb, TBN)), g_ExtraData[0].data0);
 	//output.NormalW = float4(i.normalW, 0.0f);
-	output.NormalW = float4(res, 0.0f);
+	output.NormalW = float4(res, g_Extra0);
 	output.PositionW = float4(i.positionW.xyz, i.position.z);
 	
 	return output;

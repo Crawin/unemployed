@@ -1,0 +1,23 @@
+{
+	"name": "Particle",
+	"NumRenderTargets": 6,
+	"RenderTargetFormat_0": 0,
+	"RenderTargetFormat_1": 0,
+	"RenderTargetFormat_2": 0,
+	"RenderTargetFormat_3": 0,
+	"RenderTargetFormat_4": 5,
+	"RenderTargetFormat_5": 5,
+	"DepthStencilViewFormat": 0,
+	"PrimitiveTopologyType": 1,
+	"PrimitiveTopology": 1,
+	"VS": "Particle.hlsl",
+	"HS": null,
+	"DS": null,
+	"GS": "Particle.hlsl",
+	"PS": "Particle.hlsl",
+	"StreamOutput": 0,
+	"BlendState": 0,
+	"RasterizerState": 1,
+	"DepthStencilState": 0,
+	"InputLayout": 3
+}

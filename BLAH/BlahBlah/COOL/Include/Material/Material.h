@@ -19,6 +19,7 @@ public:
 
 	void SetTexture(int idx, int tex) { m_TextureIndex[idx] = tex; }
 	void SetDataIndex(int idx, int data) { m_TextureIndex[idx] = data; }
+	void SetExtraDataIndex(int idx, float data) { m_ExtraData[idx] = data; }
 	void SetAlbedoTextureIndex(int idx) { m_TextureIndex[0] = idx; }
 	//void SetAlbedoTextureIndex(int idx) { m_TextureIndex._11 = idx; }
 
@@ -33,7 +34,8 @@ public:
 	int GetTexture(int idx) const { return m_TextureIndex[idx]; }
 
 private:
-	UINT m_TextureIndex[16] = {};
+	UINT m_TextureIndex[5] = {};
+	float m_ExtraData[3] = {};
 
 	std::string m_Name = "이름없음";
 	
