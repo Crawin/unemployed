@@ -1,0 +1,9 @@
+{
+	"name": "building_bases",
+	"BaseColor": "Map/BackGround/building_bases",
+	"Roughness": "Black",
+	"Metalic": "Black",
+	"AO": "Black",
+	"Normal": "Map/BackGround/building_bases_nm",
+	"Shader": "TestMeshDiffered"
+}

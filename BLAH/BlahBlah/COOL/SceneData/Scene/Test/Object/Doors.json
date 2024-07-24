@@ -8,50 +8,35 @@
 					"Children" : 
 					[
 						{
-							"Children" : 
-							[
-								{
-									"Name" : "Knob_1",
-									"Renderer" : 
-									{
-										"Material" : "Object/Knob",
-										"Mesh" : "Knob_1.Knob_1"
-									},
-									"Transform" : 
-									{
-										"Position" : [ 50.0, 0.0, 0.0],
-										"Rotate" : [ 0.0, 0.0, 0.0 ],
-										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
-									}
-								}
-							],
-							"Collider" : 
-							{
-								"AutoMesh" : true,
-								"Static" : true
-							},
-							"Name" : "FrameRender",
+							"Name" : "Knob_1",
 							"Renderer" : 
 							{
-								"Material" : "Object/Door",
-								"Mesh" : "Door.Frame"
+								"Material" : "Object/Knob",
+								"Mesh" : "Knob_1.Knob_1"
 							},
-
 							"Transform" : 
 							{
-								"Position" : 
-								[
-									-50.0,
-									107.82761383056641,
-									-7.62939453125e-06
-								],
+								"Position" : [ 0.0, 100.0, 0.0],
 								"Rotate" : [ 0.0, 0.0, 0.0 ],
 								"Scale" : [ 1.0, 1.0, 1.0 ]
+							},
+							"Collider" : 
+							{
+								"AutoMesh" : false,
+								"Center" : 
+								[
+									-40.0,
+									100.0,
+									0.0
+								],
+								"Extent" : 
+								[
+									50.0,
+									100.0,
+									10.0
+								],
+								"Rotate" : [ 0.0, 0.0, 0.0],
+								"Static" : true
 							}
 						}
 					],
@@ -69,13 +54,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2011
+						"ID": 2011,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -109,11 +95,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -156,13 +137,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2021
+						"ID": 2021,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -196,11 +178,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -243,13 +220,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2031
+						"ID": 2031,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -283,11 +261,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -330,13 +303,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2041
+						"ID": 2041,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -370,11 +344,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -417,13 +386,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2051
+						"ID": 2051,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -457,11 +427,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -504,13 +469,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2061
+						"ID": 2061,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -544,11 +510,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -591,13 +552,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2071
+						"ID": 2071,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -631,11 +593,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -678,13 +635,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2081
+						"ID": 2081,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -718,11 +676,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -765,13 +718,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 2091
+						"ID": 2091,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -805,11 +759,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -852,13 +801,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 1,
 						"FailCount":3,
-						"ID": 2101
+						"ID": 2101,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -892,11 +842,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -939,13 +884,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 9876,
 						"Game": 1,
 						"FailCount":3,
-						"ID": 2111
+						"ID": 2111,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -979,11 +925,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1026,13 +967,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2121
+						"ID": 2121,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1066,11 +1008,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1113,13 +1050,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2131
+						"ID": 2131,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1153,11 +1091,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1200,13 +1133,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2141
+						"ID": 2141,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1240,11 +1174,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1287,13 +1216,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2151
+						"ID": 2151,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1327,11 +1257,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1374,13 +1299,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2161
+						"ID": 2161,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1414,11 +1340,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1461,13 +1382,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2171
+						"ID": 2171,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1501,11 +1423,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1548,13 +1465,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2172
+						"ID": 2172,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1588,11 +1506,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1635,13 +1548,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2173
+						"ID": 2173,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1675,11 +1589,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1722,13 +1631,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2181
+						"ID": 2181,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1762,11 +1672,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1809,13 +1714,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2182
+						"ID": 2182,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1849,11 +1755,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1896,13 +1797,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2191
+						"ID": 2191,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -1936,11 +1838,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -1983,13 +1880,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2192
+						"ID": 2192,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2023,11 +1921,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2070,13 +1963,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2201
+						"ID": 2201,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2110,11 +2004,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2157,13 +2046,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2211
+						"ID": 2211,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2197,11 +2087,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2244,13 +2129,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2221
+						"ID": 2221,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2284,11 +2170,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2331,13 +2212,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2222
+						"ID": 2222,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2371,11 +2253,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2418,13 +2295,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2231
+						"ID": 2231,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2458,11 +2336,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2505,13 +2378,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 2232
+						"ID": 2232,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2545,11 +2419,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2592,13 +2461,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3011
+						"ID": 3011,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2632,11 +2502,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2679,13 +2544,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3021
+						"ID": 3021,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2719,11 +2585,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2766,13 +2627,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3031
+						"ID": 3031,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2806,11 +2668,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2853,13 +2710,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3041
+						"ID": 3041,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2893,11 +2751,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -2940,13 +2793,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3051
+						"ID": 3051,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -2980,11 +2834,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3027,13 +2876,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3061
+						"ID": 3061,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3067,11 +2917,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3114,13 +2959,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3071
+						"ID": 3071,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3154,11 +3000,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3201,13 +3042,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3081
+						"ID": 3081,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3241,11 +3083,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3288,13 +3125,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3082
+						"ID": 3082,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3328,11 +3166,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3375,13 +3208,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3111
+						"ID": 3111,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3415,11 +3249,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3462,13 +3291,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3121
+						"ID": 3121,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3502,11 +3332,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3549,13 +3374,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3131
+						"ID": 3131,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3589,11 +3415,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3636,13 +3457,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3141
+						"ID": 3141,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3676,11 +3498,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3723,13 +3540,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3151
+						"ID": 3151,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3763,11 +3581,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3810,13 +3623,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3161
+						"ID": 3161,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3850,11 +3664,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3897,13 +3706,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 2,
 						"FailCount":3,
-						"ID": 3171
+						"ID": 3171,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -3937,11 +3747,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -3984,13 +3789,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3181
+						"ID": 3181,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4024,11 +3830,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4071,13 +3872,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3182
+						"ID": 3182,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4111,11 +3913,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4158,13 +3955,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3183
+						"ID": 3183,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4198,11 +3996,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4245,13 +4038,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3191
+						"ID": 3191,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4285,11 +4079,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4332,13 +4121,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3192
+						"ID": 3192,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4372,11 +4162,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4419,13 +4204,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3193
+						"ID": 3193,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4459,11 +4245,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4506,13 +4287,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3201
+						"ID": 3201,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4546,11 +4328,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4593,13 +4370,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3202
+						"ID": 3202,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4633,11 +4411,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4680,13 +4453,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3203
+						"ID": 3203,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4720,11 +4494,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4767,13 +4536,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3211
+						"ID": 3211,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4807,11 +4577,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4854,13 +4619,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3212
+						"ID": 3212,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4894,11 +4660,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -4941,13 +4702,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3221
+						"ID": 3221,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -4981,11 +4743,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5028,13 +4785,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3222
+						"ID": 3222,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5068,11 +4826,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5115,13 +4868,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3231
+						"ID": 3231,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5155,11 +4909,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5202,13 +4951,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3232
+						"ID": 3232,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5242,11 +4992,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5289,13 +5034,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 3233
+						"ID": 3233,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5329,11 +5075,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5376,13 +5117,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4011
+						"ID": 4011,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5416,11 +5158,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5463,13 +5200,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4012
+						"ID": 4012,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5503,11 +5241,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5550,13 +5283,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4021
+						"ID": 4021,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5590,11 +5324,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5637,13 +5366,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4031
+						"ID": 4031,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5677,11 +5407,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5724,13 +5449,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4041
+						"ID": 4041,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5764,11 +5490,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5811,13 +5532,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4051
+						"ID": 4051,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5851,11 +5573,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5898,13 +5615,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4061
+						"ID": 4061,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -5938,11 +5656,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -5985,13 +5698,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4071
+						"ID": 4071,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6025,11 +5739,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6072,13 +5781,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4081
+						"ID": 4081,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6112,11 +5822,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6159,13 +5864,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4091
+						"ID": 4091,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6199,11 +5905,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6246,13 +5947,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4101
+						"ID": 4101,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6286,11 +5988,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6333,13 +6030,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4111
+						"ID": 4111,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6373,11 +6071,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6420,13 +6113,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4131
+						"ID": 4131,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6460,11 +6154,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6507,13 +6196,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4132
+						"ID": 4132,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6547,11 +6237,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6594,13 +6279,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4161
+						"ID": 4161,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6634,11 +6320,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6681,13 +6362,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4162
+						"ID": 4162,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6721,11 +6403,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6768,13 +6445,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4163
+						"ID": 4163,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6808,11 +6486,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6855,13 +6528,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4171
+						"ID": 4171,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6895,11 +6569,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -6942,13 +6611,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4172
+						"ID": 4172,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -6982,11 +6652,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7029,13 +6694,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4181
+						"ID": 4181,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7069,11 +6735,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7116,13 +6777,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4182
+						"ID": 4182,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7156,11 +6818,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7203,13 +6860,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4191
+						"ID": 4191,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7243,11 +6901,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7290,13 +6943,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4201
+						"ID": 4201,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7330,11 +6984,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7377,13 +7026,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4211
+						"ID": 4211,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7417,11 +7067,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7464,13 +7109,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4212
+						"ID": 4212,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7504,11 +7150,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7551,13 +7192,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4221
+						"ID": 4221,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7591,11 +7233,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7638,13 +7275,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4222
+						"ID": 4222,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7678,11 +7316,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7725,13 +7358,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4231
+						"ID": 4231,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7765,11 +7399,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7812,13 +7441,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4232
+						"ID": 4232,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7852,11 +7482,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7899,13 +7524,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4233
+						"ID": 4233,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -7939,11 +7565,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -7986,13 +7607,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4241
+						"ID": 4241,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8026,11 +7648,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8073,13 +7690,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4242
+						"ID": 4242,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8113,11 +7731,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8160,13 +7773,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 4243
+						"ID": 4243,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8200,11 +7814,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8247,13 +7856,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5011
+						"ID": 5011,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8287,11 +7897,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8334,13 +7939,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5012
+						"ID": 5012,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8374,11 +7980,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8421,13 +8022,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5021
+						"ID": 5021,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8461,11 +8063,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8508,13 +8105,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5031
+						"ID": 5031,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8548,11 +8146,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8595,13 +8188,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5041
+						"ID": 5041,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8635,11 +8229,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8682,13 +8271,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5042
+						"ID": 5042,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8722,11 +8312,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8769,13 +8354,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5043
+						"ID": 5043,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8809,11 +8395,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8856,13 +8437,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5091
+						"ID": 5091,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8896,11 +8478,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -8943,13 +8520,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5092
+						"ID": 5092,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -8983,11 +8561,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9030,13 +8603,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5101
+						"ID": 5101,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9070,11 +8644,6 @@
 										"Position" : [ 56.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9117,13 +8686,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5102
+						"ID": 5102,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9157,11 +8727,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9204,13 +8769,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5111
+						"ID": 5111,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9244,11 +8810,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9291,13 +8852,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5112
+						"ID": 5112,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9331,11 +8893,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9378,13 +8935,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5113
+						"ID": 5113,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9418,11 +8976,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9465,13 +9018,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5121
+						"ID": 5121,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9505,11 +9059,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9552,13 +9101,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5122
+						"ID": 5122,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9592,11 +9142,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9639,13 +9184,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5131
+						"ID": 5131,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9679,11 +9225,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9726,13 +9267,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5132
+						"ID": 5132,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9766,11 +9308,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9813,13 +9350,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5141
+						"ID": 5141,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9853,11 +9391,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9900,13 +9433,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5151
+						"ID": 5151,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -9940,11 +9474,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -9987,13 +9516,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5152
+						"ID": 5152,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -10027,11 +9557,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10074,13 +9599,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5161
+						"ID": 5161,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -10114,11 +9640,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10161,13 +9682,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5162
+						"ID": 5162,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -10201,11 +9723,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10248,13 +9765,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5171
+						"ID": 5171,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -10288,11 +9806,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10335,13 +9848,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5172
+						"ID": 5172,
+						"HP": 2
 					},
 					"Renderer":
 					{
@@ -10375,11 +9889,6 @@
 										"Position" : [ 50.0, 0.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
-									},
-									"Collider": 
-									{
-										"Static": true,
-										"AutoMesh": true
 									}
 								}
 							],
@@ -10422,13 +9931,14 @@
 					},
 					"Door": 
 					{
-						"MaxAngle": 120.0,
+						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
 						"Game": 9,
 						"FailCount":3,
-						"ID": 5173
+						"ID": 5173,
+						"HP": 2
 					},
 					"Renderer":
 					{
