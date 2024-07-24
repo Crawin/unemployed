@@ -1,7 +1,7 @@
 {
 	"name": "sideway_tile",
 	"BaseColor": "Map/BackGround/sideway_tile",
-	"Roughness": "Black",
+	"Roughness": "AllmostWhite",
 	"Metalic": "Black",
 	"AO": "Map/BackGround/sideway_tile_oc",
 	"Normal": "Map/BackGround/sideway_tile_nm",

@@ -2,8 +2,8 @@
 	"name": "highway_wall",
 	"BaseColor": "Map/BackGround/highway_wall",
 	"Roughness": "White",
-	"Metalic": "Black",
-	"AO": "Black",
+	"Metalic": "AllmostBlack",
+	"AO": "White",
 	"Normal": "Map/BackGround/highway_wall_nm",
 	"Shader": "TestMeshDiffered"
 }

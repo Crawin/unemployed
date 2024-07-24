@@ -739,12 +739,6 @@ namespace component {
 			doorComp->SetDoorHp(--doorhp);
 			if (doorhp == 0) doorComp->SetLock(false);
 			// todo 소리 재생
-
-
-
-			DebugPrintVector(attackPosOnDoorLocal, "pos: ");
-
-			// set collider off
 			};
 
 		collider->InsertEvent<DoorControl>(attackHit, COLLIDE_EVENT_TYPE::BEGIN);

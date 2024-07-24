@@ -3,7 +3,7 @@
 	"BaseColor": "Map/BackGround/building_bases",
 	"Roughness": "Black",
 	"Metalic": "Black",
-	"AO": "Black",
+	"AO": "White",
 	"Normal": "Map/BackGround/building_bases_nm",
 	"Shader": "TestMeshDiffered"
 }

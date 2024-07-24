@@ -2,8 +2,8 @@
 	"name": "road_sideway_fences",
 	"BaseColor": "Map/BackGround/road_sideway_fences",
 	"Roughness": "White",
-	"Metalic": "Black",
-	"AO": "Black",
+	"Metalic": "AllmostBlack",
+	"AO": "White",
 	"Normal": "Map/BackGround/road_sideway_fences_nm",
 	"Shader": "TestMeshDiffered"
 }
