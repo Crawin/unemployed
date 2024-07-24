@@ -322,6 +322,30 @@ namespace component {
 
 					manager->Execute(openCutline);
 				}
+				else if (doorCtrl->GetGamemode() == 5) { //5 == final create Cutline
+					Entity* curhold = inven->GetCurrentHoldingItem();
+					if (curhold != nullptr) {
+						KeyTool* keytool = manager->GetComponent<KeyTool>(curhold);
+						if (keytool != nullptr) {
+							std::function<void(component::UICanvas*, component::UITreasureChest*)> openKey = [door, doorCtrl, keytool](component::UICanvas* can, component::UITreasureChest* key) {
+								DebugPrint("KEY SHOW");
+
+								key->SetAnswer(doorCtrl->GetAnswer());
+								for (int i = 0; i < MAX_BUTTON; ++i) {
+									key->SetAnswerButton(i, keytool->GetKeyHold(i + 1));
+									key->SetAnswerButtonMaterial(i, keytool->GetKeyHold(i + 1));
+								}
+
+								//key->SetAnswerMaterial(,doorCtrl->GetAnswer());
+								key->SetDoor(door);
+
+								can->ShowUI();
+								};
+
+							manager->Execute(openKey);
+						}
+					}
+				}
 			}
 			};
 
@@ -1279,12 +1303,6 @@ namespace component {
 	{
 	}
 
-	void UITreasureChest::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
-	{
-		// todo
-		// 남은 열쇠 갯수 1
-	}
-
 	void KeyTool::Create(Json::Value& v, ResourceManager* rm)
 	{
 		Json::Value kt = v["KeyTool"];
@@ -1467,6 +1485,185 @@ namespace component {
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::START_PRESS), dirRight);
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::END_PRESS), dirLeft);
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::ARROW_RIGHT, KEY_STATE::PRESSING), dirDrift);
+	}
+
+	void UITreasureChest::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value rc = v["UITreasureChest"];
+
+		rm->AddLateLoadUI("UI/UITempMaterial", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword1", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword2", nullptr);
+		rm->AddLateLoadUI("UI/UIKey1", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword4", nullptr);
+		rm->AddLateLoadUI("UI/UIKey2", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword6", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword7", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword8", nullptr);
+		rm->AddLateLoadUI("UI/UIPassword9", nullptr);
+		rm->AddLateLoadUI("UI/UIX", nullptr);
+	}
+
+	void UITreasureChest::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		// todo
+		// 남은 열쇠 갯수 1
+		m_KeyMaterialMap = std::map<int, int>();
+		m_KeyMaterialMap[0] = rm->GetMaterial("UITempMaterial");		// no answer
+		m_KeyMaterialMap[1] = rm->GetMaterial("UIPassword1");
+		m_KeyMaterialMap[2] = rm->GetMaterial("UIPassword2");
+		m_KeyMaterialMap[3] = rm->GetMaterial("UIKey1");
+		m_KeyMaterialMap[4] = rm->GetMaterial("UIPassword4");
+		m_KeyMaterialMap[5] = rm->GetMaterial("UIKey2");
+		m_KeyMaterialMap[6] = rm->GetMaterial("UIPassword6");
+		m_KeyMaterialMap[7] = rm->GetMaterial("UIPassword7");
+		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword8");
+		m_KeyMaterialMap[9] = rm->GetMaterial("UIPassword9");
+
+		m_KeyMaterialMap[-1] = rm->GetMaterial("UIX");
+
+		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
+		UITreasureChest* doorkey = manager->GetComponent<UITreasureChest>(selfEntity);
+		auto& children = selfEntity->GetChildren();
+
+		for (Entity* child : children) {
+			Name* childName = manager->GetComponent<Name>(child);
+
+			// 확인 버튼
+			if (childName != nullptr) {
+				std::string name = childName->getName();
+
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas, manager, this](Entity* ent) {
+						DebugPrint("exit");
+						// set result answer
+						//int newAnswer = 0;
+						//for (int idx = 0; idx < _countof(m_Answer); ++idx) {
+						//	if (m_Answer[idx] != -1) {
+						//		newAnswer += m_Answer[idx];
+
+						//		if (idx < _countof(m_Answer) - 1)
+						//			newAnswer *= 10;
+						//	}
+						//}
+
+						//DebugPrint(std::format("NewAnswer: {}", newAnswer));
+						//DoorControl* doorCtrl = manager->GetComponent<DoorControl>(m_DoorEntity);
+						//doorCtrl->SetAnswer(newAnswer);
+
+						// hide ui;
+						canvas->HideUI();
+
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
+				else if (name == "Check") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction check = [canvas, doorkey, manager, this](Entity* ent) {
+						DebugPrint("Check");
+						
+						// check current in answer
+						for (int i = 0; i < _countof(m_Answer); ++i) {
+							// if find answer
+							if (m_Answer[i] == m_Current) {
+								// set answer [-1]
+								m_Answer[i] = -1;
+
+								// disable answer img
+								SetAnswerButtonMaterial(i, -1);
+							}
+						}
+
+						// set answer
+						int newAnswer = 0;
+						for (int idx = 0; idx < _countof(m_Answer); ++idx) {
+							if (m_Answer[idx] != -1) {
+								newAnswer += m_Answer[idx];
+
+								if (idx < _countof(m_Answer) - 1)
+									newAnswer *= 10;
+							}
+						}
+
+						DoorControl* doorCtrl = manager->GetComponent<DoorControl>(m_DoorEntity);
+						doorCtrl->SetAnswer(newAnswer);
+
+						// success
+						// open
+						if (newAnswer == 0) {
+							// open door
+							Entity* door = doorkey->GetDoor();
+							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
+							doorCtrl->SetLock(false);
+							doorCtrl->SetKeyDoorOpen(true);
+							canvas->HideUI();
+						}
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
+				}
+				else {
+
+					// answers
+					for (int i = 0; i < FINAL_LOCK; ++i) {
+						std::string renderName = std::format("AnswerKey{}", i);
+						if (name == renderName) {
+							m_AnswerUIrender[i] = manager->GetComponent<UIRenderer>(child);
+						}
+					}
+
+					// buttons
+					for (int i = 0; i < MAX_BUTTON; ++i) {
+						std::string buttonName = std::format("KeyButton{}", i);
+						if (name == buttonName) {
+							Button* button = manager->GetComponent<Button>(child);
+							UIRenderer* render = manager->GetComponent<UIRenderer>(child);
+							m_AnswerbuttonUIrender[i] = render;
+							Key* key = manager->GetComponent<Key>(child);
+							m_keyAnswer[i] = key;
+							ButtonEventFunction password = [key, doorkey, manager, this](Entity* ent) { m_Current = key->GetKeyID(); };
+							button->SetButtonEvent(KEY_STATE::END_PRESS, password);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void UITreasureChest::SetAnswer(int ans)
+	{
+		// reset to -1
+		for (int i = 0; i < FINAL_LOCK; ++i) {
+			m_Answer[i] = -1;
+			m_AnswerUIrender[i]->SetMaterial(m_KeyMaterialMap[m_Answer[i]]);
+		}
+
+		DebugPrint("Answer start");
+		DebugPrint(std::format("AnswerStart: {}", ans));
+		// set answer
+		for (int i = 0; i < FINAL_LOCK; ++i) {
+			int answer = ans % 10;
+			if (answer != 0)
+				m_Answer[i] = answer;
+			ans /= 10;
+			DebugPrint(std::format("Answer: {}", m_Answer[i]));
+
+			m_AnswerUIrender[i]->SetMaterial(m_KeyMaterialMap[m_Answer[i]]);
+
+			if (ans == 0) break;
+		}
+		DebugPrint("Answer end");
+		// set answer material auto
+	}
+
+	void UITreasureChest::SetAnswerButtonMaterial(int target, int answer)
+	{
+		m_AnswerbuttonUIrender[target]->SetMaterial(m_KeyMaterialMap[answer]);
+	}
+
+	void UITreasureChest::SetAnswerButton(int target, int answer)
+	{
+		m_keyAnswer[target]->SetKeyID(answer);
 	}
 
 }

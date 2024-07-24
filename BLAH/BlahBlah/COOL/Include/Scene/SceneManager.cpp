@@ -71,6 +71,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::UIKeypad, "UIKeypad");
 	REGISTER_COMPONENT(component::UIDoorKey, "UIDoorKey");
 	REGISTER_COMPONENT(component::UICutLine, "UICutLine");
+	REGISTER_COMPONENT(component::UITreasureChest, "UITreasureChest");
 
 }
 

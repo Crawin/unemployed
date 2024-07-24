@@ -1,0 +1,268 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UITreasureChest": {},
+
+	"Children": 
+	[
+		{	"Name": "Exit",
+
+			"UITransform":
+			{
+				"Center": [1200, 650],
+				"Size": [70, 70]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIExit",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "Check",
+
+			"UITransform":
+			{
+				"Center": [640, 360],
+				"Size": [300, 150]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UITempMaterial",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "AnswerKey0",
+
+			"UITransform":
+			{
+				"Center": [240, 160],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "AnswerKey1",
+
+			"UITransform":
+			{
+				"Center": [360, 160],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "AnswerKey2",
+
+			"UITransform":
+			{
+				"Center": [480, 160],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "AnswerKey3",
+
+			"UITransform":
+			{
+				"Center": [600, 160],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "AnswerKey4",
+
+			"UITransform":
+			{
+				"Center": [720, 160],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "KeyButton0",
+
+			"UITransform":
+			{
+				"Center": [240, 600],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton1",
+
+			"UITransform":
+			{
+				"Center": [360, 600],
+				"Size": [100, 100]
+			},
+		
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton2",
+
+			"UITransform":
+			{
+				"Center": [480, 600],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton3",
+
+			"UITransform":
+			{
+				"Center": [600, 600],
+				"Size": [100, 100]
+			},
+		
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton4",
+
+			"UITransform":
+			{
+				"Center": [720, 600],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton5",
+
+			"UITransform":
+			{
+				"Center": [840, 600],
+				"Size": [100, 100]
+			},
+		
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton6",
+
+			"UITransform":
+			{
+				"Center": [960, 600],
+				"Size": [100, 100]
+			},
+			
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey1",
+				"IsSprite": false
+			}
+		},
+		{	"Name": "KeyButton7",
+
+			"UITransform":
+			{
+				"Center": [1080, 600],
+				"Size": [100, 100]
+			},
+		
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
+		}
+
+	]
+
+}

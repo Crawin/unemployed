@@ -1,0 +1,9 @@
+{
+	"name": "FinalChest",
+	"BaseColor": "Object/FinalChest/WoodenCrate_Crate_BaseColor",
+	"Roughness": "Object/FinalChest/WoodenCrate_Crate_Roughness",
+	"Metalic": "Object/FinalChest/WoodenCrate_Crate_Metallic",
+	"AO": "White",
+	"Normal": "Object/FinalChest/WoodenCrate_Crate_Normal",
+	"Shader": "TestMeshDiffered"
+}

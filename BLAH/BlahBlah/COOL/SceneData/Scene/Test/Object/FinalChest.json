@@ -1,0 +1,140 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Children" : 
+					[
+						{
+							"Name" : "CrateDoor",
+							"Renderer" : 
+							{
+								"Material" : "Object/FinalChest",
+								"Mesh" : "FinalChest.CrateDoor"
+							},
+							"Collider": 
+							{
+								"Static": true,
+								"IsTrigger": true,
+								"AutoMesh": false,
+								"Center": [0.0, -30, 0],
+								"Extent": [99.17, 60, 50]
+							},
+							"Door": 
+							{
+								"MaxAngle": 40.0,
+								"RotateAxis": 0,
+								"Locked": true,
+								"Answer": 35,
+								"Game": 5,
+								"FailCount":3,
+								"ID": 7777,
+								"HP": 10000
+							},
+							"Interaction": {},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									0.0,
+									47.481788635253906,
+									73.958633422851562
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "CrateBody",
+					"Renderer" : 
+					{
+						"Material" : "Object/FinalChest",
+						"Mesh" : "FinalChest.CrateBody"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							270.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "FinalChest",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					-100.0,
+					571.8,
+					-688.2
+				],
+				"Rotate" : 
+				[
+					0.0,
+					-90.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					0.1,
+					0.1,
+					0.1
+				]
+			}
+		}
+	],
+	"Name" : "FinalChest_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -127,7 +127,7 @@ namespace component {
 		void SetOpen(bool state) { m_Open = state; }
 		void SetKeyDoorOpen(bool keyopen) { m_KeyDoorOpen = keyopen; }
 		void SetDoorHp(int hp) { m_Hp = hp; }
-
+		void SetAnswer(int answer) { m_Answer = answer; }
 
 		void SetCrushPosition(XMFLOAT3 pos, float power, float distance);
 		XMFLOAT4 GetShaderData(int idx) const { return m_CrushPositionAndPower[idx]; }
@@ -485,17 +485,35 @@ namespace component {
 	// UITreasureChest Component
 	// 최종 금고를 열기 위한 그거
 	//
+#define FINAL_LOCK 5
 	class UITreasureChest : public ComponentBase<UITreasureChest> {
-		int m_LockLeft = 5;
+		Entity* m_DoorEntity = nullptr;
+		
+		int m_LockLeft = FINAL_LOCK;
+		int m_Answer[FINAL_LOCK] = { -1, -1, -1, -1, -1 };
+		int m_Current = 0;
+
+		std::map<int, int> m_KeyMaterialMap;
+		UIRenderer* m_AnswerUIrender[FINAL_LOCK] = {};
+		UIRenderer* m_AnswerbuttonUIrender[MAX_BUTTON] = {};
+		Key* m_keyAnswer[MAX_BUTTON] = {};	// 키 이미지 정답
 
 	public:
-		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
 
 		virtual void ShowYourself() const {}
 
+		void SetDoor(Entity* door) { m_DoorEntity = door; }
+		void SetAnswer(int ans);
+		void SetCurrent(int Current) { m_Current = Current; }
+
 		int GetCouneLeft() const { return m_LockLeft; }
 		void SetLeftCount(int count) { m_LockLeft = count; }
+		Entity* GetDoor() const { return m_DoorEntity; }
+
+		void SetAnswerButtonMaterial(int target, int answer); 	//들고 있는 열쇠들 이미지
+		void SetAnswerButton(int target, int answer);
 	};
 
 
