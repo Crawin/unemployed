@@ -32,6 +32,8 @@ struct CollidedEntity {
 	Entity* m_Entity;
 };
 
+class Material;
+
 namespace component {
 
 
@@ -818,6 +820,47 @@ namespace component {
 		virtual void ShowYourself() const {}
 
 		int GetType() const { return m_Type; }
+	};
+
+	/////////////////////////////////////////////////////////
+	// Particle Component
+	// Particle 컴포넌트, 각자 다른 파티클이다
+	//
+	struct ParticleData {
+		XMFLOAT3 m_Position;
+		XMFLOAT3 m_Velocity;
+		float m_LifeTime;
+	};
+	class Particle : public ComponentBase<Particle> {
+		Material* m_ParticleMaterial;
+
+		PARTICLE_TYPES m_ParticleType;
+		int m_MaxParticle = 500;
+		float m_DefaultLifeTime = 5.0f;
+		XMFLOAT2 m_ParticleSize{ 20.0f, 20.0f };
+
+		std::list<ParticleData> m_ParticleDatas;
+
+		XMFLOAT3* m_ShaderData = nullptr;
+		int m_MappedShaderData = -1;
+		D3D12_GPU_VIRTUAL_ADDRESS m_ShaderDataGPUAddr = 0;
+
+		D3D12_VERTEX_BUFFER_VIEW m_ParticleBufferView = {};
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const {}
+
+		void Tick(float deltaTime);
+
+		void InsertParticle(XMFLOAT3 pos, XMFLOAT3 vel, int toInsert, float randRange);
+
+		void SyncParticle();
+
+		void OnRender(ComPtr<ID3D12GraphicsCommandList> commandList);
+
+		PARTICLE_TYPES GetType() const { return m_ParticleType; }
 	};
 
 }

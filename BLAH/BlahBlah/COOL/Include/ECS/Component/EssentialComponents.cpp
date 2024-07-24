@@ -980,4 +980,126 @@ namespace component {
 	}
 
 
+	void Particle::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value pc = v["Particle"];
+
+		std::string particleName = pc["Particle"].asString();
+		std::string fullRoute = "Particle/";
+		fullRoute += particleName;
+
+		m_ParticleType = ConvertStringToParticleType(particleName);
+		m_MaxParticle = pc["MaxParticle"].asInt();
+		m_DefaultLifeTime = pc["DefaultLifeTime"].asInt();
+
+		m_ParticleSize.x = pc["Size"][0].asFloat();
+		m_ParticleSize.y = pc["Size"][1].asFloat();
+
+		// load material
+		rm->AddLateLoadUI(fullRoute, nullptr);
+
+		// request make vertex buffer view to upload buffer
+		m_MappedShaderData = rm->CreateObjectResource(
+			sizeof(XMFLOAT3) * m_MaxParticle,
+			"Particle Data",
+			(void**)(&m_ShaderData), D3D12_HEAP_TYPE_UPLOAD, RESOURCE_TYPES::VERTEX);
+
+		m_ShaderDataGPUAddr = rm->GetResourceDataGPUAddress(RESOURCE_TYPES::VERTEX, m_MappedShaderData);
+
+		m_ParticleBufferView.BufferLocation = m_ShaderDataGPUAddr;
+		m_ParticleBufferView.StrideInBytes = sizeof(XMFLOAT3);
+		m_ParticleBufferView.SizeInBytes = sizeof(XMFLOAT3) * m_MaxParticle;
+
+		// std::vector일 때 주석 풀 것
+		//m_ParticlePositions.reserve(m_MaxParticle);
+		//m_ParticleVelocityAndLifetime.reserve(m_MaxParticle);
+	}
+
+	void Particle::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		//std::string fullRoute = "Particle/";
+		//fullRoute += ConvertParticleTypeToString(m_ParticleType);
+		m_ParticleMaterial = rm->GetMaterial(rm->GetMaterial(ConvertParticleTypeToString(m_ParticleType)));
+		
+		// set glow
+		m_ParticleMaterial->SetExtraDataIndex(0, 1.0f);
+
+		m_ParticleDatas = std::list<ParticleData>();
+	}
+
+	void Particle::Tick(float deltaTime)
+	{
+		auto iter = m_ParticleDatas.begin();
+		for (iter; iter != m_ParticleDatas.end(); ++iter) {
+			// add velocity
+			iter->m_Position.x += iter->m_Velocity.x * deltaTime;
+			iter->m_Position.y += iter->m_Velocity.y * deltaTime;
+			iter->m_Position.z += iter->m_Velocity.z * deltaTime;
+
+			// gravity
+			iter->m_Velocity.y -= 980.0f * deltaTime;
+
+			// friction??
+			iter->m_LifeTime -= deltaTime;
+		}
+
+	}
+
+	void Particle::InsertParticle(XMFLOAT3 pos, XMFLOAT3 vel, int toInsert, float randRange)
+	{
+		std::random_device rd;
+		std::uniform_real_distribution<float> xPos(pos.x - randRange, pos.x + randRange);
+		std::uniform_real_distribution<float> yPos(pos.y - randRange, pos.y + randRange);
+		std::uniform_real_distribution<float> zPos(pos.z - randRange, pos.z + randRange);
+		std::uniform_real_distribution<float> xVel(vel.x - abs(vel.x / 5.0f), vel.x + abs(vel.x / 5.0f));
+		std::uniform_real_distribution<float> yVel(vel.y - abs(vel.y / 5.0f), vel.y + abs(vel.y / 5.0f));
+		std::uniform_real_distribution<float> zVel(vel.z - abs(vel.z / 5.0f), vel.z + abs(vel.z / 5.0f));
+		std::uniform_real_distribution<float> lifeTimeRange(m_DefaultLifeTime - 1.0f, m_DefaultLifeTime + 1.0f);
+		std::default_random_engine dre(rd());
+
+		XMFLOAT3 newPos;
+		XMFLOAT4 newVelAndLifeTime;
+		float newLifeTime;
+		for (int i = 0; i < toInsert; ++i) {
+			if (m_ParticleDatas.size() >= m_MaxParticle) break;
+
+			ParticleData newData;
+			newData.m_Position = { xPos(dre), yPos(dre), zPos(dre) };
+			newData.m_Velocity = { xVel(dre), yVel(dre), zVel(dre) };
+			newData.m_LifeTime = lifeTimeRange(dre);
+
+			m_ParticleDatas.push_back(newData);
+		}
+	}
+
+	void Particle::SyncParticle()
+	{
+		// delete if velocity over
+		auto iter = m_ParticleDatas.begin();
+		for (iter; iter != m_ParticleDatas.end();) {
+			if (iter->m_LifeTime <= 0)
+				iter = m_ParticleDatas.erase(iter);
+			else
+				++iter;
+		}
+
+		int cnt = 0;
+		for (const auto& pos : m_ParticleDatas) {
+			memcpy(m_ShaderData + cnt++, &pos.m_Position, sizeof(XMFLOAT3));
+		}
+	}
+
+	void Particle::OnRender(ComPtr<ID3D12GraphicsCommandList> commandList)
+	{
+		// todo
+		// set size here
+		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+		m_ParticleMaterial->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+		commandList->SetGraphicsRoot32BitConstants(static_cast<int>(ROOT_SIGNATURE_IDX::WORLD_MATRIX), 2, &m_ParticleSize, 0);
+
+		//commandList->IASetPrimitiveTopology()
+		commandList->IASetVertexBuffers(0, 1, &m_ParticleBufferView);
+		commandList->DrawInstanced(m_ParticleDatas.size(), 1, 0, 0);
+	}
+
 }

@@ -736,7 +736,25 @@ namespace component {
 
 		EventFunction setFirePoo = [manager](Entity* self, Entity* other) {
 			DynamicCollider* collider = manager->GetComponent<DynamicCollider>(self);
+			Collider* otherColl = manager->GetComponent<Collider>(other);
+
+			// if trigger, no fire
+			if (otherColl->IsTrigger()) return;
+
+			Transform* tr = manager->GetComponent<Transform>(self);
+			XMFLOAT3 pos =  tr->GetWorldPosition();
+			XMFLOAT3 otherPos = otherColl->GetBoundingBox().Center;
+
+			XMFLOAT3 vel = {
+				pos.x - otherPos.x,
+				pos.y - otherPos.y,
+				pos.z - otherPos.z,
+			};
+			XMVECTOR velT = XMVector3Normalize(XMLoadFloat3(&vel)) * 200.0f;
+			XMStoreFloat3(&vel, velT);
+
 			DebugPrint("POO");
+			manager->AddParticle(PARTICLE_TYPES::SPARK, pos, vel, 100, 10.0f);
 			collider->SetActive(false);
 			};
 		collider->InsertEvent<Collider>(setFirePoo, COLLIDE_EVENT_TYPE::BEGIN);

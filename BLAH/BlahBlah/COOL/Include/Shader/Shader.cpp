@@ -233,6 +233,16 @@ D3D12_INPUT_LAYOUT_DESC Shader::GetInputLayout(int presetID)
 		temp.NumElements = elements;
 		return temp;
 	}
+	case VERTEX_TYPES::BILLBOARD_POSITION_ONLY:
+	{
+		const UINT elements = 1;
+		D3D12_INPUT_ELEMENT_DESC* inputElements = new D3D12_INPUT_ELEMENT_DESC[elements];
+		inputElements[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+
+		temp.pInputElementDescs = inputElements;
+		temp.NumElements = elements;
+		return temp;
+	}
 	}
 	return temp;
 }

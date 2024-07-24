@@ -346,7 +346,7 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	XMFLOAT3 camPos = camera->GetWorldPosition();
 	XMFLOAT3 camDir = camera->GetWorldDirection();
 
-	// make function
+	// default render
 	std::function<void(component::Renderer*/*, component::Name**/)> func = [&commandList, &res, &cameraFustum, &tempOBB](component::Renderer* renderComponent/*, component::Name* name*/) {
 		if (renderComponent->IsActive() == false) return;
 
@@ -375,8 +375,6 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 
 		mesh->Render(commandList, renderComponent->GetWorldMatrix(), renderComponent->GetExtraShaderData());
 		};
-
-	// execute function
 	m_ECSManager->Execute(func);
 
 	// interaction outline
@@ -413,6 +411,17 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 		m_ECSManager->ExecuteFromEntity(interactionEntity->GetBitset(), interactionEntity->GetInnerID(), traverse);
 	}
 
+	// render particle
+	Material* particleRenderMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::PARTICLE);
+	particleRenderMat->GetShader()->SetPipelineState(commandList);
+	
+	std::function<void(component::Particle*)> particleRender = [&commandList](component::Particle* particle) {
+		particle->OnRender(commandList);
+		};
+
+	m_ECSManager->Execute(particleRender);
+
+	//commandList->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	OnPostRender(commandList, dsv);
 
 	// render sky here
@@ -676,6 +685,8 @@ void Scene::Update(float deltaTime)
 void Scene::RenderSync(float deltaTime)
 {
 	m_ECSManager->UpdatePreRenderSystem(deltaTime);
+
+	m_ECSManager->SyncParticle();
 
 	// light update and evaluate
 	UpdateLightData();

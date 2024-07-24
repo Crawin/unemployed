@@ -111,6 +111,7 @@ class ECSManager
 
 	// system
 	ECSsystem::TimeLineManaging* m_TimeLineSystem = nullptr;
+	ECSsystem::ParticleManaging* m_ParticleSystem = nullptr;
 
 	std::vector<ECSsystem::System*> m_Systems;
 	std::vector<ECSsystem::System*> m_PreRenderSystem;
@@ -247,6 +248,11 @@ public:
 	}
 
 	void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLineSystem->AddTimeLine(entity, timeLine); }
+
+	void AddParticle(PARTICLE_TYPES type, XMFLOAT3 pos, XMFLOAT3 vel, int toInsert, float randRange) { m_ParticleSystem->InsertParticle(type, pos, vel, toInsert, randRange); }
+
+	void InitPartlcie();
+	void SyncParticle();
 
 private:
 	template<class ...COMPONENTS>

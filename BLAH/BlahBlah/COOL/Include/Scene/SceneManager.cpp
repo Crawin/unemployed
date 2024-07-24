@@ -34,6 +34,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Pawn, "Pawn");
 	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
 	REGISTER_COMPONENT(component::AI, "AI");
+	REGISTER_COMPONENT(component::Particle, "Particle");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");

@@ -1136,4 +1136,21 @@ namespace ECSsystem {
 				++iter;
 		}
 	}
+
+	void ParticleManaging::Update(ECSManager* manager, float deltaTime)
+	{
+		for (auto particle : m_Particles)
+			particle.second->Tick(deltaTime);
+	}
+
+	void ParticleManaging::InsertParticle(PARTICLE_TYPES type, XMFLOAT3 pos, XMFLOAT3 vel, int toInsert, float randRange)
+	{
+		m_Particles[type]->InsertParticle(pos, vel, toInsert, randRange);
+	}
+
+	void ParticleManaging::SyncParticle()
+	{
+		for (auto particle : m_Particles)
+			particle.second->SyncParticle();
+	}
 }

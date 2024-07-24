@@ -82,7 +82,9 @@ void ComponentSet::OnStart(Entity* ent, ECSManager* manager, ResourceManager* rm
 ECSManager::ECSManager()
 {
 	m_TimeLineSystem = new ECSsystem::TimeLineManaging;
+	m_ParticleSystem = new ECSsystem::ParticleManaging;
 	InsertSystem(m_TimeLineSystem);
+	InsertSystem(m_ParticleSystem);
 }
 
 ECSManager::~ECSManager()
@@ -285,4 +287,19 @@ void ECSManager::SetEntityState(Entity* entity, bool active)
 
 	for (Entity* child : entity->GetChildren())
 		SetEntityState(child, active);
+}
+
+void ECSManager::InitPartlcie()
+{
+	ECSsystem::ParticleManaging* pm = m_ParticleSystem;
+
+	std::function<void(component::Particle*)> part = [&pm](component::Particle* par) {
+		pm->InitComponent(par->GetType(), par);
+		};
+	Execute(part);
+}
+
+void ECSManager::SyncParticle()
+{
+	m_ParticleSystem->SyncParticle();
 }

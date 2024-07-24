@@ -1,0 +1,9 @@
+{
+	"name": "Particle",
+	"BaseColor": null,
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "_Particle"
+}

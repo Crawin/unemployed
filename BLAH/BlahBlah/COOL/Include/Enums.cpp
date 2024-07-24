@@ -129,6 +129,7 @@ std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat)
 	case PRE_LOADED_MATERIALS::LIGHTING:		return std::string("_Lighting");
 	case PRE_LOADED_MATERIALS::SHADOWMAPPING:	return std::string("_ShadowMapping");
 	case PRE_LOADED_MATERIALS::OUTLINE:			return std::string("_OutLine");
+	case PRE_LOADED_MATERIALS::PARTICLE:		return std::string("_Particle");
 	case PRE_LOADED_MATERIALS::BLIT:			return std::string("_Blit");
 
 #ifdef _DEBUG
@@ -139,4 +140,22 @@ std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat)
 	// 이즈리얼이 사는 곳은?
 	// 비전2동
 	ERROR_QUIT(std::format("ERROR!!!! no match materials, idx: {}", static_cast<int>(preLaodMat)));
+}
+
+PARTICLE_TYPES ConvertStringToParticleType(const std::string& str)
+{
+	if (str == "Spark")				return PARTICLE_TYPES::SPARK;
+	if (str == "Water")				return PARTICLE_TYPES::WATER;
+
+	return PARTICLE_TYPES::PARTICLE_TYPE_END;
+}
+
+std::string ConvertParticleTypeToString(PARTICLE_TYPES type)
+{
+	switch (type) {
+	case PARTICLE_TYPES::SPARK:		return std::string("Spark");
+	case PARTICLE_TYPES::WATER:		return std::string("Water");
+	}
+
+	ERROR_QUIT("ERROR");
 }
