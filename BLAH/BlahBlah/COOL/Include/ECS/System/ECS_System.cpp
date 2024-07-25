@@ -167,7 +167,7 @@ namespace ECSsystem {
 		manager->Execute(func2);
 		manager->Execute(func3);
 		manager->Execute(func4);
-		//manager->Execute(sendClientTalk);
+		manager->Execute(sendClientTalk);
 
 	}
 

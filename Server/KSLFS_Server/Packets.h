@@ -40,8 +40,8 @@ protected:
 	char size;
 	PACKET_TYPE type;
 public:
-	const unsigned char getSize() { return size; }
-	const unsigned char getType() { return type; }
+	const char getSize() { return size; }
+	const char getType() { return type; }
 };
 
 class sc_packet_position : public packet_base

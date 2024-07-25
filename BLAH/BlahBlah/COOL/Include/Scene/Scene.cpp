@@ -899,7 +899,7 @@ void Scene::ProcessPacket(packet_base* packet)
 	case pAttack:
 	{
 		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(packet);
-		std::function<void(component::AnimationController*, component::Server*)> func = [manager, buf](component::AnimationController* ac,component::Server* server) {
+		std::function<void(component::AnimationController*, component::Server*, component::Physics*)> func = [manager, buf](component::AnimationController* ac,component::Server* server, component::Physics* ph) {
 			auto id = buf->getID();
 			if (server->getID() == id)
 			{
@@ -911,6 +911,7 @@ void Scene::ProcessPacket(packet_base* packet)
 				{
 					// 학생
 					ac->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+					ph->SetVelocity(DirectX::XMFLOAT3(0, 0, 0));
 				}
 			}
 			};

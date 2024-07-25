@@ -150,8 +150,8 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			ZeroMemory(&e_over->over, sizeof(e_over->over));
 			int addr_size = sizeof(SOCKADDR_IN);
 			AcceptEx(server_s, client_s, e_over->buf, 0, addr_size + 16, addr_size + 16, nullptr, &e_over->over);
+			break;
 		}
-		break;
 		case C_RECV:
 		{
 			int current_size = 0;
@@ -175,37 +175,31 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 			}
 			login_players[my_id].set_prev_packet_size(0);
 			login_players[my_id].do_recv();
+			break;
 		}
-		break;
 		case C_SEND:
 		{
 			delete e_over;
+			break;
 		}
-		break;
 		case C_SHUTDOWN:
 			std::cout << "서버 종료 명령으로 인한 쓰레드 종료" << std::endl;
 			break;
 		case C_TIMER:
-			//std::cout << "ai 실행" << std::endl;
-			delete e_over;
-			//for (auto& game : Games)
-			//{
-			//	bool b = true;
-			//	if (game.second.CAS_state(b, b))
-			//	{
-			//		game.second.update(detail.m_bNPC);
-			//	}
-			//}
+			using namespace std::chrono;
+			auto start = steady_clock::now();
 			Games[rw_byte].update(detail.m_bNPC, my_id);
 			bool b = true;
 			if (Games[rw_byte].CAS_state(b, b))
 			{
 				using namespace std::chrono;
 				g_mutex_npc_timer.lock();
+				//g_npc_timer.emplace(rw_byte, my_id, duration_cast<milliseconds>(start + 1s - steady_clock::now()));
 				g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
 				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
 			}
+			delete e_over;
 			break;
 		}
 	}
@@ -267,17 +261,18 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			sc_packet_make_room make(currentRoom);
 			login_players[id].send_packet(reinterpret_cast<packet_base*>(&make));
-			++currentRoom;
-			
+
 			g_mutex_npc_timer.lock();
-			for (int npc_id = 2; npc_id < STUDENT_SIZE + 2; ++npc_id)
+			for (int npc_id = 2; npc_id < 3; ++npc_id)
 			{
-				g_npc_timer.emplace(currentRoom - 1, npc_id, std::chrono::milliseconds(0));
+				g_npc_timer.emplace(currentRoom, npc_id, std::chrono::milliseconds(0));
+				printf("%d 추가 완료\n", npc_id);
 			}
 			g_mutex_npc_timer.unlock();
 
-		}
+			++currentRoom;
 			break;
+		}
 		case pENTERROOM:										//		pENTERROOM
 		{
 			cs_packet_enter_room* cs_enter = reinterpret_cast<cs_packet_enter_room*>(base);
@@ -341,8 +336,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
-		}
 			break;
+		}
 		case pOpenDoor:
 		{
 			auto sent_player = login_players.find(id);
@@ -365,8 +360,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
-		}
 			break;
+		}
 		case pUnlockDoor:
 		{
 			auto sent_player = login_players.find(id);
@@ -389,8 +384,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
+			break;
 		}
-		break;
 		case pGetItem:
 		{
 			auto packet = reinterpret_cast<cs_packet_get_item*>(base);
@@ -445,8 +440,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			{
 				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
-		}
 			break;
+		}
 		case pSound:
 		{
 			auto packet = reinterpret_cast<cs_packet_sound_start*>(base);
@@ -456,9 +451,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			
 			if (detail.m_bNPC)
 				Games[gameNum].can_hear(packet->getPosition());
-
+			break;
 		}
-		break;
 		default:
 			std::cout << "정의되지 않은 패킷 타입" << std::endl;
 			break;
@@ -767,35 +761,35 @@ const DirectX::XMFLOAT3 Game::getPlayerSp(const unsigned int& id)
 
 void Game::update(const bool& npc_state)
 {	// 아무리 생각해도 npc 별로 타이머를 써서 update하는게 더 나아보인단 말이지
-	bool f = false;
-	if (std::atomic_compare_exchange_strong(&guard.updating, &f, true))
-	{
-		guard.guard_state_machine(player, npc_state);
-	}
-	//std::cout << "npc 회전: " << guard.rotation.y << std::endl;
-	for (auto& student : students)
-	{
-		if(std::atomic_compare_exchange_strong(&student.updating,&f,true))	// 업데이트 중인데 다른 쓰레드에서 update함수가 불려서 2중 업데이트를 하지 못하게 방지
-			student.student_state_machine(player);
-	}
-	sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
-	for (auto& p : player)
-	{
-		if (p.sock != NULL)
-		{
-			if (login_players.end() != login_players.find(p.id))
-			{
-				login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
-				for (auto& student : students)
-				{
-					sc_packet_position student_position(student.id, student.position, student.rotation, student.speed);
-					login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&student_position));
-				}
-			}
-			else
-				p.sock = NULL;
-		}
-	}
+	//bool f = false;
+	//if (std::atomic_compare_exchange_strong(&guard.updating, &f, true))
+	//{
+	//	guard.guard_state_machine(player, npc_state);
+	//}
+	////std::cout << "npc 회전: " << guard.rotation.y << std::endl;
+	//for (auto& student : students)
+	//{
+	//	if(std::atomic_compare_exchange_strong(&student.updating,&f,true))	// 업데이트 중인데 다른 쓰레드에서 update함수가 불려서 2중 업데이트를 하지 못하게 방지
+	//		student.student_state_machine(player);
+	//}
+	//sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
+	//for (auto& p : player)
+	//{
+	//	if (p.sock != NULL)
+	//	{
+	//		if (login_players.end() != login_players.find(p.id))
+	//		{
+	//			login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
+	//			for (auto& student : students)
+	//			{
+	//				sc_packet_position student_position(student.id, student.position, student.rotation, student.speed);
+	//				login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&student_position));
+	//			}
+	//		}
+	//		else
+	//			p.sock = NULL;
+	//	}
+	//}
 }
 
 bool Game::erasePlayer(const unsigned int& id)
@@ -861,40 +855,50 @@ bool Game::getPlayerOBB(DirectX::BoundingOrientedBox& out, const unsigned int& i
 
 void Game::update(const bool& npc_state, const unsigned int& npc_id)
 {
+	using namespace std::chrono;
 	if (npc_id == 1)		// guard
 	{
 		guard.guard_state_machine(player, npc_state);
-		sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
-		for (auto& p : player)
+		auto currTime = std::chrono::steady_clock::now();
+		if (currTime > guard.nextSendTime)
 		{
-			if (p.sock != NULL)
+			sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
+			for (auto& p : player)
 			{
-				if (login_players.end() != login_players.find(p.id))
+				if (p.sock != NULL)
 				{
-					login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
+					if (login_players.end() != login_players.find(p.id))
+					{
+						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
+					}
+					else
+						p.sock = NULL;
 				}
-				else
-					p.sock = NULL;
 			}
+			guard.nextSendTime = currTime + 1s;
 		}
 	}
 	else if (npc_id < STUDENT_SIZE + 2)	// student
 	{
 		auto& student = students[npc_id - 2];
 		student.student_state_machine(player);
-
-		sc_packet_position student_position(student.id, student.position, student.rotation, student.speed);
-		for (auto& p : player)
+		auto currTime = std::chrono::steady_clock::now();
+		if (currTime > guard.nextSendTime)
 		{
-			if (p.sock != NULL)
+			sc_packet_position student_position(student.id, student.position, student.rotation, student.speed);
+			for (auto& p : player)
 			{
-				if (login_players.end() != login_players.find(p.id))
+				if (p.sock != NULL)
 				{
-					login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&student_position));
+					if (login_players.end() != login_players.find(p.id))
+					{
+						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&student_position));
+					}
+					else
+						p.sock = NULL;
 				}
-				else
-					p.sock = NULL;
 			}
+			guard.nextSendTime = currTime + 250ms;
 		}
 	}
 	else
@@ -924,6 +928,7 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 			g_npc_timer.pop();
 		}
 		g_npc_timer.emplace(this->GameNum, 1, std::chrono::milliseconds(0));
+		std::cout << "학생 죽이고, 가드 살리기 완료" << std::endl;
 		g_mutex_npc_timer.unlock();
 	}
 }
@@ -963,6 +968,15 @@ NPC::NPC()
 
 void NPC::guard_state_machine(Player* p,const bool& npc_state)
 {
+	std::chrono::duration<double> delta;
+	if (lastTime.time_since_epoch().count() == 0)		// 시작
+	{
+		lastTime = std::chrono::steady_clock::now();
+	}
+	auto currentTime = std::chrono::steady_clock::now();
+	delta = currentTime - lastTime;
+	lastTime = currentTime;
+
 	DirectX::BoundingOrientedBox now_obb;
 
 	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
@@ -1046,7 +1060,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 	}
 
 	if(state == 1)
-		move();
+		move(delta.count());
 
 	// 다른 캐릭터와 충돌했나?
 	bool hit = false;
@@ -1086,6 +1100,15 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 
 void NPC::student_state_machine(Player* p)
 {
+	std::chrono::duration<double> delta;
+	if (lastTime.time_since_epoch().count() == 0)		// 시작
+	{
+		lastTime = std::chrono::steady_clock::now();
+	}
+	auto currentTime = std::chrono::steady_clock::now();
+	delta = currentTime - lastTime;
+	lastTime = currentTime;
+
 	DirectX::BoundingOrientedBox now_obb;
 
 	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
@@ -1160,6 +1183,7 @@ void NPC::student_state_machine(Player* p)
 		{
 			state = 2;
 			std::cout << "최초 충돌이 발생했다@" << std::endl;
+			this->speed = DirectX::XMFLOAT3(0, 0, 0);
 			using namespace std::chrono;
 			attacked_time = steady_clock::now();				// 충돌한 시간을 저장
 			arrive_time = steady_clock::now();
@@ -1231,7 +1255,7 @@ void NPC::student_state_machine(Player* p)
 			}
 			else
 			{
-				move();		// 목표 위치로 이동
+				move(delta.count());		// 목표 위치로 이동
 			}
 		}
 		else if (this->state == 2)		// 충돌 애니메이션이 진행 중
@@ -1431,17 +1455,17 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 	return false;
 }
 
-void NPC::move()
+void NPC::move(const double& time)
 {
 	using namespace DirectX;
 	XMVECTOR ActorPos = XMLoadFloat3(&position);
 	XMVECTOR DestPos = XMLoadFloat3(&destination);
+	printf("DEST: %f,%f,%f\n", destination.x, destination.y, destination.z);
 	XMVECTOR direction = XMVectorSubtract(DestPos, ActorPos);
 	direction = XMVectorSetY(direction, 0);
 	direction = XMVector3Normalize(direction);
-	XMVECTOR movement = XMVectorScale(direction, movement_speed);
+	XMVECTOR movement = XMVectorScale(direction, movement_speed * time);
 	XMStoreFloat3(&position, XMVectorAdd(ActorPos, movement));
-	//std::cout << "경비 위치 " << position.x<< ", " << position.y<< ", " << position.z<< std::endl;
 	
 	XMFLOAT3 basic_head(0, 0, 1);
 	XMVECTOR basic = XMLoadFloat3(&basic_head);
@@ -1461,11 +1485,11 @@ void NPC::move()
 		degree = -degree;
 	}
 	
-	//std::cout << degree << std::endl;
-	//rotation.y = degree;
 	if(degree*degree > 0.25) rotation.y += degree / 10;
-	movement *= 100;
+	movement /= time;
 	DirectX::XMStoreFloat3(&speed, movement);
+	if (this->id == 2)
+		printf("%f,%f,%f\n", speed.x, speed.y, speed.z);
 }
 
 const short NPC::find_near_player(Player*& players)

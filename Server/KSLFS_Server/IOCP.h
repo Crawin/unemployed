@@ -108,7 +108,7 @@ public:
 	{
 		switch (base->getType())
 		{
-			case 0:				// POSITION 
+			case pPOSITION:				// POSITION 
 			{
 				auto position = reinterpret_cast<sc_packet_position*>(base);
 				auto sendOver = new EXP_OVER(position);
@@ -373,6 +373,9 @@ public:
 
 	std::unordered_map<int, NODE*> astar_graph;
 	std::mutex graph_lock;
+
+	std::chrono::steady_clock::time_point lastTime;
+	std::chrono::steady_clock::time_point nextSendTime;
 public:
 	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
@@ -382,7 +385,7 @@ public:
 	float distance(const DirectX::XMFLOAT3& sound_pos);
 	bool compare_position(DirectX::XMFLOAT3&);
 	bool set_destination(Player*&, const bool& npc_state);
-	void move();
+	void move(const double& time);
 	const short find_near_player(Player*&);
 	void reset_graph();
 	void reset_path();
@@ -416,7 +419,7 @@ public:
 		{
 			students[i].id = i+2;
 			students[i].position = DirectX::XMFLOAT3(500.0 + 100*i, 0.0, 1000.0);
-			students[i].movement_speed = 1;
+			students[i].movement_speed = 125;
 		}
 	}
 	void init(const unsigned int& i, const SOCKET& s);
