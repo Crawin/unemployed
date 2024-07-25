@@ -1188,15 +1188,27 @@ namespace component {
 			//		put can into player's inventory
 			DebugPrint("Hit");
 			// 테스트용 임시 코드
-			std::vector<Entity*> cans;
-			std::function<void(Drink*, SelfEntity*)> findDrink = [&cans](Drink* dr, SelfEntity* ent) { if (dr->isOccupied() == false) cans.push_back(ent->GetEntity()); };
-			manager->Execute(findDrink);
+			//std::vector<Entity*> cans;
+			//std::function<void(Drink*, SelfEntity*)> findDrink = [&cans](Drink* dr, SelfEntity* ent) { if (dr->isOccupied() == false) cans.push_back(ent->GetEntity()); };
+			//manager->Execute(findDrink);
 			
 			// todo 임시
-			Inventory* playerInv = manager->GetComponent<Inventory>(player);
-			Holdable* holdable = manager->GetComponent<Holdable>(cans.front());
-			holdable->SetMaster(player);
-			playerInv->AddItem(cans.front(), 3);
+			//Inventory* playerInv = manager->GetComponent<Inventory>(player);
+			//Holdable* holdable = manager->GetComponent<Holdable>(cans.front());
+			//holdable->SetMaster(player);
+			//playerInv->AddItem(cans.front(), 3);
+
+			//Entity* curhold = inven->GetCurrentHoldingItem();
+			//if (curhold != nullptr) {
+			//	KeyTool* keytool = manager->GetComponent<KeyTool>(curhold);
+			//	if (keytool != nullptr) {
+
+			std::function<void(component::UICanvas*, component::UIVandingMachine*)> openVandingUI = [player](component::UICanvas* can, component::UIVandingMachine* vand) {
+				vand->SetPlayer(player);
+				can->ShowUI();
+				};
+			manager->Execute(openVandingUI);
+
 			};
 
 		interaction->SetInteractionFunction(withVanding);
@@ -1206,6 +1218,7 @@ namespace component {
 	{
 		Json::Value dr = v["Drink"];
 		m_Type = dr["Type"].asInt();
+		//m_InventorySocket += m_Type;
 	}
 
 	void Drink::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -1664,6 +1677,161 @@ namespace component {
 	void UITreasureChest::SetAnswerButton(int target, int answer)
 	{
 		m_keyAnswer[target]->SetKeyID(answer);
+	}
+
+	void UIVandingMachine::Create(Json::Value& v, ResourceManager* rm)
+	{
+	}
+
+	void UIVandingMachine::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		std::function<bool(Entity*)> insertCan = [manager, this](Entity* can) {
+			Inventory* playerInv = manager->GetComponent<Inventory>(m_PlayerEntity);
+			Holdable* holdable = manager->GetComponent<Holdable>(can);
+			Drink* drink = manager->GetComponent<Drink>(can);
+
+			// if not occupied, insert
+			int targetInvNum = drink->GetInvenSocket();
+			if (playerInv->IsOccupied(targetInvNum)) {
+				holdable->SetMaster(m_PlayerEntity);
+				playerInv->AddItem(can, targetInvNum);
+				return true;
+			}
+			return false;
+		};
+
+		auto& children = selfEntity->GetChildren();
+		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
+
+		for (Entity* child : children) {
+			Name* childName = manager->GetComponent<Name>(child);
+
+			if (childName != nullptr) {
+				std::string name = childName->getName();
+
+				// Exit
+				if (name == "Exit") {
+					Button* button = manager->GetComponent<Button>(child);
+					ButtonEventFunction exit = [canvas](Entity* ent) { 
+						canvas->HideUI();
+						};
+					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+				}
+				else {
+					for (int i = 0; i < MAX_DRINK_TYPE; ++i) {
+						std::string buttonName = std::format("Drink_0{}", i);
+
+						if (name == buttonName) {
+							Button* button = manager->GetComponent<Button>(child);
+							int type = i;
+							ButtonEventFunction getDrink = [manager, type, this, canvas](Entity* ent) {
+								// find cans
+								std::vector<Entity*> cans;
+								std::function<void(Drink*, SelfEntity*)> findDrink = [&cans, type](Drink* dr, SelfEntity* ent) { 
+									if (dr->isOccupied() == false && dr->GetType() == type)
+										cans.push_back(ent->GetEntity()); 
+									};
+								manager->Execute(findDrink);
+
+								// if cans over 1, insert can
+								if (cans.empty() == false) {
+									Entity* can = cans.front();
+									Inventory* playerInv = manager->GetComponent<Inventory>(m_PlayerEntity);
+									Holdable* holdable = manager->GetComponent<Holdable>(can);
+									Drink* drink = manager->GetComponent<Drink>(can);
+
+									int targetInvNum = drink->GetInvenSocket();
+									if (playerInv->IsOccupied(targetInvNum) == false) {
+										holdable->SetMaster(m_PlayerEntity);
+										playerInv->AddItem(can, targetInvNum);
+										drink->SetOccupied(true);
+										// success
+										// send inventory in
+										cs_packet_get_item packet(holdable->GetHoldableID(), targetInvNum);
+										Client::GetInstance().send_packet(&packet);
+
+										// hide ui
+										canvas->HideUI();
+									}
+								}
+
+								};
+							button->SetButtonEvent(KEY_STATE::END_PRESS, getDrink);
+						}
+
+					}
+				}
+			}
+
+		}
+
+
+
+	}
+
+	void Consumable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value con = v["Consumable"];
+
+		m_ConsumType = con["Type"].asInt();
+	}
+
+	void Consumable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+		ActionFunction action;
+		switch (m_ConsumType) {
+			// speed up
+		case 1:
+			action = [selfEntity, holdable, manager](float deltaTime) {
+				Entity* master = holdable->GetMaster();
+				Physics* masterPhy = manager->GetComponent<Physics>(master);
+				Inventory* masterInv = manager->GetComponent<Inventory>(master);
+
+				// set speed up
+				float* masterMaxSpeed = masterPhy->GetMaxVelocityPtr();
+
+				float speed = masterPhy->GetOriginalMaxVelocity();
+				TimeLine<float>* speedUp = new TimeLine<float>(masterMaxSpeed);
+				speedUp->AddKeyFrame(speed * 3.0f, 0.0f);
+				speedUp->AddKeyFrame(speed * 3.0f, 35.0f);
+				speedUp->AddKeyFrame(speed + speed, 35.0f);
+				speedUp->AddKeyFrame(speed, 40.0f);
+				manager->AddTimeLine(holdable->GetOriginParent(), speedUp);
+
+				// detach self
+				masterInv->EraseCurrentHolding();
+				manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+				//manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+				};
+			break;
+
+			// no sound
+		case 2:
+			action = [selfEntity, holdable, manager](float deltaTime) {
+				Entity* master = holdable->GetMaster();
+				Inventory* masterInv = manager->GetComponent<Inventory>(master);
+				
+				// todo player component
+				// play sound to zero
+
+				// todo sound
+				// play consume drink
+
+				// detach self
+				manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+				masterInv->EraseCurrentHolding();
+				};
+			break;
+
+			// default error but keep going
+		default:
+			ERROR_QUIT("error!! no consumable type");
+			action = [](float deltaTime) {};
+			break;
+		}
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), action);
 	}
 
 }

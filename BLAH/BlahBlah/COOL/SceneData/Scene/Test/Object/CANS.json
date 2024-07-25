@@ -1,0 +1,1027 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Can_Cola",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "COKE_CAN_00",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {
+				"HoldableID" : 7
+			},
+			"Consumable": {
+				"Type": 1
+			},
+			"Drink": {
+				"Type": 0
+			},
+			"Server":
+			{
+				"ID": 60
+			}
+		},
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Can_Cola",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "COKE_CAN_01",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {
+				"HoldableID" : 8
+			},
+			"Consumable": {
+				"Type": 1
+			},
+			"Drink": {
+				"Type": 0
+			},
+			"Server":
+			{
+				"ID": 61
+			}
+		},
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Can_Mountain_Dew",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "MOUNTAIN_DEW_CAN_00",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {
+				"HoldableID" : 9
+			},
+			"Consumable": {
+				"Type": 2
+			},
+			"Drink": {
+				"Type": 1
+			},
+			"Server":
+			{
+				"ID": 62
+			}
+		},
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Can_Mountain_Dew",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "MOUNTAIN_DEW_CAN_01",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {
+				"HoldableID" : 10
+			},
+			"Consumable": {
+				"Type": 2
+			},
+			"Drink": {
+				"Type": 1
+			},
+			"Server":
+			{
+				"ID": 63
+			}
+		},
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Can_Pepsi",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "PEPSI_CAN_00",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {
+				"HoldableID" : 11
+			},
+			"Throwable": {
+				"BakeTime": 2.0,
+				"ThrowSpeed": 70.0
+			},
+			"Physics": 
+			{
+				"MaxVelocity": 20000.0,
+				"Acceleration" : [2000.0, 2000.0, 2000.0],
+				"Calculate" : false,
+				"Friction": false
+			},
+			"Drink": {
+				"Type": 2
+			},
+			"Server":
+			{
+				"ID": 64
+			}
+		},
+		{
+			"Children" : 
+			[
+				{
+					"Name" : "Head_Dot",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Dot"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head_Handle",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head_Handle"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Body",
+					"Renderer" : 
+					{
+						"Material" : "Object/Can_Pepsi",
+						"Mesh" : "COKECAN.Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Name" : "Head",
+					"Renderer" : 
+					{
+						"Material" : "Object/ColaHeads",
+						"Mesh" : "COKECAN.Head"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "PEPSI_CAN_01",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					24.5,
+					0.8,
+					1.6
+				],
+				"Rotate" : 
+				[
+					-45.732,
+					86.147,
+					-2.677
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"DynamicCollider":
+			{
+				"Active": false,
+				"Static": false,
+				"ColideWithDynamic": false,
+				"Center": [0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Holdable": {
+				"HoldableID" : 12
+			},
+			"Throwable": {
+				"BakeTime": 2.0,
+				"ThrowSpeed": 70.0
+			},
+			"Physics": 
+			{
+				"MaxVelocity": 20000.0,
+				"Acceleration" : [2000.0, 2000.0, 2000.0],
+				"Calculate" : false,
+				"Friction": false
+			},
+			"Drink": {
+				"Type": 2
+			},
+			"Server":
+			{
+				"ID": 65
+			}
+		}
+	],
+	"Name" : "CANS_ROOT",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			-1000.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

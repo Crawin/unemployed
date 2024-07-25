@@ -297,9 +297,8 @@ namespace ECSsystem {
 				}
 			}
 
-			float maxSpeed = sp->GetOriginalMaxVelocity();
-			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
-			sp->SetMaxVelocity(maxSpeed);
+			sp->SetDash(false);
+			if (pawn->IsPressing(GAME_INPUT::SHIFT)) sp->SetDash(true);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
 			FMOD_INFO::GetInstance().set_self_speed(speed);
@@ -310,6 +309,8 @@ namespace ECSsystem {
 				XMVECTOR vel = XMLoadFloat3(&velOnXZ);
 
 				float maxSpeed = sp->GetMaxVelocity();
+				if (sp->IsDashing()) maxSpeed += sp->GetDashSpeed();
+				
 				float curSpeed = XMVectorGetX(XMVector3Length(vel));
 				
 				XMVECTOR vec = XMLoadFloat3(&tempMove);
@@ -988,11 +989,10 @@ namespace ECSsystem {
 			};
 		manager->Execute(getController);
 
-		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [controlledPawn](Button* but, UITransform* trans, SelfEntity* self) {
-			POINT mousePos =  InputManager::GetInstance().GetMouseCurrentPosition();
-			ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
+		POINT mousePos = InputManager::GetInstance().GetMouseCurrentPosition();
+		ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
 
-
+		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [controlledPawn, &mousePos](Button* but, UITransform* trans, SelfEntity* self) {
 			SIZE center = trans->GetCenter();
 			SIZE size = trans->GetSize();
 
@@ -1003,7 +1003,6 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			
 			if (PtInRect(&rect, mousePos)) {
 				KEY_STATE leftMouseState = controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT);
 

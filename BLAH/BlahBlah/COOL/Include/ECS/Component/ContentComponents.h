@@ -160,6 +160,8 @@ namespace component {
 		Entity* GetMaster() const { return m_HoldingMaster; }
 		Entity* GetOriginParent() const { return m_OriginalParent; }
 
+		int GetHoldableID() const { return m_HoldableItemID; }
+
 		virtual void ShowYourself() const {};
 	};
 
@@ -186,6 +188,20 @@ namespace component {
 		float m_ThrowBakeTime = 0.0f;
 		float m_ThrowBakeTimeMax = 3.0f;
 		float m_ThrowSpeed = 2000.0f;			// abuot 70km/h, our unit ->cm/s
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+	};
+
+	/////////////////////////////////////////////////////////
+	// Consumable Component
+	// CCTV, drinks
+	//
+	class Consumable : public ComponentBase<Consumable> {
+		int m_ConsumType = -1;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -241,6 +257,8 @@ namespace component {
 
 		void EraseCurrentHolding() { m_Items[m_CurrentHolding] = nullptr; }
 		void AddItem(Entity* entity, int idx) { m_Items[idx] = entity; }
+
+		bool IsOccupied(int target) { return m_Items[target] != nullptr; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -276,9 +294,12 @@ namespace component {
 	// Drink Component
 	// 음료 속성 보관
 	//
+#define DEFAULT_SOCKET 3
+#define MAX_DRINK_TYPE 3
 	class Drink : public ComponentBase<Drink> {
 		bool m_Occupied = false;
 		int m_Type = 0;
+		int m_InventorySocket = DEFAULT_SOCKET;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -288,6 +309,9 @@ namespace component {
 
 		void SetOccupied(bool state) { m_Occupied = state; }
 		bool isOccupied() const { return m_Occupied; }
+
+		int GetType() const { return m_Type; }
+		int GetInvenSocket() const { return m_InventorySocket; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -366,8 +390,8 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// Throwable Component
-	// CCTV, drinks
+	// RCController Component
+	// RCController
 	//
 	class RCController : public ComponentBase<RCController> {
 		Entity* m_RCEntity = nullptr;
@@ -516,5 +540,20 @@ namespace component {
 		void SetAnswerButton(int target, int answer);
 	};
 
+	/////////////////////////////////////////////////////////
+	// UIVandingMachine Component
+	// 자판기 ui, 버튼 누르면 음료 나옴
+	//
+	class UIVandingMachine : public ComponentBase<UIVandingMachine> {
+		Entity* m_PlayerEntity = nullptr;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		void SetPlayer(Entity* player) { m_PlayerEntity = player; }
+	};
 
 }

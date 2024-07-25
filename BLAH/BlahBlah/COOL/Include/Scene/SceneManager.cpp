@@ -64,15 +64,18 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
 	REGISTER_COMPONENT(component::KeyTool, "KeyTool");
 	REGISTER_COMPONENT(component::Key, "Key");			// 굳이 필요 한것인가?
+	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
+	REGISTER_COMPONENT(component::Consumable, "Consumable");
 
 
-
+	
 	// ui content
 	REGISTER_COMPONENT(component::UIKeypad, "UIKeypad");
 	REGISTER_COMPONENT(component::UIDoorKey, "UIDoorKey");
 	REGISTER_COMPONENT(component::UICutLine, "UICutLine");
 	REGISTER_COMPONENT(component::UITreasureChest, "UITreasureChest");
-
+	REGISTER_COMPONENT(component::UIVandingMachine, "UIVandingMachine");
+	
 }
 
 SceneManager::SceneManager()
@@ -96,17 +99,24 @@ bool SceneManager::Init(ComPtr<ID3D12GraphicsCommandList> commandList, const cha
 
 	TestMainScene* mainScene = new TestMainScene;
 	mainScene->m_SceneName = firstScene;
-
+	mainScene->SetSceneManager(this);
 
 	LoadingScene* loadScene = new LoadingScene;
 	loadScene->m_SceneName = "Loading";
 	loadScene->Enter(commandList);
 	loadScene->SetSceneManager(this);
 	loadScene->SetNextScene(mainScene);
-
-	m_LoadingScene = m_CurrentScene = loadScene;
+	m_LoadingScene = loadScene;
+	m_CurrentScene = m_LoadingScene;
 
 	return true;
+}
+
+void SceneManager::SetToChangeScene(const std::string& nextSceneName, int sceneType)
+{
+	m_ToChangeScene = true;
+	m_NextSceneName = nextSceneName;
+	m_NextSceneType = sceneType;
 }
 
 void SceneManager::ChangeScene(Scene* newScene, bool isFromLoading)
@@ -132,18 +142,6 @@ void SceneManager::ChangeScene(Scene* newScene, bool isFromLoading)
 	m_CurrentScene->Enter();
 }
 
-void SceneManager::ChangeScene(std::string sceneName)
-{
-	// exit cur scene
-	if (m_PrevScene) delete m_PrevScene;
-
-	m_PrevScene = m_CurrentScene;
-	m_CurrentScene->Exit();
-
-	// change cur scene to loading scene
-	m_CurrentScene = m_LoadingScene;
-}
-
 bool SceneManager::ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	if (m_CurrentScene) 
@@ -161,6 +159,33 @@ void SceneManager::Update(float deltaTime)
 
 void SceneManager::SyncWithRender(float deltaTime)
 {
+	// check scene change
+	if (m_ToChangeScene) {
+		Scene* nextScene = nullptr;
+		switch (m_NextSceneType) {
+		case 0:
+			nextScene = new TestMainScene;
+			nextScene->m_SceneName = m_NextSceneName;
+			nextScene->SetSceneManager(this);
+			break;
+			
+		case 1:
+			//nextScene = new EndScene;
+			//nextScene->m_SceneName = m_NextSceneName;
+			//nextScene->SetSceneManager(this);
+			break;
+
+		}
+
+		m_LoadingScene->SetNextScene(nextScene);
+		
+		m_CurrentScene->Exit();
+		delete m_CurrentScene;
+		m_CurrentScene = m_LoadingScene;
+
+		m_ToChangeScene = false;
+	}
+
 	if (m_CurrentScene) m_CurrentScene->RenderSync(deltaTime);
 }
 

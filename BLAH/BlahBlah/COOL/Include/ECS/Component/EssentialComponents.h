@@ -388,11 +388,13 @@ namespace component {
 	class Physics : public ComponentBase<Physics> {
 		float m_OriginalMaxVelocity = 300.0f;
 		float m_CurrentMaxVelocity = 300.0f;
+		float m_DashSpeed = 400.0f;
 
 		float m_Elasticity = 1.1f;
 
 		bool m_CalculatePhysics = false;
 		bool m_Friction = true;
+		bool m_Dashing = false;
 
 		XMFLOAT3 m_Velocity = { 0,0,0 };
 		XMFLOAT3 m_Acceleration = { 0,0,0 };
@@ -404,6 +406,7 @@ namespace component {
 
 		float GetOriginalMaxVelocity() const { return m_OriginalMaxVelocity; }
 		float GetMaxVelocity() const { return m_CurrentMaxVelocity; }
+		float* GetMaxVelocityPtr() { return &m_CurrentMaxVelocity; }
 
 		float GetCurrentVelocityLen() const { return Vector3::Length(m_Velocity); }
 		float GetCurrentVelocityLenOnXZ() const { XMFLOAT3 temp = { m_Velocity.x, 0.0f, m_Velocity.z }; return Vector3::Length(temp); }
@@ -426,6 +429,12 @@ namespace component {
 
 		void SetActiveFriction(bool state) { m_Friction = state; }
 		bool IsFrictionActive() const { return m_Friction; }
+
+		void SetDash(bool state) { m_Dashing = state; }
+		bool IsDashing() const { return m_Dashing; }
+
+		void SetDashSpeed(float speed) { m_DashSpeed = speed; }
+		float GetDashSpeed() const { return m_DashSpeed; }
 	};
 
 	/////////////////////////////////////////////////////////

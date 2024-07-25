@@ -14,7 +14,13 @@ struct SOUND_EFFECT
 enum class SOUND_TYPE
 {
     FOOTPRINT,
-    DUCK
+    DUCK,
+    CROWBAR_HIT,
+    DOOR_OPEN,
+    DRINK_BUY,
+    DRINK_THROW_HIT,
+    DRINK_CONSUME,
+    KEY_JINGLE
 };
 
 class FMOD_INFO

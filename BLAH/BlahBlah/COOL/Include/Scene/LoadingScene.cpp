@@ -66,7 +66,7 @@ void LoadingScene::Update(float deltaTime)
 	// load end!
 	// change scene
 	if (m_LoadingStep > 3) {
-		m_Manager->ChangeScene(m_NextScene, true);
+		m_SceneManager->ChangeScene(m_NextScene, true);
 		m_NextScene = nullptr;
 	}
 

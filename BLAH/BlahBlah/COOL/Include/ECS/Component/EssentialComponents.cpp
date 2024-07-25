@@ -954,9 +954,9 @@ namespace component {
 	int DayLightManager::m_ManagerCount = 0;
 	void DayLightManager::Create(Json::Value& v, ResourceManager* rm)
 	{
-		m_ManagerCount++;
-		if (m_ManagerCount > 1) 
-			ERROR_QUIT("ERROR!!, DayLightManager is two");
+		//m_ManagerCount++;
+		//if (m_ManagerCount > 1) 
+		//	ERROR_QUIT("ERROR!!, DayLightManager is two");
 
 		Json::Value d = v["DayLightManager"];
 		m_CurTime = d["Time"].asFloat();
