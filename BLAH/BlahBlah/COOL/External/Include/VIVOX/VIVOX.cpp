@@ -1,13 +1,16 @@
 ﻿#include "framework.h"
 #include "vivoxheaders.h"
+#include "Network/Client.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////
 unsigned int sockNum;
 unsigned int gameNum;
+int status;
+vx_req_connector_create* req_connector = nullptr;
 
 void Start_Vivox(const unsigned int& sock, const unsigned int& game, const VIVOX_STATE* gameState)
 {
     vx_sdk_config_t defaultConfig;
-    int status = vx_get_default_config3(&defaultConfig, sizeof(defaultConfig));
+    status = vx_get_default_config3(&defaultConfig, sizeof(defaultConfig));
 
     if (status != VxErrorSuccess) {
         printf("vx_sdk_get_default_config3() returned %d: %s\n", status, vx_get_error_string(status));
@@ -23,14 +26,44 @@ void Start_Vivox(const unsigned int& sock, const unsigned int& game, const VIVOX
         return;
     }
     // Vivox Client SDK가 이제 초기화됨
-    vx_req_connector_create* req_connector = nullptr;
     CreateConnector(req_connector);
     
     sockNum = sock;
     gameNum = game;
-    while (gameState->game_state)
-        Sleep(0);
-    // 프로그램 종료 전 uninitialize
+    //while (gameState->game_state)
+    //    Sleep(0);
+    //// 프로그램 종료 전 uninitialize
+}
+
+void Start_Vivox(const unsigned int& sock, const unsigned int& game)
+{
+    vx_sdk_config_t defaultConfig;
+    status = vx_get_default_config3(&defaultConfig, sizeof(defaultConfig));
+
+    if (status != VxErrorSuccess) {
+        printf("vx_sdk_get_default_config3() returned %d: %s\n", status, vx_get_error_string(status));
+        return;
+    }
+    defaultConfig.pf_sdk_message_callback = &OnResponseOrEventFromSdk;
+    defaultConfig.pf_on_audio_unit_before_recv_audio_mixed = &OnBeforeReceivedAudioMixed;
+    //defaultConfig.pf_on_audio_unit_before_recv_audio_rendered = &OnAudioBeforeRecvAudioRendered;
+    status = vx_initialize3(&defaultConfig, sizeof(defaultConfig));
+
+    if (status != VxErrorSuccess) {
+        printf("vx_initialize3() returned %d : %s\n", status, vx_get_error_string(status));
+        return;
+    }
+    // Vivox Client SDK가 이제 초기화됨
+    CreateConnector(req_connector);
+
+    sockNum = sock;
+    gameNum = game;
+    //while (gameState->game_state)
+    //    Sleep(0);
+    //// 프로그램 종료 전 uninitialize
+}
+void Stop_Vivox()
+{
     status = vx_uninitialize();
 }
 
@@ -310,6 +343,69 @@ void HandleParticipantRemovedEvent(vx_evt_participant_removed* evt)
 
 void HandleParticipantUpdatedEvent(vx_evt_participant_updated* evt)
 {
+    if (evt->is_current_user)
+    {
+        auto& client = Client::GetInstance();
+        if (evt->is_speaking)
+        {
+
+            if (evt->energy > client.mic_lv)
+            {
+                std::cout << "내가 " <<evt->energy<<"로 말하기 시작했어" << std::endl;
+                client.is_talking = true;
+                //while (true) {
+                //    bool f = false;
+                //    bool result = std::atomic_compare_exchange_strong(&client.is_talking, &f, true);
+                //    std::cout << "false result: " << result << std::endl;
+                //    if (result) break;
+                //}
+            }
+        }
+        else
+        {
+            std::cout << "내가 말 안한다" << std::endl;
+            client.is_talking = false;
+            //while (true)
+            //{
+            //    bool t = true;
+            //    bool result = std::atomic_compare_exchange_strong(&client.is_talking, &t, false);
+            //    std::cout << "true result: " << result << std::endl;
+            //    if (result) break;
+            //}
+        }
+    }
+    //if (evt->is_current_user)
+    //{
+    //    auto& client = Client::GetInstance();
+    //    if (evt->is_speaking)
+    //    {
+    //        std::cout << "is speaking" << std::endl;
+    //        if (client.mic_lv < evt->energy)
+    //        {
+    //            while (true) {
+    //                bool f = false;
+    //                bool result = std::atomic_compare_exchange_strong(&client.is_talking, &f, true);
+    //                if (result) break;
+    //            }
+    //        }
+    //        std::cout << "내가" << evt->energy << "만큼 말했다!" << std::endl;
+    //    }
+    //    else
+    //    {
+    //        while (true)
+    //        {
+    //            bool t = true;
+    //            bool result = std::atomic_compare_exchange_strong(&client.is_talking, &t, false);
+    //            if(result) break;
+    //        }
+    //        std::cout << "내가 말을 그만했다!" << std::endl;
+    //    }
+    //}
+    //if (strncmp(&UserName[0], evt->encoded_uri_with_tag, UserName.size()))
+    //{
+    //    if(evt->is_current_user)
+    //    std::cout << "내가 말했다!" << std::endl;
+    //}
     //printf("User %s %s speaking to %s\n", evt->encoded_uri_with_tag, evt->is_speaking ? "is" : "is not", evt->session_handle);
 }
 

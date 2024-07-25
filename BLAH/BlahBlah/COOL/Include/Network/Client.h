@@ -100,6 +100,9 @@ private:
 
 public:
 	std::unordered_map<int, GameCharacters> characters;
+	std::atomic_bool is_talking = false;
+	float mic_lv = 0.5;
+	DirectX::XMFLOAT3 self_position = { 0,0,0 };
 	VIVOX_STATE* vivox_state;
 
 	void Recv_Start();

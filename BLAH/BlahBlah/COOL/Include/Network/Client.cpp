@@ -33,6 +33,7 @@ Client::~Client()
 	// vivox 종료
 	if (vivox_state != nullptr)
 		vivox_state->game_state = false;
+	Stop_Vivox();
 
 	// 윈속 종료
 	WSACleanup();
@@ -274,8 +275,9 @@ void process_packet(packet_base*& base)
 		client.characters.try_emplace(StudentID);
 		client.vivox_state = new VIVOX_STATE;
 		client.vivox_state->game_state = true;
-		std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
-		vivox.detach();
+		Start_Vivox(client.getPSock()[0], buf->getGameNum());
+		//std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
+		//vivox.detach();
 
 		// todo 
 		// to scene manager-> change scene
@@ -300,8 +302,9 @@ void process_packet(packet_base*& base)
 			client.setCharType(2);
 			client.vivox_state = new VIVOX_STATE;
 			client.vivox_state->game_state = true;
-			std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
-			vivox.detach();
+			Start_Vivox(client.getPSock()[0], buf->getGameNum());
+			//std::thread vivox(Start_Vivox, client.getPSock()[0], buf->getGameNum(), client.vivox_state);
+			//vivox.detach();
 
 			// todo 
 			// to scene manager-> change scene

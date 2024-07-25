@@ -25,7 +25,8 @@ enum PACKET_TYPE
 	pUnlockDoor,
 	pChangeDayOrNight,
 	pGetItem,
-	pKeyInput
+	pKeyInput,
+	pSound
 };
 enum class ANIMATION_STATE;
 enum class GAME_INPUT;
@@ -322,6 +323,27 @@ public:
 	}
 	const KEY_STATE getKeyState() { return static_cast<KEY_STATE>(key_state); }
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
+};
+
+enum SoundType
+{
+	voice,
+	door
+};
+
+class cs_packet_sound_start : public packet_base
+{
+	DirectX::XMFLOAT3 position;
+	char type;
+public:
+	cs_packet_sound_start(const DirectX::XMFLOAT3& pos, const SoundType& sound_type) {
+		size = sizeof(cs_packet_sound_start);
+		type = pSound;
+		position = pos;
+		type = static_cast<char>(sound_type);
+	}
+	const DirectX::XMFLOAT3 getPosition() { return position; }
+	const SoundType getType() { return static_cast<SoundType>(type); }
 };
 
 #pragma pack(pop)

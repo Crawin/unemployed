@@ -148,10 +148,26 @@ namespace ECSsystem {
 				ren->SetExtraShaderData(door->GetShaderData(i), i);
 			};
 
+		std::function<void(component::PlayerController*)> sendClientTalk = [manager](component::PlayerController* ctrl) {
+			auto& client = Client::GetInstance();
+			if (client.is_talking)
+			{
+				component::Pawn* curPawn = ctrl->GetControllingPawn();
+				component::Transform* tr = manager->GetComponent<component::Transform>(curPawn->GetCameraEntity());
+				auto pos = tr->GetWorldPosition();
+				pos.y -= 160;
+				cs_packet_sound_start sound(pos, voice);
+				
+				client.send_packet(&sound);
+				std::cout << pos.x << "," << pos.y << "," << pos.z << " 전송 완" << std::endl;
+			}
+			};
+
 		manager->Execute(func1);
 		manager->Execute(func2);
 		manager->Execute(func3);
 		manager->Execute(func4);
+		manager->Execute(sendClientTalk);
 
 	}
 
@@ -512,76 +528,6 @@ namespace ECSsystem {
 		manager->Execute(func);
 	}
 
-//<<<<<<< HEAD
-//	void AllocateServer::Update(ECSManager* manager, float deltaTime)
-//	{
-//		std::function<void(component::Server*, component::Name*, component::SelfEntity*)> allocate = [manager]
-//		(component::Server* server, component::Name* name, component::SelfEntity* self) {
-//			auto& client = Client::GetInstance();
-//			const SOCKET* playerSock = client.getPSock();
-//			short type = client.getCharType();
-//			auto& n = name->getName();
-//			if (type)
-//			{
-//				if (playerSock[0])			// 자신의 소켓 번호가 들어가있어
-//				{
-//					std::string playername;
-//					switch (type)
-//					{
-//					case 1:
-//						playername = client.GetHostPlayerName();
-//						break;
-//					case 2:
-//						playername = client.GetGuestPlayerName();
-//						break;
-//					}
-//					if (server->getID() == NULL && n == playername)
-//					{
-//						server->setID(playerSock[0]);
-//					}
-//				}
-//				if (playerSock[1])
-//				{
-//					std::string playername;
-//					switch (type)
-//					{
-//					case 1:
-//						playername = client.GetGuestPlayerName();
-//						break;
-//					case 2:
-//						playername = client.GetHostPlayerName();
-//						break;
-//					}
-//					if (server->getID() == NULL && n == playername)
-//					{
-//						server->setID(playerSock[1]);
-//						component::Pawn* pawn = manager->GetComponent<component::Pawn>(self->GetEntity());
-//						if (pawn != nullptr) {
-//							pawn->SetControlServer(true);	// 본인은 ControlServer 가 아니고, 상대방만 ControlServer이다
-//						}
-//					}
-//
-//					//if (server->getID() == NULL && n.compare("Player2") == 0)
-//					//{
-//					//	server->setID(playerSock[1]);
-//					//}
-//				}
-//				//else //상대방 플레이어가 로그아웃 했을때
-//				//{
-//				//	if (n.compare("Player2") == 0 && server->getID() != NULL)
-//				//		server->setID(NULL);
-//				//}
-//			}
-//			if (n.compare("Guard") == 0 && server->getID() == NULL)
-//				server->setID(1);
-//			if (n.compare("Student1") == 0 && server->getID() == NULL)
-//				server->setID(2);
-//			};
-//		manager->Execute(allocate);
-//	}
-//
-//=======
-//>>>>>>> main
 	void SyncPosition::Update(ECSManager* manager, float deltaTime)
 	{
 		/*std::function<void(component::Server*, component::Name*, component::Transform*, component::Physics*)> func = []

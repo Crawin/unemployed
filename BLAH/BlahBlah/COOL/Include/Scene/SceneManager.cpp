@@ -177,7 +177,5 @@ void SceneManager::ProcessPacket(packet_base* packet)
 
 void SceneManager::PossessPlayer(bool isHost)
 {
-
-
 	m_CurrentScene->PossessPlayer(isHost);
 }

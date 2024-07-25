@@ -353,8 +353,8 @@ public:
 	void guard_state_machine(Player*, const bool& npc_state);
 	void student_state_machine(Player*);
 	bool can_see(Player&,bool& floor_gap);
-	bool can_hear(Player&);
-	float distance(Player&);
+	bool can_hear(const DirectX::XMFLOAT3& sound_pos);
+	float distance(const DirectX::XMFLOAT3& sound_pos);
 	bool compare_position(DirectX::XMFLOAT3&);
 	bool set_destination(Player*&, const bool& npc_state);
 	void move();
@@ -376,7 +376,7 @@ class Game
 	Player player[2];
 	NPC guard;
 	NPC students[STUDENT_SIZE];
-	
+	std::chrono::steady_clock::time_point begin_time;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n), state(true) {
@@ -410,7 +410,9 @@ public:
 	bool CAS_state(bool& before, bool& after);
 	bool getPlayerOBB(DirectX::BoundingOrientedBox& out, const unsigned int& id);
 	void update(const bool& npc_state, const unsigned int& npc_id);
-	
+	void setBeiginTime();
+	void addBeiginTime(std::chrono::steady_clock::duration time);
+	void can_hear(const DirectX::XMFLOAT3& sound_position);
 };
 
 struct ServerDetails

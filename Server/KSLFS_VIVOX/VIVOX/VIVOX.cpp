@@ -1,5 +1,5 @@
 #include "vivoxheaders.h"
-
+std::string UserName;
 int main()
 {
     Start_Vivox();
@@ -167,7 +167,7 @@ void OnBeforeReceivedAudioMixed(
     vx_before_recv_audio_mixed_participant_data_t* participants_data,
     size_t num_participants)
 {
-    std::cout << "오디오 콜백 등장" << std::endl;
+    //std::cout << "오디오 콜백 등장" << std::endl;
 
     //std::string example_uri = "example_uri";
     //// 다수의 오디오 스트림에 걸쳐 반복
@@ -206,7 +206,7 @@ void CreateConnector(vx_req_connector_create*& req)
 void LogIn(const int& sock)
 {
     std::string sock_str = std::to_string(sock);
-    std::string UserName = VIVOX_ISSUER;
+    UserName = VIVOX_ISSUER;
     UserName += '.' + sock_str;
     std::cout << "User name: " << UserName << std::endl;
     
@@ -259,8 +259,8 @@ void RequestParticipate(const int& sock, const int& gameNum)
 {
     std::string sock_str = std::to_string(sock);
     std::string gameNum_str = std::to_string(gameNum);
-    char* temp = vx_get_echo_channel_uri(&gameNum_str[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 에코채널
-    //char* temp = vx_get_general_channel_uri(&std::to_string(gameNum)[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 논포지셔널채널
+    //char* temp = vx_get_echo_channel_uri(&gameNum_str[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 에코채널
+    char* temp = vx_get_general_channel_uri(&std::to_string(gameNum)[0], VIVOX_DOMAIN, VIVOX_ISSUER);       // 논포지셔널채널
 
     vx_req_sessiongroup_add_session* req;
     vx_req_sessiongroup_add_session_create(&req);
@@ -336,6 +336,8 @@ void HandleParticipantRemovedEvent(vx_evt_participant_removed* evt)
 
 void HandleParticipantUpdatedEvent(vx_evt_participant_updated* evt)
 {
+    std::cout <<
+        evt->is_current_user << std::endl;
     //printf("User %s %s speaking to %s\n", evt->encoded_uri_with_tag, evt->is_speaking ? "is" : "is not", evt->session_handle);
 }
 

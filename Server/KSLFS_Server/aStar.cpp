@@ -26,7 +26,7 @@ int find_near_NODE(DirectX::XMFLOAT3& pos)
 	return nearest_ID;
 }
 
-int find_near_NODE(DirectX::XMFLOAT3& pos, std::unordered_map<int,NODE*>& astar_graph)
+int find_near_NODE(const DirectX::XMFLOAT3& pos, std::unordered_map<int,NODE*>& astar_graph)
 {
 	std::vector<std::pair<int, float>> nodes;
 	for (auto& node : astar_graph) {
@@ -106,7 +106,7 @@ PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal)
 	return nullptr;
 }
 
-PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unordered_map<int, NODE*>& graph)
+PATH* aStarSearch(const DirectX::XMFLOAT3& curr, const DirectX::XMFLOAT3& goal, std::unordered_map<int, NODE*>& graph)
 {
 	int start_id = find_near_NODE(curr, graph);
 	//std::cout << "가장 가까운 시작 노드는 [" << start_id << "] 입니다." << std::endl;
@@ -164,7 +164,7 @@ PATH* aStarSearch(DirectX::XMFLOAT3& curr, DirectX::XMFLOAT3& goal, std::unorder
 	return nullptr;
 }
 
-void compare_length_next_path(PATH*& path, const DirectX::XMFLOAT3 NPC, const DirectX::XMFLOAT3 goal)
+void compare_length_next_path(PATH*& path, const DirectX::XMFLOAT3 NPC, const DirectX::XMFLOAT3& goal)
 {
 	float goal_npc_length = (NPC.x - goal.x) * (NPC.x - goal.x) + (NPC.z - goal.z) * (NPC.z - goal.z);
 	while (goal_npc_length < (path->pos.x - goal.x) * (path->pos.x - goal.x) + (path->pos.z - goal.z) * (path->pos.z - goal.z))	// 목적지 - npc 까지의 거리보다, 목적지 - 시작노드 까지의 거리다 더 길다 == npc가 시작노드로 되돌아 가야한다.

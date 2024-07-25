@@ -290,6 +290,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				// 방 호스트에게 게스트 소켓번호 보내주기
 				sc_packet_room_player htog(players[1].sock);
 				login_players[players[0].id].send_packet(reinterpret_cast<packet_base*>(&htog));
+				
+				Games[n].setBeiginTime();
 			}
 			else
 			{
@@ -437,6 +439,17 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			}
 		}
 			break;
+		case pSound:
+		{
+			auto packet = reinterpret_cast<cs_packet_sound_start*>(base);
+			auto sent_player = login_players.find(id);
+			auto gameNum = sent_player->second.getGameNum();
+			auto InGamePlayers = Games[gameNum].getPlayers();
+			
+			Games[gameNum].can_hear(packet->getPosition());
+
+		}
+		break;
 		default:
 			std::cout << "정의되지 않은 패킷 타입" << std::endl;
 			break;
@@ -506,7 +519,14 @@ void IOCP_SERVER_MANAGER::command_thread()
 				std::cout << "[" << player.first << "]" << std::endl;
 			}
 			g_mutex_login_players.unlock();
-		}}
+		}},
+		{"/TIME",[this]()
+		{
+			for (auto& game : Games)
+			{
+				game.second.addBeiginTime(std::chrono::minutes(3));
+			}
+}}
 	};
 
 	while (detail.m_bServerState)
@@ -872,6 +892,47 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 	{
 		std::cout << "잘못된 NPC아이디 입니다." << std::endl;
 	}
+	using namespace std::chrono;
+	if (this->begin_time.time_since_epoch() > nanoseconds(1) && this->begin_time + seconds(10) < steady_clock::now())
+	{
+		sc_packet_change_day_or_night change(22);
+		for (auto& p : player)
+		{
+			if (p.sock != NULL)
+			{
+				if (login_players.end() != login_players.find(p.id))
+				{
+					login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&change));
+				}
+				else
+					p.sock = NULL;
+			}
+		}
+		begin_time = steady_clock::now() + hours(1);			// 수정해야함.
+	}
+}
+
+void Game::setBeiginTime()
+{
+	using namespace std::chrono;
+	begin_time = steady_clock::now();
+}
+void Game::addBeiginTime(std::chrono::steady_clock::duration time)
+{
+	using namespace std::chrono;
+	begin_time -= time;
+}
+
+void Game::can_hear(const DirectX::XMFLOAT3& sound_position)
+{
+	if (guard.can_hear(sound_position))
+	{
+		std::cout << sound_position.x << "," << sound_position.y << "," << sound_position.z << " 들어버렸다..." << std::endl;
+	}
+	else
+	{
+		std::cout << "멀어서 안들령~" << std::endl;
+	}
 }
 
 NPC::NPC()
@@ -1159,18 +1220,30 @@ bool NPC::can_see(Player& p, bool& floor_gap)
 	return true;
 }
 
-bool NPC::can_hear(Player& p)
+bool NPC::can_hear(const DirectX::XMFLOAT3& sound_pos)
 {
-	const unsigned short can_hear_distance = 100;
-	bool playerSound = p.sound.load();
-	if (playerSound && distance(p) < can_hear_distance * can_hear_distance)		// 플레이어가 소리를 내고 있으며, 플레이어와의 거리가 들을 수 있는 거리 이내이면
+	const unsigned short can_hear_distance = 2500;
+	if (distance(sound_pos) < can_hear_distance * can_hear_distance)		// 플레이어가 소리를 내고 있으며, 플레이어와의 거리가 들을 수 있는 거리 이내이면
+	{
+		reset_path();
+		reset_graph();
+		this->path = aStarSearch(position, sound_pos, astar_graph);
+		compare_length_next_path(path, this->position, sound_pos);
+		if (nullptr == path)
+			state = 0;
+		else
+		{
+			state = 1;
+			this->destination = this->path->pos;
+		}
 		return true;
+	}
 	return false;
 }
 
-float NPC::distance(Player& p)
+float NPC::distance(const DirectX::XMFLOAT3& sound_pos)
 {
-	return (position.x - p.position.x) * (position.x - p.position.x) + (position.y - p.position.y) * (position.y - p.position.y) + (position.z - p.position.z) * (position.z - p.position.z);
+	return (position.x - sound_pos.x) * (position.x - sound_pos.x) + (position.y - sound_pos.y) * (position.y - sound_pos.y) + (position.z - sound_pos.z) * (position.z - sound_pos.z);
 }
 
 bool NPC::compare_position(DirectX::XMFLOAT3& pos)
@@ -1182,7 +1255,7 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 			{
 				if (state == 1)
 				{
-					//std::cout <<"NPC["<<this->id<<"] 목적지 도착" << std::endl;
+					std::cout <<"NPC["<<this->id<<"] 목적지 도착" << std::endl;
 					return true;
 				}
 			}
@@ -1233,18 +1306,6 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 					//this->destination = p[n].position;
 				}
 				return true;
-			}
-			else if (can_hear(p[n]))
-			{	// 다른 층에 있는게 들릴 수 있으니 노드 따라서 그 위치로 이동
-				reset_graph();
-				reset_path();
-				this->path = aStarSearch(position, p[n].position, astar_graph);
-				compare_length_next_path(path, this->position, p[n].position);
-				this->destination = this->path->pos;
-				if (nullptr != path)
-					return true;
-				else
-					state = 0;
 			}
 			n = 1 - n;
 		}
