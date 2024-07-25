@@ -51,6 +51,7 @@ private:
 
 protected:
 	ResourceManager* m_ResourceManager = nullptr;
+	SceneManager* m_SceneManager = nullptr;
 
 	// ECS System
 	std::shared_ptr<ECSManager> m_ECSManager = nullptr;
@@ -128,6 +129,8 @@ public:
 	virtual void ProcessPacket(packet_base* packet);
 
 	virtual void OnServerConnected();
+
+	void SetSceneManager(SceneManager* manager) { m_SceneManager = manager; }
 
 	void PossessPlayer(bool isHost);
 };

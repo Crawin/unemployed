@@ -1812,7 +1812,11 @@ namespace component {
 				Entity* master = holdable->GetMaster();
 				Inventory* masterInv = manager->GetComponent<Inventory>(master);
 				
+				// todo player component
+				// play sound to zero
 
+				// todo sound
+				// play consume drink
 
 				// detach self
 				manager->AttachChild(holdable->GetOriginParent(), selfEntity);

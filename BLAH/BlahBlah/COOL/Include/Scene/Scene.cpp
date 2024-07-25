@@ -8,6 +8,7 @@
 #include "Network/Packets.h"
 #include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
+#include "Scene/SceneManager.h"
 
 #ifdef _DEBUG
 #include "App/InputManager.h"
@@ -699,8 +700,7 @@ void Scene::Update(float deltaTime)
 {
 	m_ECSManager->UpdateSystem(deltaTime);
 
-	auto manager = m_ECSManager;
-}
+}\
 
 void Scene::RenderSync(float deltaTime)
 {
@@ -711,6 +711,9 @@ void Scene::RenderSync(float deltaTime)
 	// light update and evaluate
 	UpdateLightData();
 
+	if (GetAsyncKeyState(VK_F3) & 0x8001) {
+		m_SceneManager->SetToChangeScene("Test", 0);
+	}
 }
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)

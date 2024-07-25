@@ -2,6 +2,8 @@
 
 #define SCENE_PATH "SceneData\\"
 
+#include "LoadingScene.h"
+
 class Scene;
 // 사용 예시
 // 1. 게임을 하다가(인게임씬) 다른 씬으로 이동해야한다(다음 스테이지, 메인메뉴, 게임오버씬)
@@ -12,18 +14,24 @@ class Scene;
 // 기존 싱글톤에서 Application의 멤버로 바꿈.
 
 class packet_base;
+class LoadingScene;
 
 class SceneManager
 {
 	std::string m_BaseScenePath = SCENE_PATH;
 
+
 	Scene* m_CurrentScene = nullptr;
 	Scene* m_PrevScene = nullptr;
 	Scene* m_NextScene = nullptr;
 
-	Scene* m_LoadingScene = nullptr;
+	LoadingScene* m_LoadingScene = nullptr;
 
 	virtual void RegisterComponents();
+
+	bool m_ToChangeScene = false;
+	std::string m_NextSceneName = "";
+	int m_NextSceneType = 0;
 
 public:
 	SceneManager();
@@ -33,14 +41,17 @@ public:
 //	static SceneManager& GetInstance() {
 //		static SceneManager inst;
 //		return inst;
-//	}
+//	
+// }
+private:
+	friend void LoadingScene::Update(float deltaTime);
 
+	void ChangeScene(Scene* newScene, bool isFromLoading = false);
+
+public:
 	bool Init(ComPtr<ID3D12GraphicsCommandList> commandList, const char* firstSceneName);
 
-	// 씬 전환에 로딩이 있다면 어쩌지? 로딩 씬을 강제로 넣어줘야 하지 않을까?
-	// 이건 생각해보자
-	void ChangeScene(Scene* newScene, bool isFromLoading = false);
-	void ChangeScene(std::string sceneName);
+	void SetToChangeScene(const std::string& nextSceneName, int sceneType);
 
 	bool ProcessInput(UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -52,6 +63,5 @@ public:
 	void ProcessPacket(packet_base* packet);
 	// todo 임시코드
 	void PossessPlayer(bool isHost);
-
-};
+	};
 
