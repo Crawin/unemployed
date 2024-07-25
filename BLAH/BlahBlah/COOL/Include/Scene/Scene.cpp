@@ -711,9 +711,9 @@ void Scene::RenderSync(float deltaTime)
 	// light update and evaluate
 	UpdateLightData();
 
-	if (GetAsyncKeyState(VK_F3) & 0x8001) {
-		m_SceneManager->SetToChangeScene("Test", 0);
-	}
+	//if (GetAsyncKeyState(VK_F3) & 0x8001) {
+	//	m_SceneManager->SetToChangeScene("Test", 0);
+	//}
 }
 
 void Scene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
