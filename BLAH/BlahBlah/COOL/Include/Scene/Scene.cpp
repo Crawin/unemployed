@@ -859,13 +859,18 @@ void Scene::ProcessPacket(packet_base* packet)
 		sc_packet_get_item* buf = reinterpret_cast<sc_packet_get_item*>(packet);
 		
 		Entity* holdableItem = nullptr;
-		std::function<void(component::Holdable*, component::SelfEntity*)> getHoldable = [buf, &holdableItem](component::Holdable* hold, component::SelfEntity* self) {
+		component::Holdable* holdable = nullptr;
+		std::function<void(component::Holdable*, component::SelfEntity*)> getHoldable = [buf, &holdableItem, &holdable](component::Holdable* hold, component::SelfEntity* self) {
 			if (hold->GetHoldableID() == buf->getItemID()) holdableItem = self->GetEntity();
 			};
 		manager->Execute(getHoldable);
 
-		std::function<void(component::Server*, component::Inventory*)> setHoldable = [buf, holdableItem](component::Server* serv, component::Inventory* inv) {
-			if (serv->getID() == buf->getPlayer()) inv->AddItem(holdableItem, buf->getSlotID());
+		std::function<void(component::Server*, component::Inventory*, component::SelfEntity*)> setHoldable = [buf, holdableItem, holdable]
+		(component::Server* serv, component::Inventory* inv, component::SelfEntity* self) {
+			if (serv->getID() == buf->getPlayer()) {
+				inv->AddItem(holdableItem, buf->getSlotID());
+				holdable->SetMaster(self->GetEntity());
+			}
 			};
 
 		if (holdableItem != nullptr)

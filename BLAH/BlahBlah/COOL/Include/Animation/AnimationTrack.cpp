@@ -60,7 +60,7 @@ void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> co
 
 		if (m_AffectOnlyUpper) {
 			goTrue = m_AffectIndexTo;
-			DebugPrint("GGG");
+			//DebugPrint("GGG");
 		}
 
 		commandList->SetGraphicsRoot32BitConstants(extra, 1, &goTrue, static_cast<int>(ANIM_ROOTCONST::GO_AFFECT_UPPER));
