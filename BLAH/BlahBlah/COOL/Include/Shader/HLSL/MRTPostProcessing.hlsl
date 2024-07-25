@@ -255,7 +255,7 @@ float4 Lighting(float4 albedo, float roughness, float metalic, float ao, float4 
 // defined ONLY_MAIN_LIGHT start
 
 #define MAX_DISTANCE 2000.0f
-#define STEP_PER_LOOP 5.0f
+#define STEP_PER_LOOP 25.0f
 //#define ADD_PER_LOOP STEP_PER_LOOP / MAX_DISTANCE
 
 // defined ONLY_MAIN_LIGHT end
@@ -397,5 +397,5 @@ float4 ps(VS_OUTPUT input) : SV_Target
 	float4 lightingResult = Lighting(albedoColor, roughness.r, clamp(metalic.r, 0.1f, 1.0f), ao.r, float4(normalize(normalW.rgb), normalW.a), positionW.xyz);
 	float4 lightShaftResult = LightShaft(cameraPosition, positionW.xyz);
 
-	return lightingResult;// + lightShaftResult;
+	return lightingResult + lightShaftResult;
 }
