@@ -1042,11 +1042,10 @@ namespace ECSsystem {
 			};
 		manager->Execute(getController);
 
-		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [controlledPawn](Button* but, UITransform* trans, SelfEntity* self) {
-			POINT mousePos =  InputManager::GetInstance().GetMouseCurrentPosition();
-			ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
+		POINT mousePos = InputManager::GetInstance().GetMouseCurrentPosition();
+		ScreenToClient(Application::GetInstance().GethWnd(), &mousePos);
 
-
+		std::function<void(Button*, UITransform*, SelfEntity*)> checkButtonPos = [controlledPawn, &mousePos](Button* but, UITransform* trans, SelfEntity* self) {
 			SIZE center = trans->GetCenter();
 			SIZE size = trans->GetSize();
 
@@ -1057,7 +1056,6 @@ namespace ECSsystem {
 				center.cy + size.cy / 2,
 			};
 
-			
 			if (PtInRect(&rect, mousePos)) {
 				KEY_STATE leftMouseState = controlledPawn->GetInputState(GAME_INPUT::MOUSE_LEFT);
 
