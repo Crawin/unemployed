@@ -8,8 +8,8 @@
 		"Scale": [1.0, 1.0, 1.0]
 	},
 	"DayLightManager": {
-		"Time": 0.0,
-		"DayCycle": 240
+		"Time": 12.0,
+		"DayCycle": 240000000000000000000000000000
 	},
 
 	"Children": 

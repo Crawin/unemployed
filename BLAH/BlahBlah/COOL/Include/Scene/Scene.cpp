@@ -40,7 +40,7 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	return true;
 }
 
-void Scene::ChangeDayToNight()
+void Scene::ChangeDayToNight(float time)
 {
 	ECSManager* manager = m_ECSManager.get();
 
@@ -63,13 +63,16 @@ void Scene::ChangeDayToNight()
 		ctrler->Possess(changeingPawn);
 
 		// end event
-		std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager]() {
+			ctrler->Possess(controlledPawn); 
+			dayManager->SetDayCycle(240.0f);
+			};
 
 		TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
 		changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
 		changeTime->AddKeyFrame(22.0f, 1);
 		changeTime->AddKeyFrame(22.0f, 2);
-		changeTime->SetEndEvent(returnToPawn);
+		changeTime->SetEndEvent(returnToPawnAndSetDayCycle);
 
 		manager->AddTimeLine(ent->GetEntity(), changeTime);
 		};
@@ -268,6 +271,31 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// Set Animation PSO
 	m_ResourceManager->GetAnimationShader()->SetPipelineState(commandList);
 
+	// change state to stream out
+	std::function<void(component::Renderer*, component::AnimationExecutor*)> toStreamOut = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
+
+		if (renderComponent->IsActive() == false) return;
+		// Stream Out data set to  Stream Out
+
+		int bufidx = executor->GetStreamOutBuffer();
+		manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_STREAM_OUT);
+
+		auto resPtr = executor->GetStreamOutBuffer();
+
+		// should set stream buf pos to zero
+		*(executor->m_StreamSize) = 0;
+
+		};
+
+	// change to vtx state
+	std::function<void(component::Renderer*, component::AnimationExecutor*)> toVtx = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
+
+		if (renderComponent->IsActive() == false) return;
+		int bufidx = executor->GetStreamOutBuffer();
+		manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		};
+
+
 	// animate and set animed data
 	std::function<void(component::Renderer*, component::AnimationExecutor*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
 
@@ -276,13 +304,6 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 		int meshIdx = renderComponent->GetMesh();
 		Mesh* mesh = manager->GetMesh(meshIdx);
 		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
-			// Stream Out data set to  Stream Out
-			int bufidx = executor->GetStreamOutBuffer();
-			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_STREAM_OUT);
-			auto resPtr = executor->GetStreamOutBuffer();
-
-			// should set stream buf pos to zero
-			*(executor->m_StreamSize) = 0;
 
 			// SO set
 			const auto& view = executor->GetStreamOutBufferView();
@@ -302,13 +323,12 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			executor->SetData(commandList, manager);
 
 			mesh->Animate(commandList);
-
-			// 완료 후 Vertex Buffer로 변경
-			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 		}
 		};
 
+	m_ECSManager->Execute(toStreamOut);
 	m_ECSManager->Execute(animate);
+	m_ECSManager->Execute(toVtx);
 
 	//std::function<void(component::Animation*)> debug = [](component::Animation* anim) {
 
@@ -826,7 +846,9 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pChangeDayOrNight:
 	{
-		ChangeDayToNight();
+		sc_packet_change_day_or_night* buf = reinterpret_cast<sc_packet_change_day_or_night*>(packet);
+		float time = buf->getType();
+		ChangeDayToNight(time);
 		break;
 	}
 	case pGetItem:

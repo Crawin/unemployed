@@ -61,7 +61,7 @@ protected:
 private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);
 
-	void ChangeDayToNight();
+	void ChangeDayToNight(float time);
 
 protected:
 	void SetManagers();
