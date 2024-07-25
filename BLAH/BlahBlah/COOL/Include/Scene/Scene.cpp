@@ -861,7 +861,10 @@ void Scene::ProcessPacket(packet_base* packet)
 		Entity* holdableItem = nullptr;
 		component::Holdable* holdable = nullptr;
 		std::function<void(component::Holdable*, component::SelfEntity*)> getHoldable = [buf, &holdableItem, &holdable](component::Holdable* hold, component::SelfEntity* self) {
-			if (hold->GetHoldableID() == buf->getItemID()) holdableItem = self->GetEntity();
+			if (hold->GetHoldableID() == buf->getItemID()) {
+				holdableItem = self->GetEntity();
+				holdable = hold;
+			}
 			};
 		manager->Execute(getHoldable);
 
