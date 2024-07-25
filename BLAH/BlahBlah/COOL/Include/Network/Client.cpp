@@ -211,11 +211,6 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
 		char size = base->getSize();
-		if (size == 0)
-		{
-			std::cout << "사이즈가 0인 패킷 확인?" << std::endl;
-			while (1);
-		}
 
 		if (size + current_size > recv_size + prev_size)
 		{

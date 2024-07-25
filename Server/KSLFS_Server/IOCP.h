@@ -20,7 +20,6 @@ public:
 	char buf[BUFSIZE];
 	C_OP	c_op;
 	SOCKET sock;
-	short prev_packet_size = 0;
 
 	EXP_OVER()
 	{
@@ -58,6 +57,7 @@ class SESSION {
 	PlayerState state;
 	int mi_id;
 	unsigned int gameNum = NULL;
+	short prev_packet_size = 0;
 public:
 	SESSION(int id, SOCKET s, PlayerState ps) :mi_id(id), client_s(s), state(ps) {
 		recv_over.c_op = C_RECV;
@@ -81,7 +81,7 @@ public:
 
 	void set_prev_packet_size(const short& size)
 	{
-		recv_over.prev_packet_size = size;
+		prev_packet_size = size;
 		if (size == 0)
 			ZeroMemory(recv_over.buf, BUFSIZE);
 		recv_over.wsabuf->buf = recv_over.buf + size;
@@ -294,6 +294,8 @@ public:
 	const unsigned int getGameNum() { return gameNum; }
 
 	void setGameNum(const unsigned int& gameNum) { this->gameNum = gameNum; }
+
+	short get_prev_packet_size() { return this->prev_packet_size; }
 };
 
 extern std::unordered_map<unsigned int, SESSION> login_players;
