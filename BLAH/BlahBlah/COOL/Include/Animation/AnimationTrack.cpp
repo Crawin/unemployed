@@ -54,8 +54,14 @@ void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> co
 	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &animPlayTime, static_cast<int>(ANIM_ROOTCONST::PLAYTIME));
 	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &m_Mode, static_cast<int>(ANIM_ROOTCONST::MODE));
 
+	int extra = static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_EXTRA);
+
+	int zero = 0;
+
+	commandList->SetGraphicsRoot32BitConstants(extra, 1, &zero, static_cast<int>(ANIM_ROOTCONST::GO_AFFECT_UPPER));
+	commandList->SetGraphicsRoot32BitConstants(extra, 1, &zero, static_cast<int>(ANIM_ROOTCONST::AFFECT_INDEX));
+
 	if (isCurrent) {
-		int extra = static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_EXTRA);
 		int goTrue = 0;
 
 		if (m_AffectOnlyUpper) {
