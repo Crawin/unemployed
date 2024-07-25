@@ -714,9 +714,9 @@ bool ResourceManager::LateInit(ComPtr<ID3D12GraphicsCommandList> commandList)
 	m_AnimationShader = LoadShader("Animation_StreamOut", commandList);
 	CHECK_CREATE_FAILED(m_AnimationShader, "Shader Making Failed!!");
 
-	for (auto& res : m_VertexIndexDatas) {
-		res->TransToState(commandList, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
-	}
+	//for (auto& res : m_VertexIndexDatas) {
+	//	res->TransToState(commandList, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	//}
 	
 
 	// clear all LateLoad

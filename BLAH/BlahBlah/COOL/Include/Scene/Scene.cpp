@@ -268,6 +268,31 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 	// Set Animation PSO
 	m_ResourceManager->GetAnimationShader()->SetPipelineState(commandList);
 
+	// change state to stream out
+	std::function<void(component::Renderer*, component::AnimationExecutor*)> toStreamOut = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
+
+		if (renderComponent->IsActive() == false) return;
+		// Stream Out data set to  Stream Out
+
+		int bufidx = executor->GetStreamOutBuffer();
+		manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_STREAM_OUT);
+
+		auto resPtr = executor->GetStreamOutBuffer();
+
+		// should set stream buf pos to zero
+		*(executor->m_StreamSize) = 0;
+
+		};
+
+	// change to vtx state
+	std::function<void(component::Renderer*, component::AnimationExecutor*)> toVtx = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
+
+		if (renderComponent->IsActive() == false) return;
+		int bufidx = executor->GetStreamOutBuffer();
+		manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+		};
+
+
 	// animate and set animed data
 	std::function<void(component::Renderer*, component::AnimationExecutor*)> animate = [&commandList, manager](component::Renderer* renderComponent, component::AnimationExecutor* executor) {
 
@@ -276,13 +301,6 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 		int meshIdx = renderComponent->GetMesh();
 		Mesh* mesh = manager->GetMesh(meshIdx);
 		if (mesh && mesh->IsSkinned() && mesh->GetVertexNum() > 0) {
-			// Stream Out data set to  Stream Out
-			int bufidx = executor->GetStreamOutBuffer();
-			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_STREAM_OUT);
-			auto resPtr = executor->GetStreamOutBuffer();
-
-			// should set stream buf pos to zero
-			*(executor->m_StreamSize) = 0;
 
 			// SO set
 			const auto& view = executor->GetStreamOutBufferView();
@@ -302,13 +320,12 @@ void Scene::AnimateToSO(ComPtr<ID3D12GraphicsCommandList> commandList)
 			executor->SetData(commandList, manager);
 
 			mesh->Animate(commandList);
-
-			// 완료 후 Vertex Buffer로 변경
-			manager->SetResourceState(commandList, RESOURCE_TYPES::VERTEX, bufidx, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 		}
 		};
 
+	m_ECSManager->Execute(toStreamOut);
 	m_ECSManager->Execute(animate);
+	m_ECSManager->Execute(toVtx);
 
 	//std::function<void(component::Animation*)> debug = [](component::Animation* anim) {
 
