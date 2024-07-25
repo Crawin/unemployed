@@ -850,12 +850,27 @@ void Scene::ProcessPacket(packet_base* packet)
 	case pChangeDayOrNight:
 	{
 		sc_packet_change_day_or_night* buf = reinterpret_cast<sc_packet_change_day_or_night*>(packet);
-		float time = buf->getType();
+		float time = buf->getTime();
 		ChangeDayToNight(time);
 		break;
 	}
 	case pGetItem:
 	{
+		sc_packet_get_item* buf = reinterpret_cast<sc_packet_get_item*>(packet);
+		
+		Entity* holdableItem = nullptr;
+		std::function<void(component::Holdable*, component::SelfEntity*)> getHoldable = [buf, &holdableItem](component::Holdable* hold, component::SelfEntity* self) {
+			if (hold->GetHoldableID() == buf->getItemID()) holdableItem = self->GetEntity();
+			};
+		manager->Execute(getHoldable);
+
+		std::function<void(component::Server*, component::Inventory*)> setHoldable = [buf, holdableItem](component::Server* serv, component::Inventory* inv) {
+			if (serv->getID() == buf->getPlayer()) inv->AddItem(holdableItem, buf->getSlotID());
+			};
+
+		if (holdableItem != nullptr)
+			manager->Execute(setHoldable);
+
 		break;
 	}
 	case pKeyInput:

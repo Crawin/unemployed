@@ -1736,8 +1736,13 @@ namespace component {
 										drink->SetOccupied(true);
 										// success
 										// send inventory in
-										cs_packet_get_item packet(holdable->GetHoldableID(), targetInvNum);
-										Client::GetInstance().send_packet(&packet);
+
+										// if self
+										Server* servComp = manager->GetComponent<Server>(m_PlayerEntity);
+										if (servComp->getID() == Client::GetInstance().getPSock()[0]) {
+											cs_packet_get_item packet(holdable->GetHoldableID(), targetInvNum);
+											Client::GetInstance().send_packet(&packet);
+										}
 
 										// hide ui
 										canvas->HideUI();
