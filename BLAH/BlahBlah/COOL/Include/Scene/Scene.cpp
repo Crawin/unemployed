@@ -40,13 +40,13 @@ bool Scene::LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::
 	return true;
 }
 
-void Scene::ChangeDayToNight()
+void Scene::ChangeDayToNight(float time)
 {
 	ECSManager* manager = m_ECSManager.get();
 
 	// change day to light on light
 	// change pawn and recover pawn
-	std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager](component::DayLightManager* dayManager, component::SelfEntity* ent) {
+	std::function<void(component::DayLightManager*, component::SelfEntity*)> changeTime = [manager, time](component::DayLightManager* dayManager, component::SelfEntity* ent) {
 		using namespace component;
 
 		PlayerController* ctrler = nullptr;
@@ -63,13 +63,16 @@ void Scene::ChangeDayToNight()
 		ctrler->Possess(changeingPawn);
 
 		// end event
-		std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager]() {
+			ctrler->Possess(controlledPawn); 
+			dayManager->SetDayCycle(240.0f);
+			};
 
 		TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
 		changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
-		changeTime->AddKeyFrame(22.0f, 1);
-		changeTime->AddKeyFrame(22.0f, 2);
-		changeTime->SetEndEvent(returnToPawn);
+		changeTime->AddKeyFrame(time, 1);
+		changeTime->AddKeyFrame(time, 2);
+		changeTime->SetEndEvent(returnToPawnAndSetDayCycle);
 
 		manager->AddTimeLine(ent->GetEntity(), changeTime);
 		};
@@ -843,7 +846,9 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pChangeDayOrNight:
 	{
-		ChangeDayToNight();
+		sc_packet_change_day_or_night* buf = reinterpret_cast<sc_packet_change_day_or_night*>(packet);
+		float time = buf->getType();
+		ChangeDayToNight(time);
 		break;
 	}
 	case pGetItem:
