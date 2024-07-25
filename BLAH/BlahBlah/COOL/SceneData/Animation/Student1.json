@@ -4,7 +4,7 @@
 		"Name": "Student/Student_Breathing_Idle"
 	},
 
-	"Surprise": {
+	"Attack": {
 		"Loop": false,
 		"Name": "Student/Student_Surprised"
 	},

@@ -156,25 +156,14 @@ namespace component {
 			return *sp >= 30.0f;
 			};
 
-		COND hit = [](void* data) {
-			return GetAsyncKeyState(VK_END) & 0x8000;
-			};
-
-		COND falldown = [ctrl](void* data) {
-			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 2.0f;
-			};
-
-		COND getup = [ctrl](void* data) {
+		COND end_play = [ctrl](void* data) {
 			return ctrl->GetCurrentPlayTime() - ctrl->GetCurrentPlayEndTime() > 0.0f;
 			};
 
 		// insert transition (graph)
 		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::WALK, walk);
-		ctrl->InsertCondition(ANIMATION_STATE::IDLE, ANIMATION_STATE::GETTING_HIT, hit);
 		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::IDLE, idle);
-		ctrl->InsertCondition(ANIMATION_STATE::WALK, ANIMATION_STATE::GETTING_HIT, hit);
-		ctrl->InsertCondition(ANIMATION_STATE::GETTING_HIT, ANIMATION_STATE::GETUP, falldown);
-		ctrl->InsertCondition(ANIMATION_STATE::GETUP, ANIMATION_STATE::IDLE, getup);
+		ctrl->InsertCondition(ANIMATION_STATE::ATTACK, ANIMATION_STATE::IDLE, end_play);
 
 		// set start animation
 		//ctrl->ChangeAnimationTo(ANIMATION_STATE::IDLE);

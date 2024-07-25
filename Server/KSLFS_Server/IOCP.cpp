@@ -2,12 +2,17 @@
 #include "Mesh.h"
 #include "aStar.h"
 #include "IOCP.h"
+#include <random>
 std::vector<Mesh*> m_vMeshes;
 std::unordered_map<int, NODE*> g_um_graph;
 std::unordered_map<unsigned int, SESSION> login_players;
 std::priority_queue<npc_info> g_npc_timer;
 std::mutex g_mutex_npc_timer;
 std::mutex g_mutex_login_players;
+
+std::random_device rd;
+std::default_random_engine dre(rd());
+std::uniform_int_distribution <> uid(0, 88);
 
 void IOCP_SERVER_MANAGER::start()
 {
@@ -262,7 +267,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			++currentRoom;
 			
 			g_mutex_npc_timer.lock();
-			for (int npc_id = 1; npc_id < STUDENT_SIZE + 2; ++npc_id)
+			for (int npc_id = 2; npc_id < STUDENT_SIZE + 2; ++npc_id)
 			{
 				g_npc_timer.emplace(currentRoom - 1, npc_id, std::chrono::milliseconds(0));
 			}
@@ -893,7 +898,7 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 		std::cout << "잘못된 NPC아이디 입니다." << std::endl;
 	}
 	using namespace std::chrono;
-	if (this->begin_time.time_since_epoch() > nanoseconds(1) && this->begin_time + seconds(10) < steady_clock::now())
+	if (this->begin_time.time_since_epoch() > nanoseconds(1) && this->begin_time + minutes(3) < steady_clock::now())
 	{
 		sc_packet_change_day_or_night change(22);
 		for (auto& p : player)
@@ -908,7 +913,14 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 					p.sock = NULL;
 			}
 		}
-		begin_time = steady_clock::now() + hours(1);			// 수정해야함.
+		begin_time = steady_clock::now() + hours(24);			// 타임오버 시간으로 수정해야함. 
+		g_mutex_npc_timer.lock();
+		while (!g_npc_timer.empty())
+		{
+			g_npc_timer.pop();
+		}
+		g_npc_timer.emplace(this->GameNum, 1, std::chrono::milliseconds(0));
+		g_mutex_npc_timer.unlock();
 	}
 }
 
@@ -941,7 +953,7 @@ NPC::NPC()
 	DirectX::XMFLOAT3 basic_obb_extents = basic_extents;
 	DirectX::XMFLOAT4 basic_obb_orients = { 0,0,0,1 };
 	obb = DirectX::BoundingOrientedBox(basic_obb_position, basic_obb_extents, basic_obb_orients);
-	movement_speed = 5;
+	movement_speed = 1;
 	MakeGraph(astar_graph);
 }
 
@@ -1012,7 +1024,8 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 				while (true)
 				{
 					reset_graph();
-					int des = rand() % astar_graph.size();
+					//int des = rand() % astar_graph.size();
+					int des = uid(dre);
 					//std::cout << des << "로 목적지 설정" << std::endl;
 					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
 					this->path = aStarSearch(position, destination, astar_graph);
@@ -1050,6 +1063,39 @@ void NPC::student_state_machine(Player* p)
 
 	DirectX::XMVECTOR student_location = DirectX::XMLoadFloat3(&this->position);
 	this->obb.Transform(now_obb, 1, student_rotation, student_location);
+
+	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
+	float now_floor = 0;
+	auto map_floors_cnt = map_floors.size();
+	auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
+	bool b_stair = false;
+	for (int i = 0; i < 4; ++i)
+	{	// 계단의 방향 +Z, -Z, +X, -X
+		if (stairs[i].stair_collision(now_obb, this->position.y, i))
+		{
+			b_stair = true;
+			break;
+		}
+
+	}
+
+	if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
+	{
+		for (int i = 0; i < map_floors_cnt - 1; ++i)
+		{
+			auto& floor = map_floors[i];
+			if (floor.floor_collision(now_obb, now_floor, this->position.y))
+				break;
+		}
+		//std::cout << "npc: " << now_floor << std::endl;
+		if (now_floor <= 5.5)
+		{
+			//if (m_floor != now_floor)
+			//	std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
+			m_floor = now_floor;
+		}
+	}
+
 	// 다른 캐릭터와 충돌했나?
 	bool hit = false;
 	DirectX::BoundingOrientedBox player_obb;
@@ -1120,7 +1166,8 @@ void NPC::student_state_machine(Player* p)
 				while (true)
 				{
 					reset_graph();
-					int des = rand() % astar_graph.size();
+					//int des = rand() % astar_graph.size();
+					int des = uid(dre);
 					std::cout << "student[" << this->id << "] " << des << "로 목적지 설정" << std::endl;
 					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
 					this->path = aStarSearch(position, destination, astar_graph);
@@ -1179,18 +1226,19 @@ bool NPC::can_see(Player& p, bool& floor_gap)
 	float npc_floor = m_floor;
 	if (p.m_floor != m_floor)
 	{
-		if (p.m_floor - m_floor == 0.5)			// 플레이어가 .5층에 있고 npc가 온전한 층에 있을때
-		{
-			floor_gap = true;
-		}
-		else if (m_floor - p.m_floor == 0.5)	// 플레이어가 온전한 층에 있고, npc가 .5층에 있을때
-		{
-			npc_floor = p.m_floor;
-			floor_gap = true;
-		}
-		else {
-			return false;
-		}
+		//if (p.m_floor - m_floor == 0.5)			// 플레이어가 .5층에 있고 npc가 온전한 층에 있을때
+		//{
+		//	floor_gap = true;
+		//}
+		//else if (m_floor - p.m_floor == 0.5)	// 플레이어가 온전한 층에 있고, npc가 .5층에 있을때
+		//{
+		//	npc_floor = p.m_floor;
+		//	floor_gap = true;
+		//}
+		//else {
+		//	return false;
+		//}
+		return false;
 	}
 	else if ((m_floor - (int)m_floor) == 0.5)			// 계단 사이 .5층에 존재
 	{
@@ -1225,9 +1273,14 @@ bool NPC::can_hear(const DirectX::XMFLOAT3& sound_pos)
 	const unsigned short can_hear_distance = 2500;
 	if (distance(sound_pos) < can_hear_distance * can_hear_distance)		// 플레이어가 소리를 내고 있으며, 플레이어와의 거리가 들을 수 있는 거리 이내이면
 	{
+		while (true)
+		{
 		reset_path();
 		reset_graph();
 		this->path = aStarSearch(position, sound_pos, astar_graph);
+		if (this->path != nullptr)
+			break;
+		}
 		compare_length_next_path(path, this->position, sound_pos);
 		if (nullptr == path)
 			state = 0;
@@ -1255,7 +1308,7 @@ bool NPC::compare_position(DirectX::XMFLOAT3& pos)
 			{
 				if (state == 1)
 				{
-					std::cout <<"NPC["<<this->id<<"] 목적지 도착" << std::endl;
+					//std::cout <<"NPC["<<this->id<<"] 목적지 도착" << std::endl;
 					return true;
 				}
 			}
@@ -1279,9 +1332,14 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				//std::cout << n << "P 발견" << std::endl;
 				if (floor_gap)			// 계단을 거쳐 가야함으로 astar 사용
 				{
-					reset_path();
-					reset_graph();
-					this->path = aStarSearch(position, p[n].position, astar_graph);
+					while (true)
+					{
+						reset_path();
+						reset_graph();
+						this->path = aStarSearch(position, p[n].position, astar_graph);
+						if (path != nullptr)
+							break;
+					}
 					compare_length_next_path(path, this->position, p[n].position);
 					if (this->path == nullptr)
 						state = 0;
@@ -1292,9 +1350,14 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				}
 				else
 				{
-					reset_path();
-					reset_graph();
-					this->path = aStarSearch(position, p[n].position, astar_graph);
+					while (true)
+					{
+						reset_path();
+						reset_graph();
+						this->path = aStarSearch(position, p[n].position, astar_graph);
+						if (path != nullptr)
+							break;
+					}
 					compare_length_next_path(path, this->position, p[n].position);
 					if (this->path == nullptr)
 						state = 0;
@@ -1393,14 +1456,17 @@ const short NPC::find_near_player(Player*& players)
 
 void NPC::reset_graph()
 {
+	graph_lock.lock();
 	for (auto& graph : astar_graph)
 	{
 		graph.second->init();
 	}
+	graph_lock.unlock();
 }
 
 void NPC::reset_path()
 {
+	path_lock.lock();
 	PATH* next = this->path;
 	while (this->path != nullptr)
 	{
@@ -1408,4 +1474,5 @@ void NPC::reset_path()
 		delete this->path;
 		this->path = next;
 	}
+	path_lock.unlock();
 }

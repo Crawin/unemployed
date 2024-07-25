@@ -1,7 +1,6 @@
 #pragma once
 constexpr short PORT = 9000;
 constexpr int BUFSIZE = 1024;
-constexpr int STUDENT_SIZE = 1;
 
 class packet_base;
 class sc_packet_position;
@@ -343,11 +342,13 @@ public:
 	std::chrono::steady_clock::time_point arrive_time;
 	std::chrono::steady_clock::time_point attacked_time;
 	PATH* path = nullptr;
+	std::mutex path_lock;
 	DirectX::BoundingOrientedBox obb;
 	float movement_speed;
 	NODE* goalNode = nullptr;
 
 	std::unordered_map<int, NODE*> astar_graph;
+	std::mutex graph_lock;
 public:
 	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
@@ -383,13 +384,14 @@ public:
 		// 가드 초기위치 설정
 		guard.position = DirectX::XMFLOAT3(3160, 0, -400);
 		guard.id = 1;
+		guard.movement_speed = 3;
 		
 		// npc 초기위치를 어떻게 설정할깝쇼
 		// 노가다로 설정해둘까
 		for (int i = 0; i < STUDENT_SIZE; ++i)
 		{
 			students[i].id = i+2;
-			students[i].position = DirectX::XMFLOAT3(500.0, 0.0, 1000.0);
+			students[i].position = DirectX::XMFLOAT3(500.0 + 100*i, 0.0, 1000.0);
 			students[i].movement_speed = 1;
 		}
 	}

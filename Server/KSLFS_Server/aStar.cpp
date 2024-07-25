@@ -30,7 +30,7 @@ int find_near_NODE(const DirectX::XMFLOAT3& pos, std::unordered_map<int,NODE*>& 
 {
 	std::vector<std::pair<int, float>> nodes;
 	for (auto& node : astar_graph) {
-		auto a = (node.second->pos.x - pos.x) * (node.second->pos.x - pos.x) + (node.second->pos.z - pos.z) * (node.second->pos.z - pos.z) + (node.second->pos.y - pos.y) * (node.second->pos.y - pos.y);
+		auto a = (node.second->pos.x - pos.x) * (node.second->pos.x - pos.x) + (node.second->pos.z - pos.z) * (node.second->pos.z - pos.z) + ((node.second->pos.y - pos.y) * (node.second->pos.y - pos.y)*25);
 		nodes.emplace_back(node.first, a);
 	}
 

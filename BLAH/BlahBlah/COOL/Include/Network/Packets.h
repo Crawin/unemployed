@@ -10,6 +10,7 @@
 	xmfloat3 pos
 	xmfloat3 rot
 */
+constexpr int STUDENT_SIZE = 5;
 
 enum PACKET_TYPE
 {
@@ -26,7 +27,8 @@ enum PACKET_TYPE
 	pChangeDayOrNight,
 	pGetItem,
 	pKeyInput,
-	pSound
+	pSound,
+	pBusted
 };
 enum class ANIMATION_STATE;
 enum class GAME_INPUT;
@@ -134,6 +136,7 @@ public:
 		type = pAttack;
 		size = sizeof(sc_packet_npc_attack);
 	}
+	const unsigned int getID() { return npc_id; }
 };
 
 class sc_packet_anim_type : public packet_base
@@ -199,6 +202,19 @@ public:
 	const SOCKET getPlayer() { return player; }
 	const KEY_STATE getKeyState() { return static_cast<KEY_STATE>(key_state); }
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
+};
+
+class sc_packet_busted : public packet_base
+{
+	char time_over;		// 0: 체포 , 1: 타임오버
+public:
+	sc_packet_busted(const char& time)
+	{
+		size = sizeof(sc_packet_busted);
+		type = pBusted;
+		this->time_over = time;
+	}
+	const char getTimeOver() { return time_over; }
 };
 
 //--------------------------------------------------------------------------------------------------------------------

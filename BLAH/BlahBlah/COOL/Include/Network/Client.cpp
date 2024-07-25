@@ -255,6 +255,7 @@ void process_packet(packet_base*& base)
 	case pChangeDayOrNight:
 	case pGetItem:
 	case pKeyInput:
+	case pAttack:
 		client.getSceneManager()->ProcessPacket(base);
 		break;
 	case pLOGIN:									// LOGIN
@@ -335,11 +336,6 @@ void process_packet(packet_base*& base)
 		sc_packet_logout* buf = reinterpret_cast<sc_packet_logout*>(base);
 		client.characters.erase(buf->player);
 		client.logout_opponent();
-	}
-		break;
-	case pAttack:
-	{
-		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(base);
 	}
 		break;
 	}

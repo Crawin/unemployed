@@ -872,6 +872,27 @@ void Scene::ProcessPacket(packet_base* packet)
 		m_ECSManager->Execute(func);
 		break;
 	}
+	case pAttack:
+	{
+		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(packet);
+		std::function<void(component::AnimationController*, component::Server*)> func = [manager, buf](component::AnimationController* ac,component::Server* server) {
+			auto id = buf->getID();
+			if (server->getID() == id)
+			{
+				if (id == 1)
+				{
+					// 가드
+				}
+				else if (id < STUDENT_SIZE + 2)
+				{
+					// 학생
+					ac->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+				}
+			}
+			};
+		m_ECSManager->Execute(func);
+		break;
+	}
 	}
 }
 
