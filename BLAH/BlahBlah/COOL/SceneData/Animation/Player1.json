@@ -50,7 +50,8 @@
 	"Attack":
 	{
 		"Loop": false,
-		"Name": "Player/Player_Attack"
+		"Name": "Player/Player_Attack",
+		"UpperOnly": true
 	},
 
 	"Blended_Moving_State":

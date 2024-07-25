@@ -44,6 +44,9 @@ cbuffer MaterialAnimExtra : register(b2)
 
 	float anim2_PlayTime;
 	int anim2_AnimationMode;
+
+	int animation1_AffactUpper;
+	int animation1_AffactUpperIndex;
 };
 
 // animation mode: single anim, blend1dSpace, blend2dspace
@@ -109,7 +112,7 @@ VS_OUTPUT vs(VS_INPUT input)
 			break;
 		}
 
-		if (animationBlendWeight > 0) {
+		if (animationBlendWeight > 0 || animation1_AffactUpper >= 0) {
 			matrix anim2 = 0;
 			switch(anim2_AnimationMode)
 			{
@@ -128,7 +131,15 @@ VS_OUTPUT vs(VS_INPUT input)
 				break;
 			}
 
-			boneToWorld += input.boneWeights[i] * lerp(anim1, anim2, animationBlendWeight);
+			if (animation1_AffactUpper > 0) {
+				//boneToWorld += input.boneWeights[i] * anim1;
+				if (animation1_AffactUpperIndex >= boneIdx)
+					boneToWorld += input.boneWeights[i] * anim1;
+				else
+					boneToWorld += input.boneWeights[i] * anim2;
+			}
+			else
+				boneToWorld += input.boneWeights[i] * lerp(anim1, anim2, animationBlendWeight);
 		}
 		else
 			boneToWorld += input.boneWeights[i] * anim1;	
