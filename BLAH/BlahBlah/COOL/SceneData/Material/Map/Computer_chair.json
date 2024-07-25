@@ -1,0 +1,9 @@
+{
+	"name": "Computer_chair",
+	"BaseColor": "Map/InteriorTexture/Computer_chair",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

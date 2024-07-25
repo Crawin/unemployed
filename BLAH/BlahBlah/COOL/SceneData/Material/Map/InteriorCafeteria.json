@@ -1,0 +1,9 @@
+{
+	"name": "Cafeteria",
+	"BaseColor": "Map/WIndows/Windows_Color",
+	"Roughness": "Map/WIndows/Facade005_4K-JPG_Roughness",
+	"Metalic": "Map/WIndows/Facade005_4K-JPG_Metalness",
+	"AO": "AllmostWhite",
+	"Normal": "Map/WIndows/Facade005_4K-JPG_NormalDX",
+	"Shader": "TestMeshDiffered"
+}

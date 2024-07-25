@@ -1,0 +1,9 @@
+{
+	"name": "Kitchen_Chair_B",
+	"BaseColor": "Map/InteriorTexture/Kitchen_Chair_B",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
