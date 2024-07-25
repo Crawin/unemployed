@@ -250,6 +250,13 @@ namespace ECSsystem {
 		void SyncParticle();
 	};
 	
+	/////////////////////////////////////////////////////////
+	// Particle Managing
+	// 
+	class ParticleEmitting : public System {
+	public:
+		virtual void Update(ECSManager* manager, float deltaTime);
+	};
 }
 
 

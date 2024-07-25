@@ -872,4 +872,30 @@ namespace component {
 		PARTICLE_TYPES GetType() const { return m_ParticleType; }
 	};
 
+	class ParticleEmitter : public ComponentBase<ParticleEmitter> {
+		bool m_Active = false;
+		PARTICLE_TYPES m_ParticleType;
+		
+		int m_EmitteMount = 1;
+		float m_EmittePerSec = 10.0f;
+
+		float m_TimeElapsed = 0.0f;
+		float m_RandomMount = 10.0f;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+		virtual void ShowYourself() const {}
+
+		void SetActive(bool state) { m_Active = state; }
+		bool IsActive() const { return m_Active; }
+
+		// return true when should emitte
+		bool Tick(float deltaTime);
+
+		PARTICLE_TYPES GetType() const { return m_ParticleType; }
+		int GetEmitteMount() const { return m_EmitteMount; }
+		float GetRandom() const { return m_RandomMount; }
+	};
+
 }

@@ -16,6 +16,22 @@
 				"Rotate" : [0.0, 0.0, 0.0],
 				"Scale" : [0.0, 0.0, 0.0]
 			}
+		},
+		{
+			"Name" : "WaterParticle",
+			"Particle":
+			{
+				"Particle": "Water",
+				"MaxParticle": 500,
+				"DefaultLifeTime": 1.0,
+				"Size": [1.0, 3.0]
+			},
+			"Transform" : 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate" : [0.0, 0.0, 0.0],
+				"Scale" : [0.0, 0.0, 0.0]
+			}
 		}
 
 	],

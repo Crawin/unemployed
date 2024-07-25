@@ -66,8 +66,10 @@ namespace component {
 
 	void AnimationController::ChangeAnimationTo(ANIMATION_STATE animSet)
 	{
-		m_CurrentState = animSet;
-		m_AnimationPlayer->ChangeToAnimation(animSet);
+		if (m_CurrentState != animSet) {
+			m_CurrentState = animSet;
+			m_AnimationPlayer->ChangeToAnimation(animSet);
+		}
 	}
 
 	float AnimationController::GetCurrentPlayTime() const
@@ -1100,6 +1102,34 @@ namespace component {
 		//commandList->IASetPrimitiveTopology()
 		commandList->IASetVertexBuffers(0, 1, &m_ParticleBufferView);
 		commandList->DrawInstanced(m_ParticleDatas.size(), 1, 0, 0);
+	}
+
+	void ParticleEmitter::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value pe = v["ParticleEmitter"];
+
+		m_ParticleType = ConvertStringToParticleType(pe["Type"].asString());
+
+		m_EmitteMount = pe["EmitteMount"].asInt();
+		m_EmittePerSec = pe["EmittePerSec"].asFloat();
+		m_RandomMount = pe["RandomMount"].asFloat();
+	}
+
+	void ParticleEmitter::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+	}
+
+	bool ParticleEmitter::Tick(float deltaTime)
+	{
+		m_TimeElapsed += deltaTime;
+
+		if (1.0f / m_EmittePerSec <= m_TimeElapsed) {
+			//m_TimeElapsed -= m_EmittePerSec / 60.0f;
+			m_TimeElapsed = 0.0f;
+			return true;
+		}
+
+		return false;
 	}
 
 }

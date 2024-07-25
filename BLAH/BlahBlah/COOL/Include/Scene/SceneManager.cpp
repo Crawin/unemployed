@@ -35,6 +35,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::PlayerController, "PlayerController");
 	REGISTER_COMPONENT(component::AI, "AI");
 	REGISTER_COMPONENT(component::Particle, "Particle");
+	REGISTER_COMPONENT(component::ParticleEmitter, "ParticleEmitter");
 
 	// temp
 	REGISTER_COMPONENT(component::TestInput, "TestInput");

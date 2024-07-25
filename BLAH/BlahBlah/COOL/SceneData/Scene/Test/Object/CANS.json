@@ -814,6 +814,13 @@
 				"BakeTime": 2.0,
 				"ThrowSpeed": 70.0
 			},
+			"ParticleEmitter":{
+				"Active": false,
+				"Type": "Water",
+				"EmitteMount": 2,
+				"EmittePerSec": 100.0,
+				"RandomMount": 10.0
+			},
 			"Physics": 
 			{
 				"MaxVelocity": 20000.0,
@@ -985,6 +992,13 @@
 			"Throwable": {
 				"BakeTime": 2.0,
 				"ThrowSpeed": 70.0
+			},
+			"ParticleEmitter":{
+				"Active": false,
+				"Type": "Water",
+				"EmitteMount": 2,
+				"EmittePerSec": 100.0,
+				"RandomMount": 10.0
 			},
 			"Physics": 
 			{

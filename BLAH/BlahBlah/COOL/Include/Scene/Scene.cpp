@@ -130,7 +130,8 @@ bool Scene::AddSystem()
 	m_ECSManager->InsertSystem(new ECSsystem::ChangeAnimationTest);
 	m_ECSManager->InsertSystem(new ECSsystem::HandleInteraction);
 	m_ECSManager->InsertSystem(new ECSsystem::HandleUIComponent);
-
+	m_ECSManager->InsertSystem(new ECSsystem::ParticleEmitting);
+	
 	// Updates on pre render, use light, renderer
 	m_ECSManager->InsertPreRenderSystem(new ECSsystem::DayLight);
 	m_ECSManager->InsertPreRenderSystem(new ECSsystem::SyncWithTransform);

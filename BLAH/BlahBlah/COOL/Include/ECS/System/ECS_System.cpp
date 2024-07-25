@@ -167,7 +167,7 @@ namespace ECSsystem {
 		manager->Execute(func2);
 		manager->Execute(func3);
 		manager->Execute(func4);
-		manager->Execute(sendClientTalk);
+		//manager->Execute(sendClientTalk);
 
 	}
 
@@ -1097,5 +1097,18 @@ namespace ECSsystem {
 	{
 		for (auto particle : m_Particles)
 			particle.second->SyncParticle();
+	}
+
+	void ParticleEmitting::Update(ECSManager* manager, float deltaTime)
+	{
+		std::function<void(component::ParticleEmitter*, component::Transform*, component::Physics*)> func = [manager, deltaTime]
+		(component::ParticleEmitter* pe, component::Transform* tr, component::Physics* py) {
+			if (pe->IsActive() == false) return;
+
+			if (pe->Tick(deltaTime)) 
+				manager->AddParticle(pe->GetType(), tr->GetWorldPosition(), py->GetVelocity(), pe->GetEmitteMount(), pe->GetRandom());
+			};
+
+		manager->Execute(func);
 	}
 }

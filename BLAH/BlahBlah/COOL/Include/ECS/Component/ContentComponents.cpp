@@ -895,10 +895,23 @@ namespace component {
 			// set collider on
 			dc->SetActive(true);
 
+			// if particle emitter have
+			ParticleEmitter* pe = manager->GetComponent<ParticleEmitter>(selfEntity);
+			if (pe != nullptr) {
+				pe->SetActive(true);
+			}
+
 			// set collide event
 			EventFunction cctvHitEvent = [manager](Entity* self, Entity* other) {
 				DynamicCollider* dc = manager->GetComponent<DynamicCollider>(self);
 				Physics* py = manager->GetComponent<Physics>(self);
+
+				// if particle emitter have
+				ParticleEmitter* pe = manager->GetComponent<ParticleEmitter>(self);
+				if (pe != nullptr) {
+					pe->SetActive(false);
+					DebugPrint("ON");
+				}
 
 				// set velocity calculate false
 				py->SetCalculateState(false);

@@ -1,0 +1,9 @@
+{
+	"name": "Water",
+	"BaseColor": "Particle/Water",
+	"Roughness": "Gray",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "_Particle"
+}
