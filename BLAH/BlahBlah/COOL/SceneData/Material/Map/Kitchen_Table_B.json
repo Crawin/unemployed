@@ -1,0 +1,9 @@
+{
+	"name": "Kitchen_Table_B",
+	"BaseColor": "Map/InteriorTexture/Kitchen_Table_B",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

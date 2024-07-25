@@ -1,0 +1,9 @@
+{
+	"name": "couch_office",
+	"BaseColor": "Map/InteriorTexture/couch_office",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

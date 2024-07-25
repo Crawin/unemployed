@@ -1,0 +1,9 @@
+{
+	"name": "InteriorDoor",
+	"BaseColor": "Map/Wood03/Wood03_4K_BaseColor",
+	"Roughness": "Map/Wood03/Wood03_4K_Roughness",
+	"Metalic": "Black",
+	"AO": "Map/InteriorDoor/Door_14_AO",
+	"Normal": "Map/InteriorDoor/Door_14_Normal",
+	"Shader": "TestMeshDiffered"
+}

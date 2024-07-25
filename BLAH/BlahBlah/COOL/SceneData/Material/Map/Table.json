@@ -1,0 +1,9 @@
+{
+	"name": "Table",
+	"BaseColor": "Map/InteriorTexture/Table",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

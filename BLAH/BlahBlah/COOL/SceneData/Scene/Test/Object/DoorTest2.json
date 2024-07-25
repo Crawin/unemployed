@@ -3,59 +3,63 @@
 
 	"Transform": 
 	{
-		"Position": [700.0, 0.0, 0.0],
+		"Position": [700.0, 110.0, 0.0],
 		"Rotate": [0.0, 180.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
 
 	"Renderer":
 	{
-		"Mesh": "Door.Door_1",
-		"Material": "Object/Door"
-	},
-
-	"Door": 
-	{
-		"MaxAngle": 120.0,
-		"RotateAxis": 1,
-		"Locked": true,
-		"Answer": 1234,
-		"Game": 1,
-		"FailCount":3
+		"Mesh": "Door.Frame",
+		"Material": "Object/DoorFrame"
 	},
 
 	"Collider": 
 	{
 		"Static": true,
-		"IsTrigger": true,
-		"AutoMesh": false,
-		"Center": [-50.0, 120, 0],
-		"Extent": [50.0, 100, 50]
+		"AutoMesh": true
 	},
 
-	"Interaction": {},
+	
 
 	"Children":[
 		{
 			"Name": "FrameRender",
 			"Transform": 
 			{
-				"Position": [-50.0,
-				107.82761383056641,
+				"Position": [50.0,
+				-107.82761383056641,
 				-7.62939453125e-06],
 				"Rotate": [0.0, 0.0, 0.0],
 				"Scale": [1.0, 1.0, 1.0]
 			},
 			"Renderer":
 			{
-				"Mesh": "Door.Frame",
-				"Material": "Object/DoorFrame"
+				"Mesh": "Door.Door_1",
+				"Material": "Object/Door"
 			},
+
+			"Door": 
+			{
+				"MaxAngle": 120.0,
+				"RotateAxis": 1,
+				"Locked": true,
+				"Answer": 1234,
+				"Game": 1,
+				"FailCount":3
+			},
+			
 			"Collider": 
 			{
 				"Static": true,
-				"AutoMesh": true
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [-50.0, 120, 0],
+				"Extent": [50.0, 100, 50]
 			},
+
+			"Interaction": {},
+
 			"Children" : 
 			[
 				{
@@ -69,8 +73,8 @@
 					{
 						"Position" : 
 						[
-							50.0,
 							0.0,
+							120.0,
 							0.0
 						],
 						"Rotate" : 
