@@ -444,8 +444,9 @@ bool ResourceManager::LoadLateInitAnimation(ComPtr<ID3D12GraphicsCommandList> co
 
 				// set bool state of animation
 				m_Animations[anim]->m_Loop = root[stateString]["Loop"].asBool();
-
-				player->m_AnimationMap[state] = new AnimationTrackSingle(m_Animations[anim]);
+				AnimationTrackSingle* newTrack = new AnimationTrackSingle(m_Animations[anim]);
+				newTrack->SetAffactUpper(root[stateString]["UpperOnly"].asBool());
+				player->m_AnimationMap[state] = newTrack;
 			}
 			}
 

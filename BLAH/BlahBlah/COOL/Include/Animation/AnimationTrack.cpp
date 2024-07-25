@@ -53,6 +53,21 @@ void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> co
 	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &animIndex, static_cast<int>(ANIM_ROOTCONST::INDICES));
 	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &animPlayTime, static_cast<int>(ANIM_ROOTCONST::PLAYTIME));
 	commandList->SetGraphicsRoot32BitConstants(targetParameter, 1, &m_Mode, static_cast<int>(ANIM_ROOTCONST::MODE));
+
+	if (isCurrent) {
+		int extra = static_cast<int>(ROOT_SIGNATURE_IDX::ANIMATION_EXTRA);
+		int goTrue = 0;
+
+		if (m_AffectOnlyUpper) {
+			goTrue = m_AffectIndexTo;
+			DebugPrint("GGG");
+		}
+
+		commandList->SetGraphicsRoot32BitConstants(extra, 1, &goTrue, static_cast<int>(ANIM_ROOTCONST::GO_AFFECT_UPPER));
+		commandList->SetGraphicsRoot32BitConstants(extra, 1, &goTrue, static_cast<int>(ANIM_ROOTCONST::AFFECT_INDEX));
+
+
+	}
 }
 
 XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const

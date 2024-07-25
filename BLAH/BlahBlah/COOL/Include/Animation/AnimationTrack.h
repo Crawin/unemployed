@@ -9,6 +9,8 @@ class AnimationTrackBase
 protected:
 	std::function<void(float, void*)> m_UpdateFunction;
 
+	bool m_AffectOnlyUpper = false;
+
 	int m_Mode = -1;
 
 	float m_CurPlayTime = 0.0f;
@@ -26,6 +28,9 @@ public:
 	virtual void ResetAnimationTrack() = 0;
 	virtual void SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isCurrent) = 0;
 	virtual XMMATRIX GetAnimatedBoneMat(int boneIdx) const = 0;
+
+	bool GetAffectUpperState() const { return m_AffectOnlyUpper; }
+	void SetAffactUpper(bool state) { m_AffectOnlyUpper = state; }
 };
 
 /////////////////////////////////////////////////////////
@@ -33,6 +38,8 @@ public:
 // single animation
 class AnimationTrackSingle : public AnimationTrackBase {
 	std::shared_ptr<Animation> m_Animation;
+
+	int m_AffectIndexTo = 48;
 
 public:
 	AnimationTrackSingle(std::shared_ptr<Animation> newAnim);
