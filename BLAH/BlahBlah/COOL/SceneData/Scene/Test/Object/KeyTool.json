@@ -9,7 +9,10 @@
 				"Mesh" : "crowbar.crowbar"
 			},
 			
-			"Holdable": {},
+			"Holdable": {
+				"HoldableID": 6
+
+			},
 
 			"KeyTool": {
 				"SoundMakingMinimum": 3

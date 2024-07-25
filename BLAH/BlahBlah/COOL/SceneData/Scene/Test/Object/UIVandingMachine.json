@@ -1,0 +1,81 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UIVandingMachine": {},
+
+	"Children": 
+	[
+		{	
+			"Name": "Exit",
+
+			"UITransform":
+			{
+				"Center": [1200, 650],
+				"Size": [70, 70]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIExit",
+				"IsSprite": false
+			}
+		},
+
+		{	
+			"Name": "Drink_00",
+
+			"UITransform":
+			{
+				"Center": [340, 360],
+				"Size": [200, 200]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UICanCoca",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "Drink_01",
+
+			"UITransform":
+			{
+				"Center": [640, 360],
+				"Size": [200, 200]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UICanMountaionDew",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "Drink_02",
+
+			"UITransform":
+			{
+				"Center": [940, 360],
+				"Size": [200, 200]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UICanPepsi",
+				"IsSprite": false
+			}
+		}
+	]
+
+}

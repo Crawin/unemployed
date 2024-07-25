@@ -1,0 +1,9 @@
+{
+	"name": "MDEW",
+	"BaseColor": "UI/MDEW",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

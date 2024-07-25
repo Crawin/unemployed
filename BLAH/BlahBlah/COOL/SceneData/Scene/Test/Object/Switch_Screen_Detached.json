@@ -67,7 +67,9 @@
 				}
 			],
 			"Name" : "Switch_Screen_Detached",
-			"Holdable" : {},
+			"Holdable" : {
+				"HoldableID": 5
+			},
 			"RCController": 
 			{
 				"Target": "Cybertruck_RC"

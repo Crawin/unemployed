@@ -1,0 +1,9 @@
+{
+	"name": "UICanCoca",
+	"BaseColor": "UI/COKA",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}
