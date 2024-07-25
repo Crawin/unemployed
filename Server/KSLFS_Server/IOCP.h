@@ -254,6 +254,28 @@ public:
 				}
 			}
 				break;
+			case pSound:
+			{
+				auto sound = reinterpret_cast<sc_packet_busted*>(base);
+				auto sendOver = new EXP_OVER(sound);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
+			case pBusted:
+			{
+				auto busted = reinterpret_cast<sc_packet_busted*>(base);
+				auto sendOver = new EXP_OVER(busted);
+				sendOver->c_op = C_SEND;
+				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
+				if (0 != res) {
+					print_error("WSASend", WSAGetLastError());
+				}
+			}
+				break;
 		}
 	}
 

@@ -1,9 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <set>
 #include <queue>
 #include <DirectXMath.h>
 #include "aStar.h"
+std::set<short> StairNodeNums = {
+	13,14,15,
+	33,34,35,
+	48,49,50,
+	52,62,63,
+	76,77,78
+};
 
 int find_near_NODE(DirectX::XMFLOAT3& pos)
 {
@@ -169,6 +177,8 @@ void compare_length_next_path(PATH*& path, const DirectX::XMFLOAT3 NPC, const Di
 	float goal_npc_length = (NPC.x - goal.x) * (NPC.x - goal.x) + (NPC.z - goal.z) * (NPC.z - goal.z);
 	while (goal_npc_length < (path->pos.x - goal.x) * (path->pos.x - goal.x) + (path->pos.z - goal.z) * (path->pos.z - goal.z))	// 목적지 - npc 까지의 거리보다, 목적지 - 시작노드 까지의 거리다 더 길다 == npc가 시작노드로 되돌아 가야한다.
 	{
+		if (StairNodeNums.find(path->id) != StairNodeNums.end())	// 계단노드면 무조건 거쳐가도록 탈출
+			break;
 		PATH* next = path->next;
 		delete path;
 		path = next;

@@ -3,6 +3,7 @@
 #include "aStar.h"
 #include "IOCP.h"
 #include <random>
+#include <set>
 std::vector<Mesh*> m_vMeshes;
 std::unordered_map<int, NODE*> g_um_graph;
 std::unordered_map<unsigned int, SESSION> login_players;
@@ -13,6 +14,8 @@ std::mutex g_mutex_login_players;
 std::random_device rd;
 std::default_random_engine dre(rd());
 std::uniform_int_distribution <> uid(0, 88);
+
+extern std::set<short> StairNodeNums;
 
 void IOCP_SERVER_MANAGER::start()
 {
@@ -451,7 +454,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			auto gameNum = sent_player->second.getGameNum();
 			auto InGamePlayers = Games[gameNum].getPlayers();
 			
-			Games[gameNum].can_hear(packet->getPosition());
+			if (detail.m_bNPC)
+				Games[gameNum].can_hear(packet->getPosition());
 
 		}
 		break;
@@ -1043,6 +1047,34 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 
 	if(state == 1)
 		move();
+
+	// 다른 캐릭터와 충돌했나?
+	bool hit = false;
+	DirectX::BoundingOrientedBox player_obb;
+	float player_pitch;
+	float player_yaw;
+	float player_roll;
+	DirectX::XMVECTOR player_rotation;
+	DirectX::XMVECTOR player_location;
+	for (int i = 0; i < 2; ++i)
+	{
+		if (p[i].sock == NULL)
+			continue;
+		player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
+		player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
+		player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
+		player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
+		player_location = DirectX::XMLoadFloat3(&p[i].position);
+		p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
+		hit = now_obb.Intersects(player_obb);
+		if (hit)
+		{
+			sc_packet_busted busted(0);
+			login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
+			std::cout << i << " 와 충돌" << std::endl;
+			break;
+		}
+	}
 
 	bool t = true;
 	while (true)

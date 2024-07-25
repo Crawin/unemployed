@@ -2,6 +2,7 @@
 class PATH
 {
 public:
+	short id;
 	DirectX::XMFLOAT3 pos;
 	PATH* next = nullptr;
 };
@@ -56,6 +57,7 @@ public:
 			PATH* newpath = new PATH;
 			newpath->pos = node->pos;
 			newpath->next = path;
+			newpath->id = node->id;
 			path = newpath;
 			std::cout << "<= " << node->id;
 			node = node->parent;
