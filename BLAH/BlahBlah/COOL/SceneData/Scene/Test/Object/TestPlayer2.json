@@ -32,7 +32,9 @@
 		"Slot_0": "",
 		"Slot_1": "CCTV_01",
 		"Slot_2": "Laptop_ScreenDetached",
-		"Slot_3": "Switch_Screen_Detached"
+		"Slot_3": "Switch_Screen_Detached",
+		"Slot_4": "",
+		"Slot_5": ""
 	},
 
 	"Transform": 

@@ -1712,7 +1712,9 @@ namespace component {
 				// Exit
 				if (name == "Exit") {
 					Button* button = manager->GetComponent<Button>(child);
-					ButtonEventFunction exit = [canvas](Entity* ent) { canvas->HideUI(); };
+					ButtonEventFunction exit = [canvas](Entity* ent) { 
+						canvas->HideUI();
+						};
 					button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
 				}
 				else {
@@ -1765,6 +1767,67 @@ namespace component {
 
 
 
+	}
+
+	void Consumable::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value con = v["Consumable"];
+
+		m_ConsumType = con["Type"].asInt();
+	}
+
+	void Consumable::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Holdable* holdable = manager->GetComponent<Holdable>(selfEntity);
+		ActionFunction action;
+		switch (m_ConsumType) {
+			// speed up
+		case 1:
+			action = [selfEntity, holdable, manager](float deltaTime) {
+				Entity* master = holdable->GetMaster();
+				Physics* masterPhy = manager->GetComponent<Physics>(master);
+				Inventory* masterInv = manager->GetComponent<Inventory>(master);
+
+				// set speed up
+				float* masterMaxSpeed = masterPhy->GetMaxVelocityPtr();
+
+				float speed = masterPhy->GetOriginalMaxVelocity();
+				TimeLine<float>* speedUp = new TimeLine<float>(masterMaxSpeed);
+				speedUp->AddKeyFrame(speed * 3.0f, 0.0f);
+				speedUp->AddKeyFrame(speed * 3.0f, 35.0f);
+				speedUp->AddKeyFrame(speed + speed, 35.0f);
+				speedUp->AddKeyFrame(speed, 40.0f);
+				manager->AddTimeLine(holdable->GetOriginParent(), speedUp);
+
+				// detach self
+				masterInv->EraseCurrentHolding();
+				manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+				//manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+				};
+			break;
+
+			// no sound
+		case 2:
+			action = [selfEntity, holdable, manager](float deltaTime) {
+				Entity* master = holdable->GetMaster();
+				Inventory* masterInv = manager->GetComponent<Inventory>(master);
+				
+
+
+				// detach self
+				manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+				masterInv->EraseCurrentHolding();
+				};
+			break;
+
+			// default error but keep going
+		default:
+			ERROR_QUIT("error!! no consumable type");
+			action = [](float deltaTime) {};
+			break;
+		}
+
+		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), action);
 	}
 
 }

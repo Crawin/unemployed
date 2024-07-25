@@ -196,6 +196,20 @@ namespace component {
 		virtual void ShowYourself() const {}
 	};
 
+	/////////////////////////////////////////////////////////
+	// Consumable Component
+	// CCTV, drinks
+	//
+	class Consumable : public ComponentBase<Consumable> {
+		int m_ConsumType = -1;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+	};
+
 #define MAX_CAMERA 4
 	/////////////////////////////////////////////////////////
 	// Throwable Component
@@ -376,8 +390,8 @@ namespace component {
 	};
 
 	/////////////////////////////////////////////////////////
-	// Throwable Component
-	// CCTV, drinks
+	// RCController Component
+	// RCController
 	//
 	class RCController : public ComponentBase<RCController> {
 		Entity* m_RCEntity = nullptr;

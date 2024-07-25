@@ -281,9 +281,8 @@ namespace ECSsystem {
 				}
 			}
 
-			float maxSpeed = sp->GetOriginalMaxVelocity();
-			if (pawn->IsPressing(GAME_INPUT::SHIFT)) maxSpeed += 400.0f;
-			sp->SetMaxVelocity(maxSpeed);
+			sp->SetDash(false);
+			if (pawn->IsPressing(GAME_INPUT::SHIFT)) sp->SetDash(true);
 
 			float speed = sp->GetCurrentVelocityLenOnXZ();
 			FMOD_INFO::GetInstance().set_self_speed(speed);
@@ -294,6 +293,8 @@ namespace ECSsystem {
 				XMVECTOR vel = XMLoadFloat3(&velOnXZ);
 
 				float maxSpeed = sp->GetMaxVelocity();
+				if (sp->IsDashing()) maxSpeed += sp->GetDashSpeed();
+				
 				float curSpeed = XMVectorGetX(XMVector3Length(vel));
 				
 				XMVECTOR vec = XMLoadFloat3(&tempMove);

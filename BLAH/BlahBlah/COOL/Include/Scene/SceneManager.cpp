@@ -65,9 +65,10 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::KeyTool, "KeyTool");
 	REGISTER_COMPONENT(component::Key, "Key");			// 굳이 필요 한것인가?
 	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
+	REGISTER_COMPONENT(component::Consumable, "Consumable");
 
 
-
+	
 	// ui content
 	REGISTER_COMPONENT(component::UIKeypad, "UIKeypad");
 	REGISTER_COMPONENT(component::UIDoorKey, "UIDoorKey");
