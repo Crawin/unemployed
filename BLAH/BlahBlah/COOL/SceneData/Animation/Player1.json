@@ -54,6 +54,20 @@
 		"UpperOnly": true
 	},
 
+	"Throw_Start":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Throw_Ready",
+		"UpperOnly": true
+	},
+	
+	"Throw_End":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Throw_End",
+		"UpperOnly": true
+	},
+
 	"Blended_Moving_State":
 	{
 		"Idle":

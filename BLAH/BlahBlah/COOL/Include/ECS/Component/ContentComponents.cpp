@@ -103,6 +103,9 @@ namespace component {
 			// attack
 			ctrl->InsertCondition(ANIMATION_STATE::ATTACK, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
 
+			// throw
+			ctrl->InsertCondition(ANIMATION_STATE::THROW_END, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
+
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 		}
@@ -864,7 +867,7 @@ namespace component {
 			// todo
 			// change player chara animation to throw ready
 			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
-			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROWREADY);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROW_START);
 
 			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			//selfCollider->SetActive(true);
@@ -895,6 +898,10 @@ namespace component {
 
 			DebugPrint(std::format("bakeTime: {}, speed: {}, result: {}", bakeTime, speed, ((bakeTime / maxBakeTime)*speed) / 27.7778f));
 
+			// set anim to throw end
+			Entity* master = holdable->GetMaster();
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROW_END);
 
 			float resultSpeed = speed * (bakeTime / maxBakeTime);
 			// detach

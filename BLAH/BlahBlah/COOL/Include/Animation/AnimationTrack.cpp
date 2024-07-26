@@ -41,6 +41,8 @@ void AnimationTrackSingle::ResetAnimationTrack()
 void AnimationTrackSingle::SetAnimationData(ComPtr<ID3D12GraphicsCommandList> commandList, bool isCurrent)
 {
 	float animPlayTime = m_CurPlayTime;// std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);
+	if (animPlayTime >= m_MaxTime) animPlayTime = m_MaxTime - 1.0f / 24.0f;
+
 	int animFrame = m_Animation->GetEndFrame() + 1;
 	int animIndex = m_Animation->GetDataIdx();
 
