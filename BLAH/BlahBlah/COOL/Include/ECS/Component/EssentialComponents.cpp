@@ -3,6 +3,7 @@
 #include "Scene/ResourceManager.h"
 #include "ECS/ECSManager.h"
 #include "json/json.h"
+#include "App/Application.h"
 
 
 namespace component {
@@ -259,6 +260,10 @@ namespace component {
 		m_Aspect = cam["Aspect"].asFloat();
 		m_Near = cam["Near"].asFloat();
 		m_Far = cam["Far"].asFloat();
+
+		auto size = Application::GetInstance().GetSize();
+		m_Width = size.cx;
+		m_Height = size.cy;
 
 		// get camera rendertarget idx
 		m_RenderTargetDataIndex = rm->AddCamera(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END));

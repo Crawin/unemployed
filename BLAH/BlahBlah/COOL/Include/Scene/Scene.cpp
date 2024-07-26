@@ -544,10 +544,12 @@ void Scene::BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList)
 		ecs->Execute(render);
 	}
 
-	vp.Width = static_cast<float>(1280);
-	vp.Height = static_cast<float>(720);
+	SIZE size = Renderer::GetInstance().GetScreenSize();
 
-	scRect = { 0, 0, 1280, 720};
+	vp.Width = static_cast<float>(size.cx);
+	vp.Height = static_cast<float>(size.cy);
+
+	scRect = { 0, 0, size.cx, size.cy };
 
 	commandList->RSSetViewports(1, &vp);
 	commandList->RSSetScissorRects(1, &scRect);
