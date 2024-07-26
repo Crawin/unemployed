@@ -1,0 +1,9 @@
+{
+	"name": "UIFinalChestKey_Black",
+	"BaseColor": "UI/FinalChestKey_Black",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

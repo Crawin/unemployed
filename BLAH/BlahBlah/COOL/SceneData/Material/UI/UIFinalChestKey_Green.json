@@ -1,0 +1,9 @@
+{
+	"name": "UIFinalChestKey_Green",
+	"BaseColor": "UI/FinalChestKey_Green",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

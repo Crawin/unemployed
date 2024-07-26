@@ -1,0 +1,224 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "sm_key_Red",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/FinalChestKey_Red",
+						"Mesh" : "sm_key_01.sm_key_01"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-1570.9000244140625,
+							594.0,
+							1129.699951171875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.80000001192092896,
+							0.80000001192092896,
+							0.80000001192092896
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "sm_key_Blue",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/FinalChestKey_Blue",
+						"Mesh" : "sm_key_01.sm_key_01"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							1768.0,
+							1004.800048828125,
+							1153.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "sm_key_Green",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/FinalChestKey_Green",
+						"Mesh" : "sm_key_01.sm_key_01"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-557.9000244140625,
+							951.0,
+							1170.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "sm_key_Black",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/FinalChestKey_Black",
+						"Mesh" : "sm_key_01.sm_key_01"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-1775.0,
+							1295.0,
+							1198.2999267578125
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "sm_key_Pink",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/FinalChestKey_Pink",
+						"Mesh" : "sm_key_01.sm_key_01"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-967.5,
+							1705.9879150390625,
+							-1160.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "FinalChestKeys",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "FinalChestKeys_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -2956,7 +2956,7 @@
 					"Name" : "office_building_1_bgr",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highrise_facades",
 						"Mesh" : "Background.office_building_1_bgr"
 					},
 					"Transform" : 

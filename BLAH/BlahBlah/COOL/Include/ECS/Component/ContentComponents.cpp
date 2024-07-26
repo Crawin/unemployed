@@ -211,7 +211,7 @@ namespace component {
 					KeyTool* keytool = manager->GetComponent<KeyTool>(curhold);
 					if (keytool != nullptr) {
 						keytool->InsertKey(doorCtrl->GetKeyID());
-						trans->SetPosition({ 0,0,0 });
+						trans->SetPosition({ 300,0,0 });
 					}
 				}
 			}
