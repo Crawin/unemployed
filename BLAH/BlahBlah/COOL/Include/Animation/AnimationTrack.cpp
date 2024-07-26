@@ -84,10 +84,13 @@ XMMATRIX AnimationTrackSingle::GetAnimatedBoneMat(int boneIdx) const
 	int animFrameRate = m_Animation->GetFrame();
 	int animStride = endFrame + 1;
 
-	int frameFloor = (int)floor(m_CurPlayTime * animFrameRate) % animStride;
+	float animPlayTime = m_CurPlayTime;// std::min(m_CurPlayTime, m_MaxTime - 1.0f / 24.0f);
+	if (animPlayTime >= m_MaxTime) animPlayTime = m_MaxTime - 1.0f / 24.0f;
+
+	int frameFloor = (int)floor(animPlayTime * animFrameRate) % animStride;
 	int frameCeil = (frameFloor + 1) % animStride;
 
-	float weightInterpol = ceil(m_CurPlayTime * animFrameRate) - (m_CurPlayTime * animFrameRate);
+	float weightInterpol = ceil(animPlayTime * animFrameRate) - (animPlayTime * animFrameRate);
 
 	int idx1 = boneIdx * animStride + frameFloor;
 	int idx2 = boneIdx * animStride + frameCeil;
