@@ -133,7 +133,8 @@ VS_OUTPUT vs(VS_INPUT input)
 
 			if (animation1_AffactUpper > 0) {
 				//boneToWorld += input.boneWeights[i] * anim1;
-				if (2 <= boneIdx && boneIdx <= animation1_AffactUpperIndex)
+				//if (2 <= boneIdx && boneIdx <= animation1_AffactUpperIndex)
+				if (boneIdx <= animation1_AffactUpperIndex)
 					boneToWorld += input.boneWeights[i] * anim1;
 				else
 					boneToWorld += input.boneWeights[i] * anim2;
