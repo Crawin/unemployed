@@ -814,6 +814,8 @@ namespace component {
 		m_CameraEntity = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
 		m_Camera = manager->GetComponent<Camera>(m_CameraEntity);
 		m_Physics = manager->GetComponent<Physics>(selfEntity);
+		m_Inventory = manager->GetComponent<Inventory>(selfEntity);
+		m_SelfEntity = selfEntity;
 	}
 
 	void Pawn::ShowYourself() const
@@ -889,12 +891,15 @@ namespace component {
 			m_KeyStates[static_cast<long long int>(key)] == KEY_STATE::PRESSING;
 	}
 
-	void Pawn::SetActive(bool active)
+	void Pawn::SetActive(bool active, ECSManager* manager)
 	{
 		m_Active = active;
 		m_Camera->SetActive(active);
 		m_Camera->SetMainCamera(active);
 		if (m_Physics) m_Physics->SetCalculateState(active);
+		if (m_Inventory) {
+			m_Inventory->SetMainMode(active, manager);
+		}
 	}
 	
 
@@ -919,7 +924,7 @@ namespace component {
 		// reset inputs
 		if (m_CurrentPossess) {
 			m_CurrentPossess->ResetInput();
-			m_CurrentPossess->SetActive(false);
+			m_CurrentPossess->SetActive(false, manager);
 		}
 
 		Pawn* targetPawn = nullptr;
@@ -930,25 +935,25 @@ namespace component {
 
 		manager->Execute(findTarget);
 
-		if (targetPawn) targetPawn->SetActive(true);
+		if (targetPawn) targetPawn->SetActive(true, manager);
 		m_CurrentPossess = targetPawn;
 
 		// returns success/fail
 		return (m_CurrentPossess != nullptr);
 	}
 
-	bool PlayerController::Possess(Pawn* target)
+	bool PlayerController::Possess(Pawn* target, ECSManager* manager)
 	{
 		// reset inputs
 		if (m_CurrentPossess) {
 			m_CurrentPossess->ResetInput();
-			m_CurrentPossess->SetActive(false);
+			m_CurrentPossess->SetActive(false, manager);
 		}
 
 		if (target == nullptr) return false;
 
 		m_CurrentPossess = target;
-		m_CurrentPossess->SetActive(true);
+		m_CurrentPossess->SetActive(true, manager);
 
 		return true;
 	}

@@ -231,10 +231,10 @@ namespace ECSsystem {
 					manager->Execute(getChangePawn);
 					
 					// possess to camera
-					ctrler->Possess(changeingPawn);
+					ctrler->Possess(changeingPawn, manager);
 
 					// end event
-					std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+					std::function returnToPawn = [ctrler, controlledPawn, manager]() {ctrler->Possess(controlledPawn, manager); };
 
 					TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
 					changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);

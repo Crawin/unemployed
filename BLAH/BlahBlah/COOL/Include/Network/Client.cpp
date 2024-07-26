@@ -211,14 +211,14 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
 		char size = base->getSize();
-<<<<<<< Updated upstream
-		printf("패킷 %d\n", base->getType());
-		if (size == 0) {
-			DebugPrint("사이즈0");
-		}
-=======
-		std::cout << "패킷 " << (int)size << std::endl;
->>>>>>> Stashed changes
+//<<<<<<< Updated upstream
+//		printf("패킷 %d\n", base->getType());
+//		if (size == 0) {
+//			DebugPrint("사이즈0");
+//		}
+//=======
+//		std::cout << "패킷 " << (int)size << std::endl;
+//>>>>>>> Stashed changes
 		if (size + current_size > recv_size + prev_size)
 		{
 			client.set_prev_packet_size(recv_size + prev_size - current_size);

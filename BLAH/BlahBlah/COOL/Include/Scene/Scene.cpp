@@ -61,11 +61,11 @@ void Scene::ChangeDayToNight(float time)
 		manager->Execute(getChangePawn);
 
 		// possess to camera
-		ctrler->Possess(changeingPawn);
+		ctrler->Possess(changeingPawn, manager);
 
 		// end event
-		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager]() {
-			ctrler->Possess(controlledPawn); 
+		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager, manager]() {
+			ctrler->Possess(controlledPawn, manager);
 			dayManager->SetDayCycle(240.0f);
 			};
 

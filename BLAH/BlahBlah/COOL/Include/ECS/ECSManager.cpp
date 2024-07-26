@@ -200,10 +200,7 @@ void ECSManager::OnStart(ResourceManager* rm)
 	// for every entities
 	for (Entity* ent : m_Entities) {
 		// On Start
-
 		COMP_BITSET entBitset = ent->GetBitset();
-
-		COMP_BITSET bit(1);
 
 		m_ComponentSets[entBitset].OnStart(ent, this, rm);
 	}
@@ -218,8 +215,28 @@ void ECSManager::OnStart(ResourceManager* rm)
 	if (type != 1)
 		targetName = Client::GetInstance().GetGuestPlayerName();
 
-	std::function<void(component::PlayerController*)> possess = [this, &targetName](component::PlayerController* ctrl) {	ctrl->Possess(this, targetName);	};
-	Execute(possess);
+	component::PlayerController* ctrl = nullptr;
+
+	std::function<void(component::PlayerController*)> getController = [this, &targetName, &ctrl](component::PlayerController* c) { 
+		ctrl = c;
+		};
+	Execute(getController);
+
+	// set possess
+	if (ctrl) {
+		ctrl->Possess(this, targetName);
+		Entity* curEntity = ctrl->GetControllingPawn()->GetSelfEntity();
+
+		// set inventory modes
+		std::function<void(component::Inventory*)> setSubMode = [this](component::Inventory* inv) { inv->SetMainMode(false, this); };
+		Execute(setSubMode);
+
+		component::Inventory* inventory = GetComponent<component::Inventory>(curEntity);
+		if (inventory) {
+			inventory->SetMainMode(true, this);
+		}
+	}
+
 }
 
 Entity* ECSManager::GetEntity(const std::string& targetName)
