@@ -44,7 +44,7 @@
 	"Name" : "KeyTool_Root",
 	"Transform" : 
 	{
-		"Position": [0.0, 120.0, 1000.0],
+		"Position": [0.0, -12000.0, 1000.0],
 		"Rotate" : 
 		[
 			0.0,
