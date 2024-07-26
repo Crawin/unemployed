@@ -1,0 +1,124 @@
+{
+	"Name" : "CameraChangeMaster",
+	"Transform" : 
+	{
+		"Position" : [0,0,0],
+		"Rotate" : [0,0,0],
+		"Scale" : [1.0,1.0,1.0]
+	},
+	"Children":
+	[
+		{
+			"Name" : "ChangeTimePawn",
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					4471.4,
+					1993.8,
+					4210.0
+				],
+				"Rotate" : 
+				[
+					16.43,
+					-140.736,
+					0.514
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+
+			"Pawn": 
+			{
+				"CameraName": "ViewCamera"
+			},
+			"Children": 
+			[
+				{
+					"Name": "ViewCamera",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Camera":
+					{
+						"Active": false,
+						"IsMainCamera": false,
+						"Right": 	[1.0, 0.0, 0.0],
+						"Up": 		[0.0, 1.0, 0.0],
+						"Look": 	[0.0, 0.0, 1.0],
+						"Position": [0.0, 70.0, 5.5],
+				
+						"Fov": 75.0,
+						"Aspect": 1.777,
+						"Near": 0.1,
+						"Far": 50000.0
+					}
+				}
+			]
+		},
+		{
+			"Name" : "GameStartPawn",
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					4470.6,
+					2753.0,
+					1381.6
+				],
+				"Rotate" : 
+				[
+					36.496,
+					-117.078,
+					0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+
+			"Pawn": 
+			{
+				"CameraName": "ViewCamera2"
+			},
+			"Children": 
+			[
+				{
+					"Name": "ViewCamera2",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Camera":
+					{
+						"Active": false,
+						"IsMainCamera": false,
+						"Right": 	[1.0, 0.0, 0.0],
+						"Up": 		[0.0, 1.0, 0.0],
+						"Look": 	[0.0, 0.0, 1.0],
+						"Position": [0.0, 70.0, 5.5],
+				
+						"Fov": 75.0,
+						"Aspect": 1.777,
+						"Near": 0.1,
+						"Far": 50000.0
+					}
+				}
+			]
+		}
+	]
+}

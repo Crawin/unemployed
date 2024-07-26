@@ -782,11 +782,20 @@ void Scene::ProcessPacket(packet_base* packet)
 	case pENTERROOM:
 	{
 		OnSelfGuest();
+
+		// todo
+		// possess to game start cut scene camera
+		OnGameStarted();
 		break;
 	}
 	case pRoomPlayer:
 	{
 		OnGuestEnter();
+
+		// todo
+		// possess to game start cut scene camera
+		OnGameStarted();
+
 		break;
 	}
 	case pPOSITION:								// POSITION
