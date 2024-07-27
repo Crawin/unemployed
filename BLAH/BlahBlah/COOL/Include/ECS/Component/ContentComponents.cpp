@@ -380,7 +380,7 @@ namespace component {
 		openDoor->AddKeyFrame(rot, 0);
 		openDoor->AddKeyFrame(rotAfter, 1);
 
-		manager->AddTimeLine(self, openDoor);
+		manager->AddTimeLine(openDoor);
 
 		// send door open packet
 		if (sendServer) {
@@ -1104,7 +1104,7 @@ namespace component {
 				trMove->AddKeyFrame({ 0, 0, 37.9f }, 0.0f);
 				trMove->AddKeyFrame({ 0, 0, 37.9f }, endTime);
 				trMove->AddKeyFrame({ 0, 0, 0 }, endTime);
-				manager->AddTimeLine(player, trMove);
+				manager->AddTimeLine(trMove);
 
 				// set player camera position
 				Entity* camera = manager->GetEntityInChildren("PlayerCamera", player);
@@ -1115,7 +1115,7 @@ namespace component {
 				aftPos.y -= 50.0f;
 				camMove->AddKeyFrame(curPos, 0.0f);
 				camMove->AddKeyFrame(aftPos, endTime);
-				manager->AddTimeLine(camera, camMove);
+				manager->AddTimeLine(camMove);
 
 				// set inventory also
 				Entity* inven = manager->GetEntityInChildren("InvenParent", camera);
@@ -1126,7 +1126,7 @@ namespace component {
 				aftPos.y += 50.0f;
 				invMove->AddKeyFrame(curPos, 0.0f);
 				invMove->AddKeyFrame(aftPos, endTime);
-				manager->AddTimeLine(inven, invMove);
+				manager->AddTimeLine(invMove);
 
 				// sit
 				playerComp->SetSit(true);
@@ -1151,7 +1151,7 @@ namespace component {
 				aftPos.y += 50.0f;
 				camMove->AddKeyFrame(curPos, 0.0f);
 				camMove->AddKeyFrame(aftPos, endTime);
-				manager->AddTimeLine(camera, camMove);
+				manager->AddTimeLine(camMove);
 
 				// set inventory also
 				Entity* inven = manager->GetEntityInChildren("InvenParent", camera);
@@ -1162,7 +1162,7 @@ namespace component {
 				aftPos.y -= 50.0f;
 				invMove->AddKeyFrame(curPos, 0.0f);
 				invMove->AddKeyFrame(aftPos, endTime);
-				manager->AddTimeLine(inven, invMove);
+				manager->AddTimeLine(invMove);
 
 				playerComp->SetSit(false);
 				DebugPrint("standUp");
@@ -1878,7 +1878,7 @@ namespace component {
 				speedUp->AddKeyFrame(speed * 3.0f, 35.0f);
 				speedUp->AddKeyFrame(speed + speed, 35.0f);
 				speedUp->AddKeyFrame(speed, 40.0f);
-				manager->AddTimeLine(holdable->GetOriginParent(), speedUp);
+				manager->AddTimeLine(speedUp);
 
 				// detach self
 				masterInv->EraseCurrentHolding();
@@ -1956,6 +1956,187 @@ namespace component {
 	void UIEnding::SetEndingImage(int endingType)
 	{
 		m_EndingImageRenderer->SetMaterial(m_EndingImageMaterials[endingType]);
+	}
+
+	void StartInteraction::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		Interaction* interaction = manager->GetComponent<Interaction>(selfEntity);
+
+		bool& ready = m_Ready;
+
+		InteractionFuncion inter = [manager, ready](Entity* player, Entity* self) {
+			// todo
+			// show Conversation UI
+
+			std::function<void(UICanvas*, UIConversation*)> showConvers = [manager, ready](UICanvas* canv, UIConversation* conver) {
+
+				if (ready == false) 
+				{
+					// Object/UIConversation.json 참고
+					conver->SetConversation(1);
+					conver->SetTalker(1);
+
+					// if not ready, 
+					std::function<void()> openLoginUI = [manager, canv]() {
+						canv->HideUI();
+						std::function<void(UICanvas*, UILogin*)> showLogin = [manager](UICanvas* canv, UILogin* login) {
+							login->SetRoomNum(0);
+							canv->ShowUI();
+							};
+						manager->Execute(showLogin);
+						};
+
+					TimeLine<float>* toChangeOtherUI = new TimeLine<float>(nullptr);
+					toChangeOtherUI->AddKeyFrame(0, 0.0f);
+					toChangeOtherUI->AddKeyFrame(1, 3.0f);
+					toChangeOtherUI->SetEndEvent(openLoginUI);
+					manager->AddTimeLine(toChangeOtherUI);
+				}
+				else {
+					// todo "기다려" 재생 해야함
+					conver->SetConversation(0);
+					conver->SetTalker(1);
+
+					// hide ui
+					std::function<void()> hideUI = [canv] () { canv->HideUI(); };
+
+					TimeLine<float>* toChangeOtherUI = new TimeLine<float>(nullptr);
+					toChangeOtherUI->AddKeyFrame(0, 0.0f);
+					toChangeOtherUI->AddKeyFrame(1, 3.0f);
+					toChangeOtherUI->SetEndEvent(hideUI);
+					manager->AddTimeLine(toChangeOtherUI);
+				}
+
+				canv->ShowUI();
+
+				};
+			manager->Execute(showConvers);
+
+
+			// wait for timeline end
+			// show MakeOrJoinRoom UI
+			//ready = true;
+
+			};
+
+		interaction->SetInteractionFunction(inter);
+	}
+
+	void UIConversation::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value conv = v["UIConversation"];
+
+		// conversations
+		m_NumOfConversations = conv["MaxConversation"].asInt();
+		m_ConversationsString = new std::string[m_NumOfConversations];
+
+		for (int i = 0; i < m_NumOfConversations; ++i) {
+			m_ConversationsString[i] = conv["Conversation"][i].asString();
+			rm->AddLateLoadUI(std::format("UI/Conversation/{}", m_ConversationsString[i]), nullptr);
+		}
+		
+		// talkers
+		m_NumOfTalkers = conv["MaxTalker"].asInt();
+		m_TalkersString = new std::string[m_NumOfTalkers];
+
+		for (int i = 0; i < m_NumOfTalkers; ++i) {
+			m_TalkersString[i] = conv["Talker"][i].asString();
+			rm->AddLateLoadUI(std::format("UI/Conversation/{}", m_TalkersString[i]), nullptr);
+		}
+	}
+
+	void UIConversation::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		m_ConversationsMaterialIdx = std::vector<int>();
+		m_TalkersMaterialIdx = std::vector<int>();
+		m_ConversationsMaterialIdx.reserve(m_NumOfConversations);
+		m_TalkersMaterialIdx.reserve(m_NumOfTalkers);
+
+		// conversations
+		for (int i = 0; i < m_NumOfConversations; ++i) 
+			m_ConversationsMaterialIdx.push_back(rm->GetMaterial(m_ConversationsString[i]));
+
+		// talkers
+		for (int i = 0; i < m_NumOfTalkers; ++i)
+			m_TalkersMaterialIdx.push_back(rm->GetMaterial(m_TalkersString[i]));
+
+		m_ConversationUI = manager->GetComponent<UIRenderer>(manager->GetEntityFromRoute("Conversation", selfEntity));
+		m_TalkerUI = manager->GetComponent<UIRenderer>(manager->GetEntityFromRoute("Talker", selfEntity));
+
+		delete[] m_ConversationsString;
+		delete[] m_TalkersString;
+	}
+
+	void UIConversation::SetConversation(int convIdx)
+	{
+		m_ConversationUI->SetMaterial(m_ConversationsMaterialIdx[convIdx]);
+	}
+
+	void UIConversation::SetTalker(int talkerIdx)
+	{
+		m_TalkerUI->SetMaterial(m_TalkersMaterialIdx[talkerIdx]);
+	}
+
+	void UILogin::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+
+		auto& children = selfEntity->GetChildren();
+
+		UICanvas* canvas = manager->GetComponent<UICanvas>(selfEntity);
+
+		for (Entity* child : children) {
+			Name* childName = manager->GetComponent<Name>(child);
+			auto& name = childName->getName();
+
+			if (name == "Exit") {
+				Button* button = manager->GetComponent<Button>(child);
+				ButtonEventFunction exit = [canvas](Entity* ent) {canvas->HideUI(); };
+				button->SetButtonEvent(KEY_STATE::END_PRESS, exit);
+			}
+			else if (name == "Host") {
+				Button* button = manager->GetComponent<Button>(child);
+				ButtonEventFunction makeroomButton = [canvas, manager](Entity* ent) {
+					canvas->HideUI();
+					if (Client::GetInstance().getPSock()[0]) {
+						Application::GetInstance().GetSceneManager()->PossessPlayer(true);
+						Client::GetInstance().Send_Room(pMAKEROOM, NULL);
+
+						// set start inventory to ready
+						std::function<void(StartInteraction*)> ready = [](StartInteraction* si) { si->SetReady(true); };
+						manager->Execute(ready);
+
+					}
+					};
+				button->SetButtonEvent(KEY_STATE::END_PRESS, makeroomButton);
+			}
+			else if (name == "JoinRoom") {
+				Button* button = manager->GetComponent<Button>(child);
+				ButtonEventFunction joinRoom = [canvas, this, manager](Entity* ent) {
+					canvas->HideUI();
+					if (Client::GetInstance().getPSock()[0]) {
+						Application::GetInstance().GetSceneManager()->PossessPlayer(false);
+						Client::GetInstance().Send_Room(pENTERROOM, m_ToJoinRoom);
+
+						// set start inventory to ready
+						std::function<void(StartInteraction*)> ready = [](StartInteraction* si) { si->SetReady(true); };
+						manager->Execute(ready);
+					}
+					};
+				button->SetButtonEvent(KEY_STATE::END_PRESS, joinRoom);
+			}
+			else {
+				// number buttons
+				for (int i = 0; i <= 9; ++i) {
+					std::string buttonName = std::format("{}Button", i);
+					if (name == buttonName) {
+						Button* button = manager->GetComponent<Button>(child);
+						ButtonEventFunction roomNumBut = [this, manager, i](Entity* ent) { m_ToJoinRoom = m_ToJoinRoom * 10 + i; };
+						button->SetButtonEvent(KEY_STATE::END_PRESS, roomNumBut);
+					}
+				}
+			}
+		}
+
 	}
 
 }

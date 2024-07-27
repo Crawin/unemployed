@@ -1,0 +1,9 @@
+{
+	"name": "UITalk_Default",
+	"BaseColor": "UI/Conversation/Talk_Default",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

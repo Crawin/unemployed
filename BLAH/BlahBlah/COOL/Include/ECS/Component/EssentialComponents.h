@@ -51,7 +51,7 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		const std::string getName() { return m_Name; }
+		const std::string& getName() { return m_Name; }
 	};
 
 	/////////////////////////////////////////////////////////

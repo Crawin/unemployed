@@ -1,0 +1,9 @@
+{
+	"name": "UIConverDotDot",
+	"BaseColor": "UI/Conversation/ConverDotDot",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

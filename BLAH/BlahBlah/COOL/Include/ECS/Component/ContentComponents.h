@@ -413,6 +413,22 @@ namespace component {
 		virtual void ShowYourself() const {}
 	};
 
+	/////////////////////////////////////////////////////////
+	// StartInteraction Component
+	// StartInteraction
+	//
+	class StartInteraction : public ComponentBase<StartInteraction> {
+		bool m_Ready = false;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		bool IsReady() const { return m_Ready; }
+		void SetReady(bool state) { m_Ready = state; }
+	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UI 관련 컴포넌트들
@@ -583,6 +599,48 @@ namespace component {
 
 		void SetEndingImage(int endingType);
 
+	};
+
+	/////////////////////////////////////////////////////////
+	// UI Conversation Component
+	// 대화창
+	//
+	class UIConversation : public ComponentBase<UIConversation> {
+		UIRenderer* m_ConversationUI = nullptr;
+		UIRenderer* m_TalkerUI = nullptr;
+
+		std::string* m_ConversationsString = nullptr;
+		int m_NumOfConversations = 0;
+		std::vector<int> m_ConversationsMaterialIdx;
+
+		std::string* m_TalkersString = nullptr;
+		int m_NumOfTalkers = 0;
+		std::vector<int> m_TalkersMaterialIdx;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		void SetConversation(int convIdx);
+		void SetTalker(int talkerIdx);
+	};
+
+	/////////////////////////////////////////////////////////
+	// UI Login Component
+	// 대화창
+	//
+	class UILogin : public ComponentBase<UILogin> {
+		int m_ToJoinRoom = 0;
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		void SetRoomNum(int num) { m_ToJoinRoom = num; }
 	};
 
 }

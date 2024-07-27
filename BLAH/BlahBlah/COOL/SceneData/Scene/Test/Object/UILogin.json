@@ -3,7 +3,7 @@
 
 	"UICanvas": {},
 
-	"UIKeypad": {},
+	"UILogin": {},
 
 	"Children": 
 	[
@@ -12,7 +12,7 @@
 
 			"UITransform":
 			{
-				"Center": [1200, 650],
+				"Center": [1850, 1010],
 				"Size": [70, 70]
 			},
 		
@@ -25,31 +25,48 @@
 			}
 		},
 
-		{	"Name": "Check",
+		{
+			"Name": "Host",
 
 			"UITransform":
 			{
-				"Center": [640, 100],
-				"Size": [300, 150]
+				"Center": [380, 300],
+				"Size": [400, 400]
 			},
-			
+		
 			"Button": {},
 
 			"UIRenderer" :
 			{
-				"Material": "UI/UITempMaterial",
+				"Material": "UI/UIHostImage",
 				"IsSprite": false
 			}
-
-
 		},
 
-		{	"Name": "1Button",
+		{
+			"Name": "JoinRoom",
 
 			"UITransform":
 			{
-				"Center": [540, 260],
-				"Size": [100, 100]
+				"Center": [380, 780],
+				"Size": [400, 400]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIGuestImage",
+				"IsSprite": false
+			}
+		},
+		{	
+			"Name": "1Button",
+
+			"UITransform":
+			{
+				"Center": [1080, 290],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -60,13 +77,13 @@
 				"IsSprite": false
 			}
 		},
-
-        {	"Name": "2Button",
+		{	
+			"Name": "2Button",
 
 			"UITransform":
 			{
-				"Center": [640, 260],
-				"Size": [100, 100]
+				"Center": [1280, 290],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -77,13 +94,13 @@
 				"IsSprite": false
 			}
 		},
-
-        {	"Name": "3Button",
+		{	
+			"Name": "3Button",
 
 			"UITransform":
 			{
-				"Center": [740, 260],
-				"Size": [100, 100]
+				"Center": [1480, 290],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -95,12 +112,13 @@
 			}
 		},
 
-        {	"Name": "4Button",
+		{	
+			"Name": "4Button",
 
 			"UITransform":
 			{
-				"Center": [540, 360],
-				"Size": [100, 100]
+				"Center": [1080, 480],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -112,12 +130,13 @@
 			}
 		},
 
-        {	"Name": "5Button",
+		{	
+			"Name": "5Button",
 
 			"UITransform":
 			{
-				"Center": [640, 360],
-				"Size": [100, 100]
+				"Center": [1280, 480],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -129,12 +148,13 @@
 			}
 		},
 
-        {	"Name": "6Button",
+		{	
+			"Name": "6Button",
 
 			"UITransform":
 			{
-				"Center": [740, 360],
-				"Size": [100, 100]
+				"Center": [1480, 480],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -146,12 +166,13 @@
 			}
 		},
 
-        {	"Name": "7Button",
+		{	
+			"Name": "7Button",
 
 			"UITransform":
 			{
-				"Center": [540, 460],
-				"Size": [100, 100]
+				"Center": [1080, 690],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -162,13 +183,13 @@
 				"IsSprite": false
 			}
 		},
-
-        {	"Name": "8Button",
+		{	
+			"Name": "8Button",
 
 			"UITransform":
 			{
-				"Center": [640, 460],
-				"Size": [100, 100]
+				"Center": [1280, 690],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -179,12 +200,13 @@
 				"IsSprite": false
 			}
 		},
-        {	"Name": "9Button",
+		{	
+			"Name": "9Button",
 
 			"UITransform":
 			{
-				"Center": [740, 460],
-				"Size": [100, 100]
+				"Center": [1480, 690],
+				"Size": [150, 150]
 			},
 			
 			"Button": {},
@@ -194,7 +216,25 @@
 				"Material": "UI/UIPassword9",
 				"IsSprite": false
 			}
+		},
+		{	
+			"Name": "0Button",
+
+			"UITransform":
+			{
+				"Center": [1280, 900],
+				"Size": [550, 150]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIPassword0",
+				"IsSprite": false
+			}
 		}
+
 
 	]
 

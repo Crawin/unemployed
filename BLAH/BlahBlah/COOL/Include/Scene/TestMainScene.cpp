@@ -250,7 +250,7 @@ void TestMainScene::OnGameStarted()
 		positionToEnd->AddKeyFrame(endPos, 3.5f);
 		positionToEnd->AddKeyFrame(finalPos, 4.5f);
 		positionToEnd->SetEndEvent(returnToBasePawn);
-		manager->AddTimeLine(startPawn->GetCameraEntity(), positionToEnd);
+		manager->AddTimeLine(positionToEnd);
 	}
 
 	// rotate
@@ -262,7 +262,7 @@ void TestMainScene::OnGameStarted()
 		rotateToEnd->AddKeyFrame(startRot, 0.2f);
 		rotateToEnd->AddKeyFrame(endRot, 3.0f);
 		rotateToEnd->AddKeyFrame(endRot, 4.5f);
-		manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
+		manager->AddTimeLine(rotateToEnd);
 	}
 }
 

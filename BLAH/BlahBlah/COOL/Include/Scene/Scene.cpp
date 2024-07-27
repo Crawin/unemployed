@@ -76,7 +76,7 @@ void Scene::ChangeDayToNight(float time)
 		changeTime->AddKeyFrame(22.0f, 2);
 		changeTime->SetEndEvent(returnToPawnAndSetDayCycle);
 
-		manager->AddTimeLine(ent->GetEntity(), changeTime);
+		manager->AddTimeLine(changeTime);
 		};
 	m_ECSManager->Execute(changeTime);
 

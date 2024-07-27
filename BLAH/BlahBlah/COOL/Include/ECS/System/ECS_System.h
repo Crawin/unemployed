@@ -226,12 +226,13 @@ namespace ECSsystem {
 	// TimeLine Managing
 	// 
 	class TimeLineManaging : public System {
-		std::map<Entity*, ITimeLine*> m_TimeLines;
+		std::list<ITimeLine*> m_TimeLines;
+		//std::map<Entity*, ITimeLine*> m_TimeLines;
 
 	public:
 		virtual void Update(ECSManager* manager, float deltaTime);
 
-		void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLines.emplace(entity, timeLine); }
+		void AddTimeLine(/*Entity* entity,*/ ITimeLine* timeLine) { m_TimeLines.push_back(timeLine); }
 	};
 
 	/////////////////////////////////////////////////////////

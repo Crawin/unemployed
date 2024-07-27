@@ -249,7 +249,7 @@ namespace ECSsystem {
 					changeTime->AddKeyFrame(22.0f, 2);
 					changeTime->SetEndEvent(returnToPawn);
 
-					manager->AddTimeLine(ent->GetEntity(), changeTime);
+					manager->AddTimeLine(changeTime);
 					};
 				manager->Execute(changeTime);
 
@@ -318,7 +318,7 @@ namespace ECSsystem {
 					positionToEnd->AddKeyFrame(endPos, 3.5f);
 					positionToEnd->AddKeyFrame(finalPos, 4.5f);
 					positionToEnd->SetEndEvent(returnToBasePawn);
-					manager->AddTimeLine(startPawn->GetCameraEntity(), positionToEnd);
+					manager->AddTimeLine(positionToEnd);
 				}
 
 				// rotate
@@ -330,7 +330,7 @@ namespace ECSsystem {
 					rotateToEnd->AddKeyFrame(startRot, 0.2f);
 					rotateToEnd->AddKeyFrame(endRot, 3.0f);
 					rotateToEnd->AddKeyFrame(endRot, 4.5f);
-					manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
+					manager->AddTimeLine(rotateToEnd);
 				}
 			}
 #endif
@@ -1178,14 +1178,14 @@ namespace ECSsystem {
 
 	void TimeLineManaging::Update(ECSManager* manager, float deltaTime)
 	{
-		for (auto& [entity, timeline] : m_TimeLines) {
+		for (auto& timeline : m_TimeLines) {
 			timeline->Update(deltaTime);
 			timeline->SyncData();
 		}
 
 		for (auto iter = m_TimeLines.begin(); iter != m_TimeLines.end();) {
-			if (iter->second->IsPlaying() == false) {
-				iter->second->RunEndEvent();
+			if ((*iter)->IsPlaying() == false) {
+				(*iter)->RunEndEvent();
 				iter = m_TimeLines.erase(iter);
 			}
 			else

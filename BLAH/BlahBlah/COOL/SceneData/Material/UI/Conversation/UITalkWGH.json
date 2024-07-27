@@ -1,0 +1,9 @@
+{
+	"name": "UITalkWGH",
+	"BaseColor": "UI/Conversation/TalkWGH",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}
