@@ -263,7 +263,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			login_players[id].send_packet(reinterpret_cast<packet_base*>(&make));
 
 			g_mutex_npc_timer.lock();
-			for (int npc_id = 2; npc_id < 3; ++npc_id)
+			//g_npc_timer.emplace(currentRoom, 1, std::chrono::milliseconds(0));
+			for (int npc_id = 2; npc_id < STUDENT_SIZE + 2; ++npc_id)
 			{
 				g_npc_timer.emplace(currentRoom, npc_id, std::chrono::milliseconds(0));
 				printf("%d 추가 완료\n", npc_id);
@@ -314,7 +315,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto packet = reinterpret_cast<cs_packet_anim_type*>(base);
 			auto sent_player = login_players.find(id);
-			printf("[%d] Sent Animation Change\n", id);
+			//printf("[%d] Sent Animation Change\n", id);
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
@@ -424,7 +425,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				{
 					sc_packet_key_input input(InGamePlayers[0].sock, packet->getKeyState(), packet->getGameInput());
 					login_players[InGamePlayers[1].id].send_packet(reinterpret_cast<packet_base*>(&input));
-					printf("[%d] -> [%d] Sent KeyInput\n", id, InGamePlayers[1].id);
+					//printf("[%d] -> [%d] Sent KeyInput\n", id, InGamePlayers[1].id);
 				}
 			}
 			else if (InGamePlayers[1].id == id)
@@ -433,7 +434,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				{
 					sc_packet_key_input input(InGamePlayers[1].sock, packet->getKeyState(), packet->getGameInput());
 					login_players[InGamePlayers[0].id].send_packet(reinterpret_cast<packet_base*>(&input));
-					printf("[%d] -> [%d] Sent KeyInput\n", id, InGamePlayers[0].id);
+					//printf("[%d] -> [%d] Sent KeyInput\n", id, InGamePlayers[0].id);
 				}
 			}
 			else
@@ -488,7 +489,6 @@ void IOCP_SERVER_MANAGER::LoadResources()
 
 void IOCP_SERVER_MANAGER::command_thread()
 {
-	std::string input;
 	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
 		{"/STOP",[this]() {
 			detail.m_bServerState = false;
@@ -527,9 +527,28 @@ void IOCP_SERVER_MANAGER::command_thread()
 		{
 			for (auto& game : Games)
 			{
+				game.second.setBeiginTime();
 				game.second.addBeiginTime(std::chrono::minutes(3));
 			}
-}}
+		}},
+		{"/GUARD",[this]()
+		{
+			for (auto& game : Games)
+			{
+				game.second.respawn_guard();
+				printf("가드 리스폰");
+			}
+		}},
+		{"/DEST",[this]()
+		{
+			int input;
+			printf("목표 층을 설정하세요: ");
+			std::cin >> input;
+			for (auto& game : Games)
+			{
+				game.second.set_guard_destination(input);
+			}
+		}}
 	};
 
 	while (detail.m_bServerState)
@@ -860,8 +879,8 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 	{
 		guard.guard_state_machine(player, npc_state);
 		auto currTime = std::chrono::steady_clock::now();
-		if (currTime > guard.nextSendTime)
-		{
+		//if (currTime > guard.nextSendTime)
+		//{
 			sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
 			for (auto& p : player)
 			{
@@ -875,16 +894,16 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 						p.sock = NULL;
 				}
 			}
-			guard.nextSendTime = currTime + 1s;
-		}
+		//	guard.nextSendTime = currTime + 1s;
+		//}
 	}
 	else if (npc_id < STUDENT_SIZE + 2)	// student
 	{
 		auto& student = students[npc_id - 2];
 		student.student_state_machine(player);
 		auto currTime = std::chrono::steady_clock::now();
-		if (currTime > guard.nextSendTime)
-		{
+		//if (currTime > guard.nextSendTime)
+		//{
 			sc_packet_position student_position(student.id, student.position, student.rotation, student.speed);
 			for (auto& p : player)
 			{
@@ -898,8 +917,8 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 						p.sock = NULL;
 				}
 			}
-			guard.nextSendTime = currTime + 250ms;
-		}
+		//	guard.nextSendTime = currTime + 6ms;
+		//}
 	}
 	else
 	{
@@ -954,6 +973,22 @@ void Game::can_hear(const DirectX::XMFLOAT3& sound_position)
 	{
 		std::cout << "멀어서 안들령~" << std::endl;
 	}
+}
+
+void Game::respawn_guard()
+{
+	guard.reset_npc();
+	guard.position = { 3160, 0, -400 };
+	guard.rotation = { 0, 0, 0 };
+	guard.speed = { 0,0,0 };
+	guard.destination = { 0,0,0 };
+	guard.movement_speed = 500;
+	guard.state = 0;
+}
+
+void Game::set_guard_destination(const int& floor)
+{
+	guard.set_manual_destination(floor);
 }
 
 NPC::NPC()
@@ -1083,18 +1118,11 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 		hit = now_obb.Intersects(player_obb);
 		if (hit)
 		{
-			sc_packet_busted busted(0);
+			sc_packet_ending busted(0);
 			login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
 			std::cout << i << " 와 충돌" << std::endl;
 			break;
 		}
-	}
-
-	bool t = true;
-	while (true)
-	{
-		if (std::atomic_compare_exchange_strong(&this->updating, &t, false))
-			break;
 	}
 }
 
@@ -1182,7 +1210,7 @@ void NPC::student_state_machine(Player* p)
 		if (state != 2)				// 충돌 판정이 일어났을때, 최초의 충돌이면
 		{
 			state = 2;
-			std::cout << "최초 충돌이 발생했다@" << std::endl;
+			//std::cout << "최초 충돌이 발생했다@" << std::endl;
 			this->speed = DirectX::XMFLOAT3(0, 0, 0);
 			using namespace std::chrono;
 			attacked_time = steady_clock::now();				// 충돌한 시간을 저장
@@ -1193,7 +1221,7 @@ void NPC::student_state_machine(Player* p)
 				if (p[i].sock != NULL)
 				{
 					login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
-					std::cout << "충돌 패킷 전송 완료" << std::endl;
+					//std::cout << "충돌 패킷 전송 완료" << std::endl;
 				}
 			}
 		}
@@ -1202,7 +1230,7 @@ void NPC::student_state_machine(Player* p)
 			using namespace std::chrono;
 			if (attacked_time + 3s < steady_clock::now())		// 충돌 이후 3초가 지났으면
 			{
-				std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
+				//std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
 				state = 0;
 			}
 		}
@@ -1263,17 +1291,10 @@ void NPC::student_state_machine(Player* p)
 			using namespace std::chrono;
 			if (attacked_time + 3s < steady_clock::now())		// 충돌 이후 3초가 지났으면
 			{
-				std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
+				//std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
 				state = 0;
 			}
 		}
-	}
-
-	bool t = true;
-	while (true)
-	{
-		if (std::atomic_compare_exchange_strong(&this->updating, &t, false))
-			break;
 	}
 }
 
@@ -1460,7 +1481,7 @@ void NPC::move(const double& time)
 	using namespace DirectX;
 	XMVECTOR ActorPos = XMLoadFloat3(&position);
 	XMVECTOR DestPos = XMLoadFloat3(&destination);
-	printf("DEST: %f,%f,%f\n", destination.x, destination.y, destination.z);
+	//printf("DEST: %f,%f,%f\n", destination.x, destination.y, destination.z);
 	XMVECTOR direction = XMVectorSubtract(DestPos, ActorPos);
 	direction = XMVectorSetY(direction, 0);
 	direction = XMVector3Normalize(direction);
@@ -1488,8 +1509,8 @@ void NPC::move(const double& time)
 	if(degree*degree > 0.25) rotation.y += degree / 10;
 	movement /= time;
 	DirectX::XMStoreFloat3(&speed, movement);
-	if (this->id == 2)
-		printf("%f,%f,%f\n", speed.x, speed.y, speed.z);
+	/*if (this->id == 2)
+		printf("%f,%f,%f\n", speed.x, speed.y, speed.z);*/
 }
 
 const short NPC::find_near_player(Player*& players)
@@ -1531,4 +1552,47 @@ void NPC::reset_path()
 		this->path = next;
 	}
 	path_lock.unlock();
+}
+
+void NPC::reset_npc()
+{
+	reset_graph();
+	reset_path();
+	goalNode = nullptr;
+	state = 0;
+	m_floor = 1;
+}
+
+void NPC::set_manual_destination(const int& floor)
+{
+	this->state = 1;
+	while (true)
+	{
+		reset_path();
+		reset_graph();
+		int des;
+		switch (floor)
+		{
+		case 1:
+			des = 10;
+			break;
+		case 2:
+			des = 18;
+			break;
+		case 3:
+			des = 39;
+			break;
+		case 4:
+			des = 56;
+			break;
+		case 5:
+			des = 67;
+			break;
+		}
+		this->destination = astar_graph[des]->pos;
+		this->path = aStarSearch(position, destination, astar_graph);
+		if (this->path != nullptr)
+			break;
+	}
+	this->destination = path->pos;
 }

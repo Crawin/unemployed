@@ -256,7 +256,7 @@ public:
 				break;
 			case pSound:
 			{
-				auto sound = reinterpret_cast<sc_packet_busted*>(base);
+				auto sound = reinterpret_cast<cs_packet_sound_start*>(base);
 				auto sendOver = new EXP_OVER(sound);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
@@ -265,10 +265,10 @@ public:
 				}
 			}
 				break;
-			case pBusted:
+			case pEnding:
 			{
-				auto busted = reinterpret_cast<sc_packet_busted*>(base);
-				auto sendOver = new EXP_OVER(busted);
+				auto ending = reinterpret_cast<sc_packet_ending*>(base);
+				auto sendOver = new EXP_OVER(ending);
 				sendOver->c_op = C_SEND;
 				int res = WSASend(client_s, sendOver->wsabuf, 1, nullptr, 0, &sendOver->over, nullptr);
 				if (0 != res) {
@@ -356,7 +356,6 @@ class NPC
 {
 public:
 	short state = 0;				// 0: idle, 1: 이동중 , 2: 충돌 애니메이션 진행중
-	std::atomic_bool updating = false;
 	unsigned int id = NULL;
 	float m_floor = 1;
 	DirectX::XMFLOAT3 position = { 0,0,0 };
@@ -389,6 +388,8 @@ public:
 	const short find_near_player(Player*&);
 	void reset_graph();
 	void reset_path();
+	void reset_npc();
+	void set_manual_destination(const int& floor);
 };
 
 //struct GameDetails
@@ -411,7 +412,7 @@ public:
 		// 가드 초기위치 설정
 		guard.position = DirectX::XMFLOAT3(3160, 0, -400);
 		guard.id = 1;
-		guard.movement_speed = 3;
+		guard.movement_speed = 500;
 		
 		// npc 초기위치를 어떻게 설정할깝쇼
 		// 노가다로 설정해둘까
@@ -442,6 +443,8 @@ public:
 	void setBeiginTime();
 	void addBeiginTime(std::chrono::steady_clock::duration time);
 	void can_hear(const DirectX::XMFLOAT3& sound_position);
+	void respawn_guard();
+	void set_guard_destination(const int& floor);
 };
 
 struct ServerDetails

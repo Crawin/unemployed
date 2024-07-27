@@ -28,7 +28,7 @@ enum PACKET_TYPE
 	pGetItem,
 	pKeyInput,
 	pSound,
-	pBusted
+	pEnding
 };
 enum class ANIMATION_STATE;
 enum class GAME_INPUT;
@@ -204,17 +204,17 @@ public:
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
 };
 
-class sc_packet_busted : public packet_base
+class sc_packet_ending : public packet_base
 {
-	char time_over;		// 0: 체포 , 1: 타임오버
+	char ending_type;		// 0: 체포 , 1: 타임오버
 public:
-	sc_packet_busted(const char& time)
+	sc_packet_ending(const char& end)
 	{
-		size = sizeof(sc_packet_busted);
-		type = pBusted;
-		this->time_over = time;
+		size = sizeof(sc_packet_ending);
+		type = pEnding;
+		this->ending_type = end;
 	}
-	const char getTimeOver() { return time_over; }
+	const char getEndingType() { return ending_type; }
 };
 
 //--------------------------------------------------------------------------------------------------------------------
