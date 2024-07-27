@@ -1,0 +1,9 @@
+{
+	"name": "File_cupboard",
+	"BaseColor": "Map/InteriorTexture/File_cupboard",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

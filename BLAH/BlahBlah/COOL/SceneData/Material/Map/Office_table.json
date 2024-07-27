@@ -1,0 +1,9 @@
+{
+	"name": "Office_table",
+	"BaseColor": "Map/InteriorTexture/Office_table",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

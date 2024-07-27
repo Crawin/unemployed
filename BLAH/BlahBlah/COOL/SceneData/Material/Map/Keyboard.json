@@ -1,0 +1,9 @@
+{
+	"name": "Keyboard",
+	"BaseColor": "Map/InteriorTexture/Keyboard",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

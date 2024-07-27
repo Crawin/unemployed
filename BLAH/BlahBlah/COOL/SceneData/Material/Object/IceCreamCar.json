@@ -1,0 +1,9 @@
+{
+	"name": "IceCreamCar",
+	"BaseColor": "Object/IceCreamCar/Ice_Cream_Car",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

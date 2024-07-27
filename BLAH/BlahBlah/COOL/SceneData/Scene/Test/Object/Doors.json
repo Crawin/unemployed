@@ -1008,6 +1008,11 @@
 										"Position" : [ 0.0, 110.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
+									},
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
 									}
 								}
 							],
@@ -1032,7 +1037,7 @@
 							},
 							"Door": 
 							{
-								"MaxAngle": 90.0,
+								"MaxAngle": -90.0,
 								"RotateAxis": 1,
 								"Locked": true,
 								"Answer": 1234,
@@ -1056,11 +1061,11 @@
 					{
 						"Position" : 
 						[
-							-1483.0,
+							-1468.0,
 							620.0,
 							724.0
 						],
-						"Rotate" : [ 0.0, 180.0, 0.0 ],
+						"Rotate" : [ 0.0, 0.0, 0.0 ],
 						"Scale" : [ 1.0, 1.0, 1.0 ]
 					},
 					
@@ -1068,11 +1073,6 @@
 					{
 						"Mesh": "Door.Frame",
 						"Material": "Object/Door"
-					},
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
 					}
 				},
 				{

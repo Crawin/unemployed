@@ -1,0 +1,360 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Body_ice",
+					"Renderer" : 
+					{
+						"Material" : "Object/IceCreamCar",
+						"Mesh" : "Ice_Cream_Car.Body_ice"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							9.6893309091683477e-06,
+							285.31158447265625,
+							7.152557373046875e-05
+						],
+						"Rotate" : 
+						[
+							-3.7566038372460753e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.025399999693036079,
+							0.025399999693036079,
+							0.025399999693036079
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Ice_Wheel_BL",
+					"Renderer" : 
+					{
+						"Material" : "Object/IceCreamCar",
+						"Mesh" : "Ice_Cream_Car.Ice_Wheel_BL"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-126.41603088378906,
+							50.390720367431641,
+							-171.07536315917969
+						],
+						"Rotate" : 
+						[
+							-3.7566038372460753e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.025399999693036079,
+							0.025399999693036079,
+							0.025399999693036079
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Ice_Wheel_BR",
+					"Renderer" : 
+					{
+						"Material" : "Object/IceCreamCar",
+						"Mesh" : "Ice_Cream_Car.Ice_Wheel_BR"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							126.416015625,
+							50.390697479248047,
+							-171.07539367675781
+						],
+						"Rotate" : 
+						[
+							-3.7566038372460753e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.025399999693036079,
+							0.025399999693036079,
+							0.025399999693036079
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Ice_Wheel_FL",
+					"Renderer" : 
+					{
+						"Material" : "Object/IceCreamCar",
+						"Mesh" : "Ice_Cream_Car.Ice_Wheel_FL"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-126.41603088378906,
+							50.390670776367188,
+							250.14297485351562
+						],
+						"Rotate" : 
+						[
+							-3.7566038372460753e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.025399999693036079,
+							0.025399999693036079,
+							0.025399999693036079
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Ice_Wheel_FR",
+					"Renderer" : 
+					{
+						"Material" : "Object/IceCreamCar",
+						"Mesh" : "Ice_Cream_Car.Ice_Wheel_FR"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							126.416015625,
+							50.390647888183594,
+							250.14292907714844
+						],
+						"Rotate" : 
+						[
+							-3.7566038372460753e-05,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							0.025399999693036079,
+							0.025399999693036079,
+							0.025399999693036079
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "HintText__1_",
+					"Renderer" : 
+					{
+						"Material" : "Object/TempHint",
+						"Mesh" : "Ice_Cream_Car.HintText__1_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							141.19987487792969,
+							174.50044250488281,
+							-50.741767883300781
+						],
+						"Rotate" : 
+						[
+							82.524330139160156,
+							90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "HintText__2_",
+					"Renderer" : 
+					{
+						"Material" : "Object/TempHint",
+						"Mesh" : "Ice_Cream_Car.HintText__2_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							141.19987487792969,
+							174.50044250488281,
+							-4.541778564453125
+						],
+						"Rotate" : 
+						[
+							82.524330139160156,
+							90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "HintText__3_",
+					"Renderer" : 
+					{
+						"Material" : "Object/TempHint",
+						"Mesh" : "Ice_Cream_Car.HintText__3_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							141.19987487792969,
+							174.50044250488281,
+							42.958259582519531
+						],
+						"Rotate" : 
+						[
+							82.524330139160156,
+							90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "HintText__4_",
+					"Renderer" : 
+					{
+						"Material" : "Object/TempHint",
+						"Mesh" : "Ice_Cream_Car.HintText__4_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							136.39984130859375,
+							201.19999694824219,
+							91.25823974609375
+						],
+						"Rotate" : 
+						[
+							82.524330139160156,
+							90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Ice_Cream_Car",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					3890.000244140625,
+					-92.0,
+					-512.35821533203125
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Ice_Cream_Car_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

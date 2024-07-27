@@ -1,0 +1,9 @@
+{
+	"name": "partition_wall",
+	"BaseColor": "Map/InteriorTexture/partition_wall",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
