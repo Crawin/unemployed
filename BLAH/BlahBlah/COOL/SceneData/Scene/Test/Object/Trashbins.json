@@ -1,0 +1,326 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-689.70001220703125,
+							-0.034859292209148407,
+							258.29998779296875
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__1_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-700.4000244140625,
+							510.0999755859375,
+							-271.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__2_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2227.699951171875,
+							510.39999389648438,
+							-570.4000244140625
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__3_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2926.300048828125,
+							873.4000244140625,
+							-1060.0999755859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__4_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-697.29998779296875,
+							873.4000244140625,
+							-329.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__5_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-697.29998779296875,
+							1232.0,
+							-142.90000915527344
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__6_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2960.0,
+							1232.0,
+							-1040.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Trash_bin__7_",
+					"Renderer" : 
+					{
+						"Material" : "Map/Trash_bin",
+						"Mesh" : "Trash_bin.Trash_bin"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							2960.0,
+							1591.0,
+							-1040.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Trashbins",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Trashbins_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

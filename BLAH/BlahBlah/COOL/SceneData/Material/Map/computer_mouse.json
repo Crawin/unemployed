@@ -1,0 +1,9 @@
+{
+	"name": "computer_mouse",
+	"BaseColor": "Map/InteriorTexture/computer_mouse",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

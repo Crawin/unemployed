@@ -1,0 +1,9 @@
+{
+	"name": "FinalChestKey_Green",
+	"BaseColor": "Object/FinalChestKey/m_key_01_green_bc",
+	"Roughness": "Gray",
+	"Metalic": "Object/FinalChestKey/m_key_01_m_s",
+	"AO": "Object/FinalChestKey/m_key_01_ao",
+	"Normal": "Object/FinalChestKey/m_key_01_n",
+	"Shader": "TestMeshDiffered"
+}

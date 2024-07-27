@@ -1,0 +1,9 @@
+{
+	"name": "Trash_bin",
+	"BaseColor": "Map/InteriorTexture/Trash_bin",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

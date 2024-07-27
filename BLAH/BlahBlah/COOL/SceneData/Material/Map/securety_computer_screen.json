@@ -1,0 +1,9 @@
+{
+	"name": "securety_computer_screen",
+	"BaseColor": "Map/InteriorTexture/securety_computer_screen",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

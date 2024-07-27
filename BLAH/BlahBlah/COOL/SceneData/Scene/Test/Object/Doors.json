@@ -722,7 +722,7 @@
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 5,
-						"Game": 2,
+						"Game": 9,
 						"FailCount":3,
 						"ID": 2091,
 						"HP": 2
@@ -805,7 +805,7 @@
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 1234,
-						"Game": 1,
+						"Game": 9,
 						"FailCount":3,
 						"ID": 2101,
 						"HP": 2
@@ -888,7 +888,7 @@
 						"RotateAxis": 1,
 						"Locked": true,
 						"Answer": 9876,
-						"Game": 1,
+						"Game": 9,
 						"FailCount":3,
 						"ID": 2111,
 						"HP": 2
@@ -1005,34 +1005,54 @@
 									},
 									"Transform" : 
 									{
-										"Position" : [ 50.0, 0.0, 0.0],
+										"Position" : [ 0.0, 110.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
+									},
+									"Collider" : 
+									{
+										"AutoMesh" : true,
+										"Static" : true
 									}
 								}
 							],
-							"Collider" : 
-							{
-								"AutoMesh" : true,
-								"Static" : true
-							},
+							
 							"Name" : "FrameRender",
 							"Renderer" : 
 							{
 								"Material" : "Object/Door",
-								"Mesh" : "Door.Frame"
+								"Mesh" : "Door.Door_1"
 							},
 
 							"Transform" : 
 							{
 								"Position" : 
 								[
-									-50.0,
-									107.82761383056641,
+									50.0,
+									-107.82761383056641,
 									-7.62939453125e-06
 								],
 								"Rotate" : [ 0.0, 0.0, 0.0 ],
 								"Scale" : [ 1.0, 1.0, 1.0 ]
+							},
+							"Door": 
+							{
+								"MaxAngle": -90.0,
+								"RotateAxis": 1,
+								"Locked": true,
+								"Answer": 1234,
+								"Game": 1,
+								"FailCount":3,
+								"ID": 2131,
+								"HP": 2
+							},
+							"Interaction": {},
+							"Collider": {
+								"Static": true,
+								"IsTrigger": true,
+								"AutoMesh": false,
+								"Center": [-50.0, 120, 0],
+								"Extent": [50.0, 100, 50]
 							}
 						}
 					],
@@ -1041,36 +1061,18 @@
 					{
 						"Position" : 
 						[
-							-1533.0,
-							516.0,
+							-1468.0,
+							620.0,
 							724.0
 						],
-						"Rotate" : [ 0.0, 180.0, 0.0 ],
+						"Rotate" : [ 0.0, 0.0, 0.0 ],
 						"Scale" : [ 1.0, 1.0, 1.0 ]
 					},
-					"Door": 
-					{
-						"MaxAngle": 90.0,
-						"RotateAxis": 1,
-						"Locked": true,
-						"Answer": 1234,
-						"Game": 9,
-						"FailCount":3,
-						"ID": 2131,
-						"HP": 2
-					},
+					
 					"Renderer":
 					{
-						"Mesh": "Door.Door_1",
+						"Mesh": "Door.Frame",
 						"Material": "Object/Door"
-					},
-					"Interaction": {},
-					"Collider": {
-						"Static": true,
-						"IsTrigger": true,
-						"AutoMesh": false,
-						"Center": [-50.0, 120, 0],
-						"Extent": [50.0, 100, 50]
 					}
 				},
 				{
@@ -2582,34 +2584,49 @@
 									},
 									"Transform" : 
 									{
-										"Position" : [ 50.0, 0.0, 0.0],
+										"Position" : [ 0.0, 110.0, 0.0],
 										"Rotate" : [ 0.0, 0.0, 0.0 ],
 										"Scale" : [ 1.0, 1.0, 1.0 ]
 									}
 								}
 							],
-							"Collider" : 
-							{
-								"AutoMesh" : true,
-								"Static" : true
-							},
+							
 							"Name" : "FrameRender",
 							"Renderer" : 
 							{
 								"Material" : "Object/Door",
-								"Mesh" : "Door.Frame"
+								"Mesh" : "Door.Door_1"
 							},
 
 							"Transform" : 
 							{
 								"Position" : 
 								[
-									-50.0,
-									107.82761383056641,
+									50.0,
+									-107.82761383056641,
 									-7.62939453125e-06
 								],
 								"Rotate" : [ 0.0, 0.0, 0.0 ],
 								"Scale" : [ 1.0, 1.0, 1.0 ]
+							},
+							"Door": 
+							{
+								"MaxAngle": 90.0,
+								"RotateAxis": 1,
+								"Locked": true,
+								"Answer": 3,
+								"Game": 2,
+								"FailCount":3,
+								"ID": 3031,
+								"HP": 2
+							},
+							"Interaction": {},
+							"Collider": {
+								"Static": true,
+								"IsTrigger": true,
+								"AutoMesh": false,
+								"Center": [-50.0, 120, 0],
+								"Extent": [50.0, 100, 50]
 							}
 						}
 					],
@@ -2618,36 +2635,23 @@
 					{
 						"Position" : 
 						[
-							1818.0,
-							870.0,
+							1868.0,
+							974.0,
 							724.0
 						],
 						"Rotate" : [ 0.0, 180.0, 0.0 ],
 						"Scale" : [ 1.0, 1.0, 1.0 ]
 					},
-					"Door": 
-					{
-						"MaxAngle": 90.0,
-						"RotateAxis": 1,
-						"Locked": true,
-						"Answer": 1234,
-						"Game": 9,
-						"FailCount":3,
-						"ID": 3031,
-						"HP": 2
-					},
+					
 					"Renderer":
 					{
-						"Mesh": "Door.Door_1",
+						"Mesh": "Door.Frame",
 						"Material": "Object/Door"
 					},
-					"Interaction": {},
-					"Collider": {
-						"Static": true,
-						"IsTrigger": true,
-						"AutoMesh": false,
-						"Center": [-50.0, 120, 0],
-						"Extent": [50.0, 100, 50]
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
 					}
 				},
 				{
@@ -3211,8 +3215,8 @@
 						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
-						"Answer": 1234,
-						"Game": 9,
+						"Answer": 1,
+						"Game": 2,
 						"FailCount":3,
 						"ID": 3111,
 						"HP": 2
@@ -6033,8 +6037,8 @@
 						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
-						"Answer": 1234,
-						"Game": 9,
+						"Answer": 4567,
+						"Game": 1,
 						"FailCount":3,
 						"ID": 4111,
 						"HP": 2
@@ -9353,8 +9357,8 @@
 						"MaxAngle": 90.0,
 						"RotateAxis": 1,
 						"Locked": true,
-						"Answer": 1234,
-						"Game": 9,
+						"Answer": 213,
+						"Game": 3,
 						"FailCount":3,
 						"ID": 5141,
 						"HP": 2

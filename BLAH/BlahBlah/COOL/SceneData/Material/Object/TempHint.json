@@ -1,0 +1,9 @@
+{
+	"name": "Hint",
+	"BaseColor": "Object/HintText/TempHint",
+	"Roughness": "Gray",
+	"Metalic": "Black",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

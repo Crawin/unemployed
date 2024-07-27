@@ -1,0 +1,61 @@
+{
+	"Children" : 
+	[
+		{
+			"Collider" : 
+			{
+				"AutoMesh" : true,
+				"Static" : true
+			},
+			"Name" : "sm_key_01",
+			"Renderer" : 
+			{
+				"Material" : "Object/Key/FinalChestKey_Green",
+				"Mesh" : "sm_key_01.sm_key_01"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					0.80000001192092896,
+					0.80000001192092896,
+					0.80000001192092896
+				]
+			}
+		}
+	],
+	"Name" : "sm_key_01_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			-31.900001525878906,
+			120.0,
+			679.89996337890625
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
