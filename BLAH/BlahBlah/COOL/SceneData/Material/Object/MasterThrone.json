@@ -1,0 +1,9 @@
+{
+	"name": "MasterThrone",
+	"BaseColor": "Object/Throne/diff",
+	"Roughness": "Gray",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

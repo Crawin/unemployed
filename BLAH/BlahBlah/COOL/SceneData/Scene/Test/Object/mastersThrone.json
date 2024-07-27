@@ -1,0 +1,97 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "MasterGood",
+					"Renderer" : 
+					{
+						"Material" : "Object/MasterThrone",
+						"Mesh" : "mastersThrone.MasterGood"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "mastersThrone",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					10297.4,
+					4945.2,
+					-1001.1
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Interaction": {},
+			"Collider": {
+				"Static": true,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [0.0, 100, 0],
+				"Extent": [300.0, 200, 300]
+			}
+			
+		}
+	],
+	"Name" : "mastersThrone_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

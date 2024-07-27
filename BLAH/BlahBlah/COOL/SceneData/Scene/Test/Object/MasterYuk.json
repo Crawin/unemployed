@@ -1,0 +1,355 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+
+					"Name" : "Ch33_Belt",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Belt"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Body",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Body"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Eyelashes",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Eyelashes"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Hair",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Hair"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Pants",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Pants"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Shirt",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Shirt"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Shoes",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Shoes"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Suit",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Suit"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				},
+				{
+
+					"Name" : "Ch33_Tie",
+					"Renderer" : 
+					{
+						"Material" : "Character/MasterYuk_mat",
+						"Mesh" : "MasterYuk.Ch33_Tie"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					},
+					"AnimationExecutor":{
+						"Player": "MasterYuk"
+					}
+				}
+			],
+			"Name" : "MasterYuk",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					10298.27,
+					4973.2,
+					-1001.1
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"AnimationController":
+			{
+				"Player": "MasterYuk"
+			}
+		}
+	],
+	"Name" : "MasterYuk_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

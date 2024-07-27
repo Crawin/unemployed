@@ -1,0 +1,9 @@
+{
+	"name": "Umbrella",
+	"BaseColor": "Object/Umbrella/Beach_Umbrella",
+	"Roughness": "AllmostBlack",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}
