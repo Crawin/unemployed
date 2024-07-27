@@ -206,7 +206,7 @@ public:
 
 class sc_packet_ending : public packet_base
 {
-	char ending_type;		// 0: 체포 , 1: 타임오버
+	char ending_type;		// 0: 체포 , 1: 타임오버, 2: 게임성공, 3: 도주
 public:
 	sc_packet_ending(const char& end)
 	{

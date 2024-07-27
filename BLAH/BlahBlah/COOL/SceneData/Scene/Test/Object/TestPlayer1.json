@@ -5,8 +5,8 @@
 
 	"Transform": 
 	{
-		"Position": [0.0, 20.0, 1000.0],
-		"Rotate": [0.0, 180.0, 0.0],
+		"Position": [10204.0, 5319.0, -597.0],
+		"Rotate": [0.0, 270.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
 
@@ -32,8 +32,8 @@
 
 	"Player": 
 	{
-		"OriginalPosition": [],
-		"OriginalRotate": []
+		"OriginalPosition": [4253.03, 100.0, 985.95],
+		"OriginalRotate": [0,270,0]
 	},
 
 	"PlayerAnimControll": {},
