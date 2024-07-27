@@ -4,6 +4,12 @@
 #include "ResourceManager.h"
 #include "ECS/ECSManager.h"
 #include "SceneManager.h"
+#include "App/Application.h"
+
+void LoadingScene::Exit()
+{
+	Application::GetInstance().ChangeBorderlessMode(true);
+}
 
 void LoadingScene::Update(float deltaTime)
 {
@@ -12,7 +18,7 @@ void LoadingScene::Update(float deltaTime)
 	// 1. late init
 	// 2. onstart
 	// final.. scenemanager->ChangeScene;
-
+	
 	if (m_NextScene) {
 		switch (m_LoadingStep) {
 		case 0:

@@ -38,6 +38,8 @@ public:
 	SceneManager* GetSceneManager() const { return m_SceneManager; };
 	//FMOD_SYSTEM* getFmodSystem() { return m_pSoundSystem; }
 
+	void ChangeBorderlessMode(bool toWindowed);
+	bool GetWindowed() const { return m_Windowed; }
 private:
 	HINSTANCE	m_hInst = 0;
 	HWND		m_hWnd = 0;
@@ -53,6 +55,8 @@ private:
 	bool m_ShowGrid = false;
 	bool m_GameLoop = true;
 	bool m_Rendering = false;
+
+	bool m_Windowed = true;
 
 	//FMOD_SYSTEM* m_pSoundSystem;
 	SceneManager* m_SceneManager = nullptr;

@@ -770,7 +770,17 @@ namespace component {
 
 	void Player::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value pl = v["Player"];
+
+		m_OriginalPosition.x = pl["OriginalPosition"][0].asFloat();
+		m_OriginalPosition.y = pl["OriginalPosition"][1].asFloat();
+		m_OriginalPosition.z = pl["OriginalPosition"][2].asFloat();
+		
+		m_OriginalRotate.x = pl["OriginalRotate"][0].asFloat();
+		m_OriginalRotate.y = pl["OriginalRotate"][1].asFloat();
+		m_OriginalRotate.z = pl["OriginalRotate"][2].asFloat();
 	}
+
 
 	void Player::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
@@ -799,9 +809,9 @@ namespace component {
 			ERROR_QUIT("ERROR!!! no dynamic collider on Player Entity!!");
 		}
 
-		Transform* tr = manager->GetComponent<Transform>(selfEntity);
-		m_OriginalPosition = tr->GetPosition();
-		m_OriginalRotate = tr->GetRotation();
+		//Transform* tr = manager->GetComponent<Transform>(selfEntity);
+		//m_OriginalPosition = tr->GetPosition();
+		//m_OriginalRotate = tr->GetRotation();
 	}
 
 	void Player::ShowYourself() const

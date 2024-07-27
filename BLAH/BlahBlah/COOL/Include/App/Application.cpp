@@ -120,12 +120,14 @@ bool Application::Init(HINSTANCE hInst, const SIZE& wndSize)
 	Renderer::GetInstance().ExecuteAndEraseUploadHeap(commandList);
 	Client::GetInstance().setSceneManager(m_SceneManager);
 
+
 	return true;
 }
 
 int Application::StartProgram()
 {
 	FMOD_INFO::GetInstance().begin_fmod();
+
 	MSG Message;
 	m_Timer->Start();
 	while (m_GameLoop) {
@@ -178,4 +180,40 @@ LRESULT Application::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
+}
+
+void Application::ChangeBorderlessMode(bool toWindowed)
+{
+	m_Windowed = toWindowed;
+	if (toWindowed) {
+		WINDOWPLACEMENT* wp = (WINDOWPLACEMENT*)GetWindowLongPtr(m_hWnd, GWLP_USERDATA);
+		if (wp) {
+			// Restore the window style
+			SetWindowLong(m_hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+			SetWindowPlacement(m_hWnd, wp);
+
+			// Clean up
+			delete wp;
+			SetWindowLongPtr(m_hWnd, GWLP_USERDATA, 0);
+		}
+	}
+	else {
+		// to borderless
+
+		WINDOWPLACEMENT wp;
+		GetWindowPlacement(m_hWnd, &wp);
+
+		SetWindowLong(m_hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+
+		HMONITOR hMonitor = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
+		MONITORINFO mi = { sizeof(mi) };
+		GetMonitorInfo(hMonitor, &mi);
+
+		SetWindowPos(m_hWnd, HWND_TOP, mi.rcMonitor.left, mi.rcMonitor.top,
+				 mi.rcMonitor.right - mi.rcMonitor.left,
+				 mi.rcMonitor.bottom - mi.rcMonitor.top,
+				 SWP_FRAMECHANGED | SWP_NOACTIVATE);
+
+		SetWindowLongPtr(m_hWnd, GWLP_USERDATA, (LONG_PTR)new WINDOWPLACEMENT(wp));
+	}
 }

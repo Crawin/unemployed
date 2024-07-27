@@ -30,7 +30,11 @@
 
 	"Input": {},
 
-	"Player": {},
+	"Player": 
+	{
+		"OriginalPosition": [],
+		"OriginalRotate": []
+	},
 
 	"PlayerAnimControll": {},
 
