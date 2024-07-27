@@ -6,6 +6,7 @@
 #include "json/json.h"
 #include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
+#include "FMODsound/FmodSound.h"
 
 
 namespace component {
@@ -387,6 +388,8 @@ namespace component {
 			Client::GetInstance().send_packet(&packet);
 		}
 
+		FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN, "DOOR_OPEN");
+
 		m_Open = state;
 	}
 
@@ -744,6 +747,10 @@ namespace component {
 				Client::GetInstance().send_packet(&anim);
 			}
 
+			// play sound
+			auto masterTr = manager->GetComponent<Transform>(master);
+			FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::CROWBAR_SWING, "crobwar_swing");
+
 			// set collider on
 			auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			selfCollider->SetActive(true);
@@ -806,6 +813,10 @@ namespace component {
 			DebugPrint("POO");
 			manager->AddParticle(PARTICLE_TYPES::SPARK, pos, vel, 100, 10.0f);
 			collider->SetActive(false);
+
+			// play sound
+			FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::CROWBAR_HIT, "crobwar_hit");
+
 			};
 		collider->InsertEvent<Collider>(setFirePoo, COLLIDE_EVENT_TYPE::BEGIN);
 		collider->SetActive(false);
@@ -1771,6 +1782,7 @@ namespace component {
 								if (cans.empty() == false) {
 									Entity* can = cans.front();
 									Inventory* playerInv = manager->GetComponent<Inventory>(m_PlayerEntity);
+									Transform* playerTr = manager->GetComponent<Transform>(m_PlayerEntity);
 									Holdable* holdable = manager->GetComponent<Holdable>(can);
 									Drink* drink = manager->GetComponent<Drink>(can);
 
@@ -1788,6 +1800,9 @@ namespace component {
 											cs_packet_get_item packet(holdable->GetHoldableID(), targetInvNum);
 											Client::GetInstance().send_packet(&packet);
 										}
+
+										// play sound
+										FMOD_INFO::GetInstance().play_unloop_sound(playerTr->GetWorldPosition(), SOUND_TYPE::DRINK_BUY, "DRINK_BUY");
 
 										// hide ui
 										canvas->HideUI();
@@ -1826,6 +1841,7 @@ namespace component {
 				Entity* master = holdable->GetMaster();
 				Physics* masterPhy = manager->GetComponent<Physics>(master);
 				Inventory* masterInv = manager->GetComponent<Inventory>(master);
+				Transform* masterTr = manager->GetComponent<Transform>(master);
 
 				// set speed up
 				float* masterMaxSpeed = masterPhy->GetMaxVelocityPtr();
@@ -1842,6 +1858,8 @@ namespace component {
 				masterInv->EraseCurrentHolding();
 				manager->AttachChild(holdable->GetOriginParent(), selfEntity);
 				//manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+
+				FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::DRINK_CONSUME, "ConsumeDr");
 				};
 			break;
 

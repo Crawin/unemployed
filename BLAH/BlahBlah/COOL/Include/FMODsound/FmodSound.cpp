@@ -195,9 +195,9 @@ void FMOD_INFO::begin_fmod()
     auto a = SOUNDS.try_emplace(SOUND_TYPE::FOOTPRINT);
     if (a.second)
     {
-        result = m_system->createSound("SceneData/Sound/run3.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::FOOTPRINT]);
+        result = m_system->createSound("SceneData/Sound/walking.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::FOOTPRINT]);
         ERRCHECK(result);
-        result = SOUNDS[SOUND_TYPE::FOOTPRINT]->set3DMinMaxDistance(10.0f, 100.0f);
+        result = SOUNDS[SOUND_TYPE::FOOTPRINT]->set3DMinMaxDistance(10.0f, 400.0f);
         ERRCHECK(result);
     }
 
@@ -208,6 +208,70 @@ void FMOD_INFO::begin_fmod()
         ERRCHECK(result);
     }
 
+    a = SOUNDS.try_emplace(SOUND_TYPE::CROWBAR_SWING);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/crowbar_swing.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::CROWBAR_SWING]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::CROWBAR_SWING]->set3DMinMaxDistance(10.0f, 400.0f);
+        ERRCHECK(result);
+    }
+
+    a = SOUNDS.try_emplace(SOUND_TYPE::CROWBAR_HIT);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/crowbar_hit.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::CROWBAR_HIT]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::CROWBAR_HIT]->set3DMinMaxDistance(10.0f, 100.0f);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::CROWBAR_HIT]->set3DMinMaxDistance(10.0f, 1500.0f);
+        ERRCHECK(result);
+    }
+
+    a = SOUNDS.try_emplace(SOUND_TYPE::DOOR_OPEN);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/door_open.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::DOOR_OPEN]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DOOR_OPEN]->set3DMinMaxDistance(10.0f, 300.0f);
+        ERRCHECK(result);
+    }
+
+    a = SOUNDS.try_emplace(SOUND_TYPE::DRINK_BUY);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/vending_machine_drop.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::DRINK_BUY]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DRINK_BUY]->set3DMinMaxDistance(10.0f, 1000.0f);
+        ERRCHECK(result);
+    }
+
+    a = SOUNDS.try_emplace(SOUND_TYPE::DRINK_THROW_HIT);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/can_drop.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::DRINK_THROW_HIT]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DRINK_THROW_HIT]->set3DMinMaxDistance(10.0f, 1000.0f);
+        ERRCHECK(result);
+    }
+
+    a = SOUNDS.try_emplace(SOUND_TYPE::DRINK_CONSUME);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/can_drink.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::DRINK_CONSUME]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DRINK_CONSUME]->set3DMinMaxDistance(10.0f, 300.0f);
+        ERRCHECK(result);
+    }
+
+    a = SOUNDS.try_emplace(SOUND_TYPE::KEY_JINGLE);
+    if (a.second)
+    {
+        result = m_system->createSound("SceneData/Sound/key_jingle.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::KEY_JINGLE]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::KEY_JINGLE]->set3DMinMaxDistance(10.0f, 500.0f);
+        ERRCHECK(result);
+    }
 
 
     //// 청취자 위치 설정
@@ -335,24 +399,31 @@ void FMOD_INFO::end_fmod()
     ERRCHECK(result);
 }
 
-bool FMOD_INFO::play_loop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel)
+bool FMOD_INFO::play_loop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel, float pitch)
 {
     FMOD_RESULT result;
-    auto b = CHANNELS.try_emplace(channel);
-    if (b.second)
-    {
-        CHANNELS[channel]->setMode(FMOD_LOOP_NORMAL);
-        result = m_system->playSound(SOUNDS[sound], 0, false, &CHANNELS[channel]);
-        ERRCHECK(result);
+    if (CHANNELS.contains(channel) == false) {
+        auto b = CHANNELS.try_emplace(channel);
+        if (b.second)
+        {
+            CHANNELS[channel]->setMode(FMOD_LOOP_NORMAL);
+            result = m_system->playSound(SOUNDS[sound], 0, false, &CHANNELS[channel]);
+            ERRCHECK(result);
 
-        FMOD_VECTOR soundPos = { WorldPos.x, WorldPos.y, WorldPos.z };
-        FMOD_VECTOR soundVel = { 0.0f, 0.0f, 0.0f };
-        result = CHANNELS[channel]->set3DAttributes(&soundPos, &soundVel);
-        ERRCHECK(result);
-        return true;
+            FMOD_VECTOR soundPos = { WorldPos.x, WorldPos.y, WorldPos.z };
+            FMOD_VECTOR soundVel = { 0.0f, 0.0f, 0.0f };
+            result = CHANNELS[channel]->set3DAttributes(&soundPos, &soundVel);
+            ERRCHECK(result);
+            return true;
+        }
     }
     else
     {
+        FMOD_VECTOR soundPos = { WorldPos.x, WorldPos.y, WorldPos.z };
+        FMOD_VECTOR soundVel = { 0.0f, 0.0f, 0.0f };
+        CHANNELS[channel]->set3DAttributes(&soundPos, &soundVel);
+        // 재생 속도
+        CHANNELS[channel]->setPitch(pitch);
         return false;
     }
 }

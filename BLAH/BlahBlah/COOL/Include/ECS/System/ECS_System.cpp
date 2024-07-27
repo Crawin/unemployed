@@ -150,10 +150,11 @@ namespace ECSsystem {
 
 		std::function<void(component::PlayerController*)> sendClientTalk = [manager](component::PlayerController* ctrl) {
 			auto& client = Client::GetInstance();
+			component::Pawn* curPawn = ctrl->GetControllingPawn();
+			component::Transform* tr = manager->GetComponent<component::Transform>(curPawn->GetCameraEntity());
+
 			if (client.is_talking)
 			{
-				component::Pawn* curPawn = ctrl->GetControllingPawn();
-				component::Transform* tr = manager->GetComponent<component::Transform>(curPawn->GetCameraEntity());
 				auto pos = tr->GetWorldPosition();
 				pos.y -= 160;
 				cs_packet_sound_start sound(pos, voice);
@@ -161,6 +162,12 @@ namespace ECSsystem {
 				client.send_packet(&sound);
 				std::cout << pos.x << "," << pos.y << "," << pos.z << " 전송 완" << std::endl;
 			}
+
+			// fmod sync
+			XMFLOAT3 rot = tr->GetRotation();
+			FMOD_INFO::GetInstance().set_self_position(tr->GetWorldPosition());
+			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
+			FMOD_INFO::GetInstance().set_player1_rotation_z(rot.z);
 			};
 
 		manager->Execute(func1);
@@ -402,7 +409,7 @@ namespace ECSsystem {
 				rot.y += (mouseMove.x / rootSpeed);
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
-				FMOD_INFO::GetInstance().set_player1_rotation_y(rot.y);
+				
 			}
 		};
 
@@ -424,7 +431,7 @@ namespace ECSsystem {
 			//rot.y += (mouseMove.x / rootSpeed);
 			rot.x += (mouseMove.y / rootSpeed);
 			camTr->SetRotation(rot);
-			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
+			//FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
 
 			};
 
@@ -985,6 +992,37 @@ namespace ECSsystem {
 
 		manager->Execute(friction);
 		manager->Execute(gravity);
+
+
+		// play walk sound here
+		std::function<void(Transform*, Physics*, Name*, SelfEntity*)> playWalkSound = [manager](Transform* tr, Physics* py, Name* name, SelfEntity* self) {
+			Player* p = manager->GetComponent<Player>(self->GetEntity());
+			AI* a = manager->GetComponent<AI>(self->GetEntity());
+
+			// physics를 가진 엔티티 중, ai거나 player일 때만 사운드 재생
+			if (a != nullptr || p != nullptr) {
+				SOUND_TYPE type = SOUND_TYPE::FOOTPRINT;
+
+				// todo if speed is fast
+				// play run sound
+				float vel = py->GetCurrentVelocityLenOnXZ();
+				if (vel > 10.0f) {
+					// just walk
+					// set play speed
+					// walk: 200, speed: 1.0f
+					// run : 600, speed : 1.5f
+					float soundPitch = 1.0f + (vel - 200.0f) * (600.0f - 200.0f) / (600.0f - 200.0f);
+					soundPitch = std::clamp(soundPitch, 1.0f, 1.5f);
+					//DebugPrint(std::format("pitch: {}", soundPitch));
+					FMOD_INFO::GetInstance().play_loop_sound(tr->GetWorldPosition(), type, std::format("{}_footprint", name->getName()), soundPitch);
+				}
+				else
+					FMOD_INFO::GetInstance().stop_sound(std::format("{}_footprint", name->getName()));
+			}
+
+			};
+
+		manager->Execute(playWalkSound);
 
 	}
 

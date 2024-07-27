@@ -124,7 +124,7 @@ namespace component {
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
 		void SetUioff(bool uioff) { m_Uioff = uioff; }
 		void SetOpen(ECSManager* manager, Transform* tr, Entity* self, bool state, bool sendServer = true);
-		void SetOpen(bool state) { m_Open = state; }
+		//void SetOpen(bool state) { m_Open = state; }
 		void SetKeyDoorOpen(bool keyopen) { m_KeyDoorOpen = keyopen; }
 		void SetDoorHp(int hp) { m_Hp = hp; }
 		void SetAnswer(int answer) { m_Answer = answer; }
