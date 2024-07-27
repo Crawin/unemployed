@@ -462,7 +462,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			if (detail.m_bNPC)
 				Games[gameNum].can_hear(packet->getPosition());
 
-			if (static_cast<short>(packet->getType()) > 1)
+			if (packet->getType() > SOUND_TYPE::FOOTPRINT)
 			{
 				if (InGamePlayers[0].id == id)
 				{
