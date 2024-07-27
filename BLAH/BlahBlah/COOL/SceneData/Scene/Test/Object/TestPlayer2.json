@@ -10,7 +10,11 @@
 
 	"Input": {},
 
-	"Player": {},
+	"Player": {
+		"OriginalPosition": [4267.03, 100.0, 854.2],
+		"OriginalRotate": [0,270,0]
+
+	},
 
 	"PlayerAnimControll": {},
 
@@ -40,8 +44,8 @@
 
 	"Transform": 
 	{
-		"Position": [200.0, 20.0, 1000.0],
-		"Rotate": [0.0, 180.0, 0.0],
+		"Position": [10211.58, 5321.0, -170.4],
+		"Rotate": [0.0, 270.0, 0.0],
 		"Scale": [1.0, 1.0, 1.0]
 	},
 

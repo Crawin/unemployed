@@ -214,6 +214,7 @@ void TestMainScene::OnGameStarted()
 	manager->Execute(getCtrler);
 	component::Pawn* controlledPawn = ctrler->GetControllingPawn();
 	Entity* originCam = controlledPawn->GetCameraEntity();
+	component::Transform* originEntityTransform = manager->GetComponent<component::Transform>(controlledPawn->GetSelfEntity());
 	component::Transform* originCamTransform = manager->GetComponent<component::Transform>(originCam);
 
 	// get pawn to possess
@@ -231,13 +232,23 @@ void TestMainScene::OnGameStarted()
 
 	// position
 	{
+		XMFLOAT3 finalPos;
+		XMFLOAT4X4 parent = originEntityTransform->GetWorldTransform();
+		XMFLOAT3 camPos = originCamTransform->GetPosition();
+
+		XMVECTOR camPosV = XMLoadFloat3(&camPos);
+		XMMATRIX parentMat = XMLoadFloat4x4(&parent);
+
+		XMStoreFloat3(&finalPos, XMVector3Transform(camPosV, parentMat));
+
 		TimeLine<XMFLOAT3>* positionToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetPositionPtr());
 		XMFLOAT3 startPos = camPawnTransform->GetPosition();
 		XMFLOAT3 endPos = { 4470.0f, 160.84f, 920.0f };
 		positionToEnd->AddKeyFrame(startPos, 0);
 		positionToEnd->AddKeyFrame(startPos, 0.2f);
 		positionToEnd->AddKeyFrame(endPos, 3.0f);
-		positionToEnd->AddKeyFrame(originCamTransform->GetWorldPosition(), 4.5f);
+		positionToEnd->AddKeyFrame(endPos, 3.5f);
+		positionToEnd->AddKeyFrame(finalPos, 4.5f);
 		positionToEnd->SetEndEvent(returnToBasePawn);
 		manager->AddTimeLine(startPawn->GetCameraEntity(), positionToEnd);
 	}
@@ -253,6 +264,7 @@ void TestMainScene::OnGameStarted()
 		rotateToEnd->AddKeyFrame(endRot, 4.5f);
 		manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
 	}
+}
 }
 
 //void TestMainScene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
