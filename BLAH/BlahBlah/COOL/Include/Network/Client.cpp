@@ -254,6 +254,7 @@ void process_packet(packet_base*& base)
 	case pGetItem:
 	case pKeyInput:
 	case pAttack:
+	case pSound:
 		client.getSceneManager()->ProcessPacket(base);
 		break;
 	case pLOGIN:									// LOGIN

@@ -9,6 +9,7 @@
 #include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
 #include "Scene/SceneManager.h"
+#include "FMODsound/FmodSound.h"
 
 #ifdef _DEBUG
 #include "App/InputManager.h"
@@ -927,6 +928,14 @@ void Scene::ProcessPacket(packet_base* packet)
 			}
 			};
 		m_ECSManager->Execute(func);
+		break;
+	}
+	case pSound:
+	{
+		cs_packet_sound_start* buf = reinterpret_cast<cs_packet_sound_start*>(packet);
+		int type = static_cast<int>(buf->getType());
+
+		FMOD_INFO::GetInstance().play_unloop_sound(buf->getPosition(), buf->getType(), std::format("from_server: {}", type));
 		break;
 	}
 	}
