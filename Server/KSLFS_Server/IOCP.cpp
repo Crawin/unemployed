@@ -195,7 +195,16 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				using namespace std::chrono;
 				g_mutex_npc_timer.lock();
 				//g_npc_timer.emplace(rw_byte, my_id, duration_cast<milliseconds>(start + 1s - steady_clock::now()));
-				g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+				if (my_id == 1)	// 경비 npc
+				{
+					if(!Games[rw_byte].isDay())	// 밤시간이면 업데이트 추가
+						g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+				}
+				else if (my_id < STUDENT_SIZE)	// 학생 npc
+				{
+					if (Games[rw_byte].isDay()) // 낮시간이면 업데이트 추가
+						g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+				}
 				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
 			}
@@ -474,6 +483,34 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 				}
 			}
+			break;
+		}
+		case pEnding:
+		{
+			auto packet = reinterpret_cast<sc_packet_ending*>(base);
+			auto sent_player = login_players.find(id);
+			auto gameNum = sent_player->second.getGameNum();
+			auto InGamePlayers = Games[gameNum].getPlayers();
+
+			if (InGamePlayers[0].id == id)
+			{
+				if (InGamePlayers[1].id)
+				{
+					login_players[InGamePlayers[1].id].send_packet(base);
+				}
+			}
+			else if (InGamePlayers[1].id == id)
+			{
+				if (InGamePlayers[0].id)
+				{
+					login_players[InGamePlayers[0].id].send_packet(base);
+				}
+			}
+			else
+			{
+				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+			}
+			Games.erase(gameNum);
 			break;
 		}
 		default:
@@ -958,7 +995,7 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 		std::cout << "잘못된 NPC아이디 입니다." << std::endl;
 	}
 	using namespace std::chrono;
-	if (this->begin_time.time_since_epoch() > nanoseconds(1) && this->begin_time + minutes(3) < steady_clock::now())
+	if (this->begin_time.time_since_epoch() > nanoseconds(1) && !isDay())
 	{
 		sc_packet_change_day_or_night change(22);
 		for (auto& p : player)
@@ -1000,11 +1037,11 @@ void Game::can_hear(const DirectX::XMFLOAT3& sound_position)
 {
 	if (guard.can_hear(sound_position))
 	{
-		std::cout << sound_position.x << "," << sound_position.y << "," << sound_position.z << " 들어버렸다..." << std::endl;
+		//std::cout << sound_position.x << "," << sound_position.y << "," << sound_position.z << " 들어버렸다..." << std::endl;
 	}
 	else
 	{
-		std::cout << "멀어서 안들령~" << std::endl;
+		//std::cout << "멀어서 안들령~" << std::endl;
 	}
 }
 
@@ -1022,6 +1059,12 @@ void Game::respawn_guard()
 void Game::set_guard_destination(const int& floor)
 {
 	guard.set_manual_destination(floor);
+}
+
+bool Game::isDay()
+{
+	using namespace std::chrono;
+	return begin_time + minutes(3) > steady_clock::now();
 }
 
 NPC::NPC()

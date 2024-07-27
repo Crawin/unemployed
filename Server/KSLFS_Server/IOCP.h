@@ -445,6 +445,7 @@ public:
 	void can_hear(const DirectX::XMFLOAT3& sound_position);
 	void respawn_guard();
 	void set_guard_destination(const int& floor);
+	bool isDay();
 };
 
 struct ServerDetails
