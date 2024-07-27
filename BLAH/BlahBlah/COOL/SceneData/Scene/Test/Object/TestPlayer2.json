@@ -29,6 +29,7 @@
 	"Inventory":
 	{
 		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
+		"SubSocketName": "SubInventorySocket",
 		"Slot_0": "",
 		"Slot_1": "CCTV_01",
 		"Slot_2": "Laptop_ScreenDetached",
@@ -98,7 +99,7 @@
 							"Attach":
 							{
 								"Mesh": "Player_01",
-								"BoneIDX": 48,
+								"BoneIDX": 47,
 								"Player": "Player2"
 							},
 							"Transform": 
@@ -139,6 +140,23 @@
 				}
 			]
 		},
+
+		{
+			"Name": "SubInventorySocket",
+			"Transform": 
+			{
+				"Position": [0.0, -50.0, 0.0],
+				"Rotate": [0.0, 0.0, 0.0],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Attach":
+			{
+				"Mesh": "Player_01",
+				"BoneIDX": 47,
+				"Player": "Player2"
+			}
+		},
+
 		{
 			"Name": "Player1_hands",
 			"Transform": 

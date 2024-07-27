@@ -32,9 +32,16 @@ void AnimationPlayer::ChangeToAnimation(ANIMATION_STATE animSet)
 	if (m_AnimationMap.contains(animSet)) {
 		if (m_BeforeAnimation)
 			m_BeforeAnimation->ResetAnimationTrack();
-		m_BeforeAnimation = m_CurrentAnimation;
-		m_CurrentAnimation = m_AnimationMap[animSet];
+		AnimationTrackBase* nextTrack = m_AnimationMap[animSet];
 
+		// cur and next are affect upper
+		if (nextTrack->GetAffectUpperState() && m_CurrentAnimation->GetAffectUpperState()) {
+			m_CurrentAnimation = m_AnimationMap[animSet];
+		}
+		else {
+			m_BeforeAnimation = m_CurrentAnimation;
+			m_CurrentAnimation = m_AnimationMap[animSet];
+		}
 		m_BeforeAnimWeight = 1.0f;
 	}
 	else

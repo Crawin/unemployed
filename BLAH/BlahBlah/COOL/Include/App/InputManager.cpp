@@ -6,6 +6,7 @@
 
 // todo 임시코드이다. 지우자
 #include "Scene/SceneManager.h"
+#include "Renderer/Renderer.h"
 
 InputManager::InputManager()
 {
@@ -79,6 +80,12 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 	case VK_F8:
 		m_DebugMode = !m_DebugMode;
 		break;
+
+	case VK_F7:
+		Application::GetInstance().ChangeBorderlessMode(!Application::GetInstance().GetWindowed());
+		//Renderer::GetInstance().ChangeSwapChainState(!Renderer::GetInstance().IsWindowed());
+		break;
+
 	case 'P':
 		Client::GetInstance().Connect_Server();
 		break;

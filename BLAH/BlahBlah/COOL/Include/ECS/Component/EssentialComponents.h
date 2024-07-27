@@ -752,6 +752,7 @@ namespace component {
 	// Pawn Component
 	// PlayerController에 의해 입력을 받는다, 입력 상태를 저장한다
 	//
+	class Inventory;
 	class Pawn : public ComponentBase<Pawn> {
 		KEY_STATE m_KeyStates[static_cast<long long int>(GAME_INPUT::GAME_INPUT_END)];
 		Entity* m_InteractionEntity = nullptr;
@@ -763,6 +764,9 @@ namespace component {
 		Camera* m_Camera = nullptr;
 		Physics* m_Physics = nullptr;
 		Entity* m_CameraEntity = nullptr;
+		Inventory* m_Inventory = nullptr;
+
+		Entity* m_SelfEntity = nullptr;
 
 		bool m_ControledByServer = false;
 
@@ -784,7 +788,7 @@ namespace component {
 		void SetInteractionEntity(Entity* ent) { m_InteractionEntity = ent; }
 		Entity* GetInteractionEntity() { return m_InteractionEntity; }
 
-		void SetActive(bool active);
+		void SetActive(bool active, ECSManager* manager);
 		bool IsActive() const { return m_Active; }
 
 		void SetMouseMove(const POINT& pt) { m_MouseDif = pt; }
@@ -794,6 +798,7 @@ namespace component {
 		void SetControlServer(bool state) { m_ControledByServer = state; }
 
 		Entity* GetCameraEntity() const { return m_CameraEntity; }
+		Entity* GetSelfEntity() const { return m_SelfEntity; }
 	};
 
 	/////////////////////////////////////////////////////////
@@ -810,7 +815,7 @@ namespace component {
 		virtual void ShowYourself() const;
 
 		bool Possess(ECSManager* manager, const std::string& targetName);
-		bool Possess(Pawn* target);
+		bool Possess(Pawn* target, ECSManager* manager);
 
 		const std::string& GetTargetInit() const { return m_TargetEntityName; }
 		Pawn* GetControllingPawn() const { return m_CurrentPossess; }

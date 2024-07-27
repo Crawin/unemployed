@@ -3,6 +3,7 @@
 #include "Scene/ResourceManager.h"
 #include "ECS/ECSManager.h"
 #include "json/json.h"
+#include "App/Application.h"
 
 
 namespace component {
@@ -259,6 +260,10 @@ namespace component {
 		m_Aspect = cam["Aspect"].asFloat();
 		m_Near = cam["Near"].asFloat();
 		m_Far = cam["Far"].asFloat();
+
+		auto size = Application::GetInstance().GetSize();
+		m_Width = size.cx;
+		m_Height = size.cy;
 
 		// get camera rendertarget idx
 		m_RenderTargetDataIndex = rm->AddCamera(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END));
@@ -765,7 +770,17 @@ namespace component {
 
 	void Player::Create(Json::Value& v, ResourceManager* rm)
 	{
+		Json::Value pl = v["Player"];
+
+		m_OriginalPosition.x = pl["OriginalPosition"][0].asFloat();
+		m_OriginalPosition.y = pl["OriginalPosition"][1].asFloat();
+		m_OriginalPosition.z = pl["OriginalPosition"][2].asFloat();
+		
+		m_OriginalRotate.x = pl["OriginalRotate"][0].asFloat();
+		m_OriginalRotate.y = pl["OriginalRotate"][1].asFloat();
+		m_OriginalRotate.z = pl["OriginalRotate"][2].asFloat();
 	}
+
 
 	void Player::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
@@ -794,9 +809,9 @@ namespace component {
 			ERROR_QUIT("ERROR!!! no dynamic collider on Player Entity!!");
 		}
 
-		Transform* tr = manager->GetComponent<Transform>(selfEntity);
-		m_OriginalPosition = tr->GetPosition();
-		m_OriginalRotate = tr->GetRotation();
+		//Transform* tr = manager->GetComponent<Transform>(selfEntity);
+		//m_OriginalPosition = tr->GetPosition();
+		//m_OriginalRotate = tr->GetRotation();
 	}
 
 	void Player::ShowYourself() const
@@ -814,6 +829,8 @@ namespace component {
 		m_CameraEntity = manager->GetEntityFromRoute(m_CameraSocketName, selfEntity);
 		m_Camera = manager->GetComponent<Camera>(m_CameraEntity);
 		m_Physics = manager->GetComponent<Physics>(selfEntity);
+		m_Inventory = manager->GetComponent<Inventory>(selfEntity);
+		m_SelfEntity = selfEntity;
 	}
 
 	void Pawn::ShowYourself() const
@@ -889,12 +906,15 @@ namespace component {
 			m_KeyStates[static_cast<long long int>(key)] == KEY_STATE::PRESSING;
 	}
 
-	void Pawn::SetActive(bool active)
+	void Pawn::SetActive(bool active, ECSManager* manager)
 	{
 		m_Active = active;
 		m_Camera->SetActive(active);
 		m_Camera->SetMainCamera(active);
 		if (m_Physics) m_Physics->SetCalculateState(active);
+		if (m_Inventory) {
+			m_Inventory->SetMainMode(active, manager);
+		}
 	}
 	
 
@@ -919,7 +939,7 @@ namespace component {
 		// reset inputs
 		if (m_CurrentPossess) {
 			m_CurrentPossess->ResetInput();
-			m_CurrentPossess->SetActive(false);
+			m_CurrentPossess->SetActive(false, manager);
 		}
 
 		Pawn* targetPawn = nullptr;
@@ -930,25 +950,25 @@ namespace component {
 
 		manager->Execute(findTarget);
 
-		if (targetPawn) targetPawn->SetActive(true);
+		if (targetPawn) targetPawn->SetActive(true, manager);
 		m_CurrentPossess = targetPawn;
 
 		// returns success/fail
 		return (m_CurrentPossess != nullptr);
 	}
 
-	bool PlayerController::Possess(Pawn* target)
+	bool PlayerController::Possess(Pawn* target, ECSManager* manager)
 	{
 		// reset inputs
 		if (m_CurrentPossess) {
 			m_CurrentPossess->ResetInput();
-			m_CurrentPossess->SetActive(false);
+			m_CurrentPossess->SetActive(false, manager);
 		}
 
 		if (target == nullptr) return false;
 
 		m_CurrentPossess = target;
-		m_CurrentPossess->SetActive(true);
+		m_CurrentPossess->SetActive(true, manager);
 
 		return true;
 	}

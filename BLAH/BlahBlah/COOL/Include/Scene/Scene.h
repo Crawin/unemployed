@@ -130,6 +130,8 @@ public:
 
 	virtual void OnServerConnected();
 
+	virtual void OnGameStarted() {}
+
 	void SetSceneManager(SceneManager* manager) { m_SceneManager = manager; }
 
 	void PossessPlayer(bool isHost);

@@ -231,10 +231,10 @@ namespace ECSsystem {
 					manager->Execute(getChangePawn);
 					
 					// possess to camera
-					ctrler->Possess(changeingPawn);
+					ctrler->Possess(changeingPawn, manager);
 
 					// end event
-					std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+					std::function returnToPawn = [ctrler, controlledPawn, manager]() {ctrler->Possess(controlledPawn, manager); };
 
 					TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
 					changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
@@ -259,6 +259,61 @@ namespace ECSsystem {
 					};
 				manager->Execute(movePlayers);
 
+			}
+
+			// to st
+			if (curPawn->GetInputState(GAME_INPUT::F2) == KEY_STATE::END_PRESS) {
+				std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+					tr->SetPosition(pl->GetOriginalPosition());
+					tr->SetRotation(pl->GetOriginalRotate());
+					};
+				manager->Execute(movePlayers);
+
+				// get current pawn
+				component::PlayerController* ctrler = nullptr;
+				std::function<void(component::PlayerController*)> getCtrler = [&ctrler](component::PlayerController* control) { ctrler = control; };
+				manager->Execute(getCtrler);
+				component::Pawn* controlledPawn = ctrler->GetControllingPawn();
+				Entity* originCam = controlledPawn->GetCameraEntity();
+				component::Transform* originCamTransform = manager->GetComponent<component::Transform>(originCam);
+
+				// get pawn to possess
+				component::Pawn* startPawn = nullptr;
+				std::function<void(component::Pawn*, component::Name*)> getChangePawn = [&startPawn](component::Pawn* pawn, component::Name* name)
+					{ if (name->getName() == "GameStartPawn") startPawn = pawn; };
+				manager->Execute(getChangePawn);
+				ctrler->Possess(startPawn, manager);
+
+				// end event
+				std::function returnToBasePawn = [ctrler, controlledPawn, manager]() { ctrler->Possess(controlledPawn, manager); };
+
+				// get start pawn's cam transform
+				component::Transform* camPawnTransform = manager->GetComponent<component::Transform>(startPawn->GetSelfEntity());
+
+				// position
+				{
+					TimeLine<XMFLOAT3>* positionToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetPositionPtr());
+					XMFLOAT3 startPos = camPawnTransform->GetPosition();
+					XMFLOAT3 endPos = { 4470.0f, 160.84f, 920.0f };
+					positionToEnd->AddKeyFrame(startPos, 0);
+					positionToEnd->AddKeyFrame(startPos, 0.2f);
+					positionToEnd->AddKeyFrame(endPos, 3.0f);
+					positionToEnd->AddKeyFrame(originCamTransform->GetWorldPosition(), 4.5f);
+					positionToEnd->SetEndEvent(returnToBasePawn);
+					manager->AddTimeLine(startPawn->GetCameraEntity(), positionToEnd);
+				}
+
+				// rotate
+				{
+					TimeLine<XMFLOAT3>* rotateToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetRotationPtr());
+					XMFLOAT3 startRot = camPawnTransform->GetRotation();
+					XMFLOAT3 endRot = { 0.0f, -90.0f, 0.0f };
+					rotateToEnd->AddKeyFrame(startRot, 0);
+					rotateToEnd->AddKeyFrame(startRot, 0.2f);
+					rotateToEnd->AddKeyFrame(endRot, 3.0f);
+					rotateToEnd->AddKeyFrame(endRot, 4.5f);
+					manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
+				}
 			}
 #endif
 

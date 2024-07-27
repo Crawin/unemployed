@@ -9,6 +9,8 @@ class LoadingScene : public Scene
 	
 public: 
 
+	virtual void Exit();
+
 	virtual void Update(float deltaTime);
 	
 	virtual void RenderSync(float deltaTime) {}

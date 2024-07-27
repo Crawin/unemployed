@@ -30,7 +30,11 @@
 
 	"Input": {},
 
-	"Player": {},
+	"Player": 
+	{
+		"OriginalPosition": [],
+		"OriginalRotate": []
+	},
 
 	"PlayerAnimControll": {},
 
@@ -49,6 +53,7 @@
 	"Inventory":
 	{
 		"SocketName": "PlayerCamera/InvenParent/InventoryHand",
+		"SubSocketName": "SubInventorySocket",
 		"Slot_0": "crowbar",
 		"Slot_1": "KeyTool",
 		"Slot_2": "",
@@ -103,8 +108,8 @@
 							},
 							"Transform": 
 							{
-								"Position": [0, 0, 0],
-								"Rotate": [0, 0, 0],
+								"Position": [21.0, 5.1, 31.6],
+								"Rotate": [0, -90, 0],
 								"Scale": [1.0, 1.0, 1.0]
 							}
 						},
@@ -138,6 +143,22 @@
 					]
 				}
 			]
+		},
+
+		{
+			"Name": "SubInventorySocket",
+			"Transform": 
+			{
+				"Position": [0.0, 0.0, 0.0],
+				"Rotate": [6.682, -45.188, -142.248],
+				"Scale": [1.0, 1.0, 1.0]
+			},
+			"Attach":
+			{
+				"Mesh": "Player_01",
+				"BoneIDX": 33,
+				"Player": "Player1"
+			}
 		},
 
 		{

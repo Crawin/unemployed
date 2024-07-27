@@ -50,7 +50,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevGetInstance, LPTSTR lp
     }
 #endif
 
-	SIZE temp = { 1280, 720 };
+	SIZE temp = { 1920, 1080 };
 	if (false == Application::GetInstance().Init(hInstance, temp)) {
 		DebugPrint("Application Init failed!!\n");
 		system("Pause");

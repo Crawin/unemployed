@@ -103,6 +103,9 @@ namespace component {
 			// attack
 			ctrl->InsertCondition(ANIMATION_STATE::ATTACK, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
 
+			// throw
+			ctrl->InsertCondition(ANIMATION_STATE::THROW_END, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
+
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 		}
@@ -600,6 +603,7 @@ namespace component {
 		Json::Value inven = v["Inventory"];
 
 		m_InventorySocketName = inven["SocketName"].asString();
+		m_SubInventorySocketName = inven["SubSocketName"].asString();
 
 		for(int i = 0; i < MAX_INVENTORY; ++i)
 			m_TargetEntityNames[i] = inven[std::format("Slot_{}", i)].asString().c_str();
@@ -608,7 +612,8 @@ namespace component {
 	void Inventory::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		m_HoldingSocket = manager->GetEntityFromRoute(m_InventorySocketName, selfEntity);
-		
+		m_SubHoldingSocket = manager->GetEntityFromRoute(m_SubInventorySocketName, selfEntity);
+
 		// find targets here
 		for (int i = 0; i < MAX_INVENTORY; ++i) {
 			if (m_TargetEntityNames[i] != "") {
@@ -624,6 +629,7 @@ namespace component {
 			}
 		}
 
+		// default main mode
 		m_CurrentHolding = 0;
 		if (m_Items[m_CurrentHolding] != nullptr) 
 		{
@@ -660,6 +666,28 @@ namespace component {
 		m_CurrentHolding = idx;
 
 		return true;
+	}
+
+	const Entity* Inventory::GetHoldingSocket() const
+	{
+		if (m_MainMode)
+			return m_HoldingSocket;
+
+		return m_SubHoldingSocket;
+	}
+
+	void Inventory::SetMainMode(bool state, ECSManager* manager)
+	{
+		if (m_MainMode == state) return;
+		m_MainMode = state;
+
+		Entity* curItem = GetCurrentHoldingItem();
+		if (curItem != nullptr) {
+			if (state == true)
+				manager->AttachChild(m_HoldingSocket, curItem);
+			else
+				manager->AttachChild(m_SubHoldingSocket, curItem);
+		}
 	}
 
 	void Holdable::Create(Json::Value& v, ResourceManager* rm)
@@ -839,7 +867,7 @@ namespace component {
 			// todo
 			// change player chara animation to throw ready
 			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
-			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROWREADY);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROW_START);
 
 			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			//selfCollider->SetActive(true);
@@ -870,6 +898,10 @@ namespace component {
 
 			DebugPrint(std::format("bakeTime: {}, speed: {}, result: {}", bakeTime, speed, ((bakeTime / maxBakeTime)*speed) / 27.7778f));
 
+			// set anim to throw end
+			Entity* master = holdable->GetMaster();
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROW_END);
 
 			float resultSpeed = speed * (bakeTime / maxBakeTime);
 			// detach

@@ -64,6 +64,8 @@ enum class ANIMATION_STATE {
 	SIT_LOOP,
 	SIT_END,		// stand up
 	ATTACK,
+	THROW_START,
+	THROW_END,
 	NULLANIM
 };
 

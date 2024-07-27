@@ -104,6 +104,9 @@ bool Renderer::CreateFence()
 	m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_Fence.GetAddressOf()));
 	CHECK_CREATE_FAILED(m_Fence, " m_Fence 생성 실패\n");
 
+	m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_FenceExtra.GetAddressOf()));
+	CHECK_CREATE_FAILED(m_FenceExtra, " m_FenceExtra 생성 실패\n");
+
 	return true;
 }
 
@@ -150,6 +153,8 @@ bool Renderer::CreateSwapChain()
 
 	m_Factory->CreateSwapChain(m_CommandQueue.Get(), &swapChainDesc, (IDXGISwapChain**)m_SwapChain.GetAddressOf());
 	CHECK_CREATE_FAILED(m_SwapChain, "스왑체인 생성 실패!");
+
+	m_CurSwapChainIndex = m_SwapChain->GetCurrentBackBufferIndex();
 
 	return true;
 }
@@ -629,6 +634,45 @@ COOLResourcePtr Renderer::CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3
 	return COOLResourcePtr(new COOLResource(temp, resourceState, heapType, name));
 }
 
+void Renderer::ChangeSwapChainState(bool fullScreen)
+{
+	// todo wait every render command list end
+
+	if (m_Windowed == fullScreen) return;
+
+	UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
+	HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
+	if (m_Fence->GetCompletedValue() < fenceValue) {
+		hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
+		WaitForSingleObject(m_FenceEvent, INFINITE);
+	}
+
+	m_Windowed = fullScreen;
+
+	DXGI_MODE_DESC dxgiTargetParams{};
+	dxgiTargetParams.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dxgiTargetParams.Width = m_ScreenSize.cx;
+	dxgiTargetParams.Height = m_ScreenSize.cy;
+	dxgiTargetParams.RefreshRate.Numerator = 60;
+	dxgiTargetParams.RefreshRate.Denominator = 1;
+	dxgiTargetParams.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	dxgiTargetParams.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	m_SwapChain->ResizeTarget(&dxgiTargetParams);
+
+	// delete cur swap chain buff
+
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
+	m_SwapChain->GetDesc(&swapChainDesc);
+	m_SwapChain->ResizeBuffers(m_NumSwapChainBuffers, m_ScreenSize.cx, m_ScreenSize.cy, swapChainDesc.BufferDesc.Format, swapChainDesc.Flags);
+
+	m_SwapChain->SetFullscreenState(m_Windowed, nullptr);
+
+
+	m_CurSwapChainIndex = m_SwapChain->GetCurrentBackBufferIndex();
+
+	CreateRTV();
+}
+
 bool Renderer::CreateResourceDescriptorHeap(ComPtr<ID3D12DescriptorHeap>& heap, std::vector<COOLResourcePtr>& resources)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC descriptorDesc = {};
@@ -950,11 +994,11 @@ void Renderer::ExecuteAndEraseUploadHeap(ComPtr<ID3D12GraphicsCommandList> comma
 	ID3D12CommandList* ppd3dCommandLists[] = { commandList.Get() };
 	m_CommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
 
-	UINT64 fenceValue = ++m_FenceValues[m_CurSwapChainIndex];
-	HRESULT hResult = m_CommandQueue->Signal(m_Fence.Get(), fenceValue);
-	if (m_Fence->GetCompletedValue() < fenceValue) {
-		hResult = m_Fence->SetEventOnCompletion(fenceValue, m_FenceEvent);
-		WaitForSingleObject(m_FenceEvent, INFINITE);
+	UINT64 fenceValue = ++m_ExtraFenceValues;
+	HRESULT hResult = m_CommandQueue->Signal(m_FenceExtra.Get(), fenceValue);
+	if (m_FenceExtra->GetCompletedValue() < fenceValue) {
+		hResult = m_FenceExtra->SetEventOnCompletion(fenceValue, m_ExtraFenceEvent);
+		WaitForSingleObject(m_ExtraFenceEvent, INFINITE);
 	}
 
 	for (int i = 0; i < m_UploadResources.size(); ++i) {
