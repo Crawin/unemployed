@@ -76,7 +76,8 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::UICutLine, "UICutLine");
 	REGISTER_COMPONENT(component::UITreasureChest, "UITreasureChest");
 	REGISTER_COMPONENT(component::UIVandingMachine, "UIVandingMachine");
-	
+	REGISTER_COMPONENT(component::UIEnding, "UIEnding");
+
 }
 
 SceneManager::SceneManager()

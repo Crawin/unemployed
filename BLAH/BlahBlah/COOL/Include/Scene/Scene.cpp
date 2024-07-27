@@ -938,6 +938,19 @@ void Scene::ProcessPacket(packet_base* packet)
 		FMOD_INFO::GetInstance().play_unloop_sound(buf->getPosition(), buf->getType(), std::format("from_server: {}", type));
 		break;
 	}
+	case pEnding:
+	{
+		// 0: 체포 , 1: 타임오버, 2: 게임성공, 3: 도주
+		sc_packet_ending* buf = reinterpret_cast<sc_packet_ending*>(packet);
+		auto endingType = buf->getEndingType();
+
+		std::function<void(component::UICanvas*, component::UIEnding*)> openEnding = [endingType](component::UICanvas* can, component::UIEnding* end) {
+			end->SetEndingImage(endingType);
+			can->ShowUI();
+			};
+
+		manager->Execute(openEnding);
+	}
 	}
 }
 

@@ -563,4 +563,26 @@ namespace component {
 		void SetPlayer(Entity* player) { m_PlayerEntity = player; }
 	};
 
+
+#define MAX_ENDINGS 4
+	/////////////////////////////////////////////////////////
+	// UI Ending Component
+	// 자판기 ui, 버튼 누르면 음료 나옴
+	//
+	class UIEnding : public ComponentBase<UIEnding> {
+		UIRenderer* m_EndingImageRenderer;
+		
+		int m_EndingImageMaterials[MAX_ENDINGS];
+		std::string m_EndingImageStrings[MAX_ENDINGS];
+
+	public:
+		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
+		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
+
+		virtual void ShowYourself() const {}
+
+		void SetEndingImage(int endingType);
+
+	};
+
 }

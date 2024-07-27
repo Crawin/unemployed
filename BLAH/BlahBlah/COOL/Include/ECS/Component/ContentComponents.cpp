@@ -7,7 +7,8 @@
 #include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
 #include "FMODsound/FmodSound.h"
-
+#include "App/Application.h"
+#include "Scene/SceneManager.h"
 
 namespace component {
 	void PlayerAnimControll::Create(Json::Value& v, ResourceManager* rm)
@@ -1917,6 +1918,44 @@ namespace component {
 		}
 
 		holdable->SetAction(Input_State_In_LongLong(GAME_INPUT::MOUSE_LEFT, KEY_STATE::END_PRESS), action);
+	}
+
+	void UIEnding::Create(Json::Value& v, ResourceManager* rm)
+	{
+		Json::Value end = v["UIEnding"];
+		// 0: 체포 , 1: 타임오버, 2: 게임성공, 3: 도주
+
+
+		for (int i = 0; i < MAX_ENDINGS; ++i) {
+			m_EndingImageStrings[i] = end[std::format("{}", i)].asString();
+			std::string loadUI = std::format("UI/{}", m_EndingImageStrings[i]);
+			rm->AddLateLoadUI(loadUI, nullptr);
+		}
+	}
+
+	void UIEnding::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
+	{
+		m_EndingImageRenderer = manager->GetComponent<UIRenderer>(manager->GetEntityInChildren("EndingImage", selfEntity));
+
+		for (int i = 0; i < MAX_ENDINGS; ++i)
+			m_EndingImageMaterials[i] = rm->GetMaterial(m_EndingImageStrings[i]);
+
+		// set button event
+		Entity* buttonEnt = manager->GetEntityInChildren("ReturnToLobby", selfEntity);
+		Button* returnLobby = manager->GetComponent<Button>(buttonEnt);
+		UICanvas* canv = manager->GetComponent<UICanvas>(selfEntity);
+
+		ButtonEventFunction goLobby = [canv](Entity* self) {
+			canv->HideUI();
+			Application::GetInstance().GetSceneManager()->SetToChangeScene("Test", 0);
+			};
+
+		returnLobby->SetButtonEvent(KEY_STATE::END_PRESS, goLobby);
+	}
+
+	void UIEnding::SetEndingImage(int endingType)
+	{
+		m_EndingImageRenderer->SetMaterial(m_EndingImageMaterials[endingType]);
 	}
 
 }

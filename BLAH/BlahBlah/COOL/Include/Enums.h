@@ -85,6 +85,19 @@ enum class GAME_INPUT {
 	SPACE_BAR,
 	INTERACTION,
 
+	F1,
+	F2,
+	F3,
+	F4,
+	F5,
+	F6,
+	F7,
+	F8,
+	F9,
+	F10,
+	F11,
+	F12,
+
 	// to server
 	CTRL,
 	MOUSE_LEFT,
@@ -101,11 +114,7 @@ enum class GAME_INPUT {
 	ARROW_RIGHT,
 	NEXT,
 	PREVIOUS,
-	F1,
-	F2,
-	F3,
-	F4,
-	F5,
+
 	GAME_INPUT_END
 };
 

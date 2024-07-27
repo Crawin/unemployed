@@ -1,0 +1,50 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UIEnding": 
+	{
+		"0": "UIEndingBusted",
+		"1": "UIEndingTimeOver",
+		"2": "UIEndingGetTresure",
+		"3": "UIEndingNoSwiping"
+	},
+
+	"Children": 
+	[
+		{	"Name": "ReturnToLobby",
+
+			"UITransform":
+			{
+				"Center": [150, 980],
+				"Size": [200, 50]
+			},
+		
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIEndingReturnLobby",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "EndingImage",
+
+			"UITransform":
+			{
+				"Center": [960, 540],
+				"Size": [800, 800]
+			},
+			
+			"UIRenderer" :
+			{
+				"Material": "UI/UITempMaterial",
+				"IsSprite": false
+			}
+		}
+
+	]
+
+}

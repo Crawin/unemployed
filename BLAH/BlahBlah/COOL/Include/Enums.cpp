@@ -105,6 +105,13 @@ int ConvertGameInputEnumToKeyIntValue(GAME_INPUT gameInput)
 	case GAME_INPUT::F3:					return VK_F3;
 	case GAME_INPUT::F4:					return VK_F4;
 	case GAME_INPUT::F5:					return VK_F5;
+	case GAME_INPUT::F6:					return VK_F6;
+	case GAME_INPUT::F7:					return VK_F7;
+	case GAME_INPUT::F8:					return VK_F8;
+	case GAME_INPUT::F9:					return VK_F9;
+	case GAME_INPUT::F10:					return VK_F10;
+	case GAME_INPUT::F11:					return VK_F11;
+	case GAME_INPUT::F12:					return VK_F12;
 
 	default:
 		DebugPrint("ERRPR!! no such input defined");
