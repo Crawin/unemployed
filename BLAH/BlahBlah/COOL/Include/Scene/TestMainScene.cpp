@@ -265,7 +265,6 @@ void TestMainScene::OnGameStarted()
 		manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
 	}
 }
-}
 
 //void TestMainScene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 //{
