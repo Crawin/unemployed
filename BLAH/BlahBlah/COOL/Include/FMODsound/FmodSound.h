@@ -5,24 +5,15 @@
 #include <../External/Include/FMOD/fmod.hpp>
 #include <../External/Include/FMOD/fmod_errors.h>
 
+
 struct SOUND_EFFECT
 {
     FMOD::Sound* sound;
     FMOD::Channel* channel = 0;
 };
 
-enum class SOUND_TYPE
-{
-    FOOTPRINT,
-    DUCK,
-    CROWBAR_SWING,
-    CROWBAR_HIT,
-    DOOR_OPEN,
-    DRINK_BUY,
-    DRINK_THROW_HIT,
-    DRINK_CONSUME,
-    KEY_JINGLE
-};
+// 서버에서도 사용하기에 packets로 이동
+enum class SOUND_TYPE;
 
 class FMOD_INFO
 {

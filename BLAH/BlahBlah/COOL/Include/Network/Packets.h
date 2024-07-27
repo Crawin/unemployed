@@ -341,9 +341,9 @@ public:
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
 };
 
-enum SoundType
+enum class SOUND_TYPE
 {
-	voice,
+	VOICE,
 	FOOTPRINT,
 	DUCK,
 	CROWBAR_SWING,
@@ -360,14 +360,14 @@ class cs_packet_sound_start : public packet_base
 	DirectX::XMFLOAT3 position;
 	char sound_type;
 public:
-	cs_packet_sound_start(const DirectX::XMFLOAT3& pos, const SoundType& sound_type) {
+	cs_packet_sound_start(const DirectX::XMFLOAT3& pos, const SOUND_TYPE& sound_type) {
 		size = sizeof(cs_packet_sound_start);
 		type = pSound;
 		position = pos;
 		this->sound_type = static_cast<char>(sound_type);
 	}
 	const DirectX::XMFLOAT3 getPosition() { return position; }
-	const SoundType getType() { return static_cast<SoundType>(type); }
+	const SOUND_TYPE getType() { return static_cast<SOUND_TYPE>(type); }
 };
 
 #pragma pack(pop)

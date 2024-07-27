@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include "FmodSound.h"
+#include "Network/Client.h"
 
 void ERRCHECK(FMOD_RESULT result)
 {

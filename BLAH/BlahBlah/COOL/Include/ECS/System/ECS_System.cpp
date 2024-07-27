@@ -157,7 +157,7 @@ namespace ECSsystem {
 			{
 				auto pos = tr->GetWorldPosition();
 				pos.y -= 160;
-				cs_packet_sound_start sound(pos, voice);
+				cs_packet_sound_start sound(pos, SOUND_TYPE::VOICE);
 				
 				client.send_packet(&sound);
 				std::cout << pos.x << "," << pos.y << "," << pos.z << " 전송 완" << std::endl;
@@ -1018,7 +1018,7 @@ namespace ECSsystem {
 
 					// if dashing
 					if (p != nullptr && py->IsDashing()) {
-						cs_packet_sound_start packet(tr->GetWorldPosition(), FOOTPRINT);
+						cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::FOOTPRINT);
 						Client::GetInstance().send_packet(&packet);
 					}
 

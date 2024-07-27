@@ -390,7 +390,7 @@ namespace component {
 
 		FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN, "DOOR_OPEN");
 		if (sendServer) {
-			cs_packet_sound_start packet(tr->GetWorldPosition(), DOOR_OPEN);
+			cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN);
 			Client::GetInstance().send_packet(&packet);
 		}
 
@@ -754,7 +754,7 @@ namespace component {
 				cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
 				Client::GetInstance().send_packet(&anim);
 
-				cs_packet_sound_start packet(masterTr->GetWorldPosition(), CROWBAR_SWING);
+				cs_packet_sound_start packet(masterTr->GetWorldPosition(), SOUND_TYPE::CROWBAR_SWING);
 				Client::GetInstance().send_packet(&packet);
 			}
 
@@ -827,7 +827,7 @@ namespace component {
 			// play sound
 			FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::CROWBAR_HIT, "crobwar_hit");
 
-			cs_packet_sound_start packet(tr->GetWorldPosition(), CROWBAR_HIT);
+			cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::CROWBAR_HIT);
 			Client::GetInstance().send_packet(&packet);
 
 			};
@@ -999,7 +999,7 @@ namespace component {
 					// play sound
 					FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DRINK_THROW_HIT, "DRINK_THROW");
 
-					cs_packet_sound_start packet(tr->GetWorldPosition(), DRINK_THROW_HIT);
+					cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::DRINK_THROW_HIT);
 					Client::GetInstance().send_packet(&packet);
 				}
 				};
@@ -1826,7 +1826,7 @@ namespace component {
 										// play sound
 										FMOD_INFO::GetInstance().play_unloop_sound(playerTr->GetWorldPosition(), SOUND_TYPE::DRINK_BUY, "DRINK_BUY");
 
-										cs_packet_sound_start packet(playerTr->GetWorldPosition(), DRINK_BUY);
+										cs_packet_sound_start packet(playerTr->GetWorldPosition(), SOUND_TYPE::DRINK_BUY);
 										Client::GetInstance().send_packet(&packet);
 
 										// hide ui
@@ -1886,7 +1886,7 @@ namespace component {
 
 				FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::DRINK_CONSUME, "ConsumeDr");
 
-				cs_packet_sound_start packet(masterTr->GetWorldPosition(), DRINK_CONSUME);
+				cs_packet_sound_start packet(masterTr->GetWorldPosition(), SOUND_TYPE::DRINK_CONSUME);
 				Client::GetInstance().send_packet(&packet);
 				};
 			break;
