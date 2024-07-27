@@ -1,7 +1,7 @@
 {
 	"name": "MasterYuk_mat",
 	"BaseColor": "Character/MasterYuk/master_diff",
-	"Roughness": "Character/MasterYuk/master_rough",
+	"Roughness": "Character/MasterYuk/masterYuk_rough",
 	"Metalic": "AllmostBlack",
 	"AO": "White",
 	"Normal": "Character/MasterYuk/master_normal",
