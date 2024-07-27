@@ -389,6 +389,10 @@ namespace component {
 		}
 
 		FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN, "DOOR_OPEN");
+		if (sendServer) {
+			cs_packet_sound_start packet(tr->GetWorldPosition(), DOOR_OPEN);
+			Client::GetInstance().send_packet(&packet);
+		}
 
 		m_Open = state;
 	}
@@ -732,6 +736,10 @@ namespace component {
 			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
 			auto& client = Client::GetInstance();
 			std::string playername;
+
+			auto masterTr = manager->GetComponent<Transform>(master);
+			FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::CROWBAR_SWING, "crobwar_swing");
+
 			switch (client.getCharType())
 			{
 			case 1:
@@ -741,15 +749,17 @@ namespace component {
 				playername = client.GetGuestPlayerName();
 				break;
 			}
-			if (masterAnimCtrl->GetPlayer()->GetName() == playername)			// 자신의 캐릭터라면 animation 변경 패킷 전송
+			if (masterAnimCtrl->GetPlayer()->GetName() == playername)			// 자신의 캐릭터라면 animation 변경 패킷 전송 및 소리패킷 전송
 			{
 				cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
 				Client::GetInstance().send_packet(&anim);
+
+				cs_packet_sound_start packet(masterTr->GetWorldPosition(), CROWBAR_SWING);
+				Client::GetInstance().send_packet(&packet);
 			}
 
 			// play sound
-			auto masterTr = manager->GetComponent<Transform>(master);
-			FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::CROWBAR_SWING, "crobwar_swing");
+
 
 			// set collider on
 			auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
@@ -816,6 +826,9 @@ namespace component {
 
 			// play sound
 			FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::CROWBAR_HIT, "crobwar_hit");
+
+			cs_packet_sound_start packet(tr->GetWorldPosition(), CROWBAR_HIT);
+			Client::GetInstance().send_packet(&packet);
 
 			};
 		collider->InsertEvent<Collider>(setFirePoo, COLLIDE_EVENT_TYPE::BEGIN);
@@ -985,6 +998,9 @@ namespace component {
 				if (drink != nullptr) {
 					// play sound
 					FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DRINK_THROW_HIT, "DRINK_THROW");
+
+					cs_packet_sound_start packet(tr->GetWorldPosition(), DRINK_THROW_HIT);
+					Client::GetInstance().send_packet(&packet);
 				}
 				};
 
@@ -1810,6 +1826,9 @@ namespace component {
 										// play sound
 										FMOD_INFO::GetInstance().play_unloop_sound(playerTr->GetWorldPosition(), SOUND_TYPE::DRINK_BUY, "DRINK_BUY");
 
+										cs_packet_sound_start packet(playerTr->GetWorldPosition(), DRINK_BUY);
+										Client::GetInstance().send_packet(&packet);
+
 										// hide ui
 										canvas->HideUI();
 									}
@@ -1866,6 +1885,9 @@ namespace component {
 				//manager->AttachChild(holdable->GetOriginParent(), selfEntity);
 
 				FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::DRINK_CONSUME, "ConsumeDr");
+
+				cs_packet_sound_start packet(masterTr->GetWorldPosition(), DRINK_CONSUME);
+				Client::GetInstance().send_packet(&packet);
 				};
 			break;
 

@@ -344,7 +344,15 @@ public:
 enum SoundType
 {
 	voice,
-	door
+	FOOTPRINT,
+	DUCK,
+	CROWBAR_SWING,
+	CROWBAR_HIT,
+	DOOR_OPEN,
+	DRINK_BUY,
+	DRINK_THROW_HIT,
+	DRINK_CONSUME,
+	KEY_JINGLE
 };
 
 class cs_packet_sound_start : public packet_base

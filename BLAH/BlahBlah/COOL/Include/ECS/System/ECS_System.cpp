@@ -1015,6 +1015,13 @@ namespace ECSsystem {
 					soundPitch = std::clamp(soundPitch, 1.0f, 1.5f);
 					//DebugPrint(std::format("pitch: {}", soundPitch));
 					FMOD_INFO::GetInstance().play_loop_sound(tr->GetWorldPosition(), type, std::format("{}_footprint", name->getName()), soundPitch);
+
+					// if dashing
+					if (p != nullptr && py->IsDashing()) {
+						cs_packet_sound_start packet(tr->GetWorldPosition(), FOOTPRINT);
+						Client::GetInstance().send_packet(&packet);
+					}
+
 				}
 				else
 					FMOD_INFO::GetInstance().stop_sound(std::format("{}_footprint", name->getName()));
