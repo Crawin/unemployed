@@ -9,6 +9,7 @@
 #include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
 #include "Scene/SceneManager.h"
+#include "FMODsound/FmodSound.h"
 
 #ifdef _DEBUG
 #include "App/InputManager.h"
@@ -61,11 +62,11 @@ void Scene::ChangeDayToNight(float time)
 		manager->Execute(getChangePawn);
 
 		// possess to camera
-		ctrler->Possess(changeingPawn);
+		ctrler->Possess(changeingPawn, manager);
 
 		// end event
-		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager]() {
-			ctrler->Possess(controlledPawn); 
+		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager, manager]() {
+			ctrler->Possess(controlledPawn, manager);
 			dayManager->SetDayCycle(240.0f);
 			};
 
@@ -544,10 +545,12 @@ void Scene::BuildShadowMap(ComPtr<ID3D12GraphicsCommandList> commandList)
 		ecs->Execute(render);
 	}
 
-	vp.Width = static_cast<float>(1280);
-	vp.Height = static_cast<float>(720);
+	SIZE size = Renderer::GetInstance().GetScreenSize();
 
-	scRect = { 0, 0, 1280, 720};
+	vp.Width = static_cast<float>(size.cx);
+	vp.Height = static_cast<float>(size.cy);
+
+	scRect = { 0, 0, size.cx, size.cy };
 
 	commandList->RSSetViewports(1, &vp);
 	commandList->RSSetScissorRects(1, &scRect);
@@ -782,11 +785,20 @@ void Scene::ProcessPacket(packet_base* packet)
 	case pENTERROOM:
 	{
 		OnSelfGuest();
+
+		// todo
+		// possess to game start cut scene camera
+		OnGameStarted();
 		break;
 	}
 	case pRoomPlayer:
 	{
 		OnGuestEnter();
+
+		// todo
+		// possess to game start cut scene camera
+		OnGameStarted();
+
 		break;
 	}
 	case pPOSITION:								// POSITION
@@ -899,7 +911,7 @@ void Scene::ProcessPacket(packet_base* packet)
 	case pAttack:
 	{
 		sc_packet_npc_attack* buf = reinterpret_cast<sc_packet_npc_attack*>(packet);
-		std::function<void(component::AnimationController*, component::Server*)> func = [manager, buf](component::AnimationController* ac,component::Server* server) {
+		std::function<void(component::AnimationController*, component::Server*, component::Physics*)> func = [manager, buf](component::AnimationController* ac,component::Server* server, component::Physics* ph) {
 			auto id = buf->getID();
 			if (server->getID() == id)
 			{
@@ -911,10 +923,19 @@ void Scene::ProcessPacket(packet_base* packet)
 				{
 					// 학생
 					ac->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
+					ph->SetVelocity(DirectX::XMFLOAT3(0, 0, 0));
 				}
 			}
 			};
 		m_ECSManager->Execute(func);
+		break;
+	}
+	case pSound:
+	{
+		cs_packet_sound_start* buf = reinterpret_cast<cs_packet_sound_start*>(packet);
+		int type = static_cast<int>(buf->getType());
+
+		FMOD_INFO::GetInstance().play_unloop_sound(buf->getPosition(), buf->getType(), std::format("from_server: {}", type));
 		break;
 	}
 	}

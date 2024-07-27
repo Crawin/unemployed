@@ -6,7 +6,7 @@
 #include <DirectXMath.h>
 #include "aStar.h"
 std::set<short> StairNodeNums = {
-	13,14,15,
+	12,13,14,15,
 	33,34,35,
 	48,49,50,
 	52,62,63,

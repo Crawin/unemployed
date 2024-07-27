@@ -1,0 +1,289 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : false,
+						"Center" : 
+						[
+							0.0,
+							0.0,
+							-3.5527136788005009e-15
+						],
+						"Extent" : 
+						[
+							50.0,
+							50.0,
+							50.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Static" : true
+					},
+					"Name" : "StartBase",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							10211.580078125,
+							4943.0,
+							-381.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							40.0,
+							0.10000000149011612,
+							40.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : false,
+						"Center" : 
+						[
+							0.0,
+							0.0,
+							-3.5527136788005009e-15
+						],
+						"Extent" : 
+						[
+							50.0,
+							50.0,
+							50.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Static" : true
+					},
+					"Name" : "Wall_00",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							11860.0,
+							5748.0,
+							-381.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							30.0,
+							30.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : false,
+						"Center" : 
+						[
+							0.0,
+							0.0,
+							-3.5527136788005009e-15
+						],
+						"Extent" : 
+						[
+							50.0,
+							50.0,
+							50.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Static" : true
+					},
+					"Name" : "Wall_01",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							8530.0,
+							5748.0,
+							-381.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							30.0,
+							30.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : false,
+						"Center" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Extent" : 
+						[
+							50.0,
+							50.0,
+							50.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Static" : true
+					},
+					"Name" : "Wall_02",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							10211.580078125,
+							5748.0,
+							1290.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							30.0,
+							30.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : false,
+						"Center" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Extent" : 
+						[
+							50.0,
+							50.0,
+							50.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Static" : true
+					},
+					"Name" : "Wall_03",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							10211.580078125,
+							5748.0,
+							-2050.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							30.0,
+							30.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "StartPointRoot",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "StartPointRoot_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

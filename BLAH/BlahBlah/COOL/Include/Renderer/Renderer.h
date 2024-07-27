@@ -53,6 +53,8 @@ public:
 	COOLResourcePtr CreateEmptyBufferResource(D3D12_HEAP_TYPE heapType, D3D12_RESOURCE_STATES resourceState, UINT bytes, std::string_view name = "empty");
 	//COOLResourcePtr CreateBufferResource(D3D12_HEAP_TYPE heapType, void* data, UINT bytes, COOLResourcePtr& uploadBuffer) {};	// 일단 없앰
 
+	void ChangeSwapChainState(bool fullScreen);
+
 public:
 	// ------------------- commandlist가 하는 일들 묶음 -------------------
 	
@@ -148,11 +150,15 @@ private:
 	ComPtr<IDXGIFactory4> m_Factory;
 	ComPtr<ID3D12Device> m_Device;
 	ComPtr<ID3D12Fence> m_Fence;
+	ComPtr<ID3D12Fence> m_FenceExtra;
 	ComPtr<IDXGISwapChain3> m_SwapChain;
 
 	// 렌더타겟의 갯수 만큼의 펜스 객체
 	UINT64 m_FenceValues[m_NumSwapChainBuffers] = { 0 };
 	HANDLE m_FenceEvent = 0;;
+
+	UINT64 m_ExtraFenceValues = 0;
+	HANDLE m_ExtraFenceEvent = 0;
 
 	// rtv, dsv 디스크립터 힙
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
@@ -212,6 +218,8 @@ public:
 	const SIZE& GetScreenSize() const { return m_ScreenSize; }
 
 	const float* GetClearColor() const { return m_ClearColor; }
+
+	bool IsWindowed() const { return m_Windowed; }
 
 };
 

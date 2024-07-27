@@ -19,8 +19,8 @@ void print_error(const char* msg, int err_no)
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
-	//m_cpServerIP = (char*)"127.0.0.1";
+	//m_cpServerIP = (char*)"freerain.mooo.com";
+	m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
 
@@ -254,6 +254,7 @@ void process_packet(packet_base*& base)
 	case pGetItem:
 	case pKeyInput:
 	case pAttack:
+	case pSound:
 		client.getSceneManager()->ProcessPacket(base);
 		break;
 	case pLOGIN:									// LOGIN

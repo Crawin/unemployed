@@ -124,7 +124,7 @@ namespace component {
 		void SetCurAngle(float angle) { m_CurrentAngle = angle; }
 		void SetUioff(bool uioff) { m_Uioff = uioff; }
 		void SetOpen(ECSManager* manager, Transform* tr, Entity* self, bool state, bool sendServer = true);
-		void SetOpen(bool state) { m_Open = state; }
+		//void SetOpen(bool state) { m_Open = state; }
 		void SetKeyDoorOpen(bool keyopen) { m_KeyDoorOpen = keyopen; }
 		void SetDoorHp(int hp) { m_Hp = hp; }
 		void SetAnswer(int answer) { m_Answer = answer; }
@@ -237,12 +237,16 @@ namespace component {
 		Entity* m_Items[MAX_INVENTORY] = {nullptr, };
 
 		std::string m_InventorySocketName;
+		std::string m_SubInventorySocketName;
 		std::string m_TargetEntityNames[MAX_INVENTORY] = { "", };
 		//const char* m_TargetEntityNames[MAX_INVENTORY] = { nullptr, };
 		int m_CurrentHolding = 0;
 
 		// anim socket
 		Entity* m_HoldingSocket = nullptr;
+		Entity* m_SubHoldingSocket = nullptr;
+
+		bool m_MainMode = true;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
@@ -253,12 +257,15 @@ namespace component {
 		bool ChangeHoldingItem(int idx, ECSManager* manager);
 
 		Entity* GetCurrentHoldingItem() const { return m_Items[m_CurrentHolding]; }
-		const Entity* GetHoldingSocket() const { return m_HoldingSocket; }
+		const Entity* GetHoldingSocket() const;
 
 		void EraseCurrentHolding() { m_Items[m_CurrentHolding] = nullptr; }
 		void AddItem(Entity* entity, int idx) { m_Items[idx] = entity; }
 
 		bool IsOccupied(int target) { return m_Items[target] != nullptr; }
+
+		bool IsMainMode() const { return m_MainMode; }
+		void SetMainMode(bool state, ECSManager* manager);
 	};
 
 	/////////////////////////////////////////////////////////

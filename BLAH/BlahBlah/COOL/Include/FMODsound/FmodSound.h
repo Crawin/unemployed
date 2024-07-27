@@ -5,23 +5,15 @@
 #include <../External/Include/FMOD/fmod.hpp>
 #include <../External/Include/FMOD/fmod_errors.h>
 
+
 struct SOUND_EFFECT
 {
     FMOD::Sound* sound;
     FMOD::Channel* channel = 0;
 };
 
-enum class SOUND_TYPE
-{
-    FOOTPRINT,
-    DUCK,
-    CROWBAR_HIT,
-    DOOR_OPEN,
-    DRINK_BUY,
-    DRINK_THROW_HIT,
-    DRINK_CONSUME,
-    KEY_JINGLE
-};
+// 서버에서도 사용하기에 packets로 이동
+enum class SOUND_TYPE;
 
 class FMOD_INFO
 {
@@ -61,13 +53,14 @@ public:
 
     void set_player1_rotation_x(const float& x) { m_player1_rotation.x = x; }
     void set_player1_rotation_y(const float& y) { m_player1_rotation.y = y; }
+    void set_player1_rotation_z(const float& z) { m_player1_rotation.z = z; }
 
     FMOD_VECTOR get_direction_vector(const float& x, const float& y, const float& z);
 public:
     void begin_fmod();
     void update_fmod();
     void end_fmod();
-    bool play_loop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel);
+    bool play_loop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel, float pitch = 1.0f);
     bool play_unloop_sound(const DirectX::XMFLOAT3& WorldPos, const SOUND_TYPE& sound, const std::string& channel);
     bool stop_sound(const std::string& channel);
 };

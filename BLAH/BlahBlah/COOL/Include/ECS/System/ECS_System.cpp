@@ -150,24 +150,31 @@ namespace ECSsystem {
 
 		std::function<void(component::PlayerController*)> sendClientTalk = [manager](component::PlayerController* ctrl) {
 			auto& client = Client::GetInstance();
+			component::Pawn* curPawn = ctrl->GetControllingPawn();
+			component::Transform* tr = manager->GetComponent<component::Transform>(curPawn->GetCameraEntity());
+
 			if (client.is_talking)
 			{
-				component::Pawn* curPawn = ctrl->GetControllingPawn();
-				component::Transform* tr = manager->GetComponent<component::Transform>(curPawn->GetCameraEntity());
 				auto pos = tr->GetWorldPosition();
 				pos.y -= 160;
-				cs_packet_sound_start sound(pos, voice);
+				cs_packet_sound_start sound(pos, SOUND_TYPE::VOICE);
 				
 				client.send_packet(&sound);
 				std::cout << pos.x << "," << pos.y << "," << pos.z << " 전송 완" << std::endl;
 			}
+
+			// fmod sync
+			XMFLOAT3 rot = tr->GetRotation();
+			FMOD_INFO::GetInstance().set_self_position(tr->GetWorldPosition());
+			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
+			FMOD_INFO::GetInstance().set_player1_rotation_z(rot.z);
 			};
 
 		manager->Execute(func1);
 		manager->Execute(func2);
 		manager->Execute(func3);
 		manager->Execute(func4);
-		//manager->Execute(sendClientTalk);
+		manager->Execute(sendClientTalk);
 
 	}
 
@@ -231,10 +238,10 @@ namespace ECSsystem {
 					manager->Execute(getChangePawn);
 					
 					// possess to camera
-					ctrler->Possess(changeingPawn);
+					ctrler->Possess(changeingPawn, manager);
 
 					// end event
-					std::function returnToPawn = [ctrler, controlledPawn]() {ctrler->Possess(controlledPawn); };
+					std::function returnToPawn = [ctrler, controlledPawn, manager]() {ctrler->Possess(controlledPawn, manager); };
 
 					TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
 					changeTime->AddKeyFrame(dayManager->GetCurTime(), 0);
@@ -259,6 +266,72 @@ namespace ECSsystem {
 					};
 				manager->Execute(movePlayers);
 
+			}
+
+			// to st
+			if (curPawn->GetInputState(GAME_INPUT::F2) == KEY_STATE::END_PRESS) {
+				std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+					tr->SetPosition(pl->GetOriginalPosition());
+					tr->SetRotation(pl->GetOriginalRotate());
+					};
+				manager->Execute(movePlayers);
+
+				// get current pawn
+				component::PlayerController* ctrler = nullptr;
+				std::function<void(component::PlayerController*)> getCtrler = [&ctrler](component::PlayerController* control) { ctrler = control; };
+				manager->Execute(getCtrler);
+				component::Pawn* controlledPawn = ctrler->GetControllingPawn();
+				Entity* originCam = controlledPawn->GetCameraEntity();
+				component::Transform* originEntityTransform = manager->GetComponent<component::Transform>(controlledPawn->GetSelfEntity());
+				component::Transform* originCamTransform = manager->GetComponent<component::Transform>(originCam);
+
+				// get pawn to possess
+				component::Pawn* startPawn = nullptr;
+				std::function<void(component::Pawn*, component::Name*)> getChangePawn = [&startPawn](component::Pawn* pawn, component::Name* name)
+					{ if (name->getName() == "GameStartPawn") startPawn = pawn; };
+				manager->Execute(getChangePawn);
+				ctrler->Possess(startPawn, manager);
+
+				// end event
+				std::function returnToBasePawn = [ctrler, controlledPawn, manager]() { ctrler->Possess(controlledPawn, manager); };
+
+				// get start pawn's cam transform
+				component::Transform* camPawnTransform = manager->GetComponent<component::Transform>(startPawn->GetSelfEntity());
+
+				// position
+				{
+					XMFLOAT3 finalPos;
+					XMFLOAT4X4 parent = originEntityTransform->GetWorldTransform();
+					XMFLOAT3 camPos = originCamTransform->GetPosition();
+
+					XMVECTOR camPosV = XMLoadFloat3(&camPos);
+					XMMATRIX parentMat = XMLoadFloat4x4(&parent);
+
+					XMStoreFloat3(&finalPos, XMVector3Transform(camPosV, parentMat));
+
+					TimeLine<XMFLOAT3>* positionToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetPositionPtr());
+					XMFLOAT3 startPos = camPawnTransform->GetPosition();
+					XMFLOAT3 endPos = { 4470.0f, 160.84f, 920.0f };
+					positionToEnd->AddKeyFrame(startPos, 0);
+					positionToEnd->AddKeyFrame(startPos, 0.2f);
+					positionToEnd->AddKeyFrame(endPos, 3.0f);
+					positionToEnd->AddKeyFrame(endPos, 3.5f);
+					positionToEnd->AddKeyFrame(finalPos, 4.5f);
+					positionToEnd->SetEndEvent(returnToBasePawn);
+					manager->AddTimeLine(startPawn->GetCameraEntity(), positionToEnd);
+				}
+
+				// rotate
+				{
+					TimeLine<XMFLOAT3>* rotateToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetRotationPtr());
+					XMFLOAT3 startRot = camPawnTransform->GetRotation();
+					XMFLOAT3 endRot = { 0.0f, -90.0f, 0.0f };
+					rotateToEnd->AddKeyFrame(startRot, 0);
+					rotateToEnd->AddKeyFrame(startRot, 0.2f);
+					rotateToEnd->AddKeyFrame(endRot, 3.0f);
+					rotateToEnd->AddKeyFrame(endRot, 4.5f);
+					manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
+				}
 			}
 #endif
 
@@ -347,7 +420,7 @@ namespace ECSsystem {
 				rot.y += (mouseMove.x / rootSpeed);
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
-				FMOD_INFO::GetInstance().set_player1_rotation_y(rot.y);
+				
 			}
 		};
 
@@ -369,7 +442,7 @@ namespace ECSsystem {
 			//rot.y += (mouseMove.x / rootSpeed);
 			rot.x += (mouseMove.y / rootSpeed);
 			camTr->SetRotation(rot);
-			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
+			//FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
 
 			};
 
@@ -930,6 +1003,44 @@ namespace ECSsystem {
 
 		manager->Execute(friction);
 		manager->Execute(gravity);
+
+
+		// play walk sound here
+		std::function<void(Transform*, Physics*, Name*, SelfEntity*)> playWalkSound = [manager](Transform* tr, Physics* py, Name* name, SelfEntity* self) {
+			Player* p = manager->GetComponent<Player>(self->GetEntity());
+			AI* a = manager->GetComponent<AI>(self->GetEntity());
+
+			// physics를 가진 엔티티 중, ai거나 player일 때만 사운드 재생
+			if (a != nullptr || p != nullptr) {
+				SOUND_TYPE type = SOUND_TYPE::FOOTPRINT;
+
+				// todo if speed is fast
+				// play run sound
+				float vel = py->GetCurrentVelocityLenOnXZ();
+				if (vel > 10.0f) {
+					// just walk
+					// set play speed
+					// walk: 200, speed: 1.0f
+					// run : 600, speed : 1.5f
+					float soundPitch = 1.0f + (vel - 200.0f) * (600.0f - 200.0f) / (600.0f - 200.0f);
+					soundPitch = std::clamp(soundPitch, 1.0f, 1.5f);
+					//DebugPrint(std::format("pitch: {}", soundPitch));
+					FMOD_INFO::GetInstance().play_loop_sound(tr->GetWorldPosition(), type, std::format("{}_footprint", name->getName()), soundPitch);
+
+					// if dashing
+					if (p != nullptr && py->IsDashing()) {
+						cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::FOOTPRINT);
+						Client::GetInstance().send_packet(&packet);
+					}
+
+				}
+				else
+					FMOD_INFO::GetInstance().stop_sound(std::format("{}_footprint", name->getName()));
+			}
+
+			};
+
+		manager->Execute(playWalkSound);
 
 	}
 

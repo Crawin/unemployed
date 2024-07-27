@@ -197,6 +197,75 @@ void TestMainScene::OnServerConnected()
 	}
 }
 
+void TestMainScene::OnGameStarted()
+{
+	ECSManager* manager = m_ECSManager.get();
+
+	// reset player positions
+	std::function<void(component::Player*, component::Transform*)> movePlayers = [manager](component::Player* pl, component::Transform* tr) {
+		tr->SetPosition(pl->GetOriginalPosition());
+		tr->SetRotation(pl->GetOriginalRotate());
+		};
+	manager->Execute(movePlayers);
+
+	// get current pawn
+	component::PlayerController* ctrler = nullptr;
+	std::function<void(component::PlayerController*)> getCtrler = [&ctrler](component::PlayerController* control) { ctrler = control; };
+	manager->Execute(getCtrler);
+	component::Pawn* controlledPawn = ctrler->GetControllingPawn();
+	Entity* originCam = controlledPawn->GetCameraEntity();
+	component::Transform* originEntityTransform = manager->GetComponent<component::Transform>(controlledPawn->GetSelfEntity());
+	component::Transform* originCamTransform = manager->GetComponent<component::Transform>(originCam);
+
+	// get pawn to possess
+	component::Pawn* startPawn = nullptr;
+	std::function<void(component::Pawn*, component::Name*)> getChangePawn = [&startPawn](component::Pawn* pawn, component::Name* name)
+		{ if (name->getName() == "GameStartPawn") startPawn = pawn; };
+	manager->Execute(getChangePawn);
+	ctrler->Possess(startPawn, manager);
+
+	// end event
+	std::function returnToBasePawn = [ctrler, controlledPawn, manager]() { ctrler->Possess(controlledPawn, manager); };
+
+	// get start pawn's cam transform
+	component::Transform* camPawnTransform = manager->GetComponent<component::Transform>(startPawn->GetSelfEntity());
+
+	// position
+	{
+		XMFLOAT3 finalPos;
+		XMFLOAT4X4 parent = originEntityTransform->GetWorldTransform();
+		XMFLOAT3 camPos = originCamTransform->GetPosition();
+
+		XMVECTOR camPosV = XMLoadFloat3(&camPos);
+		XMMATRIX parentMat = XMLoadFloat4x4(&parent);
+
+		XMStoreFloat3(&finalPos, XMVector3Transform(camPosV, parentMat));
+
+		TimeLine<XMFLOAT3>* positionToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetPositionPtr());
+		XMFLOAT3 startPos = camPawnTransform->GetPosition();
+		XMFLOAT3 endPos = { 4470.0f, 160.84f, 920.0f };
+		positionToEnd->AddKeyFrame(startPos, 0);
+		positionToEnd->AddKeyFrame(startPos, 0.2f);
+		positionToEnd->AddKeyFrame(endPos, 3.0f);
+		positionToEnd->AddKeyFrame(endPos, 3.5f);
+		positionToEnd->AddKeyFrame(finalPos, 4.5f);
+		positionToEnd->SetEndEvent(returnToBasePawn);
+		manager->AddTimeLine(startPawn->GetCameraEntity(), positionToEnd);
+	}
+
+	// rotate
+	{
+		TimeLine<XMFLOAT3>* rotateToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetRotationPtr());
+		XMFLOAT3 startRot = camPawnTransform->GetRotation();
+		XMFLOAT3 endRot = { 0.0f, -90.0f, 0.0f };
+		rotateToEnd->AddKeyFrame(startRot, 0);
+		rotateToEnd->AddKeyFrame(startRot, 0.2f);
+		rotateToEnd->AddKeyFrame(endRot, 3.0f);
+		rotateToEnd->AddKeyFrame(endRot, 4.5f);
+		manager->AddTimeLine(startPawn->GetSelfEntity(), rotateToEnd);
+	}
+}
+
 //void TestMainScene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)
 //{
 //	// heap set

@@ -28,7 +28,7 @@ enum PACKET_TYPE
 	pGetItem,
 	pKeyInput,
 	pSound,
-	pBusted
+	pEnding
 };
 enum class ANIMATION_STATE;
 enum class GAME_INPUT;
@@ -40,8 +40,8 @@ protected:
 	char size;
 	PACKET_TYPE type;
 public:
-	const unsigned char getSize() { return size; }
-	const unsigned char getType() { return type; }
+	const char getSize() { return size; }
+	const char getType() { return type; }
 };
 
 class sc_packet_position : public packet_base
@@ -204,17 +204,17 @@ public:
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
 };
 
-class sc_packet_busted : public packet_base
+class sc_packet_ending : public packet_base
 {
-	char time_over;		// 0: 체포 , 1: 타임오버
+	char ending_type;		// 0: 체포 , 1: 타임오버, 2: 게임성공, 3: 도주
 public:
-	sc_packet_busted(const char& time)
+	sc_packet_ending(const char& end)
 	{
-		size = sizeof(sc_packet_busted);
-		type = pBusted;
-		this->time_over = time;
+		size = sizeof(sc_packet_ending);
+		type = pEnding;
+		this->ending_type = end;
 	}
-	const char getTimeOver() { return time_over; }
+	const char getEndingType() { return ending_type; }
 };
 
 //--------------------------------------------------------------------------------------------------------------------
@@ -341,10 +341,18 @@ public:
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
 };
 
-enum SoundType
+enum class SOUND_TYPE
 {
-	voice,
-	door
+	VOICE,
+	FOOTPRINT,
+	DUCK,
+	CROWBAR_SWING,
+	CROWBAR_HIT,
+	DOOR_OPEN,
+	DRINK_BUY,
+	DRINK_THROW_HIT,
+	DRINK_CONSUME,
+	KEY_JINGLE
 };
 
 class cs_packet_sound_start : public packet_base
@@ -352,14 +360,14 @@ class cs_packet_sound_start : public packet_base
 	DirectX::XMFLOAT3 position;
 	char sound_type;
 public:
-	cs_packet_sound_start(const DirectX::XMFLOAT3& pos, const SoundType& sound_type) {
+	cs_packet_sound_start(const DirectX::XMFLOAT3& pos, const SOUND_TYPE& sound_type) {
 		size = sizeof(cs_packet_sound_start);
 		type = pSound;
 		position = pos;
 		this->sound_type = static_cast<char>(sound_type);
 	}
 	const DirectX::XMFLOAT3 getPosition() { return position; }
-	const SoundType getType() { return static_cast<SoundType>(type); }
+	const SOUND_TYPE getType() { return static_cast<SOUND_TYPE>(type); }
 };
 
 #pragma pack(pop)

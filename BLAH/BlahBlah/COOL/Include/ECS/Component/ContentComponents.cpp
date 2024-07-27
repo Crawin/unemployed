@@ -6,6 +6,7 @@
 #include "json/json.h"
 #include "ECS/TimeLine/TimeLine.h"
 #include "Network/Client.h"
+#include "FMODsound/FmodSound.h"
 
 
 namespace component {
@@ -102,6 +103,9 @@ namespace component {
 
 			// attack
 			ctrl->InsertCondition(ANIMATION_STATE::ATTACK, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
+
+			// throw
+			ctrl->InsertCondition(ANIMATION_STATE::THROW_END, ANIMATION_STATE::BLENDED_MOVING_STATE, endPlaying);
 
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
 			ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
@@ -384,6 +388,12 @@ namespace component {
 			Client::GetInstance().send_packet(&packet);
 		}
 
+		FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN, "DOOR_OPEN");
+		if (sendServer) {
+			cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN);
+			Client::GetInstance().send_packet(&packet);
+		}
+
 		m_Open = state;
 	}
 
@@ -600,6 +610,7 @@ namespace component {
 		Json::Value inven = v["Inventory"];
 
 		m_InventorySocketName = inven["SocketName"].asString();
+		m_SubInventorySocketName = inven["SubSocketName"].asString();
 
 		for(int i = 0; i < MAX_INVENTORY; ++i)
 			m_TargetEntityNames[i] = inven[std::format("Slot_{}", i)].asString().c_str();
@@ -608,7 +619,8 @@ namespace component {
 	void Inventory::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
 	{
 		m_HoldingSocket = manager->GetEntityFromRoute(m_InventorySocketName, selfEntity);
-		
+		m_SubHoldingSocket = manager->GetEntityFromRoute(m_SubInventorySocketName, selfEntity);
+
 		// find targets here
 		for (int i = 0; i < MAX_INVENTORY; ++i) {
 			if (m_TargetEntityNames[i] != "") {
@@ -624,6 +636,7 @@ namespace component {
 			}
 		}
 
+		// default main mode
 		m_CurrentHolding = 0;
 		if (m_Items[m_CurrentHolding] != nullptr) 
 		{
@@ -660,6 +673,28 @@ namespace component {
 		m_CurrentHolding = idx;
 
 		return true;
+	}
+
+	const Entity* Inventory::GetHoldingSocket() const
+	{
+		if (m_MainMode)
+			return m_HoldingSocket;
+
+		return m_SubHoldingSocket;
+	}
+
+	void Inventory::SetMainMode(bool state, ECSManager* manager)
+	{
+		if (m_MainMode == state) return;
+		m_MainMode = state;
+
+		Entity* curItem = GetCurrentHoldingItem();
+		if (curItem != nullptr) {
+			if (state == true)
+				manager->AttachChild(m_HoldingSocket, curItem);
+			else
+				manager->AttachChild(m_SubHoldingSocket, curItem);
+		}
 	}
 
 	void Holdable::Create(Json::Value& v, ResourceManager* rm)
@@ -701,6 +736,10 @@ namespace component {
 			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::ATTACK);
 			auto& client = Client::GetInstance();
 			std::string playername;
+
+			auto masterTr = manager->GetComponent<Transform>(master);
+			FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::CROWBAR_SWING, "crobwar_swing");
+
 			switch (client.getCharType())
 			{
 			case 1:
@@ -710,11 +749,17 @@ namespace component {
 				playername = client.GetGuestPlayerName();
 				break;
 			}
-			if (masterAnimCtrl->GetPlayer()->GetName() == playername)			// 자신의 캐릭터라면 animation 변경 패킷 전송
+			if (masterAnimCtrl->GetPlayer()->GetName() == playername)			// 자신의 캐릭터라면 animation 변경 패킷 전송 및 소리패킷 전송
 			{
 				cs_packet_anim_type anim(ANIMATION_STATE::ATTACK);
 				Client::GetInstance().send_packet(&anim);
+
+				cs_packet_sound_start packet(masterTr->GetWorldPosition(), SOUND_TYPE::CROWBAR_SWING);
+				Client::GetInstance().send_packet(&packet);
 			}
+
+			// play sound
+
 
 			// set collider on
 			auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
@@ -778,6 +823,13 @@ namespace component {
 			DebugPrint("POO");
 			manager->AddParticle(PARTICLE_TYPES::SPARK, pos, vel, 100, 10.0f);
 			collider->SetActive(false);
+
+			// play sound
+			FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::CROWBAR_HIT, "crobwar_hit");
+
+			cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::CROWBAR_HIT);
+			Client::GetInstance().send_packet(&packet);
+
 			};
 		collider->InsertEvent<Collider>(setFirePoo, COLLIDE_EVENT_TYPE::BEGIN);
 		collider->SetActive(false);
@@ -839,7 +891,7 @@ namespace component {
 			// todo
 			// change player chara animation to throw ready
 			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
-			//masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROWREADY);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROW_START);
 
 			//auto selfCollider = manager->GetComponent<DynamicCollider>(selfEntity);
 			//selfCollider->SetActive(true);
@@ -870,6 +922,10 @@ namespace component {
 
 			DebugPrint(std::format("bakeTime: {}, speed: {}, result: {}", bakeTime, speed, ((bakeTime / maxBakeTime)*speed) / 27.7778f));
 
+			// set anim to throw end
+			Entity* master = holdable->GetMaster();
+			auto masterAnimCtrl = manager->GetComponent<AnimationController>(master);
+			masterAnimCtrl->ChangeAnimationTo(ANIMATION_STATE::THROW_END);
 
 			float resultSpeed = speed * (bakeTime / maxBakeTime);
 			// detach
@@ -921,8 +977,8 @@ namespace component {
 				dc->SetActive(false);
 
 				Server* serv = manager->GetComponent<Server>(self);
+				Transform* tr = manager->GetComponent<Transform>(self);
 				if (serv != nullptr) {
-					Transform* tr = manager->GetComponent<Transform>(self);
 					XMFLOAT3 pos = tr->GetPosition();
 					XMFLOAT3 rot = tr->GetRotation();
 					XMFLOAT3 vel = py->GetVelocity();
@@ -937,6 +993,15 @@ namespace component {
 				Collider* otherCol = manager->GetComponent<Collider>(other);
 
 				DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+
+				Drink* drink = manager->GetComponent<Drink>(self);
+				if (drink != nullptr) {
+					// play sound
+					FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DRINK_THROW_HIT, "DRINK_THROW");
+
+					cs_packet_sound_start packet(tr->GetWorldPosition(), SOUND_TYPE::DRINK_THROW_HIT);
+					Client::GetInstance().send_packet(&packet);
+				}
 				};
 
 
@@ -1739,6 +1804,7 @@ namespace component {
 								if (cans.empty() == false) {
 									Entity* can = cans.front();
 									Inventory* playerInv = manager->GetComponent<Inventory>(m_PlayerEntity);
+									Transform* playerTr = manager->GetComponent<Transform>(m_PlayerEntity);
 									Holdable* holdable = manager->GetComponent<Holdable>(can);
 									Drink* drink = manager->GetComponent<Drink>(can);
 
@@ -1756,6 +1822,12 @@ namespace component {
 											cs_packet_get_item packet(holdable->GetHoldableID(), targetInvNum);
 											Client::GetInstance().send_packet(&packet);
 										}
+
+										// play sound
+										FMOD_INFO::GetInstance().play_unloop_sound(playerTr->GetWorldPosition(), SOUND_TYPE::DRINK_BUY, "DRINK_BUY");
+
+										cs_packet_sound_start packet(playerTr->GetWorldPosition(), SOUND_TYPE::DRINK_BUY);
+										Client::GetInstance().send_packet(&packet);
 
 										// hide ui
 										canvas->HideUI();
@@ -1794,6 +1866,7 @@ namespace component {
 				Entity* master = holdable->GetMaster();
 				Physics* masterPhy = manager->GetComponent<Physics>(master);
 				Inventory* masterInv = manager->GetComponent<Inventory>(master);
+				Transform* masterTr = manager->GetComponent<Transform>(master);
 
 				// set speed up
 				float* masterMaxSpeed = masterPhy->GetMaxVelocityPtr();
@@ -1810,6 +1883,11 @@ namespace component {
 				masterInv->EraseCurrentHolding();
 				manager->AttachChild(holdable->GetOriginParent(), selfEntity);
 				//manager->AttachChild(holdable->GetOriginParent(), selfEntity);
+
+				FMOD_INFO::GetInstance().play_unloop_sound(masterTr->GetWorldPosition(), SOUND_TYPE::DRINK_CONSUME, "ConsumeDr");
+
+				cs_packet_sound_start packet(masterTr->GetWorldPosition(), SOUND_TYPE::DRINK_CONSUME);
+				Client::GetInstance().send_packet(&packet);
 				};
 			break;
 
