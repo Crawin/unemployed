@@ -964,8 +964,8 @@ namespace component {
 				dc->SetActive(false);
 
 				Server* serv = manager->GetComponent<Server>(self);
+				Transform* tr = manager->GetComponent<Transform>(self);
 				if (serv != nullptr) {
-					Transform* tr = manager->GetComponent<Transform>(self);
 					XMFLOAT3 pos = tr->GetPosition();
 					XMFLOAT3 rot = tr->GetRotation();
 					XMFLOAT3 vel = py->GetVelocity();
@@ -980,6 +980,12 @@ namespace component {
 				Collider* otherCol = manager->GetComponent<Collider>(other);
 
 				DebugPrint(std::format("Hit Collider, name: {}", name->getName()));
+
+				Drink* drink = manager->GetComponent<Drink>(self);
+				if (drink != nullptr) {
+					// play sound
+					FMOD_INFO::GetInstance().play_unloop_sound(tr->GetWorldPosition(), SOUND_TYPE::DRINK_THROW_HIT, "DRINK_THROW");
+				}
 				};
 
 
