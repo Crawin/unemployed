@@ -452,6 +452,28 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			
 			if (detail.m_bNPC)
 				Games[gameNum].can_hear(packet->getPosition());
+
+			if (static_cast<short>(packet->getType()) > 1)
+			{
+				if (InGamePlayers[0].id == id)
+				{
+					if (InGamePlayers[1].id)
+					{
+						login_players[InGamePlayers[1].id].send_packet(base);
+					}
+				}
+				else if (InGamePlayers[1].id == id)
+				{
+					if (InGamePlayers[0].id)
+					{
+						login_players[InGamePlayers[0].id].send_packet(base);
+					}
+				}
+				else
+				{
+					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+				}
+			}
 			break;
 		}
 		default:
@@ -548,7 +570,18 @@ void IOCP_SERVER_MANAGER::command_thread()
 			{
 				game.second.set_guard_destination(input);
 			}
+		}},
+		{"/REBOOT",[this]()
+		{
+			detail.id = 1;
+			currentRoom = 10000;
+			g_mutex_login_players.lock();
+			login_players.clear();
+			g_mutex_login_players.unlock();
+			Games.clear();
+			printf("서버 재시작 완료\n");
 		}}
+
 	};
 
 	while (detail.m_bServerState)

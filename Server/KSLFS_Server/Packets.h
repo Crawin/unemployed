@@ -341,7 +341,7 @@ public:
 	const GAME_INPUT getGameInput() { return static_cast<GAME_INPUT>(game_input); }
 };
 
-enum SoundType
+enum class SoundType
 {
 	voice,
 	FOOTPRINT,
