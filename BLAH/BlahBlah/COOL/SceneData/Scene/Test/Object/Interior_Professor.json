@@ -1,0 +1,3283 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "MeshChair_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer_chair",
+								"Mesh" : "MeshChair.MeshChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1482.300048828125,
+									508.19998168945312,
+									1167.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_screen_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/securety_computer_screen",
+								"Mesh" : "computer_screen.computer_screen"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1474.39990234375,
+									597.161376953125,
+									1070.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Keyboard_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/Keyboard",
+								"Mesh" : "Keyboard.Keyboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1475.4000244140625,
+									596.8802490234375,
+									1104.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_mouse_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/computer_mouse",
+								"Mesh" : "computer_mouse.computer_mouse"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1518.0,
+									597.01312255859375,
+									1102.2000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Computer_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer",
+								"Mesh" : "Computer.Computer"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1424.300048828125,
+									597.10943603515625,
+									1074.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1559.599853515625,
+									596.66412353515625,
+									1077.5999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "paper_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/paper",
+								"Mesh" : "paper.paper"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1526.89990234375,
+									597.14935302734375,
+									1067.199951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "telephone_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/telephone",
+								"Mesh" : "telephone.telephone"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1594.199951171875,
+									597.2216796875,
+									1091.0999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Office_table_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/Office_table",
+								"Mesh" : "Office_table.Office_table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1506.4998779296875,
+									511.70001220703125,
+									1088.699951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1511.89990234375,
+									511.29998779296875,
+									1033.800048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1506.279052734375,
+									508.0,
+									972.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "desk1_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/(Txt)GradientBrown",
+								"Mesh" : "desk1.desk1"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1491.1998291015625,
+									510.79998779296875,
+									917.39996337890625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/File_cupboard",
+								"Mesh" : "File_cupboard.File_cupboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1578.4854736328125,
+									585.20001220703125,
+									1394.2999267578125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_213",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1468.7000732421875,
+									510.79998779296875,
+									1401.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "_213_interior",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "MeshChair_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer_chair",
+								"Mesh" : "MeshChair.MeshChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1861.7855224609375,
+									871.99993896484375,
+									1187.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_screen_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/securety_computer_screen",
+								"Mesh" : "computer_screen.computer_screen"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1869.685546875,
+									960.96136474609375,
+									1091.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Keyboard_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/Keyboard",
+								"Mesh" : "Keyboard.Keyboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1868.685546875,
+									960.68017578125,
+									1124.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_mouse_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/computer_mouse",
+								"Mesh" : "computer_mouse.computer_mouse"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1826.085693359375,
+									960.81317138671875,
+									1122.7000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Computer_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer",
+								"Mesh" : "Computer.Computer"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1919.78564453125,
+									960.90936279296875,
+									1094.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1784.485595703125,
+									960.464111328125,
+									1098.0999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "paper_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/paper",
+								"Mesh" : "paper.paper"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1817.185546875,
+									960.9493408203125,
+									1087.699951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "telephone_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/telephone",
+								"Mesh" : "telephone.telephone"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1749.885498046875,
+									961.0216064453125,
+									1111.5999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Office_table_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/Office_table",
+								"Mesh" : "Office_table.Office_table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1837.585693359375,
+									875.49993896484375,
+									1109.199951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1834.78564453125,
+									875.09991455078125,
+									1054.300048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1865.3858642578125,
+									871.7999267578125,
+									992.89996337890625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "desk1_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/(Txt)GradientBrown",
+								"Mesh" : "desk1.desk1"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1852.8858642578125,
+									874.59991455078125,
+									934.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/File_cupboard",
+								"Mesh" : "File_cupboard.File_cupboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1765.5999755859375,
+									949.0,
+									1414.7999267578125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_303",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									1875.3856201171875,
+									874.59991455078125,
+									1422.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "_303_interior",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "MeshChair_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer_chair",
+								"Mesh" : "MeshChair.MeshChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-479.99996948242188,
+									871.99993896484375,
+									1187.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_screen_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/securety_computer_screen",
+								"Mesh" : "computer_screen.computer_screen"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-472.10000610351562,
+									960.96136474609375,
+									1091.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Keyboard_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/Keyboard",
+								"Mesh" : "Keyboard.Keyboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-473.09994506835938,
+									960.68017578125,
+									1124.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_mouse_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/computer_mouse",
+								"Mesh" : "computer_mouse.computer_mouse"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-515.6998291015625,
+									960.81317138671875,
+									1122.7000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Computer_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer",
+								"Mesh" : "Computer.Computer"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-421.99978637695312,
+									960.90936279296875,
+									1094.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-557.29986572265625,
+									960.464111328125,
+									1098.0999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "paper_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/paper",
+								"Mesh" : "paper.paper"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-524.59991455078125,
+									960.9493408203125,
+									1087.699951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "telephone_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/telephone",
+								"Mesh" : "telephone.telephone"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-591.89990234375,
+									961.0216064453125,
+									1111.5999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Office_table_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/Office_table",
+								"Mesh" : "Office_table.Office_table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-504.1998291015625,
+									875.49993896484375,
+									1109.199951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-506.99981689453125,
+									875.09991455078125,
+									1054.300048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-468.5,
+									871.7999267578125,
+									950.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "desk1_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/(Txt)GradientBrown",
+								"Mesh" : "desk1.desk1"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-519.89996337890625,
+									874.59991455078125,
+									966.60003662109375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/File_cupboard",
+								"Mesh" : "File_cupboard.File_cupboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-576.18548583984375,
+									949.0,
+									1414.7999267578125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_311",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-466.39981079101562,
+									874.59991455078125,
+									1422.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "_311_interior",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "MeshChair_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer_chair",
+								"Mesh" : "MeshChair.MeshChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-878.0,
+									1588.300048828125,
+									-1354.199951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_screen_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/securety_computer_screen",
+								"Mesh" : "computer_screen.computer_screen"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-787.5,
+									1677.2613525390625,
+									-1342.199951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Keyboard_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/Keyboard",
+								"Mesh" : "Keyboard.Keyboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-815.0999755859375,
+									1676.980224609375,
+									-1346.699951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_mouse_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/computer_mouse",
+								"Mesh" : "computer_mouse.computer_mouse"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-806.9000244140625,
+									1677.1134033203125,
+									-1393.7000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Computer_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer",
+								"Mesh" : "Computer.Computer"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-764.0,
+									1677.20947265625,
+									-1363.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-782.60003662109375,
+									1676.7642822265625,
+									-1429.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_514_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-819.9000244140625,
+									1676.7642822265625,
+									-1123.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "paper_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/paper",
+								"Mesh" : "paper.paper"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-796.0,
+									1677.24951171875,
+									-1241.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "telephone_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/telephone",
+								"Mesh" : "telephone.telephone"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-773.70001220703125,
+									1677.3216552734375,
+									-1278.89990234375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Office_table_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/Office_table",
+								"Mesh" : "Office_table.Office_table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-806.29998779296875,
+									1591.800048828125,
+									-1373.7000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-854.5,
+									1591.4000244140625,
+									-1069.0999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-884.39996337890625,
+									1588.0999755859375,
+									-979.300048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_514_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-884.39996337890625,
+									1588.0999755859375,
+									-1133.60009765625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "desk1_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/(Txt)GradientBrown",
+								"Mesh" : "desk1.desk1"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-804.199951171875,
+									1590.89990234375,
+									-981.00006103515625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/File_cupboard",
+								"Mesh" : "File_cupboard.File_cupboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1137.0,
+									1665.300048828125,
+									-1214.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1147.0999755859375,
+									1590.89990234375,
+									-1426.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_514_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1147.0999755859375,
+									1590.89990234375,
+									-1305.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Flat_Table_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/Table",
+								"Mesh" : "Flat_Table.Flat_Table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-798.70001220703125,
+									1590.0,
+									-1172.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Sofa_5_514",
+							"Renderer" : 
+							{
+								"Material" : "Map/couch_office",
+								"Mesh" : "Sofa_5.Sofa_5"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1045.0,
+									1602.199951171875,
+									-665.89996337890625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "_514_interior",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Children" : 
+					[
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "MeshChair_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer_chair",
+								"Mesh" : "MeshChair.MeshChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1483.900146484375,
+									1227.3197021484375,
+									1186.0999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_screen_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/securety_computer_screen",
+								"Mesh" : "computer_screen.computer_screen"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1476.0003662109375,
+									1316.2811279296875,
+									1089.2000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Keyboard_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/Keyboard",
+								"Mesh" : "Keyboard.Keyboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1477.0001220703125,
+									1316.0,
+									1122.7000732421875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_mouse_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/computer_mouse",
+								"Mesh" : "computer_mouse.computer_mouse"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1519.5999755859375,
+									1316.1329345703125,
+									1120.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Computer_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer",
+								"Mesh" : "Computer.Computer"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1425.9000244140625,
+									1316.2291259765625,
+									1093.10009765625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1561.2000732421875,
+									1315.783935546875,
+									1096.300048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "paper_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/paper",
+								"Mesh" : "paper.paper"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1528.5001220703125,
+									1316.2691650390625,
+									1085.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "telephone_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/telephone",
+								"Mesh" : "telephone.telephone"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1595.8001708984375,
+									1316.3414306640625,
+									1109.800048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Office_table_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/Office_table",
+								"Mesh" : "Office_table.Office_table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1508.0999755859375,
+									1230.8197021484375,
+									1107.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1510.9000244140625,
+									1230.419677734375,
+									1052.5
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1532.199951171875,
+									1227.1197509765625,
+									961.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "desk1_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/(Txt)GradientBrown",
+								"Mesh" : "desk1.desk1"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1460.0,
+									1229.919677734375,
+									964.5999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/File_cupboard",
+								"Mesh" : "File_cupboard.File_cupboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1568.0999755859375,
+									1304.3197021484375,
+									1391.800048828125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_411_1",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1483.39990234375,
+									1229.919677734375,
+									1401.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									-1.4033418253411173e-14
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "MeshChair_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer_chair",
+								"Mesh" : "MeshChair.MeshChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1906.5,
+									1227.3197021484375,
+									1306.2999267578125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_screen_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/securety_computer_screen",
+								"Mesh" : "computer_screen.computer_screen"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-2015.2000732421875,
+									1316.2811279296875,
+									1294.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Keyboard_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/Keyboard",
+								"Mesh" : "Keyboard.Keyboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1988.5999755859375,
+									1316.0,
+									1295.0999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "computer_mouse_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/computer_mouse",
+								"Mesh" : "computer_mouse.computer_mouse"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1987.800048828125,
+									1316.1329345703125,
+									1336.9000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									-90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Computer_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/Computer",
+								"Mesh" : "Computer.Computer"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-2039.800048828125,
+									1316.2291259765625,
+									1304.5999755859375
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "filing_B_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/filing_B",
+								"Mesh" : "filing_B.filing_B"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1988.800048828125,
+									1315.783935546875,
+									1409.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "paper_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/paper",
+								"Mesh" : "paper.paper"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1940.099853515625,
+									1316.2691650390625,
+									1397.7999267578125
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "telephone_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/telephone",
+								"Mesh" : "telephone.telephone"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-2018.5,
+									1316.3414306640625,
+									1225.0
+								],
+								"Rotate" : 
+								[
+									0.0,
+									180.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "Office_table_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/Office_table",
+								"Mesh" : "Office_table.Office_table"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1997.2999267578125,
+									1230.8197021484375,
+									1313.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1828.5,
+									1230.419677734375,
+									1002.2000122070312
+								],
+								"Rotate" : 
+								[
+									0.0,
+									0.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "_2fIstudioChair_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/Kitchen_Chair_B",
+								"Mesh" : "2fIstudioChair._2fIstudioChair"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1810.7999267578125,
+									1227.1197509765625,
+									1142.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "desk1_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/(Txt)GradientBrown",
+								"Mesh" : "desk1.desk1"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1810.89990234375,
+									1229.919677734375,
+									1053.199951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/File_cupboard",
+								"Mesh" : "File_cupboard.File_cupboard"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1751.0,
+									1304.3197021484375,
+									1265.699951171875
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "File_cupboard_wide_411_2",
+							"Renderer" : 
+							{
+								"Material" : "Map/file_cupboard_wide",
+								"Mesh" : "File_cupboard_wide.File_cupboard_wide"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1742.60009765625,
+									1229.919677734375,
+									1357.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_411_3",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1723.800048828125,
+									1230.5,
+									1104.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						},
+						{
+							"Collider" : 
+							{
+								"AutoMesh" : true,
+								"Static" : true
+							},
+							"Name" : "partition_wall_411_4",
+							"Renderer" : 
+							{
+								"Material" : "Map/partition_wall",
+								"Mesh" : "partition_wall.partition_wall"
+							},
+							"Transform" : 
+							{
+								"Position" : 
+								[
+									-1723.800048828125,
+									1230.5999755859375,
+									1311.4000244140625
+								],
+								"Rotate" : 
+								[
+									0.0,
+									90.0,
+									0.0
+								],
+								"Scale" : 
+								[
+									1.0,
+									1.0,
+									1.0
+								]
+							}
+						}
+					],
+					"Name" : "_411_interior",
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Interior_Test",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Interior_Professor_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
