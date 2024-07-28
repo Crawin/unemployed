@@ -186,6 +186,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		}
 		case C_SHUTDOWN:
 			std::cout << "서버 종료 명령으로 인한 쓰레드 종료" << std::endl;
+			delete e_over;
 			break;
 		case C_TIMER:
 			using namespace std::chrono;
@@ -553,8 +554,8 @@ void IOCP_SERVER_MANAGER::command_thread()
 	std::unordered_map<std::string, std::function<void()>> commands = {		// 이곳에 추가하고 싶은 명령어 기입 { 명령어 , 람다 }
 		{"/STOP",[this]() {
 			detail.m_bServerState = false;
-			EXP_OVER over;
-			over.c_op = C_SHUTDOWN;
+			EXP_OVER* over = new EXP_OVER;
+			over->c_op = C_SHUTDOWN;
 			int num_threads = std::thread::hardware_concurrency();
 			for (int i = 0; i < num_threads; ++i)
 				PostQueuedCompletionStatus(detail.m_hIOCP, 1, -1, reinterpret_cast<OVERLAPPED*>(&over));
