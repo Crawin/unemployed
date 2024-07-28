@@ -11,7 +11,7 @@
 
 			"UITransform":
 			{
-				"Center": [1200, 650],
+				"Center": [1800, 950],
 				"Size": [70, 70]
 			},
 		
@@ -28,7 +28,7 @@
 
 			"UITransform":
 			{
-				"Center": [640, 360],
+				"Center": [960, 540],
 				"Size": [300, 150]
 			},
 			
@@ -45,7 +45,7 @@
 
 			"UITransform":
 			{
-				"Center": [240, 160],
+				"Center": [360, 240],
 				"Size": [100, 100]
 			},
 			
@@ -62,7 +62,7 @@
 
 			"UITransform":
 			{
-				"Center": [360, 160],
+				"Center": [540, 240],
 				"Size": [100, 100]
 			},
 			
@@ -79,7 +79,7 @@
 
 			"UITransform":
 			{
-				"Center": [480, 160],
+				"Center": [720, 240],
 				"Size": [100, 100]
 			},
 			
@@ -96,7 +96,7 @@
 
 			"UITransform":
 			{
-				"Center": [600, 160],
+				"Center": [900, 240],
 				"Size": [100, 100]
 			},
 			
@@ -113,7 +113,7 @@
 
 			"UITransform":
 			{
-				"Center": [720, 160],
+				"Center": [1080, 240],
 				"Size": [100, 100]
 			},
 			
@@ -130,7 +130,7 @@
 
 			"UITransform":
 			{
-				"Center": [240, 600],
+				"Center": [360, 900],
 				"Size": [100, 100]
 			},
 			
@@ -147,7 +147,7 @@
 
 			"UITransform":
 			{
-				"Center": [360, 600],
+				"Center": [540, 900],
 				"Size": [100, 100]
 			},
 		
@@ -164,7 +164,7 @@
 
 			"UITransform":
 			{
-				"Center": [480, 600],
+				"Center": [720, 900],
 				"Size": [100, 100]
 			},
 			
@@ -181,7 +181,7 @@
 
 			"UITransform":
 			{
-				"Center": [600, 600],
+				"Center": [900, 900],
 				"Size": [100, 100]
 			},
 		
@@ -198,7 +198,7 @@
 
 			"UITransform":
 			{
-				"Center": [720, 600],
+				"Center": [1080, 900],
 				"Size": [100, 100]
 			},
 			
@@ -215,7 +215,7 @@
 
 			"UITransform":
 			{
-				"Center": [840, 600],
+				"Center": [1260, 900],
 				"Size": [100, 100]
 			},
 		
@@ -232,7 +232,7 @@
 
 			"UITransform":
 			{
-				"Center": [960, 600],
+				"Center": [1440, 900],
 				"Size": [100, 100]
 			},
 			
@@ -249,7 +249,7 @@
 
 			"UITransform":
 			{
-				"Center": [1080, 600],
+				"Center": [1620, 900],
 				"Size": [100, 100]
 			},
 		

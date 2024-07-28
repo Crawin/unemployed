@@ -11,7 +11,7 @@
 
 			"UITransform":
 			{
-				"Center": [1200, 650],
+				"Center": [1800, 950],
 				"Size": [70, 70]
 			},
 		
@@ -28,7 +28,7 @@
 
 			"UITransform":
 			{
-				"Center": [640, 100],
+				"Center": [960, 150],
 				"Size": [300, 150]
 			},
 			
@@ -45,7 +45,7 @@
 
 			"UITransform":
 			{
-				"Center": [640, 260],
+				"Center": [960, 390],
 				"Size": [500, 30]
 			},
 			
@@ -61,7 +61,7 @@
 
 			"UITransform":
 			{
-				"Center": [640, 360],
+				"Center": [960, 540],
 				"Size": [500, 30]
 			},
 		
@@ -77,7 +77,7 @@
 
 			"UITransform":
 			{
-				"Center": [640, 460],
+				"Center": [960, 690],
 				"Size": [500, 30]
 			},
 			
@@ -93,7 +93,7 @@
 
 			"UITransform":
 			{
-				"Center": [640, 560],
+				"Center": [960, 840],
 				"Size": [500, 30]
 			},
 		
