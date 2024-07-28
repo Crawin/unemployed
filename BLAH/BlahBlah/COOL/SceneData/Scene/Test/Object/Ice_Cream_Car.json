@@ -251,7 +251,7 @@
 					"Name" : "HintText__3_",
 					"Renderer" : 
 					{
-						"Material" : "Object/Floor_Plan",
+						"Material" : "Object/Hint_3Page",
 						"Mesh" : "Ice_Cream_Car.HintText__3_"
 					},
 					"Transform" : 
