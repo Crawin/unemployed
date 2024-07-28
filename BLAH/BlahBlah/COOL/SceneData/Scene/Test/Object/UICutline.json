@@ -69,7 +69,7 @@
 
 			"UIRenderer" :
 			{
-				"Material": "UI/UILineBlue",
+				"Material": "UI/UILineWine",
 				"IsSprite": false
 			}
 		},
@@ -85,7 +85,7 @@
 
 			"UIRenderer" :
 			{
-				"Material": "UI/UILineGreen",
+				"Material": "UI/UILineCherry",
 				"IsSprite": false
 			}
 		},
@@ -101,7 +101,7 @@
 
 			"UIRenderer" :
 			{
-				"Material": "UI/UILineYellow",
+				"Material": "UI/UILineRose",
 				"IsSprite": false
 			}
 		}

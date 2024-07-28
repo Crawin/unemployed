@@ -1,0 +1,9 @@
+{
+	"name": "UILineCherry",
+	"BaseColor": "UI/Cherry",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

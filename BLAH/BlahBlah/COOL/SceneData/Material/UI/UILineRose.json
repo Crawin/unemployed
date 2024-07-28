@@ -1,0 +1,9 @@
+{
+	"name": "UILineRose",
+	"BaseColor": "UI/Rose",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

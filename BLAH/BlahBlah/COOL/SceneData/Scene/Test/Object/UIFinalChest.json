@@ -130,7 +130,7 @@
 
 			"UITransform":
 			{
-				"Center": [360, 900],
+				"Center": [300, 800],
 				"Size": [100, 100]
 			},
 			
@@ -147,7 +147,7 @@
 
 			"UITransform":
 			{
-				"Center": [540, 900],
+				"Center": [460, 800],
 				"Size": [100, 100]
 			},
 		
@@ -164,7 +164,7 @@
 
 			"UITransform":
 			{
-				"Center": [720, 900],
+				"Center": [620, 800],
 				"Size": [100, 100]
 			},
 			
@@ -181,7 +181,7 @@
 
 			"UITransform":
 			{
-				"Center": [900, 900],
+				"Center": [780, 800],
 				"Size": [100, 100]
 			},
 		
@@ -198,7 +198,7 @@
 
 			"UITransform":
 			{
-				"Center": [1080, 900],
+				"Center": [940, 800],
 				"Size": [100, 100]
 			},
 			
@@ -215,7 +215,7 @@
 
 			"UITransform":
 			{
-				"Center": [1260, 900],
+				"Center": [1100, 800],
 				"Size": [100, 100]
 			},
 		
@@ -232,7 +232,7 @@
 
 			"UITransform":
 			{
-				"Center": [1440, 900],
+				"Center": [1260, 800],
 				"Size": [100, 100]
 			},
 			
@@ -249,7 +249,7 @@
 
 			"UITransform":
 			{
-				"Center": [1620, 900],
+				"Center": [1420, 800],
 				"Size": [100, 100]
 			},
 		
@@ -262,8 +262,7 @@
 				"IsSprite": false
 			}
 		},
-		{	
-			"Name": "KeyButton8",
+		{	"Name": "KeyButton8",
 
 			"UITransform":
 			{
