@@ -244,7 +244,7 @@ namespace component {
 				cs_packet_sound_start packetsound(trans->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN);
 				Client::GetInstance().send_packet(&packetsound);
 
-				doorCtrl->SetOpen(manager, trans, door, !doorCtrl->IsOpen(), true);
+				//doorCtrl->SetOpen(manager, trans, door, !doorCtrl->IsOpen(), true);
 
 
 			}
