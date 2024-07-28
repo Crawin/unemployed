@@ -215,10 +215,10 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
 			}
-			else
-			{
-				Games.erase(rw_byte);
-			}
+			//else
+			//{
+			//	Games.erase(rw_byte);
+			//}
 			delete e_over;
 			break;
 		}
@@ -504,13 +504,15 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				if (InGamePlayers[i].id)
 				{
 					login_players[InGamePlayers[i].id].send_packet(base);
+					printf("%d -> %d 엔딩패킷 전송\n", id, InGamePlayers[i].id);
+					login_players[InGamePlayers[i].id].setGameNum(0);
 				}
 				else
 				{
 					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 				}
 			}
-			Games.erase(gameNum);
+			//Games.erase(gameNum);
 			break;
 		}
 		default:
@@ -1084,6 +1086,7 @@ void Game::respawn_guard()
 	guard.destination = { 0,0,0 };
 	guard.movement_speed = 400;
 	guard.state = 0;
+	guard.aggro_type = 2;
 }
 
 void Game::set_guard_destination(const int& floor)
@@ -1228,8 +1231,16 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 		if (hit)
 		{
 			sc_packet_ending busted(0);
-			login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
-			std::cout << i << " 와 충돌" << std::endl;
+			for (int i = 0; i < 2; ++i)
+			{
+				if (login_players[p[i].id].getGameNum() != 0)
+				{
+					login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
+					printf("%d 에게 엔딩 전송", p[i].id);
+					login_players[p[i].id].setGameNum(0);
+				}
+			}
+			//std::cout << i << " 와 충돌" << std::endl;
 			break;
 		}
 	}
@@ -1507,17 +1518,17 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 {
 	short n = find_near_player(p);
 	if (npc_state) {
-		for (int i = 0; i < 2; ++i)
-		{
-			if (p[n].sock == NULL)
-			{
-				n = 1 - n;
-				continue;
-			}
+		//for (int i = 0; i < 2; ++i)
+		//{
+		//	if (p[n].sock == NULL)
+		//	{
+		//		n = 1 - n;
+		//		continue;
+		//	}
 			bool floor_gap = false;
 			if (can_see(p[n], floor_gap))
 			{	// 보이면 그냥 돌진
-				//std::cout << n << "P 발견" << std::endl;
+				std::cout << n << "P 발견" << std::endl;
 				if (floor_gap)			// 계단을 거쳐 가야함으로 astar 사용
 				{
 					while (true)
@@ -1560,8 +1571,8 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				this->aggro_type = 0;
 				return true;
 			}
-			n = 1 - n;
-		}
+		//	n = 1 - n;
+		//}
 	}
 
 	// 플레이어를 찾지도, 듣지도 못했다면
@@ -1575,6 +1586,7 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 				this->state = 0;
 				this->speed = DirectX::XMFLOAT3(0, 0, 0);
 				std::cout << "두리번 상태로 변경" << std::endl;
+				this->aggro_type = 2;
 			}
 		}
 		else
@@ -1584,7 +1596,6 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 			path = next;
 			destination = path->pos;
 		}
-
 	}
 	return false;
 }
@@ -1628,6 +1639,8 @@ void NPC::move(const double& time)
 
 const short NPC::find_near_player(Player*& players)
 {
+	return 0;
+
 	float distance[2] = { 1E+37,1E+37 };
 	for (int i = 0; i < 2; ++i)
 	{
