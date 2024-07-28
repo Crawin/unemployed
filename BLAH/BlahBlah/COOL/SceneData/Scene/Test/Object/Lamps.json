@@ -1,0 +1,360 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-462.55453491210938,
+							-1141.0531005859375,
+							-377.29312133789062
+						],
+						"Rotate" : 
+						[
+							0.0,
+							-90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__1_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__1_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-462.55453491210938,
+							-1141.0531005859375,
+							480.00003051757812
+						],
+						"Rotate" : 
+						[
+							0.0,
+							-90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__2_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__2_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-462.55453491210938,
+							-1141.0531005859375,
+							1262.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							-90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__3_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__3_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-462.55453491210938,
+							-1141.0531005859375,
+							2138.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							-90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__4_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__4_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-462.55453491210938,
+							-1141.0531005859375,
+							3259.999755859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							-90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__5_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__5_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-2255.0,
+							-1141.0531005859375,
+							3259.999755859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							180.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__6_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__6_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-4054.0,
+							-1141.0531005859375,
+							3259.999755859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							180.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__7_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__7_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-5977.0,
+							-1141.0531005859375,
+							3259.999755859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							180.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "lamp_pole_single__8_",
+					"Renderer" : 
+					{
+						"Material" : "NoMaterial",
+						"Mesh" : "Lamps.lamp_pole_single__8_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-8012.99951171875,
+							-1141.0531005859375,
+							3259.999755859375
+						],
+						"Rotate" : 
+						[
+							0.0,
+							180.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "Lamps",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Lamps_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
