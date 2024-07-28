@@ -279,7 +279,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			g_mutex_npc_timer.lock();
 			//g_npc_timer.emplace(currentRoom, 1, std::chrono::milliseconds(0));
-			for (int npc_id = 2; npc_id < 3; ++npc_id)//STUDENT_SIZE + 2
+			for (int npc_id = 2; npc_id < STUDENT_SIZE + 2; ++npc_id)//STUDENT_SIZE + 2
 			{
 				g_npc_timer.emplace(currentRoom, npc_id, std::chrono::milliseconds(0));
 				printf("%d 추가 완료\n", npc_id);
@@ -1001,30 +1001,53 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 		std::cout << "잘못된 NPC아이디 입니다." << std::endl;
 	}
 	using namespace std::chrono;
-	if (this->begin_time.time_since_epoch() > nanoseconds(1) && !isDay())
+	if (this->day)		// 낮시간이면
 	{
-		sc_packet_change_day_or_night change(22);
-		for (auto& p : player)
+		if (this->begin_time.time_since_epoch() > nanoseconds(1) && !isDay())
 		{
-			if (p.sock != NULL)
+			sc_packet_change_day_or_night change(22);
+			for (auto& p : player)
 			{
-				if (login_players.end() != login_players.find(p.id))
+				if (p.sock != NULL)
 				{
-					login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&change));
+					if (login_players.end() != login_players.find(p.id))
+					{
+						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&change));
+					}
+					else
+						p.sock = NULL;
 				}
-				else
-					p.sock = NULL;
+			}
+			begin_time = steady_clock::now() + minutes(5);			// 타임오버 시간으로 수정해야함. 
+			this->day = false;
+			g_mutex_npc_timer.lock();
+			while (!g_npc_timer.empty())
+			{
+				g_npc_timer.pop();
+			}
+			g_npc_timer.emplace(this->GameNum, 1, std::chrono::milliseconds(0));
+			std::cout << "학생 죽이고, 가드 살리기 완료" << std::endl;
+			g_mutex_npc_timer.unlock();
+		}
+	}
+	else
+	{
+		if (begin_time < steady_clock::now())	// 밤시간에 타임오버 시간 측정
+		{
+			sc_packet_ending ending(1);
+			for (auto& p : player)
+			{
+				if (p.sock != NULL)
+				{
+					if (login_players.end() != login_players.find(p.id))
+					{
+						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&ending));
+					}
+					else
+						p.sock = NULL;
+				}
 			}
 		}
-		begin_time = steady_clock::now() + hours(24);			// 타임오버 시간으로 수정해야함. 
-		g_mutex_npc_timer.lock();
-		while (!g_npc_timer.empty())
-		{
-			g_npc_timer.pop();
-		}
-		g_npc_timer.emplace(this->GameNum, 1, std::chrono::milliseconds(0));
-		std::cout << "학생 죽이고, 가드 살리기 완료" << std::endl;
-		g_mutex_npc_timer.unlock();
 	}
 }
 

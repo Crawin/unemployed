@@ -406,6 +406,7 @@ class Game
 	NPC guard;
 	NPC students[STUDENT_SIZE];
 	std::chrono::steady_clock::time_point begin_time;
+	bool day = true;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n), state(true) {
