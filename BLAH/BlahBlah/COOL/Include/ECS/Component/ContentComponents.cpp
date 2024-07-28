@@ -233,26 +233,20 @@ namespace component {
 			
 			// if opened
 			if (doorCtrl != nullptr && doorCtrl->IsLocked() == false) {
-				//auto rot = trans->GetRotation();
-				//XMFLOAT3 rotAfter = rot;
 
-				//float angle = doorCtrl->GetMaxAngle();
-				//if (doorCtrl->IsOpen()) angle *= -1;
+				char toState = 0;
+				if (doorCtrl->IsOpen() == false)
+					toState = 1;
 
-				//switch (doorCtrl->GetAxis()) {
-				//case 0:		rotAfter.x -= angle;	break;
-				//case 1:		rotAfter.y -= angle;	break;
-				//case 2:		rotAfter.z -= angle;	break;
-				//	break;
-				//}
+				cs_packet_open_door packet(doorCtrl->GetDoorID(), toState);
+				Client::GetInstance().send_packet(&packet);
 
-				//TimeLine<XMFLOAT3>* openDoor = new TimeLine<XMFLOAT3>(trans->GetRotationPtr());
-				//openDoor->AddKeyFrame(rot, 0);
-				//openDoor->AddKeyFrame(rotAfter, 1);
-
-				//manager->AddTimeLine(door, openDoor);
+				cs_packet_sound_start packet(trans->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN);
+				Client::GetInstance().send_packet(&packet);
 
 				doorCtrl->SetOpen(manager, trans, door, !doorCtrl->IsOpen(), true);
+
+
 			}
 			else {
 				// todo
@@ -368,6 +362,8 @@ namespace component {
 
 		float angle = GetMaxAngle();
 		if (m_Open) angle *= -1;
+
+		DebugPrint(std::format("angle: {}", angle));
 
 		switch (m_RotateAxis) {
 		case 0:		rotAfter.x -= angle;	break;

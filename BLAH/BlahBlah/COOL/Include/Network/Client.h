@@ -20,7 +20,7 @@
 #include <chrono>
 #include "Packets.h"
 
-#define BUFSIZE    512
+#define BUFSIZE    2048
 constexpr int PoliceID = 1;
 constexpr int StudentID = 2;
 
