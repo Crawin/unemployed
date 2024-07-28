@@ -68,7 +68,7 @@
 			]
 		},
 		{
-			"Name" : "GameStartPawn",
+			"Name" : "GameStartCutScenePawn00",
 
 			"Transform" : 
 			{
@@ -100,6 +100,124 @@
 			[
 				{
 					"Name": "ViewCamera2",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Camera":
+					{
+						"Active": false,
+						"IsMainCamera": false,
+						"Right": 	[1.0, 0.0, 0.0],
+						"Up": 		[0.0, 1.0, 0.0],
+						"Look": 	[0.0, 0.0, 1.0],
+						"Position": [0.0, 70.0, 5.5],
+				
+						"Fov": 75.0,
+						"Aspect": 1.777,
+						"Near": 0.1,
+						"Far": 50000.0,
+
+						"Noise": 1,
+						"Vignetting": false
+					}
+				}
+			]
+		},
+		{
+			"Name" : "GameStartCutScenePawn01",
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					3918.6,
+					234.0,
+					3512.0
+				],
+				"Rotate" : 
+				[
+					-16.392,
+					-178.304,
+					0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+
+			"Pawn": 
+			{
+				"CameraName": "ViewCamera3"
+			},
+			"Children": 
+			[
+				{
+					"Name": "ViewCamera3",
+					"Transform": 
+					{
+						"Position": [0.0, 0.0, 0.0],
+						"Rotate": [0.0, 0.0, 0.0],
+						"Scale": [1.0, 1.0, 1.0]
+					},
+					"Camera":
+					{
+						"Active": false,
+						"IsMainCamera": false,
+						"Right": 	[1.0, 0.0, 0.0],
+						"Up": 		[0.0, 1.0, 0.0],
+						"Look": 	[0.0, 0.0, 1.0],
+						"Position": [0.0, 70.0, 5.5],
+				
+						"Fov": 75.0,
+						"Aspect": 1.777,
+						"Near": 0.1,
+						"Far": 50000.0,
+
+						"Noise": 1,
+						"Vignetting": false
+					}
+				}
+			]
+		},
+		{
+			"Name" : "GameStartCutScenePawn02",
+
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					4619.0,
+					132.9,
+					931.0
+				],
+				"Rotate" : 
+				[
+					0.392,
+					-90.304,
+					0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+
+			"Pawn": 
+			{
+				"CameraName": "ViewCamera4"
+			},
+			"Children": 
+			[
+				{
+					"Name": "ViewCamera4",
 					"Transform": 
 					{
 						"Position": [0.0, 0.0, 0.0],

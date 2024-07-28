@@ -68,6 +68,12 @@
 		"UpperOnly": true
 	},
 
+	"Get_Phone_Call":
+	{
+		"Loop": false,
+		"Name": "Player/Player_Phone_Call"
+	},
+
 	"Blended_Moving_State":
 	{
 		"Idle":

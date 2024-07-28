@@ -3,6 +3,10 @@
 
 class Material;
 
+namespace component {
+    class Pawn;
+};
+
 class TestMainScene :
     public Scene
 {
@@ -39,6 +43,14 @@ public:
     virtual void OnServerConnected();
 
     virtual void OnGameStarted();
+
+    void CutScenePawnMoving(component::Pawn* pawn, const std::function<void()>& endEvent, const XMFLOAT3& endPos, const XMFLOAT3& endRot, float endTime, bool eventOn = true);
+
+    void AddEndEventAfterTime(const std::function<void()>& endEvent, float endTime);
+
+    void ShowConversationUI(int talker, int conversation);
+    
+    void HideConversationUI();
 
     // 최종 결과를 resultRtv, resultDsv에 넘긴다
     //virtual void Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv);

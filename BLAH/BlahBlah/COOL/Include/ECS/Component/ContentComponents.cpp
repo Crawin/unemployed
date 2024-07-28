@@ -51,7 +51,8 @@ namespace component {
 			};
 
 		COND hit = [](void* data) {
-			return GetAsyncKeyState(VK_END) & 0x8000;
+			//return GetAsyncKeyState(VK_END) & 0x8000;
+			return false;
 			};
 
 		COND falldown = [ctrl](void* data) {

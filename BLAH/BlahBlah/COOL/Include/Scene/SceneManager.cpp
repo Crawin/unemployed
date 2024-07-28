@@ -209,3 +209,8 @@ void SceneManager::PossessPlayer(bool isHost)
 {
 	m_CurrentScene->PossessPlayer(isHost);
 }
+
+void SceneManager::StartGame()
+{
+	m_CurrentScene->OnGameStarted();
+}

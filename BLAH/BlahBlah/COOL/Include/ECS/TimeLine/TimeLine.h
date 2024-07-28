@@ -29,7 +29,7 @@ public:
 	void SetMoveFront() { m_PlayBack = false; }
 	void SetMoveBack() { m_PlayBack = true; }
 
-	void SetEndEvent(std::function<void()>& event) { m_HaveEndEvent = true; m_OnEnd = event; }
+	void SetEndEvent(const std::function<void()>& event) { m_HaveEndEvent = true; m_OnEnd = event; }
 	void RunEndEvent() { if (m_HaveEndEvent) m_OnEnd(); }
 };
 

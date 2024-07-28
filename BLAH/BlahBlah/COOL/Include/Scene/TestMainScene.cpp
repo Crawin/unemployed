@@ -217,63 +217,176 @@ void TestMainScene::OnGameStarted()
 	component::Transform* originEntityTransform = manager->GetComponent<component::Transform>(controlledPawn->GetSelfEntity());
 	component::Transform* originCamTransform = manager->GetComponent<component::Transform>(originCam);
 
+	XMFLOAT3 finalPos;
+	XMFLOAT4X4 parent = originEntityTransform->GetWorldTransform();
+	XMFLOAT3 camPos = originCamTransform->GetPosition();
+	XMFLOAT3 endPos = { 4470.0f, 160.84f, 920.0f };
+
+	XMVECTOR camPosV = XMLoadFloat3(&camPos);
+	XMMATRIX parentMat = XMLoadFloat4x4(&parent);
+
+	XMStoreFloat3(&finalPos, XMVector3Transform(camPosV, parentMat));
+
+	XMFLOAT3 endRot = { 0.0f, -90.0f, 0.0f };
+
 	// get pawn to possess
-	component::Pawn* startPawn = nullptr;
-	component::Pawn* startCutScenePawn = nullptr;
+	component::Pawn* startCutScenePawn[3] = { nullptr, };
 	std::function<void(component::Pawn*, component::Name*)> getChangePawn = 
 		[
-			&startPawn, 
 			&startCutScenePawn
 		]
 		
 		(component::Pawn* pawn, component::Name* name)
 		{ 
-			if (name->getName() == "GameStartPawn") startPawn = pawn;
-			else if (name->getName() == "GameStartCutScene01Pawn") startPawn = pawn;
+			if (name->getName() == "GameStartCutScenePawn00") startCutScenePawn[0] = pawn;
+			else if (name->getName() == "GameStartCutScenePawn01") startCutScenePawn[1] = pawn;
+			else if (name->getName() == "GameStartCutScenePawn02") startCutScenePawn[2] = pawn;
 		};
 	manager->Execute(getChangePawn);
-	ctrler->Possess(startPawn, manager);
+	ctrler->Possess(startCutScenePawn[0], manager);
 
-	// end event
-	std::function returnToBasePawn = [ctrler, controlledPawn, manager]() { ctrler->Possess(controlledPawn, manager); };
+	XMFLOAT3 endPositions[3] = {
+		//{4919, 132.9, 931},
+		{4056.5, 198.7, 1187.5},
+		{2318.0, 234.0, 3559.0},
+		finalPos
+	};
+	XMFLOAT3 endRotations[3] = {
+		//{0, -90.0, 0},
+		{20.418, 148.493, 0},
+		{-16.392, -178.304, 0},
+		endRot
+	};
 
-	// get start pawn's cam transform
-	component::Transform* camPawnTransform = manager->GetComponent<component::Transform>(startPawn->GetSelfEntity());
+	//XMFLOAT3 endPositions[3] = {
+	//{4056.5, 198.7, 1187.5},
+	//{2318.0, 234.0, 3559.0},
+	//finalPos
+	//};
+	//XMFLOAT3 endRotations[3] = {
+	//	{20.418, 148.493, 0},
+	//	{-16.392, -178.304, 0},
+	//	endRot
+	//};
+
+
+	// cut scene 진행
+	// 00 -> 00end포인트 이동(EndEvent로 아래)
+	// 00end에서 애니메이션 재생 및 1초 대기 (EndEvent로 아래)
+	// 1초 대기 이후 대화창 (원기학의 도착했습니다.) 및 2.5초 대기 (EndEvent로 아래)
+	// 
+
+	std::function TwoToEnd = [ctrler, controlledPawn, manager]() { ctrler->Possess(controlledPawn, manager); };
+	std::function OneToTwo = [ctrler, TwoToEnd, startCutScenePawn, this, manager, endPositions, endRotations]() {
+
+		Entity* playerEnt = manager->GetEntity(Client::GetInstance().GetHostPlayerName());
+		component::AnimationController* ctrl = manager->GetComponent<component::AnimationController>(playerEnt);
+
+		ctrl->ChangeAnimationTo(ANIMATION_STATE::BLENDED_MOVING_STATE);
+
+		ctrler->Possess(startCutScenePawn[2], manager);
+		CutScenePawnMoving(startCutScenePawn[2], TwoToEnd, endPositions[2], endRotations[2], 2.5f, true);
+		};
+
+	// end events
+	std::function wait2SecAndZeroToOne = [ctrler, startCutScenePawn, manager, this, OneToTwo, endPositions, endRotations]() {
+		
+		std::function<void()> changeToOne = [ctrler, startCutScenePawn, manager, this, OneToTwo, endPositions, endRotations]() {
+			ctrler->Possess(startCutScenePawn[1], manager);
+			CutScenePawnMoving(startCutScenePawn[1], OneToTwo, endPositions[1], endRotations[1], 4.0f, true);
+			};
+		
+		
+		// find host player
+		Entity* playerEnt = manager->GetEntity(Client::GetInstance().GetHostPlayerName());
+		component::AnimationController* ctrl = manager->GetComponent<component::AnimationController>(playerEnt);
+
+		ctrl->ChangeAnimationTo(ANIMATION_STATE::GET_PHONE_CALL);
+
+		AddEndEventAfterTime(changeToOne, 8.0f);
+		};
+
+
+
+	// start to start cut scene pawn
+	ctrler->Possess(startCutScenePawn[0], manager);
+	CutScenePawnMoving(startCutScenePawn[0], wait2SecAndZeroToOne, endPositions[0], endRotations[0], 5.0f, true);
+
+
+	// ui set
+	std::function<void()> showConver = [this]() { ShowConversationUI(2, 2); };
+	AddEndEventAfterTime(showConver, 10.0f);
+
+	std::function<void()> showConver2 = [this]() { ShowConversationUI(2, 3); };
+	AddEndEventAfterTime(showConver2, 12.0f);
+
+	std::function<void()> showConver3 = [this]() { ShowConversationUI(2, 4); };
+	AddEndEventAfterTime(showConver3, 14.0f);
+
+	std::function<void()> showConver4 = [this]() { ShowConversationUI(3, 5); };
+	AddEndEventAfterTime(showConver4, 16.0f);
+
+	std::function<void()> showConver5 = [this]() { ShowConversationUI(2, 6); };
+	AddEndEventAfterTime(showConver5, 18.0f);
+
+	std::function<void()> showConver6 = [this]() { HideConversationUI(); };
+	AddEndEventAfterTime(showConver6, 20.0f);
+}
+
+void TestMainScene::CutScenePawnMoving(component::Pawn* pawn, const std::function<void()>& endEvent, const XMFLOAT3& endPos, const XMFLOAT3& endRot, float endTime, bool eventOn)
+{
+	component::Transform* pawnTr = m_ECSManager->GetComponent<component::Transform>(pawn->GetSelfEntity());
 
 	// position
-	{
-		XMFLOAT3 finalPos;
-		XMFLOAT4X4 parent = originEntityTransform->GetWorldTransform();
-		XMFLOAT3 camPos = originCamTransform->GetPosition();
+	TimeLine<XMFLOAT3>* positionToEnd = new TimeLine<XMFLOAT3>(pawnTr->GetPositionPtr());
+	XMFLOAT3 startPos = pawnTr->GetPosition();
+	positionToEnd->AddKeyFrame(startPos, 0);
+	positionToEnd->AddKeyFrame(startPos, 0.2f);
+	positionToEnd->AddKeyFrame(endPos, endTime - 0.2f);
+	positionToEnd->AddKeyFrame(endPos, endTime);
+	if (eventOn) positionToEnd->SetEndEvent(endEvent);
+	m_ECSManager->AddTimeLine(positionToEnd);
 
-		XMVECTOR camPosV = XMLoadFloat3(&camPos);
-		XMMATRIX parentMat = XMLoadFloat4x4(&parent);
+	// rotation
+	TimeLine<XMFLOAT3>* rotateToEnd = new TimeLine<XMFLOAT3>(pawnTr->GetRotationPtr());
+	XMFLOAT3 startRot = pawnTr->GetRotation();
 
-		XMStoreFloat3(&finalPos, XMVector3Transform(camPosV, parentMat));
+	rotateToEnd->AddKeyFrame(startRot, 0);
+	rotateToEnd->AddKeyFrame(startRot, 0.2f);
+	rotateToEnd->AddKeyFrame(endRot, endTime - 0.5f);
+	rotateToEnd->AddKeyFrame(endRot, endTime - 1.0f);
+	m_ECSManager->AddTimeLine(rotateToEnd);
+}
 
-		TimeLine<XMFLOAT3>* positionToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetPositionPtr());
-		XMFLOAT3 startPos = camPawnTransform->GetPosition();
-		XMFLOAT3 endPos = { 4470.0f, 160.84f, 920.0f };
-		positionToEnd->AddKeyFrame(startPos, 0);
-		positionToEnd->AddKeyFrame(startPos, 0.2f);
-		positionToEnd->AddKeyFrame(endPos, 3.0f);
-		positionToEnd->AddKeyFrame(endPos, 3.5f);
-		positionToEnd->AddKeyFrame(finalPos, 4.5f);
-		positionToEnd->SetEndEvent(returnToBasePawn);
-		manager->AddTimeLine(positionToEnd);
-	}
+void TestMainScene::AddEndEventAfterTime(const std::function<void()>& endEvent, float endTime)
+{
+	// position
+	TimeLine<float>* temp = new TimeLine<float>(nullptr);
+	temp->AddKeyFrame(0.0f, 0.0f);
+	temp->AddKeyFrame(0.0f, endTime);
+	temp->SetEndEvent(endEvent);
+	m_ECSManager->AddTimeLine(temp);
+}
 
-	// rotate
-	{
-		TimeLine<XMFLOAT3>* rotateToEnd = new TimeLine<XMFLOAT3>(camPawnTransform->GetRotationPtr());
-		XMFLOAT3 startRot = camPawnTransform->GetRotation();
-		XMFLOAT3 endRot = { 0.0f, -90.0f, 0.0f };
-		rotateToEnd->AddKeyFrame(startRot, 0);
-		rotateToEnd->AddKeyFrame(startRot, 0.2f);
-		rotateToEnd->AddKeyFrame(endRot, 3.0f);
-		rotateToEnd->AddKeyFrame(endRot, 4.5f);
-		manager->AddTimeLine(rotateToEnd);
-	}
+void TestMainScene::ShowConversationUI(int talker, int conversation)
+{
+	std::function<void(component::UICanvas*, component::UIConversation*)> ui = [talker, conversation](component::UICanvas* canv, component::UIConversation* conv) {
+		conv->SetTalker(talker);
+		conv->SetConversation(conversation);
+
+		canv->ShowUI();
+		};
+
+	m_ECSManager->Execute(ui);
+}
+
+void TestMainScene::HideConversationUI()
+{
+	std::function<void(component::UICanvas*, component::UIConversation*)> ui = [](component::UICanvas* canv, component::UIConversation* conv) {
+		canv->HideUI();
+		};
+
+	m_ECSManager->Execute(ui);
 }
 
 //void TestMainScene::Render(std::vector<ComPtr<ID3D12GraphicsCommandList>>& commandLists, D3D12_CPU_DESCRIPTOR_HANDLE resultRtv, D3D12_CPU_DESCRIPTOR_HANDLE resultDsv)

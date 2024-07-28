@@ -38,6 +38,7 @@ ANIMATION_STATE ConvertStringToAnimationState(const std::string& str)
 	if (str == "Attack")							return ANIMATION_STATE::ATTACK;
 	if (str == "Throw_Start")						return ANIMATION_STATE::THROW_START;
 	if (str == "Throw_End")							return ANIMATION_STATE::THROW_END;
+	if (str == "Get_Phone_Call")					return ANIMATION_STATE::GET_PHONE_CALL;
 
 	return ANIMATION_STATE::NULLANIM;
 }

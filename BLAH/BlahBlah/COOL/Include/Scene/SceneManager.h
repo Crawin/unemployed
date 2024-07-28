@@ -63,5 +63,10 @@ public:
 	void ProcessPacket(packet_base* packet);
 	// todo 임시코드
 	void PossessPlayer(bool isHost);
+
+#ifdef _DEBUG
+	void StartGame();
+#endif
+
 	};
 
