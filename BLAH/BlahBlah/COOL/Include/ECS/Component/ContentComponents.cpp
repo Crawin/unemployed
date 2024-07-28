@@ -1573,15 +1573,15 @@ namespace component {
 		Json::Value rc = v["UITreasureChest"];
 
 		rm->AddLateLoadUI("UI/UITempMaterial", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword1", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword2", nullptr);
 		rm->AddLateLoadUI("UI/UIKey1", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword4", nullptr);
 		rm->AddLateLoadUI("UI/UIKey2", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword6", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword7", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword8", nullptr);
-		rm->AddLateLoadUI("UI/UIPassword9", nullptr);
+		rm->AddLateLoadUI("UI/UIOld_Key", nullptr);
+		rm->AddLateLoadUI("UI/UIRing_Key", nullptr);
+		rm->AddLateLoadUI("UI/UIFinalChestKey_Black", nullptr);
+		rm->AddLateLoadUI("UI/UIFinalChestKey_Blue", nullptr);
+		rm->AddLateLoadUI("UI/UIFinalChestKey_Green", nullptr);
+		rm->AddLateLoadUI("UI/UIFinalChestKey_Pink", nullptr);
+		rm->AddLateLoadUI("UI/UIFinalChestKey_Red", nullptr);
 		rm->AddLateLoadUI("UI/UIX", nullptr);
 	}
 
@@ -1590,16 +1590,16 @@ namespace component {
 		// todo
 		// 남은 열쇠 갯수 1
 		m_KeyMaterialMap = std::map<int, int>();
-		m_KeyMaterialMap[0] = rm->GetMaterial("UITempMaterial");		// no answer
-		m_KeyMaterialMap[1] = rm->GetMaterial("UIPassword1");
-		m_KeyMaterialMap[2] = rm->GetMaterial("UIPassword2");
-		m_KeyMaterialMap[3] = rm->GetMaterial("UIKey1");
-		m_KeyMaterialMap[4] = rm->GetMaterial("UIPassword4");
-		m_KeyMaterialMap[5] = rm->GetMaterial("UIKey2");
-		m_KeyMaterialMap[6] = rm->GetMaterial("UIPassword6");
-		m_KeyMaterialMap[7] = rm->GetMaterial("UIPassword7");
-		m_KeyMaterialMap[8] = rm->GetMaterial("UIPassword8");
-		m_KeyMaterialMap[9] = rm->GetMaterial("UIPassword9");
+		m_KeyMaterialMap[0] = rm->GetMaterial("UITempMaterial");
+		m_KeyMaterialMap[1] = rm->GetMaterial("UIKey1");
+		m_KeyMaterialMap[2] = rm->GetMaterial("UIKey2");
+		m_KeyMaterialMap[3] = rm->GetMaterial("UIOld_Key");
+		m_KeyMaterialMap[4] = rm->GetMaterial("UIRing_Key");
+		m_KeyMaterialMap[5] = rm->GetMaterial("UIFinalChestKey_Black");
+		m_KeyMaterialMap[6] = rm->GetMaterial("UIFinalChestKey_Blue");
+		m_KeyMaterialMap[7] = rm->GetMaterial("UIFinalChestKey_Green");
+		m_KeyMaterialMap[8] = rm->GetMaterial("UIFinalChestKey_Pink");
+		m_KeyMaterialMap[9] = rm->GetMaterial("UIFinalChestKey_Red");
 
 		m_KeyMaterialMap[-1] = rm->GetMaterial("UIX");
 

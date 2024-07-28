@@ -213,8 +213,10 @@ void FMOD_INFO::begin_fmod()
     {
         result = m_system->createSound("SceneData/Sound/walking.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::FOOTPRINT]);
         ERRCHECK(result);
-        result = SOUNDS[SOUND_TYPE::FOOTPRINT]->set3DMinMaxDistance(10.0f, 400.0f);
+        result = SOUNDS[SOUND_TYPE::FOOTPRINT]->set3DMinMaxDistance(10.0f, 600.0f);
         //result = SOUNDS[SOUND_TYPE::FOOTPRINT]->set3DMinMaxDistance(0.1f, 4.0f);
+        ERRCHECK(result);
+        result =  SOUNDS[SOUND_TYPE::FOOTPRINT]->setMode(FMOD_3D_LINEARROLLOFF);
         ERRCHECK(result);
     }
 
@@ -222,6 +224,8 @@ void FMOD_INFO::begin_fmod()
     if (a.second)
     {
         result = m_system->createSound("SceneData/Sound/ducktest.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::DUCK]);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DUCK]->setMode(FMOD_3D_LINEARROLLOFF);
         ERRCHECK(result);
     }
 
@@ -232,6 +236,8 @@ void FMOD_INFO::begin_fmod()
         ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::CROWBAR_SWING]->set3DMinMaxDistance(10.0f, 400.0f);
         ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::CROWBAR_SWING]->setMode(FMOD_3D_LINEARROLLOFF);
+        ERRCHECK(result);
     }
 
     a = SOUNDS.try_emplace(SOUND_TYPE::CROWBAR_HIT);
@@ -239,9 +245,11 @@ void FMOD_INFO::begin_fmod()
     {
         result = m_system->createSound("SceneData/Sound/crowbar_hit.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::CROWBAR_HIT]);
         ERRCHECK(result);
-        result = SOUNDS[SOUND_TYPE::CROWBAR_HIT]->set3DMinMaxDistance(10.0f, 100.0f);
-        ERRCHECK(result);
+        //result = SOUNDS[SOUND_TYPE::CROWBAR_HIT]->set3DMinMaxDistance(10.0f, 100.0f);
+        //ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::CROWBAR_HIT]->set3DMinMaxDistance(10.0f, 1500.0f);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::CROWBAR_HIT]->setMode(FMOD_3D_LINEARROLLOFF);
         ERRCHECK(result);
     }
 
@@ -252,6 +260,8 @@ void FMOD_INFO::begin_fmod()
         ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::DOOR_OPEN]->set3DMinMaxDistance(10.0f, 300.0f);
         ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DOOR_OPEN]->setMode(FMOD_3D_LINEARROLLOFF);
+        ERRCHECK(result);
     }
 
     a = SOUNDS.try_emplace(SOUND_TYPE::DRINK_BUY);
@@ -260,6 +270,8 @@ void FMOD_INFO::begin_fmod()
         result = m_system->createSound("SceneData/Sound/vending_machine_drop.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::DRINK_BUY]);
         ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::DRINK_BUY]->set3DMinMaxDistance(10.0f, 1000.0f);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DRINK_BUY]->setMode(FMOD_3D_LINEARROLLOFF);
         ERRCHECK(result);
     }
 
@@ -270,6 +282,8 @@ void FMOD_INFO::begin_fmod()
         ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::DRINK_THROW_HIT]->set3DMinMaxDistance(10.0f, 1000.0f);
         ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DRINK_THROW_HIT]->setMode(FMOD_3D_LINEARROLLOFF);
+        ERRCHECK(result);
     }
 
     a = SOUNDS.try_emplace(SOUND_TYPE::DRINK_CONSUME);
@@ -279,6 +293,8 @@ void FMOD_INFO::begin_fmod()
         ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::DRINK_CONSUME]->set3DMinMaxDistance(10.0f, 300.0f);
         ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::DRINK_CONSUME]->setMode(FMOD_3D_LINEARROLLOFF);
+        ERRCHECK(result);
     }
 
     a = SOUNDS.try_emplace(SOUND_TYPE::KEY_JINGLE);
@@ -287,6 +303,8 @@ void FMOD_INFO::begin_fmod()
         result = m_system->createSound("SceneData/Sound/key_jingle.wav", FMOD_3D, 0, &SOUNDS[SOUND_TYPE::KEY_JINGLE]);
         ERRCHECK(result);
         result = SOUNDS[SOUND_TYPE::KEY_JINGLE]->set3DMinMaxDistance(10.0f, 500.0f);
+        ERRCHECK(result);
+        result = SOUNDS[SOUND_TYPE::KEY_JINGLE]->setMode(FMOD_3D_LINEARROLLOFF);
         ERRCHECK(result);
     }
 

@@ -261,6 +261,24 @@
 				"Material": "UI/UIKey2",
 				"IsSprite": false
 			}
+		},
+		{	
+			"Name": "KeyButton8",
+
+			"UITransform":
+			{
+				"Center": [1580, 800],
+				"Size": [100, 100]
+			},
+		
+			"Button": {},
+			"Key": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIKey2",
+				"IsSprite": false
+			}
 		}
 
 	]
