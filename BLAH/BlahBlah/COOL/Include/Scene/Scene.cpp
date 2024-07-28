@@ -67,6 +67,7 @@ void Scene::ChangeDayToNight(float time)
 		// end event
 		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager, manager]() {
 			ctrler->Possess(controlledPawn, manager);
+			printf("asdf\n");
 			dayManager->SetDayCycle(480.0f);
 			};
 
