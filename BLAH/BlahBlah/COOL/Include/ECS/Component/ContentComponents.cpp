@@ -241,8 +241,8 @@ namespace component {
 				cs_packet_open_door packet(doorCtrl->GetDoorID(), toState);
 				Client::GetInstance().send_packet(&packet);
 
-				cs_packet_sound_start packet(trans->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN);
-				Client::GetInstance().send_packet(&packet);
+				cs_packet_sound_start packetsound(trans->GetWorldPosition(), SOUND_TYPE::DOOR_OPEN);
+				Client::GetInstance().send_packet(&packetsound);
 
 				doorCtrl->SetOpen(manager, trans, door, !doorCtrl->IsOpen(), true);
 
