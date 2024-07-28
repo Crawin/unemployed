@@ -39,11 +39,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Ice_Wheel_BL",
 					"Renderer" : 
 					{
@@ -73,11 +68,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Ice_Wheel_BR",
 					"Renderer" : 
 					{
@@ -107,11 +97,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Ice_Wheel_FL",
 					"Renderer" : 
 					{
@@ -141,11 +126,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "Ice_Wheel_FR",
 					"Renderer" : 
 					{
@@ -175,11 +155,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "HintText__1_",
 					"Renderer" : 
 					{
@@ -209,11 +184,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "HintText__2_",
 					"Renderer" : 
 					{
@@ -243,11 +213,6 @@
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "HintText__3_",
 					"Renderer" : 
 					{
