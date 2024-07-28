@@ -167,7 +167,8 @@ namespace ECSsystem {
 			XMFLOAT3 rot = tr->GetRotation();
 			FMOD_INFO::GetInstance().set_self_position(tr->GetWorldPosition());
 			FMOD_INFO::GetInstance().set_player1_rotation_x(rot.x);
-			FMOD_INFO::GetInstance().set_player1_rotation_z(rot.z);
+			//FMOD_INFO::GetInstance().set_player1_rotation_y(rot.y);
+			//printf("%f 할당", rot.y);
 			};
 
 		manager->Execute(func1);
@@ -420,7 +421,7 @@ namespace ECSsystem {
 				rot.y += (mouseMove.x / rootSpeed);
 				//rot.x += (mouseMove.y / rootSpeed);
 				tr->SetRotation(rot);
-				
+				FMOD_INFO::GetInstance().set_player1_rotation_y(rot.y);
 			}
 		};
 
