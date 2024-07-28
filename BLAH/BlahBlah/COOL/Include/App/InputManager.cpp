@@ -67,8 +67,6 @@ void InputManager::HandleMouseInput(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 			m_MouseDif.y += m_CurMouse.y - m_WndCenter.y;
 			SetCursorPos(m_WndCenter.x, m_WndCenter.y);
 		}
-		//m_BefMouse = curPos;
-		
 		break;
 	}
 	}
@@ -123,7 +121,19 @@ void InputManager::SetUIState(bool uiState)
 
 		ReleaseCapture();
 		m_MouseCapture = false;
-		ShowCursor(true);
+		int result;
+		//while (result = ShowCursor(true) < 0);
+		SetCursor(GetCursor());
+		//if (m_BefCursor)
+		//	SetCursor(m_BefCursor);
+		
+		//do {
+		//	result = ShowCursor(true);
+		//} while (result < 0);
+		//SetCursor(IDC_CURSOR);
+
+		DebugPrint(std::format("ui true ret: {}", result));
+		//DebugPrint(std::format("curs ret: {}", result));
 
 		// todo
 		// set keyboard state to disable
@@ -134,8 +144,16 @@ void InputManager::SetUIState(bool uiState)
 		SetCapture(Application::GetInstance().GethWnd());
 		m_MouseCapture = true;
 
-		ShowCursor(false);
-		
+		int result;
+		//while (result = ShowCursor(false) >= 0);
+
+		auto returnVal = SetCursor(NULL);
+
+		if (m_BefCursor == NULL)
+			m_BefCursor = returnVal;
+
+		DebugPrint(std::format("ui false ret: {}", result));
+
 		POINT pt;
 		Application::GetInstance().GetWindowCenterPos(pt);
 

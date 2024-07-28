@@ -42,6 +42,8 @@ private:
 	// mosue input
 	BYTE lpb[sizeof(RAWINPUT)] = { 0, };
 
+	HCURSOR m_BefCursor = NULL;
+
 	POINT m_WndCenter = { 0,0 };
 	POINT m_CurMouse = { 0,0 };
 	POINT m_MouseDif = { 0,0 };
