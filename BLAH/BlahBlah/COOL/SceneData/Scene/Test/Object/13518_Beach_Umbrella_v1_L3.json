@@ -1,0 +1,122 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Beach_Umbrella_1",
+					"Renderer" : 
+					{
+						"Material" : "Object/Umbrella",
+						"Mesh" : "13518_Beach_Umbrella_v1_L3.Beach_Umbrella_1"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "Beach_Umbrella_2",
+					"Renderer" : 
+					{
+						"Material" : "Object/Umbrella",
+						"Mesh" : "13518_Beach_Umbrella_v1_L3.Beach_Umbrella_2"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Name" : "_13518_Beach_Umbrella_v1_L3",
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					10368.5,
+					4934.19970703125,
+					-1039.2999267578125
+				],
+				"Rotate" : 
+				[
+					-90.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0000002384185791,
+					1.0000002384185791
+				]
+			}
+		}
+	],
+	"Name" : "13518_Beach_Umbrella_v1_L3_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -8,7 +8,7 @@
 
 void LoadingScene::Exit()
 {
-	Application::GetInstance().ChangeBorderlessMode(true);
+	//Application::GetInstance().ChangeBorderlessMode(true);
 }
 
 void LoadingScene::Update(float deltaTime)

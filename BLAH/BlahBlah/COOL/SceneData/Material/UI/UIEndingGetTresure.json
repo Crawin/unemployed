@@ -1,0 +1,9 @@
+{
+	"name": "UIEndingGetTresure",
+	"BaseColor": "UI/EndingSuccess",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

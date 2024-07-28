@@ -1,0 +1,64 @@
+{
+	"Name": "UITestCanvas",
+
+	"UICanvas": {},
+
+	"UIConversation": 
+	{
+		"MaxConversation": 7,
+		"Conversation": 
+		[
+			"UIConver_Default",
+			"UIConverStart",
+			"UIConverArrive",
+			"UIConverDotDot",
+			"UIConverOK",
+			"UIConverWhat",
+			"UIConverIDK"
+		],
+
+		"MaxTalker": 4,
+		"Talker": 
+		[
+			"UITalk_Default",
+			"UITalkMaster",
+			"UITalkWGH",
+			"UITalkYJS"
+		]
+	},
+
+	"Children": 
+	[
+		{	"Name": "Conversation",
+
+			"UITransform":
+			{
+				"Center": [960, 850],
+				"Size": [1600, 280]
+			},
+		
+			"UIRenderer" :
+			{
+				"Material": "UI/Conversation/UIConver_Default",
+				"IsSprite": false
+			}
+		},
+
+		{	"Name": "Talker",
+
+			"UITransform":
+			{
+				"Center": [400, 650],
+				"Size": [300, 80]
+			},
+			
+			"UIRenderer" :
+			{
+				"Material": "UI/Conversation/UITalk_Default",
+				"IsSprite": false
+			}
+		}
+
+	]
+
+}

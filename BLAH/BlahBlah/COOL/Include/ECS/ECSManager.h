@@ -247,7 +247,7 @@ public:
 		return nullptr;
 	}
 
-	void AddTimeLine(Entity* entity, ITimeLine* timeLine) { m_TimeLineSystem->AddTimeLine(entity, timeLine); }
+	void AddTimeLine(ITimeLine* timeLine) { m_TimeLineSystem->AddTimeLine(timeLine); }
 
 	void AddParticle(PARTICLE_TYPES type, XMFLOAT3 pos, XMFLOAT3 vel, int toInsert, float randRange) { m_ParticleSystem->InsertParticle(type, pos, vel, toInsert, randRange); }
 

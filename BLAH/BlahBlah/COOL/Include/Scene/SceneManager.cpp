@@ -67,6 +67,7 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::Key, "Key");			// 굳이 필요 한것인가?
 	REGISTER_COMPONENT(component::CreditCard, "CreditCard");
 	REGISTER_COMPONENT(component::Consumable, "Consumable");
+	REGISTER_COMPONENT(component::StartInteraction, "StartInteraction");
 
 
 	
@@ -76,7 +77,10 @@ void SceneManager::RegisterComponents()
 	REGISTER_COMPONENT(component::UICutLine, "UICutLine");
 	REGISTER_COMPONENT(component::UITreasureChest, "UITreasureChest");
 	REGISTER_COMPONENT(component::UIVandingMachine, "UIVandingMachine");
-	
+	REGISTER_COMPONENT(component::UIEnding, "UIEnding");
+	REGISTER_COMPONENT(component::UIConversation, "UIConversation");
+	REGISTER_COMPONENT(component::UILogin, "UILogin");
+
 }
 
 SceneManager::SceneManager()

@@ -1,0 +1,9 @@
+{
+	"name": "UIConverWhat",
+	"BaseColor": "UI/Conversation/ConverWhat",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "UITalkMaster",
+	"BaseColor": "UI/Conversation/TalkMaster",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

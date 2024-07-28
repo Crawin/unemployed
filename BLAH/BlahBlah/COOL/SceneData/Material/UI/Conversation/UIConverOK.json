@@ -1,0 +1,9 @@
+{
+	"name": "UIConverOK",
+	"BaseColor": "UI/Conversation/ConverOK",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

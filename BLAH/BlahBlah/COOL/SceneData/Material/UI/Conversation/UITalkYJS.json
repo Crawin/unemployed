@@ -1,0 +1,9 @@
+{
+	"name": "UITalkYJS",
+	"BaseColor": "UI/Conversation/TalkYJS",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

@@ -68,7 +68,7 @@ public:
 			}
 		}
 	}
-	virtual void SyncData() { (*m_TargetValue) = m_CurrentValue; }
+	virtual void SyncData() { if (m_TargetValue) (*m_TargetValue) = m_CurrentValue; }
 };
 
 
