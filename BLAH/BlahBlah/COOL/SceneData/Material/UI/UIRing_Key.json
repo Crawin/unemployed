@@ -1,0 +1,9 @@
+{
+	"name": "UIRing_Key",
+	"BaseColor": "UI/Ring_Key",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

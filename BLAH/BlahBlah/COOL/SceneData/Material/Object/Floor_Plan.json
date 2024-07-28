@@ -1,0 +1,9 @@
+{
+	"name": "Floor_Plan",
+	"BaseColor": "Object/HintText/floor_plan",
+	"Roughness": "White",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

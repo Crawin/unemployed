@@ -1,0 +1,56 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "HintText",
+			"Renderer" : 
+			{
+				"Material" : "Object/TempHint",
+				"Mesh" : "HintText.HintText"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					300.0,
+					120.0,
+					1000.0
+				],
+				"Rotate" : 
+				[
+					2.5044780613825424e-06,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "HintText_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"name": "Hint_1Page",
+	"BaseColor": "Object/HintText/Hint_1Page",
+	"Roughness": "White",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

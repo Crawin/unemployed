@@ -1,0 +1,105 @@
+{
+	"Children" : 
+	[
+		{
+			"Children" : 
+			[
+				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "BezierCircle_000",
+					"Renderer" : 
+					{
+						"Material" : "Object/Key/Key_1",
+						"Mesh" : "Ring_Key.BezierCircle_000"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							-0.1712033748626709,
+							7.2856044769287109,
+							0.0025195227935910225
+						],
+						"Rotate" : 
+						[
+							0.0,
+							0.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				}
+			],
+			"Collider": 
+			{
+				"Static": true,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [0.0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Interaction":{},
+			"Holdable": {},
+			"Door": 
+			{
+				"KeyID": 4
+			},
+			"Name" : "Ring_Key",
+			"Renderer" : 
+			{
+				"Material" : "Object/Key/Key_1",
+				"Mesh" : "Ring_Key.Ring_Key"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					200.0, 20.0, 1000.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			}
+		}
+	],
+	"Name" : "Ring_Key_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}

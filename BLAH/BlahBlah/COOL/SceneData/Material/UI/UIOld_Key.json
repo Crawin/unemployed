@@ -1,0 +1,9 @@
+{
+	"name": "UIOld_Key",
+	"BaseColor": "UI/Old_Key",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

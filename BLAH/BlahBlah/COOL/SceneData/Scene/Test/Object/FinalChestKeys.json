@@ -5,11 +5,6 @@
 			"Children" : 
 			[
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "sm_key_Red",
 					"Renderer" : 
 					{
@@ -36,14 +31,23 @@
 							0.80000001192092896,
 							0.80000001192092896
 						]
+					},
+					"Collider": 
+					{
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 0, 0],
+						"Extent": [10.0, 10, 10]
+					},
+					"Interaction":{},
+					"Holdable": {},
+					"Door": 
+					{
+						"KeyID": 9
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "sm_key_Blue",
 					"Renderer" : 
 					{
@@ -70,14 +74,23 @@
 							1.0,
 							1.0
 						]
+					},
+					"Collider": 
+					{
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 0, 0],
+						"Extent": [10.0, 10, 10]
+					},
+					"Interaction":{},
+					"Holdable": {},
+					"Door": 
+					{
+						"KeyID": 6
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "sm_key_Green",
 					"Renderer" : 
 					{
@@ -104,14 +117,23 @@
 							1.0,
 							1.0
 						]
+					},
+					"Collider": 
+					{
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 0, 0],
+						"Extent": [10.0, 10, 10]
+					},
+					"Interaction":{},
+					"Holdable": {},
+					"Door": 
+					{
+						"KeyID": 7
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "sm_key_Black",
 					"Renderer" : 
 					{
@@ -138,14 +160,23 @@
 							1.0,
 							1.0
 						]
+					},
+					"Collider": 
+					{
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 0, 0],
+						"Extent": [10.0, 10, 10]
+					},
+					"Interaction":{},
+					"Holdable": {},
+					"Door": 
+					{
+						"KeyID": 5
 					}
 				},
 				{
-					"Collider" : 
-					{
-						"AutoMesh" : true,
-						"Static" : true
-					},
 					"Name" : "sm_key_Pink",
 					"Renderer" : 
 					{
@@ -172,6 +203,20 @@
 							1.0,
 							1.0
 						]
+					},
+					"Collider": 
+					{
+						"Static": true,
+						"IsTrigger": true,
+						"AutoMesh": false,
+						"Center": [0.0, 0, 0],
+						"Extent": [10.0, 10, 10]
+					},
+					"Interaction":{},
+					"Holdable": {},
+					"Door": 
+					{
+						"KeyID": 8
 					}
 				}
 			],

@@ -5,8 +5,8 @@
 			"Name" : "KeyTool",
 			"Renderer" : 
 			{
-				"Material" : "Object/crowbar",
-				"Mesh" : "crowbar.crowbar"
+				"Material" : "Object/Key/Key_1",
+				"Mesh" : "Key_Tool.Key_Tool"
 			},
 			
 			"Holdable": {
@@ -28,7 +28,7 @@
 				],
 				"Rotate" : 
 				[
-					0.0,
+					70.0,
 					0,
 					0.0
 				],

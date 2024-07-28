@@ -448,7 +448,7 @@ namespace component {
 	// 열쇠 미니게임의 결과
 	//
 #define MAX_KEY 2
-#define MAX_BUTTON 8
+#define MAX_BUTTON 9
 	class UIRenderer;
 	class UIDoorKey : public ComponentBase<UIDoorKey> {
 		Entity* m_DoorEntity = nullptr;

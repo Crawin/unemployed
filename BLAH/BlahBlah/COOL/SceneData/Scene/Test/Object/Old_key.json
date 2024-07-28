@@ -1,0 +1,68 @@
+{
+	"Children" : 
+	[
+		{
+			"Name" : "Old_key",
+			"Renderer" : 
+			{
+				"Material" : "Object/Key/Key_1_Tag",
+				"Mesh" : "Old_key.Old_key"
+			},
+			"Transform" : 
+			{
+				"Position" : 
+				[
+					300.0, 20.0, 1000.0
+				],
+				"Rotate" : 
+				[
+					0.0,
+					0.0,
+					0.0
+				],
+				"Scale" : 
+				[
+					1.0,
+					1.0,
+					1.0
+				]
+			},
+			"Collider": 
+			{
+				"Static": true,
+				"IsTrigger": true,
+				"AutoMesh": false,
+				"Center": [0.0, 0, 0],
+				"Extent": [10.0, 10, 10]
+			},
+			"Interaction":{},
+			"Holdable": {},
+			"Door": 
+			{
+				"KeyID": 3
+			}
+		}
+	],
+	"Name" : "Old_key_Root",
+	"Transform" : 
+	{
+		"Position" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Rotate" : 
+		[
+			0.0,
+			0.0,
+			0.0
+		],
+		"Scale" : 
+		[
+			1.0,
+			1.0,
+			1.0
+		]
+	}
+}
