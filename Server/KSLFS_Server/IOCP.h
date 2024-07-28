@@ -413,7 +413,7 @@ public:
 	Game(const unsigned int& n) : GameNum(n), state(true) {
 		// 가드 초기위치 설정
 		//guard.position = DirectX::XMFLOAT3(3160, 0, -400);
-		guard.position = DirectX::XMFLOAT3(-427, 1769.8, -1249.1);
+		guard.position = DirectX::XMFLOAT3(-427, 1590.8, -519.5);
 		guard.id = 1;
 		guard.movement_speed = 400;
 		
