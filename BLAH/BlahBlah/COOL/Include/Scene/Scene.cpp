@@ -67,7 +67,7 @@ void Scene::ChangeDayToNight(float time)
 		// end event
 		std::function returnToPawnAndSetDayCycle = [ctrler, controlledPawn, dayManager, manager]() {
 			ctrler->Possess(controlledPawn, manager);
-			dayManager->SetDayCycle(240.0f);
+			dayManager->SetDayCycle(480.0f);
 			};
 
 		TimeLine<float>* changeTime = new TimeLine<float>(dayManager->GetCurTimePtr());
