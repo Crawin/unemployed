@@ -13,16 +13,16 @@
 					"Name" : "lamp_pole_single",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-462.55453491210938,
-							-1141.0531005859375,
-							-377.29312133789062
+							4452.0,
+							0.0,
+							-566.8131103515625
 						],
 						"Rotate" : 
 						[
@@ -36,7 +36,32 @@
 							1.0,
 							1.0
 						]
-					}
+					},
+					"Children" :
+					[
+						{
+							"name": "1st_Light3",
+					
+							"Transform": 
+							{
+								"Position": [-0.004868746, 6.287004, 2.415001],
+								"Rotate": [90.0, 0.0, 0.0],
+								"Scale": [1.0, 1.0, 1.0]
+							},
+							"Light": 
+							{
+								"LightColor": [1, 1, 1, 1],
+								"AmbientColor": [0.0, 0.0, 0.0, 1],
+								"LightType": 1,
+								"Distance": 5000.0,
+								"Angle": 50.0, 
+								"Intensity": 1.0,
+								"Active": true,
+								"CastShadow": true,
+								"Main": false
+							}
+						}
+					]
 				},
 				{
 					"Collider" : 
@@ -47,16 +72,16 @@
 					"Name" : "lamp_pole_single__1_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__1_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-462.55453491210938,
-							-1141.0531005859375,
-							480.00003051757812
+							4452.0,
+							0.0,
+							290.48004150390625
 						],
 						"Rotate" : 
 						[
@@ -81,16 +106,16 @@
 					"Name" : "lamp_pole_single__2_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__2_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-462.55453491210938,
-							-1141.0531005859375,
-							1262.0
+							4452.0,
+							0.0,
+							1072.47998046875
 						],
 						"Rotate" : 
 						[
@@ -115,16 +140,16 @@
 					"Name" : "lamp_pole_single__3_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__3_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-462.55453491210938,
-							-1141.0531005859375,
-							2138.0
+							4452.0,
+							0.0,
+							1948.4798583984375
 						],
 						"Rotate" : 
 						[
@@ -149,16 +174,16 @@
 					"Name" : "lamp_pole_single__4_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__4_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-462.55453491210938,
-							-1141.0531005859375,
-							3259.999755859375
+							4452.0,
+							0.0,
+							3070.479736328125
 						],
 						"Rotate" : 
 						[
@@ -183,16 +208,16 @@
 					"Name" : "lamp_pole_single__5_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__5_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-2255.0,
-							-1141.0531005859375,
-							3259.999755859375
+							2659.5546875,
+							0.0,
+							3070.479736328125
 						],
 						"Rotate" : 
 						[
@@ -217,16 +242,16 @@
 					"Name" : "lamp_pole_single__6_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__6_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-4054.0,
-							-1141.0531005859375,
-							3259.999755859375
+							860.55450439453125,
+							0.0,
+							3070.479736328125
 						],
 						"Rotate" : 
 						[
@@ -251,16 +276,16 @@
 					"Name" : "lamp_pole_single__7_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__7_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-5977.0,
-							-1141.0531005859375,
-							3259.999755859375
+							-1062.4454345703125,
+							0.0,
+							3070.479736328125
 						],
 						"Rotate" : 
 						[
@@ -285,16 +310,16 @@
 					"Name" : "lamp_pole_single__8_",
 					"Renderer" : 
 					{
-						"Material" : "NoMaterial",
+						"Material" : "Map/BG_highway_wall",
 						"Mesh" : "Lamps.lamp_pole_single__8_"
 					},
 					"Transform" : 
 					{
 						"Position" : 
 						[
-							-8012.99951171875,
-							-1141.0531005859375,
-							3259.999755859375
+							-3098.445068359375,
+							0.0,
+							3070.479736328125
 						],
 						"Rotate" : 
 						[
@@ -317,7 +342,7 @@
 				"Position" : 
 				[
 					0.0,
-					0.0,
+					0.82,
 					0.0
 				],
 				"Rotate" : 
