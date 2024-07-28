@@ -353,7 +353,7 @@ void FMOD_INFO::update_fmod()
             //std::cout << it->first << "의 볼륨: " << vol << std::endl;
             float min, max;
             it->second->get3DMinMaxDistance(&min, &max);
-            std::cout << "min:" << min << ", max: " << max << std::endl;
+            //std::cout << "min:" << min << ", max: " << max << std::endl;
             ++it;
         }
     }

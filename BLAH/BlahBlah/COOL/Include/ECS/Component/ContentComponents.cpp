@@ -361,7 +361,7 @@ namespace component {
 		XMFLOAT3 rotAfter = rot;
 
 		float angle = GetMaxAngle();
-		if (m_Open) angle *= -1;
+		if (!state) angle *= -1;
 
 		DebugPrint(std::format("angle: {}", angle));
 
@@ -1677,6 +1677,7 @@ namespace component {
 							canvas->HideUI();
 
 							// open final chest
+							printf("SEND END");
 							sc_packet_ending packet(2);
 							Client::GetInstance().send_packet(&packet);
 						}

@@ -216,8 +216,8 @@ void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover
 		packet_base* base = reinterpret_cast<packet_base*>(recv_buf + current_size);
 
 		char size = base->getSize();
-		printf("패킷 %d\n", base->getType());
 		if (size == 0) {
+			printf("패킷 %d\n", base->getType());
 			DebugPrint("사이즈0");
 		}
 		if (size + current_size > recv_size + prev_size)

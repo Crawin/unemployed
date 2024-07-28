@@ -351,7 +351,7 @@ void HandleParticipantUpdatedEvent(vx_evt_participant_updated* evt)
 
             if (evt->energy > client.mic_lv)
             {
-                std::cout << "내가 " <<evt->energy<<"로 말하기 시작했어" << std::endl;
+                //std::cout << "내가 " <<evt->energy<<"로 말하기 시작했어" << std::endl;
                 client.is_talking = true;
                 //while (true) {
                 //    bool f = false;
@@ -363,7 +363,7 @@ void HandleParticipantUpdatedEvent(vx_evt_participant_updated* evt)
         }
         else
         {
-            std::cout << "내가 말 안한다" << std::endl;
+            //std::cout << "내가 말 안한다" << std::endl;
             client.is_talking = false;
             //while (true)
             //{
