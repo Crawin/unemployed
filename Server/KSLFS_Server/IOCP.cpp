@@ -200,13 +200,19 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 					if(!Games[rw_byte].isDay())	// 밤시간이면 업데이트 추가
 						g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
 				}
-				else if (my_id < STUDENT_SIZE)	// 학생 npc
+				else if (my_id < STUDENT_SIZE+2)	// 학생 npc
 				{
 					if (Games[rw_byte].isDay()) // 낮시간이면 업데이트 추가
+					{
 						g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+					}
 				}
 				g_mutex_npc_timer.unlock();
 				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
+			}
+			else
+			{
+				Games.erase(rw_byte);
 			}
 			delete e_over;
 			break;
@@ -273,7 +279,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 
 			g_mutex_npc_timer.lock();
 			//g_npc_timer.emplace(currentRoom, 1, std::chrono::milliseconds(0));
-			for (int npc_id = 2; npc_id < STUDENT_SIZE + 2; ++npc_id)
+			for (int npc_id = 2; npc_id < 3; ++npc_id)//STUDENT_SIZE + 2
 			{
 				g_npc_timer.emplace(currentRoom, npc_id, std::chrono::milliseconds(0));
 				printf("%d 추가 완료\n", npc_id);
@@ -1064,6 +1070,8 @@ void Game::set_guard_destination(const int& floor)
 bool Game::isDay()
 {
 	using namespace std::chrono;
+	if (this->begin_time.time_since_epoch() < nanoseconds(1))
+		return true;
 	return begin_time + minutes(3) > steady_clock::now();
 }
 

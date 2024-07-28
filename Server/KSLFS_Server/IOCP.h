@@ -410,7 +410,8 @@ public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n), state(true) {
 		// 가드 초기위치 설정
-		guard.position = DirectX::XMFLOAT3(3160, 0, -400);
+		//guard.position = DirectX::XMFLOAT3(3160, 0, -400);
+		guard.position = DirectX::XMFLOAT3(-427, 1769.8, -1249.1);
 		guard.id = 1;
 		guard.movement_speed = 500;
 		
@@ -419,7 +420,25 @@ public:
 		for (int i = 0; i < STUDENT_SIZE; ++i)
 		{
 			students[i].id = i+2;
-			students[i].position = DirectX::XMFLOAT3(500.0 + 100*i, 0.0, 1000.0);
+			switch (i)
+			{
+			case 0:
+				students[i].position = DirectX::XMFLOAT3(2483, 1590.8, -519.5);
+				break;
+			case 1:
+				students[i].position = DirectX::XMFLOAT3(-426.1, 1230.6, 615.3);
+				break;
+			case 2:
+				students[i].position = DirectX::XMFLOAT3(332, 864.8, 603.2);
+				break;
+			case 3:
+				students[i].position = DirectX::XMFLOAT3(-401.3, 864.8, -506.2);
+				break;
+			case 4:
+				students[i].position = DirectX::XMFLOAT3(1290, 0, 1111);
+				break;
+			}
+
 			students[i].movement_speed = 125;
 		}
 	}

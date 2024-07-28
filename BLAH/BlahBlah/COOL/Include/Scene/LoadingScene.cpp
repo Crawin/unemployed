@@ -5,6 +5,7 @@
 #include "ECS/ECSManager.h"
 #include "SceneManager.h"
 #include "App/Application.h"
+#include "Network/Client.h"
 
 void LoadingScene::Exit()
 {
@@ -74,6 +75,7 @@ void LoadingScene::Update(float deltaTime)
 	if (m_LoadingStep > 3) {
 		m_SceneManager->ChangeScene(m_NextScene, true);
 		m_NextScene = nullptr;
+		Client::GetInstance().Connect_Server();
 	}
 
 }
