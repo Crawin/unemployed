@@ -1,0 +1,9 @@
+{
+	"name": "Hint_3Page",
+	"BaseColor": "Object/HintText/Hint_3Page",
+	"Roughness": "White",
+	"Metalic": "Gray",
+	"AO": "White",
+	"Normal": null,
+	"Shader": "TestMeshDiffered"
+}

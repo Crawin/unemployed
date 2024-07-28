@@ -243,6 +243,40 @@
 					}
 				},
 				{
+					"Collider" : 
+					{
+						"AutoMesh" : true,
+						"Static" : true
+					},
+					"Name" : "HintText__3_",
+					"Renderer" : 
+					{
+						"Material" : "Object/Hint_3Page",
+						"Mesh" : "Ice_Cream_Car.HintText__3_"
+					},
+					"Transform" : 
+					{
+						"Position" : 
+						[
+							141.8,
+							160.0,
+							42.95826
+						],
+						"Rotate" : 
+						[
+							88.334,
+							90.0,
+							0.0
+						],
+						"Scale" : 
+						[
+							1.0,
+							1.0,
+							1.0
+						]
+					}
+				},
+				{
 					"Name" : "Floor_Plan",
 					"Renderer" : 
 					{
