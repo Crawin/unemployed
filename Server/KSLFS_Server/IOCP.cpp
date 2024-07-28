@@ -37,6 +37,8 @@ void IOCP_SERVER_MANAGER::start()
 
 
 	SOCKET client_s = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+	int option = TRUE;
+	setsockopt(client_s, IPPROTO_TCP, TCP_NODELAY, (const char*)&option, sizeof(option));
 	EXP_OVER accept_over;
 	ZeroMemory(&accept_over.over, sizeof(accept_over.over));
 	accept_over.c_op = C_ACCEPT;
@@ -197,14 +199,17 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				//g_npc_timer.emplace(rw_byte, my_id, duration_cast<milliseconds>(start + 1s - steady_clock::now()));
 				if (my_id == 1)	// 경비 npc
 				{
-					if(!Games[rw_byte].isDay())	// 밤시간이면 업데이트 추가
-						g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+					if (Games[rw_byte].day == false)	// 밤시간이면 업데이트 추가
+					{
+						g_npc_timer.emplace(rw_byte, my_id, milliseconds(16));
+						//printf("가드 업데이트 추가\n");
+					}
 				}
 				else if (my_id < STUDENT_SIZE+2)	// 학생 npc
 				{
-					if (Games[rw_byte].isDay()) // 낮시간이면 업데이트 추가
+					if (Games[rw_byte].day == true) // 낮시간이면 업데이트 추가
 					{
-						g_npc_timer.emplace(rw_byte, my_id, milliseconds(8));
+						g_npc_timer.emplace(rw_byte, my_id, milliseconds(64));
 					}
 				}
 				g_mutex_npc_timer.unlock();
@@ -358,23 +363,18 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto sent_player = login_players.find(id);
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
-			if (InGamePlayers[0].id == id)
+			printf("%d로부터 오픈패킷 수신\n", id);
+			for (int i = 0; i < 2; ++i)
 			{
-				if (InGamePlayers[1].id)
+				if (InGamePlayers[i].id)
 				{
-					login_players[InGamePlayers[1].id].send_packet(base);
+					login_players[InGamePlayers[i].id].send_packet(base);
+					printf("%d -> %d 오픈패킷 송신\n", id, InGamePlayers[i].id);
 				}
-			}
-			else if (InGamePlayers[1].id == id)
-			{
-				if (InGamePlayers[0].id)
+				else
 				{
-					login_players[InGamePlayers[0].id].send_packet(base);
+					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 				}
-			}
-			else
-			{
-				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
 			break;
 		}
@@ -382,6 +382,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto sent_player = login_players.find(id);
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
+			printf("%d로부터 언락 수신\n", id);
 			if (InGamePlayers[0].id == id)
 			{
 				if (InGamePlayers[1].id)
@@ -497,24 +498,17 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			auto sent_player = login_players.find(id);
 			auto gameNum = sent_player->second.getGameNum();
 			auto InGamePlayers = Games[gameNum].getPlayers();
-
-			if (InGamePlayers[0].id == id)
+			printf("%d가 보낸 엔딩패킷 수신\n", id);
+			for (int i = 0; i < 2; ++i)
 			{
-				if (InGamePlayers[1].id)
+				if (InGamePlayers[i].id)
 				{
-					login_players[InGamePlayers[1].id].send_packet(base);
+					login_players[InGamePlayers[i].id].send_packet(base);
 				}
-			}
-			else if (InGamePlayers[1].id == id)
-			{
-				if (InGamePlayers[0].id)
+				else
 				{
-					login_players[InGamePlayers[0].id].send_packet(base);
+					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 				}
-			}
-			else
-			{
-				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
 			Games.erase(gameNum);
 			break;
@@ -751,9 +745,12 @@ void Game::setPlayerPR(const unsigned int& id, cs_packet_position*& packet)
 	{
 		if (p.id == id)
 		{
-			p.position = packet->getPosition();
-			p.rotation = packet->getRotation();
-			p.speed = packet->getSpeed();
+			if (packet->getID() == p.sock)
+			{
+				p.position = packet->getPosition();
+				p.rotation = packet->getRotation();
+				p.speed = packet->getSpeed();
+			}
 			break;
 		}
 	}
@@ -1064,24 +1061,28 @@ void Game::addBeiginTime(std::chrono::steady_clock::duration time)
 
 void Game::can_hear(const DirectX::XMFLOAT3& sound_position)
 {
-	if (guard.can_hear(sound_position))
+	if (this->day == false)
 	{
-		//std::cout << sound_position.x << "," << sound_position.y << "," << sound_position.z << " 들어버렸다..." << std::endl;
-	}
-	else
-	{
-		//std::cout << "멀어서 안들령~" << std::endl;
+		if (guard.can_hear(sound_position))
+		{
+			//std::cout << sound_position.x << "," << sound_position.y << "," << sound_position.z << " 들어버렸다..." << std::endl;
+		}
+		else
+		{
+			//std::cout << "멀어서 안들령~" << std::endl;
+		}
 	}
 }
 
 void Game::respawn_guard()
 {
 	guard.reset_npc();
-	guard.position = { 3160, 0, -400 };
+	//guard.position = { 3160, 0, -400 };
+	guard.position = DirectX::XMFLOAT3(-427, 1769.8, -1249.1);
 	guard.rotation = { 0, 0, 0 };
 	guard.speed = { 0,0,0 };
 	guard.destination = { 0,0,0 };
-	guard.movement_speed = 500;
+	guard.movement_speed = 400;
 	guard.state = 0;
 }
 
@@ -1193,6 +1194,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 						break;
 				}
 				this->destination = path->pos;
+				this->aggro_type = 2;
 			}
 		}
 	}
@@ -1455,7 +1457,8 @@ bool NPC::can_see(Player& p, bool& floor_gap)
 bool NPC::can_hear(const DirectX::XMFLOAT3& sound_pos)
 {
 	const unsigned short can_hear_distance = 2500;
-	if (distance(sound_pos) < can_hear_distance * can_hear_distance)		// 플레이어가 소리를 내고 있으며, 플레이어와의 거리가 들을 수 있는 거리 이내이면
+	
+	if (distance(sound_pos) < can_hear_distance * can_hear_distance && this->aggro_type > 1)		// 플레이어가 소리를 내고 있으며, 플레이어와의 거리가 들을 수 있는 거리 이내이면
 	{
 		while (true)
 		{
@@ -1473,6 +1476,7 @@ bool NPC::can_hear(const DirectX::XMFLOAT3& sound_pos)
 			state = 1;
 			this->destination = this->path->pos;
 		}
+		this->aggro_type = 1;
 		return true;
 	}
 	return false;
@@ -1524,7 +1528,7 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 						if (path != nullptr)
 							break;
 					}
-					compare_length_next_path(path, this->position, p[n].position);
+					//compare_length_next_path(path, this->position, p[n].position);
 					if (this->path == nullptr)
 						state = 0;
 					else
@@ -1542,16 +1546,18 @@ bool NPC::set_destination(Player*& p, const bool& npc_state)
 						if (path != nullptr)
 							break;
 					}
-					compare_length_next_path(path, this->position, p[n].position);
+					//compare_length_next_path(path, this->position, p[n].position);
 					if (this->path == nullptr)
 						state = 0;
 					else
 					{
-						this->destination = this->path->pos;
+						//this->destination = this->path->pos;
+						this->destination = p[n].position;
 					}
 					//reset_path();
 					//this->destination = p[n].position;
 				}
+				this->aggro_type = 0;
 				return true;
 			}
 			n = 1 - n;

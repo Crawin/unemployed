@@ -206,7 +206,6 @@ public:
 				if (0 != res) {
 					print_error("WSASend", WSAGetLastError());
 				}
-				std::cout << "오픈 패킷 전송 완료" << std::endl;
 			}
 				break;
 			case pUnlockDoor:
@@ -376,6 +375,7 @@ public:
 	std::chrono::steady_clock::time_point lastTime;
 	std::chrono::steady_clock::time_point nextSendTime;
 public:
+	char aggro_type = 2;		// 0: 시야, 1: 귀, 2: 없음
 	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
 	void student_state_machine(Player*);
@@ -406,6 +406,7 @@ class Game
 	NPC guard;
 	NPC students[STUDENT_SIZE];
 	std::chrono::steady_clock::time_point begin_time;
+public:
 	bool day = true;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
@@ -414,7 +415,7 @@ public:
 		//guard.position = DirectX::XMFLOAT3(3160, 0, -400);
 		guard.position = DirectX::XMFLOAT3(-427, 1769.8, -1249.1);
 		guard.id = 1;
-		guard.movement_speed = 500;
+		guard.movement_speed = 400;
 		
 		// npc 초기위치를 어떻게 설정할깝쇼
 		// 노가다로 설정해둘까

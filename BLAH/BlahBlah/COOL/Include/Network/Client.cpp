@@ -116,6 +116,8 @@ void Client::Connect_Server()
 
 		// 소켓 생성
 		m_sServer = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, nullptr, 0, WSA_FLAG_OVERLAPPED);
+		int option = TRUE;
+		setsockopt(m_sServer, IPPROTO_TCP, TCP_NODELAY, (const char*)&option, sizeof(option));
 		SOCKADDR_IN server_a;
 		server_a.sin_family = AF_INET;
 		server_a.sin_port = htons(SERVERPORT);
