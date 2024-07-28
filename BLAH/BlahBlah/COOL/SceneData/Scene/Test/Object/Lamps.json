@@ -40,12 +40,12 @@
 					"Children" :
 					[
 						{
-							"name": "1st_Light3",
+							"name": "Lamp_light",
 					
 							"Transform": 
 							{
-								"Position": [-0.004868746, 6.287004, 2.415001],
-								"Rotate": [90.0, 0.0, 0.0],
+								"Position": [-0.4868746, 628.7004, 241.5001],
+								"Rotate": [90.0, 0.0, -90.0],
 								"Scale": [1.0, 1.0, 1.0]
 							},
 							"Light": 
@@ -55,7 +55,7 @@
 								"LightType": 1,
 								"Distance": 5000.0,
 								"Angle": 50.0, 
-								"Intensity": 1.0,
+								"Intensity": 5.0,
 								"Active": true,
 								"CastShadow": true,
 								"Main": false
