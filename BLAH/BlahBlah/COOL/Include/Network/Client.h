@@ -133,6 +133,8 @@ public:
 
 	const std::string& GetHostPlayerName() const { return m_HostPlayerName; }
 	const std::string& GetGuestPlayerName() const { return m_GuestPlayerName; }
+
+	void Reset();
 };
 
 void CALLBACK recv_callback(DWORD, DWORD, LPWSAOVERLAPPED, DWORD);

@@ -983,12 +983,17 @@ void Scene::ProcessPacket(packet_base* packet)
 		sc_packet_ending* buf = reinterpret_cast<sc_packet_ending*>(packet);
 		auto endingType = buf->getEndingType();
 
+		printf("ending type: %d\n", endingType);
+
 		std::function<void(component::UICanvas*, component::UIEnding*)> openEnding = [endingType](component::UICanvas* can, component::UIEnding* end) {
 			end->SetEndingImage(endingType);
 			can->ShowUI();
 			};
 
 		manager->Execute(openEnding);
+
+		Client::GetInstance().Reset();
+
 	}
 	}
 }

@@ -9,7 +9,7 @@ void ERRCHECK(FMOD_RESULT result)
 {
     if (result != FMOD_OK)
     {
-        std::cout << "FMOD error! (" << result << ") " << FMOD_ErrorString(result) << std::endl;
+        //std::cout << "FMOD error! (" << result << ") " << FMOD_ErrorString(result) << std::endl;
     }
 }
 

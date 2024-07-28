@@ -1669,17 +1669,18 @@ namespace component {
 						// success
 						// open
 						if (newAnswer == 0) {
+							// open final chest
+							printf("SEND END");
+							sc_packet_ending packet(2);
+							Client::GetInstance().send_packet(&packet);
+
+
 							// open door
 							Entity* door = doorkey->GetDoor();
 							DoorControl* doorCtrl = manager->GetComponent<DoorControl>(door);
 							doorCtrl->SetLock(false);
 							doorCtrl->SetKeyDoorOpen(true);
 							canvas->HideUI();
-
-							// open final chest
-							printf("SEND END");
-							sc_packet_ending packet(2);
-							Client::GetInstance().send_packet(&packet);
 						}
 						};
 					button->SetButtonEvent(KEY_STATE::END_PRESS, check);

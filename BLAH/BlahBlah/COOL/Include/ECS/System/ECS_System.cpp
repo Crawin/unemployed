@@ -160,7 +160,7 @@ namespace ECSsystem {
 				cs_packet_sound_start sound(pos, SOUND_TYPE::VOICE);
 				
 				client.send_packet(&sound);
-				std::cout << pos.x << "," << pos.y << "," << pos.z << " 전송 완" << std::endl;
+				//std::cout << pos.x << "," << pos.y << "," << pos.z << " 전송 완" << std::endl;
 			}
 
 			// fmod sync

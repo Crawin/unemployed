@@ -198,6 +198,13 @@ void Client::send_packet(void* packet)
 	}
 }
 
+void Client::Reset()
+{
+	playerSock[1] = NULL;
+	roomNum = NULL;
+	characterType = NULL;
+}
+
 void CALLBACK recv_callback(DWORD err, DWORD recv_size, LPWSAOVERLAPPED pwsaover, DWORD send_flag)
 {
 	if (0 != err)
@@ -265,6 +272,7 @@ void process_packet(packet_base*& base)
 	case pKeyInput:
 	case pAttack:
 	case pSound:
+	case pEnding:
 		client.getSceneManager()->ProcessPacket(base);
 		break;
 	case pLOGIN:									// LOGIN
