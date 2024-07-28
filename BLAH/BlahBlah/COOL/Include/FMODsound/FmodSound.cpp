@@ -179,7 +179,7 @@ FMOD_VECTOR FMOD_INFO::get_direction_vector(const float& x, const float& y, cons
     XMVECTOR v = XMVectorSet(x, y, z, 0.0f);
     float x1 = XMConvertToRadians(m_player1_rotation.x);
     float y1 = XMConvertToRadians(m_player1_rotation.y);
-    printf("y값: %f\n", y1);
+    //printf("y값: %f\n", y1);
     XMMATRIX rotMat = XMMatrixRotationRollPitchYaw(x1, y1, 0.0f);
 
     XMVECTOR result = XMVector3Transform(v, rotMat);

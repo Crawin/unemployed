@@ -86,6 +86,7 @@ private:
 	short characterType = NULL;
 	short prev_packet_size = 0;
 
+	bool m_UpdatePosition = true;
 
 	float m_SendTimeElapsed = 0.0f;
 	// 1초에 24번 보냄
@@ -126,6 +127,9 @@ public:
 	SceneManager* getSceneManager() { return m_SceneManager; }
 
 	void send_packet(void*);
+
+	void SetPositionRecv(bool state) { m_UpdatePosition = state; }
+	bool GetPositionRecv() const { return m_UpdatePosition; }
 
 	const std::string& GetHostPlayerName() const { return m_HostPlayerName; }
 	const std::string& GetGuestPlayerName() const { return m_GuestPlayerName; }

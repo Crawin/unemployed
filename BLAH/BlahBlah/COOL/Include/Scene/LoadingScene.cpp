@@ -75,7 +75,7 @@ void LoadingScene::Update(float deltaTime)
 	if (m_LoadingStep > 3) {
 		m_SceneManager->ChangeScene(m_NextScene, true);
 		m_NextScene = nullptr;
-		Client::GetInstance().Connect_Server();
+		//Client::GetInstance().Connect_Server();
 	}
 
 }

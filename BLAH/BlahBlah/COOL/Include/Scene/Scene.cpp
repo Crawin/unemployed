@@ -891,6 +891,16 @@ void Scene::ProcessPacket(packet_base* packet)
 	}
 	case pChangeDayOrNight:
 	{
+		Client::GetInstance().SetPositionRecv(false);
+
+		std::function<void()> change = []() { Client::GetInstance().SetPositionRecv(true); };
+
+		TimeLine<float>* timeline = new TimeLine<float>(nullptr);
+		timeline->AddKeyFrame(0.0f, 0.0f);
+		timeline->AddKeyFrame(0.0f, 5.0f);
+		timeline->SetEndEvent(change);
+		manager->AddTimeLine(timeline);
+
 		sc_packet_change_day_or_night* buf = reinterpret_cast<sc_packet_change_day_or_night*>(packet);
 		float time = buf->getTime();
 		ChangeDayToNight(time);

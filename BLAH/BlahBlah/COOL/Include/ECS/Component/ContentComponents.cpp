@@ -2101,7 +2101,8 @@ namespace component {
 				Button* button = manager->GetComponent<Button>(child);
 				ButtonEventFunction makeroomButton = [canvas, manager](Entity* ent) {
 					canvas->HideUI();
-					if (Client::GetInstance().getPSock()[0]) {
+					//if (Client::GetInstance().getPSock()[0])
+					{
 						Application::GetInstance().GetSceneManager()->PossessPlayer(true);
 						Client::GetInstance().Send_Room(pMAKEROOM, NULL);
 
@@ -2117,7 +2118,8 @@ namespace component {
 				Button* button = manager->GetComponent<Button>(child);
 				ButtonEventFunction joinRoom = [canvas, this, manager](Entity* ent) {
 					canvas->HideUI();
-					if (Client::GetInstance().getPSock()[0]) {
+					//if (Client::GetInstance().getPSock()[0])
+					{
 						Application::GetInstance().GetSceneManager()->PossessPlayer(false);
 						Client::GetInstance().Send_Room(pENTERROOM, m_ToJoinRoom);
 

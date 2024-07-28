@@ -213,7 +213,7 @@ void ECSManager::OnStart(ResourceManager* rm)
 
 	// if not host
 	if (type != 1)
-		targetName = Client::GetInstance().GetGuestPlayerName();
+		targetName = Client::GetInstance().GetHostPlayerName();
 
 	component::PlayerController* ctrl = nullptr;
 
