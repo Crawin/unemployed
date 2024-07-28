@@ -467,6 +467,7 @@ public:
 	void respawn_guard();
 	void set_guard_destination(const int& floor);
 	bool isDay();
+	void reset_player(const int& id);
 };
 
 struct ServerDetails

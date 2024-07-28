@@ -511,6 +511,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 					login_players[InGamePlayers[i].id].send_packet(base);
 					printf("%d -> %d 엔딩패킷 전송\n", id, InGamePlayers[i].id);
 					login_players[InGamePlayers[i].id].setGameNum(0);
+					Games[gameNum].reset_player(InGamePlayers[i].id);
 				}
 				else
 				{
@@ -1107,6 +1108,17 @@ bool Game::isDay()
 	return begin_time + minutes(3) > steady_clock::now();
 }
 
+void Game::reset_player(const int& id)
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		if (player[i].id == id)
+		{
+			player[i].reset();
+		}
+	}
+}
+
 NPC::NPC()
 {
 	DirectX::XMFLOAT3 basic_obb_position = { 0,0,0 };	//0, 85, 0
@@ -1191,7 +1203,7 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 				//std::unordered_map<int, NODE*> guard_graph;
 				//MakeGraph(guard_graph);
 				while (true)
-				{
+				{	
 					reset_graph();
 					//int des = rand() % astar_graph.size();
 					int des = uid(dre);
