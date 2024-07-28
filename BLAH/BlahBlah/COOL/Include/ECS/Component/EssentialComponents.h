@@ -313,6 +313,9 @@ namespace component {
 		// resource manager's camera rtv data
 		int m_RenderTargetDataIndex = -1;
 
+		int m_NoiseType = 0;
+		bool m_Vignetting = false;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 
@@ -354,6 +357,9 @@ namespace component {
 		bool IsMainCameraOnRender() const { return m_IsMainCameraOnRender; }
 		bool IsActive() const { return m_Active; }
 		bool IsActiveOnRender() const { return m_ActiveStateOnRender; }
+
+		int GetNoiseType() const { return m_NoiseType; }
+		bool GetVignettingState() const { return m_Vignetting; }
 
 	private:
 		// 행렬 재생성

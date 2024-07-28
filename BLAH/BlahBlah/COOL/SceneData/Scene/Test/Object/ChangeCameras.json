@@ -59,7 +59,10 @@
 						"Fov": 75.0,
 						"Aspect": 1.777,
 						"Near": 0.1,
-						"Far": 50000.0
+						"Far": 50000.0,
+
+						"Noise": 1,
+						"Vignetting": false
 					}
 				}
 			]
@@ -115,7 +118,10 @@
 						"Fov": 75.0,
 						"Aspect": 1.777,
 						"Near": 0.1,
-						"Far": 50000.0
+						"Far": 50000.0,
+
+						"Noise": 1,
+						"Vignetting": false
 					}
 				}
 			]

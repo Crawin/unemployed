@@ -124,6 +124,10 @@ PRE_LOADED_MATERIALS ConvertStringToMaterial(const std::string& str)
 	if (str == "_Lighting")				return PRE_LOADED_MATERIALS::LIGHTING;
 	if (str == "_ShadowMapping")		return PRE_LOADED_MATERIALS::SHADOWMAPPING;
 	if (str == "_Blit")					return PRE_LOADED_MATERIALS::BLIT;
+	if (str == "_NoiseCCTV")			return PRE_LOADED_MATERIALS::NOISE_CCTV;
+	if (str == "_NoiseNormal")			return PRE_LOADED_MATERIALS::NOISE_NORMAL;
+	if (str == "_Vignette")				return PRE_LOADED_MATERIALS::VIGNETTING;
+
 
 #ifdef _DEBUG
 	if (str == "_ForDebug")				return PRE_LOADED_MATERIALS::FOR_DEBUG;
@@ -142,6 +146,9 @@ std::string ConvertMaterialToString(PRE_LOADED_MATERIALS preLaodMat)
 	case PRE_LOADED_MATERIALS::OUTLINE:			return std::string("_OutLine");
 	case PRE_LOADED_MATERIALS::PARTICLE:		return std::string("_Particle");
 	case PRE_LOADED_MATERIALS::BLIT:			return std::string("_Blit");
+	case PRE_LOADED_MATERIALS::NOISE_CCTV:		return std::string("_NoiseCCTV");
+	case PRE_LOADED_MATERIALS::NOISE_NORMAL:	return std::string("_NoiseNormal");
+	case PRE_LOADED_MATERIALS::VIGNETTING:		return std::string("_Vignette");
 
 #ifdef _DEBUG
 	case PRE_LOADED_MATERIALS::FOR_DEBUG:		return std::string("_ForDebug");

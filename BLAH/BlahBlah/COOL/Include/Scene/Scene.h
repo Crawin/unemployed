@@ -58,6 +58,8 @@ protected:
 
 	int m_ActiveLightSize = 0;
 
+	float m_ElapsedTime = 0.0f;
+
 	//virtual bool Init();
 private:
 	bool LoadScene(ComPtr<ID3D12GraphicsCommandList> commandList, const std::string& sceneName);

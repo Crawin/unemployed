@@ -351,13 +351,15 @@ void Scene::RenderOnMRT(ComPtr<ID3D12GraphicsCommandList> commandList, component
 	// default deffered renderer
 	m_ResourceManager->SetMRTStates(commandList, D3D12_RESOURCE_STATE_RENDER_TARGET, camIdx);
 
-	// clear mrt
-	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	m_ResourceManager->ClearMRTS(commandList, clearColor, camIdx);
-
 	// OM set
 	auto rtMRT = camDatas.m_MRTHeap->GetCPUDescriptorHandleForHeapStart();
 	auto dsv = camDatas.m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
+
+	// clear mrt
+	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	m_ResourceManager->ClearMRTS(commandList, clearColor, camIdx);
+	commandList->ClearDepthStencilView(dsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
 	commandList->OMSetRenderTargets(static_cast<int>(MULTIPLE_RENDER_TARGETS::MRT_END), &rtMRT, true, &dsv);
 
 	camera->SetCameraData(commandList);
@@ -568,9 +570,9 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, compon
 	auto& camDatas = m_ResourceManager->GetCameraRenderTargetData(camIdx);
 
 	auto resultRtv = camDatas.m_ResultRenderTargetHeap->GetCPUDescriptorHandleForHeapStart();
-
-	//commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-	commandList->OMSetRenderTargets(1, &resultRtv, true, nullptr);
+	auto resultDsv = camDatas.m_DsvHeap->GetCPUDescriptorHandleForHeapStart();
+	commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	commandList->OMSetRenderTargets(1, &resultRtv, true, &resultDsv);
 
 	m_ResourceManager->SetCameraToPostProcessing(camIdx);
 
@@ -586,6 +588,32 @@ void Scene::PostProcessing(ComPtr<ID3D12GraphicsCommandList> commandList, compon
 	lightingMat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
 
 	commandList->DrawInstanced(6, 1, 0, 0);
+
+	// if noise on
+	int noiseType = camera->GetNoiseType();
+	if (noiseType != 0) {
+		commandList->ClearDepthStencilView(resultDsv, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+		Material* noiseMat = nullptr;
+		if (noiseType == 1) noiseMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::NOISE_NORMAL);
+		else noiseMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::NOISE_CCTV);
+
+		noiseMat->SetExtraDataIndex(0, m_ElapsedTime);
+
+		noiseMat->GetShader()->SetPipelineState(commandList);
+		noiseMat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+		commandList->DrawInstanced(6, 1, 0, 0);
+	}
+
+	// if vingnetting on
+	if (camera->GetVignettingState()) {
+		Material* vignettingMat = m_ResourceManager->GetPreLoadedMaterial(PRE_LOADED_MATERIALS::VIGNETTING);
+
+		vignettingMat->GetShader()->SetPipelineState(commandList);
+		vignettingMat->SetDatas(commandList, static_cast<int>(ROOT_SIGNATURE_IDX::DESCRIPTOR_IDX_CONSTANT));
+
+		commandList->DrawInstanced(6, 1, 0, 0);
+	}
 
 #ifdef _DEBUG
 	// test code
@@ -702,9 +730,10 @@ bool Scene::Enter()
 
 void Scene::Update(float deltaTime)
 {
+	m_ElapsedTime += deltaTime;
 	m_ECSManager->UpdateSystem(deltaTime);
 
-}\
+}
 
 void Scene::RenderSync(float deltaTime)
 {

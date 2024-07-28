@@ -1,0 +1,9 @@
+{
+	"name": "_NoiseNormal",
+	"BaseColor": "Noise/NoiseOnMain",
+	"Roughness": "Noise/tv_noise_move_mount",
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "_Noise"
+}

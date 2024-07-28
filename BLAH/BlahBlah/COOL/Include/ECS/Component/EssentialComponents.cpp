@@ -261,6 +261,9 @@ namespace component {
 		m_Near = cam["Near"].asFloat();
 		m_Far = cam["Far"].asFloat();
 
+		m_NoiseType = cam["Noise"].asInt();
+		m_Vignetting = cam["Vignetting"].asBool();
+
 		auto size = Application::GetInstance().GetSize();
 		m_Width = size.cx;
 		m_Height = size.cy;

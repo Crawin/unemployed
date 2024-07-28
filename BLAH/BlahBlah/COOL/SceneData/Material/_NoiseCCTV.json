@@ -1,0 +1,9 @@
+{
+	"name": "_NoiseCCTV",
+	"BaseColor": "Noise/tv_noise",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "_NoiseCCTV"
+}

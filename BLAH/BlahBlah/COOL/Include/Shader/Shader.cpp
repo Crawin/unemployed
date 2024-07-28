@@ -121,6 +121,12 @@ D3D12_BLEND_DESC Shader::GetBlendDesc(int presetID)
 		// alpha cut off
 		desc.AlphaToCoverageEnable = true;
 		return desc;
+
+	case 2:
+		desc.RenderTarget[0].BlendEnable = true;
+		desc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		desc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		desc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	}
 
 	return desc;

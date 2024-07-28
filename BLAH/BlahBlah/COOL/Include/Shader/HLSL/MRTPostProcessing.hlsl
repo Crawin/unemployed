@@ -11,13 +11,13 @@ VS_OUTPUT vs(uint vtxID : SV_VertexID)
 {
 	VS_OUTPUT output;
 
-	if (vtxID == 0)			{ output.position = float4(-1.0f, +1.0f, 0.0f, 1.0f); output.uv = float2(0.0f, 0.0f); }
-	else if (vtxID == 1)	{ output.position = float4(+1.0f, +1.0f, 0.0f, 1.0f); output.uv = float2(1.0f, 0.0f); }
-	else if (vtxID == 2)	{ output.position = float4(+1.0f, -1.0f, 0.0f, 1.0f); output.uv = float2(1.0f, 1.0f); }
+	if (vtxID == 0)			{ output.position = float4(-1.0f, +1.0f, 0.9f, 1.0f); output.uv = float2(0.0f, 0.0f); }
+	else if (vtxID == 1)	{ output.position = float4(+1.0f, +1.0f, 0.9f, 1.0f); output.uv = float2(1.0f, 0.0f); }
+	else if (vtxID == 2)	{ output.position = float4(+1.0f, -1.0f, 0.9f, 1.0f); output.uv = float2(1.0f, 1.0f); }
 	
-	else if (vtxID == 3)	{ output.position = float4(-1.0f, +1.0f, 0.0f, 1.0f); output.uv = float2(0.0f, 0.0f); }
-	else if (vtxID == 4)	{ output.position = float4(+1.0f, -1.0f, 0.0f, 1.0f); output.uv = float2(1.0f, 1.0f); }
-	else if (vtxID == 5)	{ output.position = float4(-1.0f, -1.0f, 0.0f, 1.0f); output.uv = float2(0.0f, 1.0f); }
+	else if (vtxID == 3)	{ output.position = float4(-1.0f, +1.0f, 0.9f, 1.0f); output.uv = float2(0.0f, 0.0f); }
+	else if (vtxID == 4)	{ output.position = float4(+1.0f, -1.0f, 0.9f, 1.0f); output.uv = float2(1.0f, 1.0f); }
+	else if (vtxID == 5)	{ output.position = float4(-1.0f, -1.0f, 0.9f, 1.0f); output.uv = float2(0.0f, 1.0f); }
 
 	return output; 
 }
