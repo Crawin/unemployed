@@ -12,8 +12,8 @@
 
 			"UITransform":
 			{
-				"Center": [1200, 650],
-				"Size": [70, 70]
+				"Center": [1800, 975],
+				"Size": [105, 105]
 			},
 		
 			"Button": {},
@@ -30,8 +30,8 @@
 
 			"UITransform":
 			{
-				"Center": [340, 360],
-				"Size": [200, 200]
+				"Center": [510, 540],
+				"Size": [300, 300]
 			},
 			
 			"Button": {},
@@ -47,8 +47,8 @@
 
 			"UITransform":
 			{
-				"Center": [640, 360],
-				"Size": [200, 200]
+				"Center": [960, 540],
+				"Size": [300, 300]
 			},
 		
 			"Button": {},
@@ -64,8 +64,8 @@
 
 			"UITransform":
 			{
-				"Center": [940, 360],
-				"Size": [200, 200]
+				"Center": [1410, 540],
+				"Size": [300, 300]
 			},
 			
 			"Button": {},
