@@ -219,8 +219,18 @@ void TestMainScene::OnGameStarted()
 
 	// get pawn to possess
 	component::Pawn* startPawn = nullptr;
-	std::function<void(component::Pawn*, component::Name*)> getChangePawn = [&startPawn](component::Pawn* pawn, component::Name* name)
-		{ if (name->getName() == "GameStartPawn") startPawn = pawn; };
+	component::Pawn* startCutScenePawn = nullptr;
+	std::function<void(component::Pawn*, component::Name*)> getChangePawn = 
+		[
+			&startPawn, 
+			&startCutScenePawn
+		]
+		
+		(component::Pawn* pawn, component::Name* name)
+		{ 
+			if (name->getName() == "GameStartPawn") startPawn = pawn;
+			else if (name->getName() == "GameStartCutScene01Pawn") startPawn = pawn;
+		};
 	manager->Execute(getChangePawn);
 	ctrler->Possess(startPawn, manager);
 
