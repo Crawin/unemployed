@@ -1679,6 +1679,10 @@ namespace component {
 							doorCtrl->SetLock(false);
 							doorCtrl->SetKeyDoorOpen(true);
 							canvas->HideUI();
+
+							// open final chest
+							sc_packet_ending packet(2);
+							Client::GetInstance().send_packet(&packet);
 						}
 						};
 					button->SetButtonEvent(KEY_STATE::END_PRESS, check);
