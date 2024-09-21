@@ -217,7 +217,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 							if (Games[rw_byte].getGuardGameOver() == false)
 							{
 								g_npc_timer.emplace(rw_byte, my_id, milliseconds(16));
-								printf("가드 업데이트 추가\n");
+								//printf("가드 업데이트 추가\n");
 							}
 						}
 					}
