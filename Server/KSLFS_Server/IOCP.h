@@ -295,6 +295,10 @@ public:
 	void setGameNum(const unsigned int& gameNum) { this->gameNum = gameNum; }
 
 	short get_prev_packet_size() { return this->prev_packet_size; }
+
+	PlayerState getPlayerState() { return state; }
+
+	void setGameOver();
 };
 
 extern std::unordered_map<unsigned int, SESSION> login_players;
@@ -376,6 +380,7 @@ public:
 	std::chrono::steady_clock::time_point nextSendTime;
 public:
 	char aggro_type = 2;		// 0: ½Ã¾ß, 1: ±Í, 2: ¾øÀ½
+	std::atomic_bool gameover = false;
 	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
 	void student_state_machine(Player*);
@@ -407,7 +412,7 @@ class Game
 	NPC students[STUDENT_SIZE];
 	std::chrono::steady_clock::time_point begin_time;
 public:
-	bool day = true;
+	std::atomic_bool day = true;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n), state(true) {
@@ -468,6 +473,8 @@ public:
 	void set_guard_destination(const int& floor);
 	bool isDay();
 	void reset_player(const int& id);
+	bool getGuardGameOver() { return guard.gameover; };
+	void setGuardGameOver(const bool& b) { guard.gameover = b; }
 };
 
 struct ServerDetails

@@ -122,7 +122,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 					}
 					else
 					{
-						std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
+						//std::cout << "Error!!" << gameNum << "방의 " << my_id << " 플레이어가 존재하지 않아 삭제하지 못했습니다." << std::endl;
 						continue;
 					}
 				}
@@ -195,35 +195,48 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 		case C_TIMER:
 			using namespace std::chrono;
 			auto start = steady_clock::now();
-			Games[rw_byte].update(detail.m_bNPC, my_id);
-			bool b = true;
-			if (Games[rw_byte].CAS_state(b, b))
-			{
-				using namespace std::chrono;
-				g_mutex_npc_timer.lock();
-				//g_npc_timer.emplace(rw_byte, my_id, duration_cast<milliseconds>(start + 1s - steady_clock::now()));
-				if (my_id == 1)	// 경비 npc
-				{
-					if (Games[rw_byte].day == false)	// 밤시간이면 업데이트 추가
-					{
-						g_npc_timer.emplace(rw_byte, my_id, milliseconds(16));
-						//printf("가드 업데이트 추가\n");
-					}
-				}
-				else if (my_id < STUDENT_SIZE+2)	// 학생 npc
-				{
-					if (Games[rw_byte].day == true) // 낮시간이면 업데이트 추가
-					{
-						g_npc_timer.emplace(rw_byte, my_id, milliseconds(64));
-					}
-				}
-				g_mutex_npc_timer.unlock();
-				//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
+			if (Games.find(rw_byte) == Games.end()) {
+				delete e_over;
+				break;
 			}
-			//else
-			//{
-			//	Games.erase(rw_byte);
-			//}
+			Games[rw_byte].update(detail.m_bNPC, my_id);
+
+			if (Games.find(rw_byte) != Games.end())
+			{
+				bool b = true;
+				if (Games[rw_byte].CAS_state(b, b)) // 게임이 아직 돌아가고 있는 상태면
+				{
+					using namespace std::chrono;
+					g_mutex_npc_timer.lock();
+					//g_npc_timer.emplace(rw_byte, my_id, duration_cast<milliseconds>(start + 1s - steady_clock::now()));
+					if (my_id == 1)	// 경비 npc
+					{
+						bool f = false;
+						if (std::atomic_compare_exchange_strong(&Games[rw_byte].day, &f, false))	// 밤시간이면 업데이트 추가
+						{
+							if (Games[rw_byte].getGuardGameOver() == false)
+							{
+								g_npc_timer.emplace(rw_byte, my_id, milliseconds(16));
+								printf("가드 업데이트 추가\n");
+							}
+						}
+					}
+					else if (my_id < STUDENT_SIZE + 2)	// 학생 npc
+					{
+						bool t = true;
+						if (std::atomic_compare_exchange_strong(&Games[rw_byte].day, &t, true))		// 낮시간이면 업데이트 추가
+						{
+							g_npc_timer.emplace(rw_byte, my_id, milliseconds(64));
+						}
+					}
+					g_mutex_npc_timer.unlock();
+					//std::cout << "NPC[" << my_id << "] 0.008초 후 업데이트 추가" << std::endl;
+				}
+				else
+				{
+					Games.erase(rw_byte);
+				}
+			}
 			delete e_over;
 			break;
 		}
@@ -239,6 +252,9 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			cs_packet_position* position = reinterpret_cast<cs_packet_position*>(base);
 			auto ping = std::chrono::high_resolution_clock::now() - position->sendTime;
+			if (login_players[id].getPlayerState() == PlayerState::PS_LOBBY) break;
+
+			if (Games.find(login_players[id].getGameNum()) == Games.end())break;
 			auto& gameRoom = Games[login_players[id].getGameNum()];
 			
 			// 충돌체크 하지 않고 위치 전달
@@ -278,7 +294,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			break;
 		case pMAKEROOM:										//		pMAKEROOM
 		{
-			Games.try_emplace(currentRoom, currentRoom);
+			if (Games.try_emplace(currentRoom, currentRoom).second == false)
+				break;
 			Games[currentRoom].init(id, login_players[id].getSock());
 			login_players[id].setState(PS_GAME);
 			login_players[id].setGameNum(currentRoom);
@@ -341,6 +358,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			auto packet = reinterpret_cast<cs_packet_anim_type*>(base);
 			auto sent_player = login_players.find(id);
 			//printf("[%d] Sent Animation Change\n", id);
+			if (Games.find(sent_player->second.getGameNum()) == Games.end())break;
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
@@ -360,13 +378,14 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			}
 			else
 			{
-				std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+				//std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 			}
 			break;
 		}
 		case pOpenDoor:
 		{
 			auto sent_player = login_players.find(id);
+			if (Games.find(sent_player->second.getGameNum()) == Games.end())break;
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			printf("%d로부터 오픈패킷 수신\n", id);
 			for (int i = 0; i < 2; ++i)
@@ -378,7 +397,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 				}
 				else
 				{
-					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
+					//std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 				}
 			}
 			break;
@@ -386,6 +405,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		case pUnlockDoor:
 		{
 			auto sent_player = login_players.find(id);
+			if (Games.find(sent_player->second.getGameNum()) == Games.end())break;
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			printf("%d로부터 언락 수신\n", id);
 			if (InGamePlayers[0].id == id)
@@ -412,6 +432,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto packet = reinterpret_cast<cs_packet_get_item*>(base);
 			auto sent_player = login_players.find(id);
+			if (Games.find(sent_player->second.getGameNum()) == Games.end())break;
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
@@ -439,6 +460,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 		{
 			auto packet = reinterpret_cast<cs_packet_key_input*>(base);
 			auto sent_player = login_players.find(id);
+			if (Games.find(sent_player->second.getGameNum()) == Games.end())break;
 			auto InGamePlayers = Games[sent_player->second.getGameNum()].getPlayers();
 			if (InGamePlayers[0].id == id)
 			{
@@ -469,6 +491,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			auto packet = reinterpret_cast<cs_packet_sound_start*>(base);
 			auto sent_player = login_players.find(id);
 			auto gameNum = sent_player->second.getGameNum();
+			if (Games.find(gameNum) == Games.end())
+				break;
 			auto InGamePlayers = Games[gameNum].getPlayers();
 			
 			if (detail.m_bNPC)
@@ -502,6 +526,8 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 			auto packet = reinterpret_cast<sc_packet_ending*>(base);
 			auto sent_player = login_players.find(id);
 			auto gameNum = sent_player->second.getGameNum();
+			if (Games.find(gameNum) == Games.end())
+				break;
 			auto InGamePlayers = Games[gameNum].getPlayers();
 			printf("%d가 보낸 엔딩패킷 수신\n", id);
 			for (int i = 0; i < 2; ++i)
@@ -512,6 +538,7 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 					printf("%d -> %d 엔딩패킷 전송\n", id, InGamePlayers[i].id);
 					login_players[InGamePlayers[i].id].setGameNum(0);
 					Games[gameNum].reset_player(InGamePlayers[i].id);
+					Games[gameNum].setGuardGameOver(true);
 				}
 				else
 				{
@@ -898,6 +925,10 @@ bool Game::erasePlayer(const unsigned int& id)
 	{
 		if (player[i].id == id)
 		{
+			if (player[1 - i].id == 0) {
+				player[i].reset();
+				return true;
+			}
 			sc_packet_logout logout(player[i].sock);
 
 			login_players[player[1 - i].id].send_packet(reinterpret_cast<packet_base*>(&logout));
@@ -959,24 +990,27 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 	if (npc_id == 1)		// guard
 	{
 		guard.guard_state_machine(player, npc_state);
-		auto currTime = std::chrono::steady_clock::now();
-		//if (currTime > guard.nextSendTime)
-		//{
-			sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
-			for (auto& p : player)
-			{
-				if (p.sock != NULL)
-				{
-					if (login_players.end() != login_players.find(p.id))
-					{
-						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
-					}
-					else
-						p.sock = NULL;
-				}
+		if (guard.gameover == true) {	// 체포되어 gameover 가 되면
+			bool t = true;
+			while (true) {
+				if (std::atomic_compare_exchange_strong(&this->state, &t, false))	//Game의 state를 0으로 바꿔
+					break;
 			}
-		//	guard.nextSendTime = currTime + 1s;
-		//}
+			return;
+		}
+		sc_packet_position guard_position(guard.id, guard.position, guard.rotation, guard.speed);
+		for (auto& p : player)
+		{
+			if (p.sock != NULL)
+			{
+				if (login_players.end() != login_players.find(p.id))
+				{
+					login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&guard_position));
+				}
+				else
+					p.sock = NULL;
+			}
+		}
 	}
 	else if (npc_id < STUDENT_SIZE + 2)	// student
 	{
@@ -1023,7 +1057,7 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 						p.sock = NULL;
 				}
 			}
-			begin_time = steady_clock::now() + minutes(5);			// 타임오버 시간으로 수정해야함. 
+			begin_time = steady_clock::now() + minutes(1);			// 타임오버 시간으로 수정해야함. 
 			this->day = false;
 			g_mutex_npc_timer.lock();
 			while (!g_npc_timer.empty())
@@ -1047,10 +1081,14 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 					if (login_players.end() != login_players.find(p.id))
 					{
 						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&ending));
+						login_players[p.id].setGameOver();
 					}
-					else
-						p.sock = NULL;
 				}
+			}
+			bool t = true;
+			while (true) {
+				if (std::atomic_compare_exchange_strong(&state, &t, false))
+					break;
 			}
 		}
 	}
@@ -1254,8 +1292,14 @@ void NPC::guard_state_machine(Player* p,const bool& npc_state)
 				{
 					login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
 					printf("%d 에게 엔딩 전송", p[i].id);
-					login_players[p[i].id].setGameNum(0);
+					login_players[p[i].id].setGameOver();
 				}
+			}
+			bool f = false;
+			while (true)
+			{
+				if (std::atomic_compare_exchange_strong(&this->gameover, &f, true))	// npc의 gameover가 true가 될때까지 루프
+					break;
 			}
 			//std::cout << i << " 와 충돌" << std::endl;
 			break;
@@ -1738,4 +1782,10 @@ void NPC::set_manual_destination(const int& floor)
 			break;
 	}
 	this->destination = path->pos;
+}
+
+void SESSION::setGameOver()
+{
+	setGameNum(0);
+	setState(PS_LOBBY);
 }
