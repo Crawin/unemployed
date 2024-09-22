@@ -35,7 +35,7 @@ struct CollidedEntity {
 class Material;
 
 namespace component {
-
+	class UICanvas;
 
 	/////////////////////////////////////////////////////////
 	// Name Component
@@ -775,6 +775,9 @@ namespace component {
 		Entity* m_SelfEntity = nullptr;
 
 		bool m_ControledByServer = false;
+
+		std::string m_HudName = "";
+		UICanvas* m_HudCanvas = nullptr;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);

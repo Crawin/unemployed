@@ -1,0 +1,28 @@
+{
+	"Name": "UIHostPlayerHud",
+
+	"UICanvas": {},
+
+	"Children": 
+	[
+		{	
+			"Name": "Hud",
+
+			"UITransform":
+			{
+				"Center": [315, 960],
+				"Size": [590, 220]
+			},
+			
+			"Button": {},
+
+			"UIRenderer" :
+			{
+				"Material": "UI/UIHostHudImage",
+				"IsSprite": false
+			}
+		}
+
+	]
+
+}

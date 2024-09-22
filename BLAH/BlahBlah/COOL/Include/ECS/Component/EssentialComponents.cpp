@@ -825,6 +825,10 @@ namespace component {
 	{
 		Json::Value pa = v["Pawn"];
 		m_CameraSocketName = pa["CameraName"].asString();
+
+		if (pa["HudName"].isNull() == false) {
+			m_HudName = pa["HudName"].asString();
+		}
 	}
 
 	void Pawn::OnStart(Entity* selfEntity, ECSManager* manager, ResourceManager* rm)
@@ -834,6 +838,13 @@ namespace component {
 		m_Physics = manager->GetComponent<Physics>(selfEntity);
 		m_Inventory = manager->GetComponent<Inventory>(selfEntity);
 		m_SelfEntity = selfEntity;
+
+		if (m_HudName != "") {
+			UICanvas* canvas = nullptr;
+
+			std::function<void(UICanvas*, Name*)> findHud = [this](UICanvas* can, Name* name) { if (name->getName() == m_HudName) m_HudCanvas = can; };
+			manager->Execute(findHud);
+		}
 	}
 
 	void Pawn::ShowYourself() const
@@ -917,6 +928,11 @@ namespace component {
 		if (m_Physics) m_Physics->SetCalculateState(active);
 		if (m_Inventory) {
 			m_Inventory->SetMainMode(active, manager);
+		}
+
+		if (m_HudCanvas) {
+			if (active) m_HudCanvas->ShowUI(false);
+			else m_HudCanvas->HideUI(false);
 		}
 	}
 	

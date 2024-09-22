@@ -1,0 +1,9 @@
+{
+	"name": "UIGuestImage",
+	"BaseColor": "UI/HUD/HostHud",
+	"Roughness": null,
+	"Metalic": null,
+	"AO": null,
+	"Normal": null,
+	"Shader": "UIBaseShader"
+}

@@ -25,8 +25,8 @@ namespace component {
 
 		virtual void ShowYourself() const;
 
-		void ShowUI();
-		void HideUI();
+		void ShowUI(bool changeMouseState = true);
+		void HideUI(bool changeMouseState = true);
 
 		float GetDepth() { return 1.0f - (float)m_Layer / (float)m_NextID; }
 

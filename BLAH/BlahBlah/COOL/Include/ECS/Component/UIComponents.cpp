@@ -23,16 +23,16 @@ namespace component {
 	{
 	}
 
-	void UICanvas::ShowUI()
+	void UICanvas::ShowUI(bool changeMouseState)
 	{
 		m_On = true;
-		InputManager::GetInstance().SetUIState(true);
+		if (changeMouseState == true) InputManager::GetInstance().SetUIState(true);
 	}
 
-	void UICanvas::HideUI()
+	void UICanvas::HideUI(bool changeMouseState)
 	{
 		m_On = false;
-		InputManager::GetInstance().SetUIState(false);
+		if (changeMouseState == true) InputManager::GetInstance().SetUIState(false);
 	}
 
 	void UITransform::Create(Json::Value& v, ResourceManager* rm)

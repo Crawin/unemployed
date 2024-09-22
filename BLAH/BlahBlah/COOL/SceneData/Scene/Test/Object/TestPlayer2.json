@@ -5,7 +5,8 @@
 
 	"Pawn": 
 	{
-		"CameraName": "PlayerCamera"
+		"CameraName": "PlayerCamera",
+		"HudName": "UIGuestPlayerHud"
 	},
 
 	"Input": {},
