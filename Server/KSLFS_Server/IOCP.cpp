@@ -538,13 +538,13 @@ void IOCP_SERVER_MANAGER::process_packet(const unsigned int& id, EXP_OVER*& over
 					printf("%d -> %d 엔딩패킷 전송\n", id, InGamePlayers[i].id);
 					login_players[InGamePlayers[i].id].setGameNum(0);
 					Games[gameNum].reset_player(InGamePlayers[i].id);
-					Games[gameNum].setGuardGameOver(true);
 				}
 				else
 				{
 					std::cout << "오류: 게임에 " << id << "에 해당하는 플레이어가 존재하지 않습니다." << std::endl;
 				}
 			}
+			Games[gameNum].setGuardGameOver(true);
 			//Games.erase(gameNum);
 			break;
 		}
@@ -1057,7 +1057,7 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 						p.sock = NULL;
 				}
 			}
-			begin_time = steady_clock::now() + minutes(1);			// 타임오버 시간으로 수정해야함. 
+			begin_time = steady_clock::now() + minutes(5);			// 타임오버 시간으로 수정해야함. 밤 시간 5분
 			this->day = false;
 			g_mutex_npc_timer.lock();
 			while (!g_npc_timer.empty())
@@ -1143,7 +1143,7 @@ bool Game::isDay()
 	using namespace std::chrono;
 	if (this->begin_time.time_since_epoch() < nanoseconds(1))
 		return true;
-	return begin_time + minutes(3) > steady_clock::now();
+	return begin_time + minutes(3) > steady_clock::now();		// 낮 시간 3분
 }
 
 void Game::reset_player(const int& id)
