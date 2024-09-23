@@ -1967,13 +1967,17 @@ namespace component {
 
 		bool& ready = m_Ready;
 
-		InteractionFuncion inter = [manager, ready](Entity* player, Entity* self) {
+		InteractionFuncion inter = [manager, this](Entity* player, Entity* self) {
 			// todo
 			// show Conversation UI
 
-			std::function<void(UICanvas*, UIConversation*)> showConvers = [manager, ready](UICanvas* canv, UIConversation* conver) {
+			std::function<void(UICanvas*, UIConversation*)> showConvers = [manager, this](UICanvas* canv, UIConversation* conver) {
+				if (m_LoggedIn == false) {
+					Client::GetInstance().Connect_Server();
+					m_LoggedIn = true;
+				}
 
-				if (ready == false) 
+				if (m_Ready == false)
 				{
 					// Object/UIConversation.json 참고
 					conver->SetConversation(1);

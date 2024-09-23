@@ -419,6 +419,7 @@ namespace component {
 	//
 	class StartInteraction : public ComponentBase<StartInteraction> {
 		bool m_Ready = false;
+		bool m_LoggedIn = false;
 
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr) {}
@@ -428,6 +429,9 @@ namespace component {
 
 		bool IsReady() const { return m_Ready; }
 		void SetReady(bool state) { m_Ready = state; }
+
+		bool IsLoggedIn() const { return m_LoggedIn; }
+		void SetLogin(bool state) { m_LoggedIn = state;; }
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////

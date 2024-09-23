@@ -85,7 +85,7 @@ void InputManager::HandleKeyboardInput(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		break;
 
 	case 'P':
-		Client::GetInstance().Connect_Server();
+		//Client::GetInstance().Connect_Server();
 		break;
 	case 'O':
 		Application::GetInstance().GetSceneManager()->PossessPlayer(true);

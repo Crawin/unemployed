@@ -904,6 +904,7 @@ void Scene::ProcessPacket(packet_base* packet)
 
 		sc_packet_change_day_or_night* buf = reinterpret_cast<sc_packet_change_day_or_night*>(packet);
 		float time = buf->getTime();
+		//printf("packet hit");
 		ChangeDayToNight(time);
 		break;
 	}
