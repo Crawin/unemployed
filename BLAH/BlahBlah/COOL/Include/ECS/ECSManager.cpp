@@ -225,6 +225,7 @@ void ECSManager::OnStart(ResourceManager* rm)
 	// set possess
 	if (ctrl) {
 		ctrl->Possess(this, targetName);
+		ctrl->SetMasterPlayerPawn();
 		Entity* curEntity = ctrl->GetControllingPawn()->GetSelfEntity();
 
 		// set inventory modes

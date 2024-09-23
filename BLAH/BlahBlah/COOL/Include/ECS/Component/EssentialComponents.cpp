@@ -992,6 +992,12 @@ namespace component {
 		return true;
 	}
 
+	void PlayerController::PossessToMasterPlayer(ECSManager* manager)
+	{
+		if (m_MasterPlayerPawn)
+			Possess(m_MasterPlayerPawn, manager);
+	}
+
 	int DayLightManager::m_ManagerCount = 0;
 	void DayLightManager::Create(Json::Value& v, ResourceManager* rm)
 	{

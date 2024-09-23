@@ -818,6 +818,8 @@ namespace component {
 		Pawn* m_CurrentPossess = nullptr;
 		std::string m_TargetEntityName;			// todo 안써도 되는 방법을 찾아보자
 
+		Pawn* m_MasterPlayerPawn = nullptr;
+
 	public:
 		virtual void Create(Json::Value& v, ResourceManager* rm = nullptr);
 		virtual void OnStart(Entity* selfEntity, ECSManager* manager = nullptr, ResourceManager* rm = nullptr);
@@ -825,9 +827,13 @@ namespace component {
 
 		bool Possess(ECSManager* manager, const std::string& targetName);
 		bool Possess(Pawn* target, ECSManager* manager);
+		void PossessToMasterPlayer(ECSManager* manager);
 
 		const std::string& GetTargetInit() const { return m_TargetEntityName; }
 		Pawn* GetControllingPawn() const { return m_CurrentPossess; }
+
+		void SetMasterPlayerPawn() { m_MasterPlayerPawn = m_CurrentPossess; }
+
 	};
 
 	/////////////////////////////////////////////////////////
