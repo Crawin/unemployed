@@ -200,6 +200,7 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				break;
 			}
 			Games[rw_byte].update(detail.m_bNPC, my_id);
+			Games[rw_byte].compare_time();
 
 			if (Games.find(rw_byte) != Games.end())
 			{
@@ -214,11 +215,11 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 						bool f = false;
 						if (std::atomic_compare_exchange_strong(&Games[rw_byte].day, &f, false))	// 밤시간이면 업데이트 추가
 						{
-							if (Games[rw_byte].getGuardGameOver() == false)
-							{
+							//if (Games[rw_byte].getGuardGameOver() == false)
+							//{
 								g_npc_timer.emplace(rw_byte, my_id, milliseconds(16));
 								//printf("가드 업데이트 추가\n");
-							}
+							//}
 						}
 					}
 					else if (my_id < STUDENT_SIZE + 2)	// 학생 npc
@@ -234,7 +235,12 @@ void IOCP_SERVER_MANAGER::worker(SOCKET server_s)
 				}
 				else
 				{
-					Games.erase(rw_byte);
+					bool f = false;
+					if (std::atomic_compare_exchange_strong(&Games[rw_byte].erasing, &f, true))
+					{
+						Games[rw_byte].erase_start();
+						Games.erase(rw_byte);
+					}
 				}
 			}
 			delete e_over;
@@ -1015,10 +1021,8 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 	else if (npc_id < STUDENT_SIZE + 2)	// student
 	{
 		auto& student = students[npc_id - 2];
-		student.student_state_machine(player);
-		auto currTime = std::chrono::steady_clock::now();
-		//if (currTime > guard.nextSendTime)
-		//{
+		if (student.student_state_machine(player))
+		{
 			sc_packet_position student_position(student.id, student.position, student.rotation, student.speed);
 			for (auto& p : player)
 			{
@@ -1032,65 +1036,11 @@ void Game::update(const bool& npc_state, const unsigned int& npc_id)
 						p.sock = NULL;
 				}
 			}
-		//	guard.nextSendTime = currTime + 6ms;
-		//}
+		}
 	}
 	else
 	{
 		std::cout << "잘못된 NPC아이디 입니다." << std::endl;
-	}
-	using namespace std::chrono;
-	if (this->day)		// 낮시간이면
-	{
-		if (this->begin_time.time_since_epoch() > nanoseconds(1) && !isDay())
-		{
-			sc_packet_change_day_or_night change(22);
-			for (auto& p : player)
-			{
-				if (p.sock != NULL)
-				{
-					if (login_players.end() != login_players.find(p.id))
-					{
-						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&change));
-					}
-					else
-						p.sock = NULL;
-				}
-			}
-			begin_time = steady_clock::now() + minutes(5);			// 타임오버 시간으로 수정해야함. 밤 시간 5분
-			this->day = false;
-			g_mutex_npc_timer.lock();
-			while (!g_npc_timer.empty())
-			{
-				g_npc_timer.pop();
-			}
-			g_npc_timer.emplace(this->GameNum, 1, std::chrono::milliseconds(0));
-			std::cout << "학생 죽이고, 가드 살리기 완료" << std::endl;
-			g_mutex_npc_timer.unlock();
-		}
-	}
-	else
-	{
-		if (begin_time < steady_clock::now())	// 밤시간에 타임오버 시간 측정
-		{
-			sc_packet_ending ending(1);
-			for (auto& p : player)
-			{
-				if (p.sock != NULL)
-				{
-					if (login_players.end() != login_players.find(p.id))
-					{
-						login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&ending));
-						login_players[p.id].setGameOver();
-					}
-				}
-			}
-			bool t = true;
-			while (true) {
-				if (std::atomic_compare_exchange_strong(&state, &t, false))
-					break;
-			}
-		}
 	}
 }
 
@@ -1128,7 +1078,7 @@ void Game::respawn_guard()
 	guard.rotation = { 0, 0, 0 };
 	guard.speed = { 0,0,0 };
 	guard.destination = { 0,0,0 };
-	guard.movement_speed = 400;
+	guard.movement_speed = 300;
 	guard.state = 0;
 	guard.aggro_type = 2;
 }
@@ -1144,6 +1094,7 @@ bool Game::isDay()
 	if (this->begin_time.time_since_epoch() < nanoseconds(1))
 		return true;
 	return begin_time + minutes(3) > steady_clock::now();		// 낮 시간 3분
+	//return begin_time + seconds(30) > steady_clock::now();		// 낮 시간 20초
 }
 
 void Game::reset_player(const int& id)
@@ -1155,6 +1106,95 @@ void Game::reset_player(const int& id)
 			player[i].reset();
 		}
 	}
+}
+
+void Game::compare_time()
+{
+	using namespace std::chrono;
+	bool t = true;
+	if (std::atomic_compare_exchange_strong(&day, &t, true))		// 낮시간이였는데
+	{
+		if (this->begin_time.time_since_epoch() > nanoseconds(1) && !isDay())	// 측정해보니 밤이 되었다면?
+		{
+			bool f = false;
+			if (std::atomic_compare_exchange_strong(&changing_time, &f, true))	// 젤 먼저 들어온 애가 패킷 1회만 전송하고 npc 죽일거야! 나머진 나가!
+			{
+				sc_packet_change_day_or_night change(22);
+				for (auto& p : player)
+				{
+					if (p.sock != NULL)
+					{
+						if (login_players.end() != login_players.find(p.id))
+						{
+							login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&change));
+						}
+						else
+							p.sock = NULL;
+					}
+				}
+				begin_time = steady_clock::now() + minutes(5);			// 타임오버 시간으로 수정해야함. 밤 시간 5분
+				//begin_time = steady_clock::now() + seconds(20);			// 타임오버 시간으로 수정해야함. 밤 시간 5분
+				std::atomic_compare_exchange_strong(&day, &t, false);
+				for (auto& bot : students)
+				{
+					while (true)
+					{
+						if (std::atomic_compare_exchange_strong(&bot.running, &f, true))		// 모든 봇이 run하고 있지 않다가 내가 run 시켜두면 다른곳에서 run 할 일이 없지
+						{
+							std::atomic_compare_exchange_strong(&bot.gameover, &f, true);		// 거기다가 student의 gameover를 true로 해서 위에서 running으로 잡아두고, gameover까지 모두 true 면 student는 죽은 목숨
+							break;
+						}
+					}
+				}
+				g_npc_timer.emplace(this->GameNum, 1, std::chrono::milliseconds(0));
+				std::cout << "학생 죽이고, 가드 살리기 완료" << std::endl;
+			}
+		}
+	}
+	else
+	{
+		if (begin_time < steady_clock::now())	// 밤시간에 타임오버 시간 측정
+		{
+			bool bt = true;
+			if (std::atomic_compare_exchange_strong(&state, &bt, false))
+			{
+				//std::cout << "타임아웃이다 이놈아" << std::endl;
+				sc_packet_ending ending(1);
+				for (auto& p : player)
+				{
+					if (p.sock != NULL)
+					{
+						if (login_players.end() != login_players.find(p.id))
+						{
+							login_players[p.id].send_packet(reinterpret_cast<packet_base*>(&ending));
+							login_players[p.id].setGameOver();
+						}
+						p.reset();
+					}
+				}
+			}
+		}
+	}
+}
+
+void Game::erase_start()
+{
+	for (auto& bot : students)
+	{
+		while (true) {
+			if (bot.gameover && bot.running)		//학생의 running과 gameover 둘 다 true라는 뜻은 학생은 더 이상 업데이트가 이루어지지 않는 죽은 목숨
+				break;
+		}
+	}
+	//학생들은 모두 죽은 목숨이고
+	// 가드의 행동이 끝났는지 확인할 차례
+	bool f = false;
+	while (true)
+	{
+		if (guard.gameover && !guard.running)		//가드는 잡는 즉시 게임이 끝이기에 가드가 돌아가고 있을 확률은 0
+			break;
+	}
+
 }
 
 NPC::NPC()
@@ -1169,314 +1209,327 @@ NPC::NPC()
 
 void NPC::guard_state_machine(Player* p,const bool& npc_state)
 {
-	std::chrono::duration<double> delta;
-	if (lastTime.time_since_epoch().count() == 0)		// 시작
+	bool f = false;
+	if (std::atomic_compare_exchange_strong(&running, &f, true))
 	{
-		lastTime = std::chrono::steady_clock::now();
-	}
-	auto currentTime = std::chrono::steady_clock::now();
-	delta = currentTime - lastTime;
-	lastTime = currentTime;
-
-	DirectX::BoundingOrientedBox now_obb;
-
-	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
-	float yaw = DirectX::XMConvertToRadians(this->rotation.y);   // y축을 기준으로 회전
-	float roll = DirectX::XMConvertToRadians(this->rotation.z);  // z축을 기준으로 회전
-	DirectX::XMVECTOR guard_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
-
-	DirectX::XMVECTOR guard_location = DirectX::XMLoadFloat3(&this->position);
-	this->obb.Transform(now_obb, 1, guard_rotation, guard_location);
-	DirectX::XMFLOAT3 temp;
-
-	float now_floor = 0;
-	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
-	
-	bool b_stair = false;
-	auto map_floors_cnt = map_floors.size();
-
-	auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
-
-	for (int i = 0; i < 4; ++i)
-	{	// 계단의 방향 +Z, -Z, +X, -X
-		if (stairs[i].stair_collision(now_obb, this->position.y, i))
+		std::chrono::duration<double> delta;
+		if (lastTime.time_since_epoch().count() == 0)		// 시작
 		{
-			b_stair = true;
-			break;
+			lastTime = std::chrono::steady_clock::now();
 		}
+		auto currentTime = std::chrono::steady_clock::now();
+		delta = currentTime - lastTime;
+		lastTime = currentTime;
 
-	}
+		DirectX::BoundingOrientedBox now_obb;
 
-	if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
-	{
-		for (int i = 0; i < map_floors_cnt - 1; ++i)
-		{
-			auto& floor = map_floors[i];
-			if (floor.floor_collision(now_obb, now_floor, this->position.y))
+		float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
+		float yaw = DirectX::XMConvertToRadians(this->rotation.y);   // y축을 기준으로 회전
+		float roll = DirectX::XMConvertToRadians(this->rotation.z);  // z축을 기준으로 회전
+		DirectX::XMVECTOR guard_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+
+		DirectX::XMVECTOR guard_location = DirectX::XMLoadFloat3(&this->position);
+		this->obb.Transform(now_obb, 1, guard_rotation, guard_location);
+		DirectX::XMFLOAT3 temp;
+
+		float now_floor = 0;
+		auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
+
+		bool b_stair = false;
+		auto map_floors_cnt = map_floors.size();
+
+		auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
+
+		for (int i = 0; i < 4; ++i)
+		{	// 계단의 방향 +Z, -Z, +X, -X
+			if (stairs[i].stair_collision(now_obb, this->position.y, i))
+			{
+				b_stair = true;
 				break;
-		}
-		//std::cout << "npc: " << now_floor << std::endl;
-		if (now_floor <= 5.5)
-		{
-			//if (m_floor != now_floor)
-			//	std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
-			m_floor = now_floor;
-		}
-	}
-
-	if (this->state == 0)				// 두리번 두리번 상태
-	{
-		if (set_destination(p, npc_state))			// 두리번 거리다가 뭔갈 발견했으면, 목적지 조정하고 이동
-		{
-			this->state = 1;
-		}
-		else
-		{	// 위치를 못찾았으면
-			int duribun_duribun = 5;
-			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
-			if (duration > duribun_duribun)		// 5초 넘게 두리번 거렸는데 위치를 못찾았으면
-			{
-				this->state = 1;
-				// 가드가 사용할 astar 그래프 생성
-				//std::unordered_map<int, NODE*> guard_graph;
-				//MakeGraph(guard_graph);
-				while (true)
-				{	
-					reset_graph();
-					//int des = rand() % astar_graph.size();
-					int des = uid(dre);
-					//std::cout << des << "로 목적지 설정" << std::endl;
-					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
-					this->path = aStarSearch(position, destination, astar_graph);
-					if (this->path != nullptr)
-						break;
-				}
-				this->destination = path->pos;
-				this->aggro_type = 2;
 			}
+
 		}
-	}
-	else if (this->state == 1)	// 목적지로 이동하는 중
-	{
-		set_destination(p, npc_state);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
-	}
 
-	if(state == 1)
-		move(delta.count());
-
-	// 다른 캐릭터와 충돌했나?
-	bool hit = false;
-	DirectX::BoundingOrientedBox player_obb;
-	float player_pitch;
-	float player_yaw;
-	float player_roll;
-	DirectX::XMVECTOR player_rotation;
-	DirectX::XMVECTOR player_location;
-	for (int i = 0; i < 2; ++i)
-	{
-		if (p[i].sock == NULL)
-			continue;
-		player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
-		player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
-		player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
-		player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
-		player_location = DirectX::XMLoadFloat3(&p[i].position);
-		p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
-		hit = now_obb.Intersects(player_obb);
-		if (hit)
+		if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
 		{
-			sc_packet_ending busted(0);
-			for (int i = 0; i < 2; ++i)
+			for (int i = 0; i < map_floors_cnt - 1; ++i)
 			{
-				if (login_players[p[i].id].getGameNum() != 0)
-				{
-					login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
-					printf("%d 에게 엔딩 전송", p[i].id);
-					login_players[p[i].id].setGameOver();
-				}
-			}
-			bool f = false;
-			while (true)
-			{
-				if (std::atomic_compare_exchange_strong(&this->gameover, &f, true))	// npc의 gameover가 true가 될때까지 루프
+				auto& floor = map_floors[i];
+				if (floor.floor_collision(now_obb, now_floor, this->position.y))
 					break;
 			}
-			//std::cout << i << " 와 충돌" << std::endl;
-			break;
+			//std::cout << "npc: " << now_floor << std::endl;
+			if (now_floor <= 5.5)
+			{
+				//if (m_floor != now_floor)
+				//	std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
+				m_floor = now_floor;
+			}
 		}
+
+		if (this->state == 0)				// 두리번 두리번 상태
+		{
+			if (set_destination(p, npc_state))			// 두리번 거리다가 뭔갈 발견했으면, 목적지 조정하고 이동
+			{
+				this->state = 1;
+			}
+			else
+			{	// 위치를 못찾았으면
+				int duribun_duribun = 5;
+				auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
+				if (duration > duribun_duribun)		// 5초 넘게 두리번 거렸는데 위치를 못찾았으면
+				{
+					this->state = 1;
+					// 가드가 사용할 astar 그래프 생성
+					//std::unordered_map<int, NODE*> guard_graph;
+					//MakeGraph(guard_graph);
+					while (true)
+					{
+						reset_graph();
+						//int des = rand() % astar_graph.size();
+						int des = uid(dre);
+						//std::cout << des << "로 목적지 설정" << std::endl;
+						this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
+						this->path = aStarSearch(position, destination, astar_graph);
+						if (this->path != nullptr)
+							break;
+					}
+					this->destination = path->pos;
+					this->aggro_type = 2;
+				}
+			}
+		}
+		else if (this->state == 1)	// 목적지로 이동하는 중
+		{
+			set_destination(p, npc_state);		// 이동 하면서도 눈으로 보이는지, 소리가 들리는지 확인
+		}
+
+		if (state == 1)
+			move(delta.count());
+
+		// 다른 캐릭터와 충돌했나?
+		bool hit = false;
+		DirectX::BoundingOrientedBox player_obb;
+		float player_pitch;
+		float player_yaw;
+		float player_roll;
+		DirectX::XMVECTOR player_rotation;
+		DirectX::XMVECTOR player_location;
+		for (int i = 0; i < 2; ++i)
+		{
+			if (p[i].sock == NULL)
+				continue;
+			player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
+			player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
+			player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
+			player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
+			player_location = DirectX::XMLoadFloat3(&p[i].position);
+			p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
+			hit = now_obb.Intersects(player_obb);
+			if (hit)
+			{
+				sc_packet_ending busted(0);
+				for (int i = 0; i < 2; ++i)
+				{
+					if (login_players[p[i].id].getGameNum() != 0)
+					{
+						login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&busted));
+						printf("%d 에게 엔딩 전송", p[i].id);
+						login_players[p[i].id].setGameOver();
+					}
+				}
+				bool f = false;
+				while (true)
+				{
+					if (std::atomic_compare_exchange_strong(&this->gameover, &f, true))	// npc의 gameover가 true가 될때까지 루프
+						break;
+				}
+				//std::cout << i << " 와 충돌" << std::endl;
+				break;
+			}
+		}
+		bool t = true;
+		std::atomic_compare_exchange_strong(&running, &t, false);
 	}
 }
 
-void NPC::student_state_machine(Player* p)
+bool NPC::student_state_machine(Player* p)
 {
-	std::chrono::duration<double> delta;
-	if (lastTime.time_since_epoch().count() == 0)		// 시작
-	{
-		lastTime = std::chrono::steady_clock::now();
-	}
-	auto currentTime = std::chrono::steady_clock::now();
-	delta = currentTime - lastTime;
-	lastTime = currentTime;
-
-	DirectX::BoundingOrientedBox now_obb;
-
-	float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
-	float yaw = DirectX::XMConvertToRadians(this->rotation.y);   // y축을 기준으로 회전
-	float roll = DirectX::XMConvertToRadians(this->rotation.z);  // z축을 기준으로 회전
-	DirectX::XMVECTOR student_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
-
-	DirectX::XMVECTOR student_location = DirectX::XMLoadFloat3(&this->position);
-	this->obb.Transform(now_obb, 1, student_rotation, student_location);
-
-	auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
-	float now_floor = 0;
-	auto map_floors_cnt = map_floors.size();
-	auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
-	bool b_stair = false;
-	for (int i = 0; i < 4; ++i)
-	{	// 계단의 방향 +Z, -Z, +X, -X
-		if (stairs[i].stair_collision(now_obb, this->position.y, i))
+	bool f = false;
+	if (std::atomic_compare_exchange_strong(&running, &f, true)) {
+		std::chrono::duration<double> delta;
+		if (lastTime.time_since_epoch().count() == 0)		// 시작
 		{
-			b_stair = true;
-			break;
+			lastTime = std::chrono::steady_clock::now();
 		}
+		auto currentTime = std::chrono::steady_clock::now();
+		delta = currentTime - lastTime;
+		lastTime = currentTime;
 
-	}
+		DirectX::BoundingOrientedBox now_obb;
 
-	if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
-	{
-		for (int i = 0; i < map_floors_cnt - 1; ++i)
-		{
-			auto& floor = map_floors[i];
-			if (floor.floor_collision(now_obb, now_floor, this->position.y))
-				break;
-		}
-		//std::cout << "npc: " << now_floor << std::endl;
-		if (now_floor <= 5.5)
-		{
-			//if (m_floor != now_floor)
-			//	std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
-			m_floor = now_floor;
-		}
-	}
+		float pitch = DirectX::XMConvertToRadians(this->rotation.x); // x축을 기준으로 회전
+		float yaw = DirectX::XMConvertToRadians(this->rotation.y);   // y축을 기준으로 회전
+		float roll = DirectX::XMConvertToRadians(this->rotation.z);  // z축을 기준으로 회전
+		DirectX::XMVECTOR student_rotation = DirectX::XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
 
-	// 다른 캐릭터와 충돌했나?
-	bool hit = false;
-	DirectX::BoundingOrientedBox player_obb;
-	float player_pitch;
-	float player_yaw;
-	float player_roll;
-	DirectX::XMVECTOR player_rotation;
-	DirectX::XMVECTOR player_location;
-	for (int i = 0; i < 2; ++i)
-	{
-		if (p[i].sock == NULL)
-			continue;
-		player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
-		player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
-		player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
-		player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
-		player_location = DirectX::XMLoadFloat3(&p[i].position);
-		p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
-		hit = now_obb.Intersects(player_obb);
-		if (hit&& state!=2)
-		{
-			std::cout << i<<" 와 충돌" << std::endl;
-			break;
-		}
-	}
+		DirectX::XMVECTOR student_location = DirectX::XMLoadFloat3(&this->position);
+		this->obb.Transform(now_obb, 1, student_rotation, student_location);
 
-	if (hit)
-	{
-		if (state != 2)				// 충돌 판정이 일어났을때, 최초의 충돌이면
-		{
-			state = 2;
-			//std::cout << "최초 충돌이 발생했다@" << std::endl;
-			this->speed = DirectX::XMFLOAT3(0, 0, 0);
-			using namespace std::chrono;
-			attacked_time = steady_clock::now();				// 충돌한 시간을 저장
-			arrive_time = steady_clock::now();
-			sc_packet_npc_attack attack_student(this->id);
-			for (int i = 0; i < 2; ++i)
+		auto& map_floors = m_vMeshes[0]->m_Childs[0].m_Childs[0].m_Childs;
+		float now_floor = 0;
+		auto map_floors_cnt = map_floors.size();
+		auto& stairs = map_floors[map_floors_cnt - 1].m_Childs;
+		bool b_stair = false;
+		for (int i = 0; i < 4; ++i)
+		{	// 계단의 방향 +Z, -Z, +X, -X
+			if (stairs[i].stair_collision(now_obb, this->position.y, i))
 			{
-				if (p[i].sock != NULL)
+				b_stair = true;
+				break;
+			}
+
+		}
+
+		if (b_stair == false)		// 계단과 충돌하지 못했다면 바닥과 충돌중인지 확인
+		{
+			for (int i = 0; i < map_floors_cnt - 1; ++i)
+			{
+				auto& floor = map_floors[i];
+				if (floor.floor_collision(now_obb, now_floor, this->position.y))
+					break;
+			}
+			//std::cout << "npc: " << now_floor << std::endl;
+			if (now_floor <= 5.5)
+			{
+				//if (m_floor != now_floor)
+				//	std::cout << "npc가 " << m_floor << " -> " << now_floor << "로 이동" << std::endl;
+				m_floor = now_floor;
+			}
+		}
+
+		// 다른 캐릭터와 충돌했나?
+		bool hit = false;
+		DirectX::BoundingOrientedBox player_obb;
+		float player_pitch;
+		float player_yaw;
+		float player_roll;
+		DirectX::XMVECTOR player_rotation;
+		DirectX::XMVECTOR player_location;
+		for (int i = 0; i < 2; ++i)
+		{
+			if (p[i].sock == NULL)
+				continue;
+			player_pitch = DirectX::XMConvertToRadians(p[i].rotation.x);
+			player_yaw = DirectX::XMConvertToRadians(p[i].rotation.y);
+			player_roll = DirectX::XMConvertToRadians(p[i].rotation.z);
+			player_rotation = DirectX::XMQuaternionRotationRollPitchYaw(player_pitch, player_yaw, player_roll);
+			player_location = DirectX::XMLoadFloat3(&p[i].position);
+			p[i].obb.Transform(player_obb, 1, player_rotation, player_location);
+			hit = now_obb.Intersects(player_obb);
+			if (hit && state != 2)
+			{
+				std::cout << i << " 와 충돌" << std::endl;
+				break;
+			}
+		}
+
+		if (hit)
+		{
+			if (state != 2)				// 충돌 판정이 일어났을때, 최초의 충돌이면
+			{
+				state = 2;
+				//std::cout << "최초 충돌이 발생했다@" << std::endl;
+				this->speed = DirectX::XMFLOAT3(0, 0, 0);
+				using namespace std::chrono;
+				attacked_time = steady_clock::now();				// 충돌한 시간을 저장
+				arrive_time = steady_clock::now();
+				sc_packet_npc_attack attack_student(this->id);
+				for (int i = 0; i < 2; ++i)
 				{
-					login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
-					//std::cout << "충돌 패킷 전송 완료" << std::endl;
+					if (p[i].sock != NULL)
+					{
+						login_players[p[i].id].send_packet(reinterpret_cast<packet_base*>(&attack_student));
+						//std::cout << "충돌 패킷 전송 완료" << std::endl;
+					}
+				}
+			}
+			else
+			{		//  충돌 되어있는 상태에서 3초가 지났다면
+				using namespace std::chrono;
+				if (attacked_time + 3s < steady_clock::now())		// 충돌 이후 3초가 지났으면
+				{
+					//std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
+					state = 0;
 				}
 			}
 		}
 		else
-		{		//  충돌 되어있는 상태에서 3초가 지났다면
-			using namespace std::chrono;
-			if (attacked_time + 3s < steady_clock::now())		// 충돌 이후 3초가 지났으면
-			{
-				//std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
-				state = 0;
-			}
-		}
-	}
-	else
-	{
-		if (this->state == 0)			// 목적지 도착한 상태
 		{
-			// 2초동안 대기
-			int stop = 2;
-			auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
-			if (duration > stop)			// 2초 대기 이후
+			if (this->state == 0)			// 목적지 도착한 상태
 			{
-				this->state = 1;
-				// 새로운 목표 위치 선정
-				// 학생이 사용할 astar 그래프 깊은 복사
-				while (true)
+				// 2초동안 대기
+				int stop = 2;
+				auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - arrive_time).count();
+				if (duration > stop)			// 2초 대기 이후
 				{
-					reset_graph();
-					//int des = rand() % astar_graph.size();
-					int des = uid(dre);
-					std::cout << "student[" << this->id << "] " << des << "로 목적지 설정" << std::endl;
-					this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
-					this->path = aStarSearch(position, destination, astar_graph);
-					if (this->path != nullptr)
-						break;
-				}
-				this->destination = path->pos;
-			}
-		}
-		else if (this->state == 1)		// 목적지로 이동하는 중
-		{
-			if (compare_position(this->destination))		// 목적지에 도달하였으면
-			{
-				if (this->path == nullptr || this->path->next == nullptr)			// 더 이상의 목적지가 없으면 두리번 상태로 변경
-				{
-					if (this->state != 0)
+					this->state = 1;
+					// 새로운 목표 위치 선정
+					// 학생이 사용할 astar 그래프 깊은 복사
+					while (true)
 					{
-						arrive_time = std::chrono::high_resolution_clock::now();	// 도달한 시각 기록
-						this->state = 0;
-						this->speed = DirectX::XMFLOAT3(0, 0, 0);
-						std::cout << "NPC[" << id << "] 두리번 상태로 변경" << std::endl;
+						reset_graph();
+						//int des = rand() % astar_graph.size();
+						int des = uid(dre);
+						std::cout << "student[" << this->id << "] " << des << "로 목적지 설정" << std::endl;
+						this->destination = astar_graph[des]->pos; // 랜덤한 목적지 설정
+						this->path = aStarSearch(position, destination, astar_graph);
+						if (this->path != nullptr)
+							break;
+					}
+					this->destination = path->pos;
+				}
+			}
+			else if (this->state == 1)		// 목적지로 이동하는 중
+			{
+				if (compare_position(this->destination))		// 목적지에 도달하였으면
+				{
+					if (this->path == nullptr || this->path->next == nullptr)			// 더 이상의 목적지가 없으면 두리번 상태로 변경
+					{
+						if (this->state != 0)
+						{
+							arrive_time = std::chrono::high_resolution_clock::now();	// 도달한 시각 기록
+							this->state = 0;
+							this->speed = DirectX::XMFLOAT3(0, 0, 0);
+							std::cout << "NPC[" << id << "] 두리번 상태로 변경" << std::endl;
+						}
+					}
+					else
+					{
+						path = path->next;
+						destination = path->pos;
 					}
 				}
 				else
 				{
-					path = path->next;
-					destination = path->pos;
+					move(delta.count());		// 목표 위치로 이동
 				}
 			}
-			else
+			else if (this->state == 2)		// 충돌 애니메이션이 진행 중
 			{
-				move(delta.count());		// 목표 위치로 이동
+				using namespace std::chrono;
+				if (attacked_time + 3s < steady_clock::now())		// 충돌 이후 3초가 지났으면
+				{
+					//std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
+					state = 0;
+				}
 			}
 		}
-		else if (this->state == 2)		// 충돌 애니메이션이 진행 중
-		{
-			using namespace std::chrono;
-			if (attacked_time + 3s < steady_clock::now())		// 충돌 이후 3초가 지났으면
-			{
-				//std::cout << "충돌 애니메이션이 재생된지 3초가 지나 state를 목적지 도착 상태로 변경했다!" << std::endl;
-				state = 0;
-			}
-		}
+		bool t = true;
+		std::atomic_compare_exchange_strong(&running, &t, false);
+		return true;
 	}
+	return false;
 }
 
 bool NPC::can_see(Player& p, bool& floor_gap)

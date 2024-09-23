@@ -381,9 +381,10 @@ public:
 public:
 	char aggro_type = 2;		// 0: 시야, 1: 귀, 2: 없음
 	std::atomic_bool gameover = false;
+	std::atomic_bool running = false;
 	NPC();
 	void guard_state_machine(Player*, const bool& npc_state);
-	void student_state_machine(Player*);
+	bool student_state_machine(Player*);
 	bool can_see(Player&,bool& floor_gap);
 	bool can_hear(const DirectX::XMFLOAT3& sound_pos);
 	float distance(const DirectX::XMFLOAT3& sound_pos);
@@ -413,6 +414,8 @@ class Game
 	std::chrono::steady_clock::time_point begin_time;
 public:
 	std::atomic_bool day = true;
+	std::atomic_bool changing_time = false;
+	std::atomic_bool erasing = false;
 public:
 	Game() { std::cout << "Game initialize error" << std::endl; }
 	Game(const unsigned int& n) : GameNum(n), state(true) {
@@ -420,7 +423,7 @@ public:
 		//guard.position = DirectX::XMFLOAT3(3160, 0, -400);
 		guard.position = DirectX::XMFLOAT3(-427, 1590.8, -519.5);
 		guard.id = 1;
-		guard.movement_speed = 400;
+		guard.movement_speed = 300;
 		
 		// npc 초기위치를 어떻게 설정할깝쇼
 		// 노가다로 설정해둘까
@@ -475,6 +478,8 @@ public:
 	void reset_player(const int& id);
 	bool getGuardGameOver() { return guard.gameover; };
 	void setGuardGameOver(const bool& b) { guard.gameover = b; }
+	void compare_time();
+	void erase_start();
 };
 
 struct ServerDetails
