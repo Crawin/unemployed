@@ -19,7 +19,11 @@ void print_error(const char* msg, int err_no)
 
 Client::Client()
 {
-	m_cpServerIP = (char*)"freerain.mooo.com";
+	std::fstream ipFile("ServerIPAddr.txt");
+
+	m_ServerIP = std::string{ std::istream_iterator<char>{ipFile}, {} };
+
+	//m_cpServerIP = (char*)"freerain.mooo.com";
 	//m_cpServerIP = (char*)"127.0.0.1";
 	m_sServer = NULL;
 }
@@ -121,13 +125,13 @@ void Client::Connect_Server()
 		SOCKADDR_IN server_a;
 		server_a.sin_family = AF_INET;
 		server_a.sin_port = htons(SERVERPORT);
-		if (strncmp(m_cpServerIP, "free", 4) == 0) {            // 아이피가 도메인이면
-			struct hostent* ptr = gethostbyname(m_cpServerIP);
+		if (strncmp(m_ServerIP.c_str(), "free", 4) == 0) {            // 아이피가 도메인이면
+			struct hostent* ptr = gethostbyname(m_ServerIP.c_str());
 			memcpy(&server_a.sin_addr, ptr->h_addr, ptr->h_length);
 		}
 		else
 		{
-			inet_pton(AF_INET, m_cpServerIP, &server_a.sin_addr);
+			inet_pton(AF_INET, m_ServerIP.c_str(), &server_a.sin_addr);
 		}
 		int res = WSAConnect(m_sServer, reinterpret_cast<sockaddr*>(&server_a), sizeof(server_a), nullptr, nullptr, NULL, NULL);
 		if (0 != res)

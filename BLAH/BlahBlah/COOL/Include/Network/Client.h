@@ -75,7 +75,8 @@ public:
 private:
 	Client();
 	~Client();
-	char* m_cpServerIP;
+	//char* m_cpServerIP;
+	std::string m_ServerIP;
 	SOCKET m_sServer;
 	EXP_OVER EXPover;
 	WSABUF wsabuf[1];
